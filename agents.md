@@ -118,3 +118,56 @@
 7. 对预测正确、预测错误、早癌高置信度、非癌高置信度样本分别生成 Grad-CAM 热图。
 8. 请医生初步判断热图是否关注病灶区域，记录伪相关关注案例。
 9. 在已有分类模型基础上复现 MOCE，为第二阶段概念提取做准备。
+
+## Phase 1 实验结果（2026-07-08）
+
+### 共同配置
+
+| 配置项 | 值 |
+|--------|-----|
+| 随机种子 | 42 |
+| 数据划分 | 训练 2319 / 验证 497 / 测试 498（分层随机） |
+| 类别分布 | 早癌 1918 / 非癌 1396（1.37:1） |
+| Batch Size | 32 |
+| 优化器 | AdamW, weight_decay=1e-4 |
+| 第一阶段 | 冻结 backbone, LR=1e-3, 10 epochs |
+| 第二阶段 | CosineAnnealing + EarlyStop(patience=8), LR=1e-4, 20 epochs |
+| BN 冻结 | freeze_bn_stats()：冻结层 requires_grad=False 时同步设为 eval |
+
+### ResNet50
+
+| 配置项 | 值 |
+|--------|-----|
+| 预训练权重 | ImageNet1K_V2 |
+| 第二阶段解冻范围 | layer4 + fc |
+| Label Smoothing | **0.05**（0.1 过强压低了概率分布） |
+| Best Val AUC | 0.8468 |
+| Test AUC | 0.8427 |
+| Test Accuracy | 0.7751 |
+| Test Sensitivity | 0.8160 |
+| Test Specificity | 0.7190 |
+| Test Precision | 0.7993 |
+| Test F1 | 0.8076 |
+| **推荐阈值 @Sens≥0.90** | **0.20**（Sens=0.913, Spec=0.522） |
+
+### EfficientNet-B0
+
+| 配置项 | 值 |
+|--------|-----|
+| 预训练权重 | ImageNet1K_V1 |
+| 第二阶段解冻范围 | features[5:] + classifier |
+| Label Smoothing | **0.1**（训练动态健康，无过强压制迹象） |
+| Best Val AUC | 0.8718 |
+| Test AUC | **0.8806** |
+| Test Accuracy | 0.8012 |
+| Test Sensitivity | 0.8160 |
+| Test Specificity | **0.7810** |
+| Test Precision | 0.8363 |
+| Test F1 | 0.8260 |
+| **推荐阈值 @Sens≥0.90** | **0.22**（Sens=0.903, Spec=0.617） |
+
+### 结论
+
+- EfficientNet-B0（5.3M）全面优于 ResNet50（25M）：Test AUC +3.8, Spec +6.2 个百分点
+- 在 Sens≥0.90 约束下，EfficientNet 误报率 38.3% vs ResNet 47.8%，每 100 例非癌少误报约 10 例
+- 后续 Grad-CAM 和可解释性实验建议以 EfficientNet-B0 为主线
