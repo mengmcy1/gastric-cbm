@@ -1,0 +1,20 @@
+# LibreOffice / render cache
+99_过程文件_可删除或归档/渲染检查缓存/
+
+# Temp Word files
+~$*
+
+# Temp download report (auto-generated)
+99_过程文件_可删除或归档/下载与检查报告/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 论文 PDF 不上传（体积大，仅本地保留）
+papers/
