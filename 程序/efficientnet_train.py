@@ -61,7 +61,7 @@ STAGE2_EPOCHS  = 2 if DEBUG else 20
 STAGE1_LR      = 1e-3
 STAGE2_LR      = 1e-4
 WEIGHT_DECAY   = 1e-4
-EARLY_STOP_PATIENCE = 5
+EARLY_STOP_PATIENCE = 8
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -392,7 +392,7 @@ def main():
         model = nn.DataParallel(model)
         print(f'已启用 DataParallel，使用 {torch.cuda.device_count()} 张 GPU')
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
     # ===== 第一阶段：冻结 backbone，仅训练 classifier =====
     print('\n' + '=' * 60)

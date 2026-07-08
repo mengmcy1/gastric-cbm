@@ -199,4 +199,7 @@
 - 验证集→测试集泛化良好，未出现大幅衰减，阈值选择没有过拟合验证集
 - EfficientNet-B0（5.3M）全面优于 ResNet50（25M）：Test AUC +3.8, Test Spec +6.2 个百分点
 - 在 Sens≥0.90 约束下，EfficientNet 测试集 Spec 0.595 vs ResNet 0.514，每 100 例非癌少误报约 8 例
-- 后续 Grad-CAM 和可解释性实验建议以 EfficientNet-B0 为主线
+- 后续可解释性路线：**EfficientNet-B0 作为性能主模型，ResNet50 作为可解释性基线**
+  - EfficientNet-B0 性能更强（Test AUC +3.8, Spec +8.1 pp @Sens≥0.90），是临床辅助诊断的更好选择
+  - ResNet50 残差块梯度流直观、Grad-CAM 在 ResNet 架构上验证最成熟，适合作为热图解释的参考基线
+  - 两个模型都生成 Grad-CAM，对照分析能区分"模型看到的" vs "架构特性造成的"，增强结论可信度
