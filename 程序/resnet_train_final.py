@@ -58,7 +58,7 @@ STAGE2_EPOCHS  = 2 if DEBUG else 20
 STAGE1_LR      = 1e-3
 STAGE2_LR      = 1e-4
 WEIGHT_DECAY   = 1e-4
-EARLY_STOP_PATIENCE = 5               # 连续 N 个 epoch Val AUC 未提升则停止
+EARLY_STOP_PATIENCE = 8                # 连续 N 个 epoch Val AUC 未提升则停止
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -396,7 +396,7 @@ def main():
 
     # 不做类别加权（1918:1396 = 1.37:1，不平衡较轻）
     # 胃早癌筛查优先关注 Sensitivity，评估时重点看该指标即可
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.05)
 
     # ===== 第一阶段：冻结 backbone，仅训练 FC =====
     print('\n' + '=' * 60)
