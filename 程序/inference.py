@@ -29,7 +29,7 @@ MODEL_PATH = os.path.join(BASE_DIR, '结果', 'resnet50_transfer_best.pth')
 
 # ★ 部署阈值 —— 跑完 tune_threshold.py 后填入推荐值
 # 当前默认 0.5，调优后改为推荐值（如 0.36）
-THRESHOLD = 0.5
+THRESHOLD = 0.14  # 来自 tune_threshold.py，验证集 Sens≥0.90 下的最佳阈值
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
