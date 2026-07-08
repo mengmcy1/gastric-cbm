@@ -7,9 +7,11 @@
   - 在满足 Sens ≥ 目标底线的前提下，选 Spec 最高的阈值
 
 用法：
-  python tune_threshold.py                                 # 默认 ResNet50 + Sens 0.90
-  python tune_threshold.py --model efficientnet_b0          # EfficientNet-B0 对照
-  python tune_threshold.py --sens 0.85 --model resnet50    # 指定 Sens 底线
+  python tune_threshold.py                                          # 默认 ResNet50 + Sens 0.90
+  python tune_threshold.py --model efficientnet_b0                   # EfficientNet-B0 对照
+  python tune_threshold.py --sens 0.85 --model resnet50             # 指定 Sens 底线
+  python tune_threshold.py --model resnet50 --data test --fixed-threshold 0.20      # 固定阈值评估
+  python tune_threshold.py --model efficientnet_b0 --data test --fixed-threshold 0.22
 """
 
 import os
@@ -165,6 +167,8 @@ def main():
     parser.add_argument('--data', type=str, default='val',
                         choices=['val', 'test'],
                         help='在哪个数据集上调优：val（验证集）或 test（测试集）')
+    parser.add_argument('--fixed-threshold', type=float, default=None,
+                        help='固定阈值评估模式：不扫描、不推荐，仅输出该阈值下的完整指标')
     args = parser.parse_args()
 
     # ---- 加载数据 ----
@@ -197,7 +201,35 @@ def main():
     model = build_model(args.model, model_path)
     y_true, y_prob = collect_predictions(model, loader)
 
-    # ---- 扫描阈值 ----
+    # ---- 固定阈值模式：不扫描、不推荐，仅评估 ----
+    if args.fixed_threshold is not None:
+        m = compute_metrics(y_true, y_prob, threshold=args.fixed_threshold)
+        youden = m['Sensitivity'] + m['Specificity'] - 1
+
+        print(f'\n===== 固定阈值评估结果 =====')
+        print(f'数据集:  {args.data}（{len(dataset)} 张）')
+        print(f'阈值:    {args.fixed_threshold}')
+        print(f'  Sensitivity: {m["Sensitivity"]:.3f}  (漏诊率: {1-m["Sensitivity"]:.1%})')
+        print(f'  Specificity: {m["Specificity"]:.3f}  (误诊率: {1-m["Specificity"]:.1%})')
+        print(f'  Accuracy:    {m["Accuracy"]:.3f}')
+        print(f'  Precision:   {m["Precision"]:.3f}')
+        print(f'  F1:          {m["F1"]:.3f}')
+        print(f'  Youden:      {youden:.3f}')
+        tn, fp, fn, tp = m['CM']
+        print(f'  混淆矩阵 — TN={tn}, FP={fp}, FN={fn}, TP={tp}')
+        print(f'  每 100 例真癌漏诊 {fn/(tp+fn)*100:.0f} 例')
+        print(f'  每 100 例非癌误报 {fp/(tn+fp)*100:.0f} 例')
+
+        output_csv = os.path.join(
+            OUTPUT_DIR,
+            f'fixed_threshold_{args.model}_{args.data}_th{args.fixed_threshold:.2f}.csv',
+        )
+        pd.DataFrame([{**m, 'Threshold': args.fixed_threshold, 'Youden': youden}]
+                     ).to_csv(output_csv, index=False, encoding='utf-8-sig')
+        print(f'\n结果已保存至: {output_csv}')
+        return
+
+    # ---- 扫描模式 ----
     results = scan_thresholds(y_true, y_prob, step=args.step)
 
     # ---- 打印 ----
