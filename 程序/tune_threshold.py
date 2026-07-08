@@ -28,7 +28,7 @@ from sklearn.metrics import (
 )
 
 # 复用训练脚本中的组件
-from train_final import GastricDataset, compute_metrics, format_metrics
+from resnet_train_final import GastricDataset, compute_metrics, format_metrics
 
 # ---- 路径配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
@@ -156,7 +156,7 @@ def main():
     print(f'加载模型: {MODEL_PATH}')
 
     # 读 CSV 并重复训练时的数据划分逻辑
-    from train_final import load_matched_dataframe, split_dataframe
+    from resnet_train_final import load_matched_dataframe, split_dataframe
 
     df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR)
     train_df, val_df, test_df = split_dataframe(df_valid)
