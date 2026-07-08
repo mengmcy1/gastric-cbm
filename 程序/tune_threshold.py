@@ -13,6 +13,7 @@
 """
 
 import os
+os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 import argparse
 import numpy as np
 import pandas as pd

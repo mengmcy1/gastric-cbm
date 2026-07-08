@@ -12,6 +12,7 @@ ResNet50 迁移学习训练脚本（最终版）
 """
 
 import os
+os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 import time
 import random
 from copy import deepcopy

@@ -16,6 +16,7 @@ EfficientNet-B0 迁移学习训练脚本（对照实验）
 """
 
 import os
+os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 import time
 import random
 from copy import deepcopy
@@ -217,11 +218,17 @@ def build_model(num_classes=2):
     return model
 
 
+def unwrap(model):
+    """DataParallel 包装时取 .module，否则直接返回。"""
+    return model.module if hasattr(model, 'module') else model
+
+
 def set_trainable_stage1(model):
     """第一阶段：冻结 backbone，仅训练 classifier 分类头。"""
-    for param in model.parameters():
+    m = unwrap(model)
+    for param in m.parameters():
         param.requires_grad = False
-    for param in model.classifier.parameters():
+    for param in m.classifier.parameters():
         param.requires_grad = True
 
 
@@ -232,13 +239,14 @@ def set_trainable_stage2(model):
     EfficientNet-B0 的 features 有 8 个阶段（索引 0-7），后段负责高层语义。
     解冻 features[5:] ≈ 最后 3 个阶段，类比 ResNet 的 layer4 微调策略。
     """
-    for param in model.parameters():
+    m = unwrap(model)
+    for param in m.parameters():
         param.requires_grad = False
     # features 是 nn.Sequential，用切片解冻后段
-    for i in range(5, len(model.features)):
-        for param in model.features[i].parameters():
+    for i in range(5, len(m.features)):
+        for param in m.features[i].parameters():
             param.requires_grad = True
-    for param in model.classifier.parameters():
+    for param in m.classifier.parameters():
         param.requires_grad = True
 
 

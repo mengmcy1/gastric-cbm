@@ -13,6 +13,7 @@
 """
 
 import os
+os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 import argparse
 import numpy as np
 import pandas as pd
@@ -30,6 +31,10 @@ MODEL_PATH = os.path.join(BASE_DIR, '结果', 'resnet50_transfer_best.pth')
 # ★ 部署阈值 —— 跑完 tune_threshold.py 后填入推荐值
 # 当前默认 0.5，调优后改为推荐值（如 0.36）
 THRESHOLD = 0.14  # 来自 tune_threshold.py，验证集 Sens≥0.90 下的最佳阈值
+
+# ★ 默认推理图片 —— 不传参数时直接用这个，点 ▶ 按钮就能跑
+DATA_DIR   = os.path.join(os.path.dirname(BASE_DIR), '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
+DEFAULT_IMG = os.path.join(DATA_DIR, '01.0000000000296_16_2016-11-09_10_49_17.jpg')
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -101,13 +106,18 @@ def predict_batch(model, img_dir):
 # ---- 主入口 ----
 def main():
     parser = argparse.ArgumentParser(description='胃早癌图像推理')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--img', type=str, help='单张图像路径')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--img', type=str, help='单张图像路径（默认使用 DEFAULT_IMG）')
     group.add_argument('--dir', type=str, help='图像文件夹路径')
     parser.add_argument('--output', type=str, default=None, help='批量预测结果 CSV 路径')
     parser.add_argument('--threshold', type=float, default=None,
                         help='临时覆盖阈值（不修改脚本默认值）')
     args = parser.parse_args()
+
+    # 没传参数 → 用默认单张图片
+    if not args.img and not args.dir:
+        args.img = DEFAULT_IMG
+        print(f'未指定输入，使用默认图片: {args.img}')
 
     th = args.threshold if args.threshold is not None else THRESHOLD
     print(f'推理阈值: {th}')
