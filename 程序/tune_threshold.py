@@ -7,9 +7,9 @@
   - 在满足 Sens ≥ 目标底线的前提下，选 Spec 最高的阈值
 
 用法：
-  python tune_threshold.py                    # 默认 Sens 底线 0.90
-  python tune_threshold.py --sens 0.88        # 指定 Sens 底线
-  python tune_threshold.py --sens 0.85        # 更宽松的底线
+  python tune_threshold.py                                 # 默认 ResNet50 + Sens 0.90
+  python tune_threshold.py --model efficientnet_b0          # EfficientNet-B0 对照
+  python tune_threshold.py --sens 0.85 --model resnet50    # 指定 Sens 底线
 """
 
 import os
@@ -22,7 +22,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
-from torchvision.models import resnet50
+from torchvision.models import resnet50, efficientnet_b0
 
 from sklearn.metrics import (
     roc_auc_score, accuracy_score, confusion_matrix, f1_score,
@@ -35,8 +35,13 @@ from resnet_train_final import GastricDataset, compute_metrics, format_metrics
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR   = os.path.join(BASE_DIR, '..', '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 CSV_PATH   = os.path.join(BASE_DIR, '..', '数据', '胃图文标签表格-添加瘤变标签.csv')
-MODEL_PATH = os.path.join(BASE_DIR, '结果', 'resnet50_transfer_best.pth')
 OUTPUT_DIR = os.path.join(BASE_DIR, '结果')
+
+# 模型名 → (权重文件名, 构建函数)
+MODEL_REGISTRY = {
+    'resnet50':        ('resnet50_transfer_best.pth', 'resnet'),
+    'efficientnet_b0': ('efficientnet_b0_best.pth',   'efficientnet'),
+}
 
 BATCH_SIZE = 32
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -45,10 +50,17 @@ IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 
 
-def build_model(weight_path):
-    """加载 ResNet50 并恢复训练好的权重。"""
-    model = resnet50(weights=None)
-    model.fc = nn.Linear(model.fc.in_features, 2)
+def build_model(model_name, weight_path):
+    """根据模型名构建对应架构并恢复权重。"""
+    if model_name == 'resnet50':
+        model = resnet50(weights=None)
+        model.fc = nn.Linear(model.fc.in_features, 2)
+    elif model_name == 'efficientnet_b0':
+        model = efficientnet_b0(weights=None)
+        in_features = model.classifier[1].in_features
+        model.classifier[1] = nn.Linear(in_features, 2)
+    else:
+        raise ValueError(f'不支持的模型: {model_name}')
 
     checkpoint = torch.load(weight_path, map_location=DEVICE, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
@@ -143,6 +155,9 @@ def print_threshold_table(results):
 
 def main():
     parser = argparse.ArgumentParser(description='阈值调优')
+    parser.add_argument('--model', type=str, default='resnet50',
+                        choices=['resnet50', 'efficientnet_b0'],
+                        help='模型选择，默认 resnet50')
     parser.add_argument('--sens', type=float, default=0.90,
                         help='Sensitivity 目标底线，默认 0.90')
     parser.add_argument('--step', type=float, default=0.02,
@@ -153,8 +168,12 @@ def main():
     args = parser.parse_args()
 
     # ---- 加载数据 ----
+    weight_file, _ = MODEL_REGISTRY[args.model]
+    model_path = os.path.join(OUTPUT_DIR, weight_file)
+
     print(f'当前设备: {DEVICE}')
-    print(f'加载模型: {MODEL_PATH}')
+    print(f'模型: {args.model}')
+    print(f'权重: {model_path}')
 
     # 读 CSV 并重复训练时的数据划分逻辑
     from resnet_train_final import load_matched_dataframe, split_dataframe
@@ -175,7 +194,7 @@ def main():
     print(f'调优数据集: {args.data}（{len(dataset)} 张）')
 
     # ---- 加载模型 & 收集预测 ----
-    model = build_model(MODEL_PATH)
+    model = build_model(args.model, model_path)
     y_true, y_prob = collect_predictions(model, loader)
 
     # ---- 扫描阈值 ----
@@ -202,7 +221,7 @@ def main():
     print(f'  每 100 例非癌误报 {fp/(tn+fp)*100:.0f} 例')
 
     # ---- 保存 ----
-    output_csv = os.path.join(OUTPUT_DIR, f'threshold_scan_{args.data}_sens{args.sens:.0f}.csv')
+    output_csv = os.path.join(OUTPUT_DIR, f'threshold_scan_{args.model}_{args.data}_sens{args.sens:.0f}.csv')
     pd.DataFrame(results).to_csv(output_csv, index=False, encoding='utf-8-sig')
     print(f'\n扫描结果已保存至: {output_csv}')
 

@@ -242,6 +242,14 @@ def set_trainable_stage2(model):
         param.requires_grad = True
 
 
+def freeze_bn_stats(model):
+    """将所有 requires_grad=False 的 BatchNorm 设为 eval，冻结 running mean/var。"""
+    for module in model.modules():
+        if isinstance(module, (nn.BatchNorm1d, nn.BatchNorm2d)):
+            if not any(p.requires_grad for p in module.parameters()):
+                module.eval()
+
+
 # ============================================================
 # 4. 评估指标 & 训练工具
 # ============================================================
@@ -314,6 +322,7 @@ def format_metrics(metrics):
 def train_one_epoch(model, loader, criterion, optimizer):
     """一个 epoch 的训练，返回 (平均 loss, 耗时秒数)。"""
     model.train()
+    freeze_bn_stats(model)           # 冻结 backbone BN 统计量，避免漂移
     total_loss = 0.0
     start = time.time()
 

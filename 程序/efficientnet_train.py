@@ -223,6 +223,15 @@ def unwrap(model):
     return model.module if hasattr(model, 'module') else model
 
 
+def freeze_bn_stats(model):
+    """将所有 requires_grad=False 的 BatchNorm 设为 eval，冻结 running mean/var。"""
+    m = unwrap(model)
+    for module in m.modules():
+        if isinstance(module, (nn.BatchNorm1d, nn.BatchNorm2d)):
+            if not any(p.requires_grad for p in module.parameters()):
+                module.eval()
+
+
 def set_trainable_stage1(model):
     """第一阶段：冻结 backbone，仅训练 classifier 分类头。"""
     m = unwrap(model)
@@ -308,6 +317,7 @@ def format_metrics(metrics):
 
 def train_one_epoch(model, loader, criterion, optimizer):
     model.train()
+    freeze_bn_stats(model)           # 冻结 backbone BN 统计量，避免漂移
     total_loss = 0.0
     start = time.time()
 
