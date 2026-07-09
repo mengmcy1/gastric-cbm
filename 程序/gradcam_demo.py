@@ -247,12 +247,12 @@ def visualize(img_path, heatmap, prob, pred_class, model_name, save_path):
         overlay = (original_rgb.astype(np.float32) * 0.60 +
                    heatmap_rgb.astype(np.float32) * 0.40).clip(0, 255).astype(np.uint8)
 
-    # 同时保存单独热图和叠加图，方便后续给医生单独查看。
-    root, ext = os.path.splitext(save_path)
-    heatmap_path = f'{root}_heatmap{ext}'
-    overlay_path = f'{root}_overlay{ext}'
-    Image.fromarray(heatmap_rgb).save(heatmap_path)
-    Image.fromarray(overlay).save(overlay_path)
+    # 如需单独保存热图和叠加图，取消下面几行注释。
+    # root, ext = os.path.splitext(save_path)
+    # heatmap_path = f'{root}_heatmap{ext}'
+    # overlay_path = f'{root}_overlay{ext}'
+    # Image.fromarray(heatmap_rgb).save(heatmap_path)
+    # Image.fromarray(overlay).save(overlay_path)
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     axes[0].imshow(original_rgb)
@@ -274,8 +274,8 @@ def visualize(img_path, heatmap, prob, pred_class, model_name, save_path):
     fig.savefig(save_path, dpi=220, bbox_inches='tight')
     plt.close(fig)
     print(f'  → 已保存: {save_path}')
-    print(f'  → 单独热图: {heatmap_path}')
-    print(f'  → 单独叠加: {overlay_path}')
+    # print(f'  → 单独热图: {heatmap_path}')
+    # print(f'  → 单独叠加: {overlay_path}')
 
 
 # ---- 主入口 ----
