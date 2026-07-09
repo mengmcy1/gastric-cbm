@@ -1,7 +1,7 @@
 """
-批量生成测试集 Grad-CAM 三联图
+批量生成全部有效样本 Grad-CAM 三联图
 ==============================
-按测试集顺序逐张保存：原图 / Grad-CAM 热图 / 叠加图。
+按 labels.csv 原始顺序逐张保存全部有效样本：原图 / Grad-CAM 热图 / 叠加图。
 
 用法：
   1. 在下面“手动配置区”修改 RUN_MODEL 和 DEBUG_N
@@ -15,15 +15,16 @@ import csv
 
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 import torch
 import torch.nn as nn
 from torchvision import transforms
 from torchvision.models import efficientnet_b0, resnet50
 
-from resnet_train_final import load_matched_dataframe, split_dataframe
+from resnet_train_final import load_matched_dataframe
 
 try:
     import cv2
@@ -65,6 +66,16 @@ RUN_MODEL = 'efficientnet_b0'
 # 调试时填数字，例如 5；正式全量生成时改为 None
 DEBUG_N = 5
 
+# 三联图固定版式，保证不同原图的标题大小和位置一致
+PANEL_WIDTH = 560
+PANEL_HEIGHT = 420
+PANEL_GAP = 12
+LABEL_HEIGHT = 48
+LABEL_FONT_SIZE = 22
+
+# 每次运行前清理当前模型输出目录中的旧热图，避免不同排序规则的结果混在一起
+CLEAR_OLD_OUTPUTS = True
+
 
 eval_transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -84,6 +95,16 @@ def load_label_font(size):
         if os.path.exists(font_path):
             return ImageFont.truetype(font_path, size=size)
     return ImageFont.load_default()
+
+
+def fit_panel(image_array):
+    image = Image.fromarray(image_array).convert('RGB')
+    image = ImageOps.contain(image, (PANEL_WIDTH, PANEL_HEIGHT), Image.Resampling.LANCZOS)
+    panel = Image.new('RGB', (PANEL_WIDTH, PANEL_HEIGHT), color=(0, 0, 0))
+    x = (PANEL_WIDTH - image.width) // 2
+    y = (PANEL_HEIGHT - image.height) // 2
+    panel.paste(image, (x, y))
+    return panel
 
 
 def build_model(model_name):
@@ -122,12 +143,16 @@ class GradCAM:
         self.gradients = grad_output[0].detach()
 
     def generate(self, img_tensor, threshold):
+        self.activations = None
+        self.gradients = None
+
         img_tensor = img_tensor.to(DEVICE)
+        img_tensor.requires_grad = True
         logits = self.model(img_tensor)
         prob = torch.softmax(logits, dim=1)[0, 1].item()
         pred = 1 if prob >= threshold else 0
 
-        self.model.zero_grad()
+        self.model.zero_grad(set_to_none=True)
         logits[0, pred].backward()
 
         weights = self.gradients.mean(dim=(2, 3), keepdim=True)
@@ -140,7 +165,10 @@ class GradCAM:
         else:
             cam = torch.zeros_like(cam)
 
-        return cam.cpu().numpy(), prob, pred
+        heatmap = cam.detach().cpu().numpy()
+        self.activations = None
+        self.gradients = None
+        return heatmap, prob, pred
 
     def cleanup(self):
         self._hook_handle_fwd.remove()
@@ -163,50 +191,64 @@ def make_triptych(img_path, heatmap, prob, pred, true_label, save_path):
         heatmap_img = heatmap_img.resize((w, h), resample=Image.Resampling.BICUBIC)
         heatmap_resized = np.array(heatmap_img, dtype=np.float32)
         heatmap_rgb = (
-            matplotlib.colormaps['jet'](np.clip(heatmap_resized, 0, 1))[..., :3] * 255
+            plt.get_cmap('jet')(np.clip(heatmap_resized, 0, 1))[..., :3] * 255
         ).astype(np.uint8)
         overlay = (
             original_rgb.astype(np.float32) * 0.60 +
             heatmap_rgb.astype(np.float32) * 0.40
         ).clip(0, 255).astype(np.uint8)
 
-    panel_h = max(original_rgb.shape[0], heatmap_rgb.shape[0], overlay.shape[0])
-    gap = max(12, w // 40)
-    label_h = max(54, h // 10)
-    canvas = np.full((panel_h + label_h, w * 3 + gap * 2, 3), 255, dtype=np.uint8)
-    canvas[label_h:label_h + h, :w] = original_rgb
-    canvas[label_h:label_h + h, w + gap:w * 2 + gap] = heatmap_rgb
-    canvas[label_h:label_h + h, w * 2 + gap * 2:w * 3 + gap * 2] = overlay
+    panels = [
+        fit_panel(original_rgb),
+        fit_panel(heatmap_rgb),
+        fit_panel(overlay),
+    ]
+    canvas_w = PANEL_WIDTH * 3 + PANEL_GAP * 2
+    canvas_h = LABEL_HEIGHT + PANEL_HEIGHT
+    output = Image.new('RGB', (canvas_w, canvas_h), color=(255, 255, 255))
 
-    output = Image.fromarray(canvas)
+    x_positions = [0, PANEL_WIDTH + PANEL_GAP, (PANEL_WIDTH + PANEL_GAP) * 2]
+    for x, panel in zip(x_positions, panels):
+        output.paste(panel, (x, LABEL_HEIGHT))
+
     draw = ImageDraw.Draw(output)
-    font = load_label_font(max(18, min(34, w // 18)))
+    font = load_label_font(LABEL_FONT_SIZE)
 
     labels = [
         f'原图  真实: {CLASS_NAMES[true_label]} ({true_label})',
         'Grad-CAM 热图',
-        f'叠加图  预测: {CLASS_NAMES[pred]} ({pred})',
+        f'叠加图  预测: {CLASS_NAMES[pred]} ({pred})  癌概率: {prob:.3f}',
     ]
-    x_positions = [0, w + gap, w * 2 + gap * 2]
     for x, label_text in zip(x_positions, labels):
-        draw.text((x + 8, max(8, label_h // 4)), label_text, fill=(20, 20, 20), font=font)
+        draw.text((x + 8, 9), label_text, fill=(20, 20, 20), font=font)
 
     output.save(save_path)
 
 
-def load_test_dataframe(debug_n):
-    df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR)
-    _, _, test_df = split_dataframe(df_valid)
-    test_df = test_df.reset_index(drop=True)
+def load_output_dataframe(debug_n):
+    # 生成全部有效样本；load_matched_dataframe 会保留 labels.csv/原始标签表顺序。
+    df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR).reset_index(drop=True)
+
     if debug_n is not None:
-        test_df = test_df.head(debug_n).copy()
-    return test_df
+        df_valid = df_valid.head(debug_n).copy()
+    return df_valid
 
 
-def generate_for_model(model_name, test_df):
+def clear_old_outputs(out_dir):
+    if not CLEAR_OLD_OUTPUTS:
+        return
+
+    for filename in os.listdir(out_dir):
+        path = os.path.join(out_dir, filename)
+        if os.path.isfile(path) and (filename.endswith('.png') or filename == 'manifest.csv'):
+            os.remove(path)
+
+
+def generate_for_model(model_name, df):
     threshold = MODEL_THRESHOLDS[model_name]
     out_dir = os.path.join(OUTPUT_DIR, '热图批量', model_name)
     os.makedirs(out_dir, exist_ok=True)
+    clear_old_outputs(out_dir)
 
     print(f'\n===== {model_name} =====')
     print(f'阈值: {threshold}')
@@ -220,11 +262,11 @@ def generate_for_model(model_name, test_df):
     with open(manifest_path, 'w', newline='', encoding='utf-8-sig') as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=['order', 'image_name', 'true_label', 'pred_label', 'output_file'],
+            fieldnames=['order', 'image_name', 'true_label', 'cancer_prob', 'pred_label', 'output_file'],
         )
         writer.writeheader()
 
-        for i, row in test_df.iterrows():
+        for i, row in df.iterrows():
             order = i + 1
             image_name = row['图片名字']
             true_label = int(row['瘤变标签'])
@@ -244,10 +286,12 @@ def generate_for_model(model_name, test_df):
                 'order': order,
                 'image_name': image_name,
                 'true_label': true_label,
+                'cancer_prob': round(prob, 4),
                 'pred_label': pred,
                 'output_file': output_name,
             })
-            print(f'[{order:04d}/{len(test_df):04d}] {image_name} -> {output_name}')
+            f.flush()
+            print(f'[{order:04d}/{len(df):04d}] {image_name}  prob={prob:.3f} -> {output_name}')
 
     gradcam.cleanup()
     del model
@@ -263,10 +307,10 @@ def main():
     print(f'手动指定模型: {RUN_MODEL}')
     print(f'DEBUG_N: {DEBUG_N}')
 
-    test_df = load_test_dataframe(DEBUG_N)
-    print(f'待生成图片数: {len(test_df)}')
+    df = load_output_dataframe(DEBUG_N)
+    print(f'待生成图片数: {len(df)}')
 
-    generate_for_model(RUN_MODEL, test_df)
+    generate_for_model(RUN_MODEL, df)
 
 
 if __name__ == '__main__':
