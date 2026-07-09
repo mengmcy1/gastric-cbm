@@ -29,11 +29,8 @@ logs/
 
 # Large data & assets
 数据/
-文献/
-_论文/
-*.docx
-*.pdf
 参考图片/
+*.pdf
 
 # OS
 .DS_Store
