@@ -11,7 +11,7 @@ Grad-CAM 核心思想（5 步）：
   5. ReLU 过滤负值 → 上采样到原图尺寸 → 叠加显示
 
 用法：
-  python gradcam_demo.py                                    # 默认测试图，两个模型都跑
+  python gradcam_demo.py                                     # 默认测试图，两个模型都跑
   python gradcam_demo.py --img ../数据/某图片.jpg             # 指定图片
   python gradcam_demo.py --model resnet50                    # 只看 ResNet50
 """
@@ -21,6 +21,7 @@ os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
 import argparse
 import numpy as np
+import pandas as pd
 from PIL import Image
 try:
     import cv2
@@ -54,6 +55,7 @@ BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR   = os.path.join(os.path.dirname(BASE_DIR), '数据',
                           '胃图文带特征标签数据集 3600+ 1933瘤变')
 OUTPUT_DIR = os.path.join(os.path.dirname(BASE_DIR), '结果')
+CSV_PATH   = os.path.join(os.path.dirname(BASE_DIR), '数据', '胃图文标签表格-添加瘤变标签.csv')
 
 # 模型配置：名称 → (权重文件, 目标层获取函数, 架构构建)
 MODEL_SPECS = {
@@ -217,25 +219,29 @@ class GradCAM:
 
 
 # ---- 可视化 ----
-def visualize(img_path, heatmap, prob, pred_class, model_name, save_path):
+def visualize(img_path, heatmap, prob, pred_class, model_name, save_path, true_label=None):
     """
     生成三列对比图：原图 / 热图 / 叠加图
+
+    Args:
+        true_label: 真实标签（0/1/None），如果提供则在原图上标注
     """
     # 读取原图（显示用，不做归一化），保留原始分辨率，避免输出被压到 224x224。
     original_pil = Image.open(img_path).convert('RGB')
     original_rgb = np.array(original_pil)
     h, w = original_rgb.shape[:2]
 
-    # Grad-CAM 原始分辨率通常很低，例如 7x7；先高质量上采样到原图尺寸。
+    # Grad-CAM 原始分辨率通常很低（7×7）；高质量上采样到原图尺寸。
     if cv2 is not None:
         heatmap_resized = cv2.resize(heatmap, (w, h), interpolation=cv2.INTER_CUBIC)
+        heatmap_resized = np.clip(heatmap_resized, 0, 1)
+        heatmap_uint8 = np.uint8(255 * heatmap_resized)
     else:
-        heatmap_img = Image.fromarray(np.uint8(255 * heatmap))
+        # PIL 路径：直接在 float [0,1] 上缩放，避免 uint8↔float 来回转换
+        heatmap_img = Image.fromarray(heatmap)  # Image.fromarray 接受 float32 [0,1]
         heatmap_img = heatmap_img.resize((w, h), resample=Image.Resampling.BICUBIC)
-        heatmap_resized = np.array(heatmap_img).astype(np.float32) / 255.0
-
-    heatmap_resized = np.clip(heatmap_resized, 0, 1)
-    heatmap_uint8 = np.uint8(255 * heatmap_resized)
+        heatmap_resized = np.array(heatmap_img, dtype=np.float32)
+        heatmap_uint8 = np.uint8(255 * np.clip(heatmap_resized, 0, 1))
 
     # 优先使用 OpenCV applyColorMap；没有 cv2 时用 matplotlib jet 色图兜底。
     if cv2 is not None:
@@ -255,8 +261,13 @@ def visualize(img_path, heatmap, prob, pred_class, model_name, save_path):
     # Image.fromarray(overlay).save(overlay_path)
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    # 原图标题：标注真实标签
+    if true_label is not None:
+        axes[0].set_title(f'原图（ {CLASS_NAMES[true_label]}）',
+                          fontproperties=_CJK_FONT, fontsize=13)
+    else:
+        axes[0].set_title('原图', fontproperties=_CJK_FONT, fontsize=13)
     axes[0].imshow(original_rgb)
-    axes[0].set_title('原图', fontproperties=_CJK_FONT, fontsize=13)
     axes[0].axis('off')
 
     axes[1].imshow(heatmap_rgb)
@@ -264,7 +275,7 @@ def visualize(img_path, heatmap, prob, pred_class, model_name, save_path):
     axes[1].axis('off')
 
     axes[2].imshow(overlay)
-    axes[2].set_title(f'叠加图\n预测: {CLASS_NAMES[pred_class]} (癌概率 {prob:.3f})',
+    axes[2].set_title(f'叠加图\n预测: {CLASS_NAMES[pred_class]}',
                       fontproperties=_CJK_FONT, fontsize=13)
     axes[2].axis('off')
 
@@ -303,6 +314,23 @@ def main():
 
     print(f'设备: {DEVICE}\n')
 
+    # 从 CSV 查真实标签
+    basename = os.path.basename(args.img)
+    true_label = None
+    if os.path.exists(CSV_PATH):
+        df = pd.read_csv(CSV_PATH, encoding='gbk')
+        # 列名可能是 '图片名' 或 '图片名字'
+        img_col = '图片名字' if '图片名字' in df.columns else '图片名'
+        row = df[df[img_col] == basename]
+        if not row.empty:
+            lbl = row.iloc[0]['瘤变标签']
+            true_label = int(lbl)
+            print(f'真实标签: {CLASS_NAMES[true_label]} ({true_label})')
+        else:
+            print(f'⚠ 未在 CSV 中找到 {basename} 的标签')
+    else:
+        print(f'⚠ 未找到标签文件: {CSV_PATH}')
+
     # 读图像 → tensor
     image = Image.open(args.img).convert('RGB')
     img_tensor = transform(image).unsqueeze(0)    # (1, 3, 224, 224)
@@ -334,7 +362,7 @@ def main():
         # 可视化保存
         basename = os.path.splitext(os.path.basename(args.img))[0]
         save_path = os.path.join(OUTPUT_DIR, '热图', f'gradcam_demo_{name}_{basename}.png')
-        visualize(args.img, heatmap, prob2, pred2, name, save_path)
+        visualize(args.img, heatmap, prob2, pred2, name, save_path, true_label=true_label)
 
         # 清理钩子
         gradcam.cleanup()
