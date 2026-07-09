@@ -1,0 +1,2032 @@
+{
+  "total": 42,
+  "slides": [
+    {
+      "num": 1,
+      "layout": "封面",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 1",
+          "texts": [
+            "Review of ICCV 2025 Papers on 3D Gaussian Splatting"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Shape 1"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "文本占位符 6",
+          "texts": [
+            "汇报人：郭浩杰"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Shape 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "文本占位符 6",
+          "texts": [
+            "时间：2025.8.15"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 2,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题1&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：3DGS-LM: Faster Gaussian-Splatting Optimization with Levenberg-Marquardt"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Lukas Hollein, Aljaz Bozic, Michael Zollhofer, Matthias Nießner（from Technical University of Munich  and  Meta）"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "现有3DGS的优化方法主要聚焦于减少高斯数量、优化渲染、优化稀疏/表面/大尺度重建，但底层优化器仍依赖Adam算法，迭代效率比较低。",
+            "受启发：RGB-D融合领域多采用高斯-牛顿法（或LM法），收敛速度比SGD快一个数量级。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "提出：①使用LM算法替代Adam优化器，大幅减少优化迭代次数；",
+            "②进行高效的GPU并行加速：使用专门的CUDA内核与数据缓存结构。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 3,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "3DGS Optimization In Two Stages：",
+            "阶段一仍使用Adam完成初始增密化；阶段二使用改进LM算法：针对更新方程进入迭代，PCG算法获得参数更新方向Δ，线搜索寻找最优缩放因子γ，并进行自适应正则化调整。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Efficient Parallelization Scheme For PCG：",
+            "采用“单像素-单高斯并行”＋“批次加权缓存机制”策略，使每个线程可独立地完成[像素, 高斯]对的梯度计算，解决了中间状态（像素颜色对高斯的梯度）容易被大量重复计算的问题。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        }
+      ]
+    },
+    {
+      "num": 4,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table：",
+            "在Tanks&Temples、Deep Blending、MipNeRF-360三大数据集上，验证了“多个方法＋LM”的广泛适用性。",
+            "在保持同等渲染质量的前提下（指标PSNR平均变动幅度<0.03，SSIM、LPIPS平均变动幅度<0.003），平均加速比达到1.26×。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Figure：",
+            "图中为第一阶段迭代次数对比。若Adam阶段迭代K=6000次再用LM，比baseline要好；若K=8000次，则收敛速度更快、效果更好。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        },
+        {
+          "type": "TABLE (19)",
+          "name": "表格 8",
+          "table": {
+            "rows": 1,
+            "cols": 5,
+            "data": [
+              [
+                "3DGS + LM",
+                "1.21x",
+                "+0.02dB",
+                "+0.001",
+                "-0.002"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "num": 5,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "使所有数据集和baseline的3DGS收敛速度平均提高20%。",
+            "将“逐像素”的计算模式改为“逐像素-逐高斯”，使Jacobian向量乘积的计算速度提升3倍。",
+            "依赖同等大小的batch-size中的多视图约束，该方法收敛速度极快，仅需5-10次迭代。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "由于需要缓存，该方法的GPU内存占用很高，可通过降低batch-size来缓解。",
+            "第一阶段仍然依赖Adam优化器来进行“增密化”，难以直接被仅有5-10次的LM迭代所优化。",
+            "Jabobian和Hessian估计会依赖密集的多视图，难以稀疏重建。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 6,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题2&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：RayGaussX: Accelerating Gaussian-Based Ray Marching for Real-Time and High-Quality Novel View Synthesis"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Hugo Blanc, Jean-Emmanuel Deschaud, Alexis Paljic（from Mines Paris, PSL University, Centre for robotics）"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "基于光栅化的方法（如3DGS）速度极快，但存在部分问题：易产生popping伪影；忽略高斯体积；难以处理复杂相机模型、模拟复杂光路。",
+            "RayGauss达到的基于RBF方法中的SOTA效果，实现了物理精确性，尽管使用了BVH来加速，但在真实数据上的 training & rendering 依旧很慢，同时体积光线积分求解析解计算量巨大。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "希望结合 RayGauss 的物理正确性 + 3DGS 的速度：",
+            "①增强空域跳过能力与使用自适应采样；②重排GS基元，提升GPU并行效率；",
+            "③引入尺度正则化损失；④使用新的增密化准则，提高远景区域细节质量。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 7,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Empty Space Skipping and Adaptive Sampling:",
+            "首先，用自适应采样计算区间长度ΔS：ΔS由恒定的基础采样步长Δt、恒定的最多连续基础采样段数量Ns、经过前i-1个区间后的透射率T和与原点的距离d四个参数共同决定。",
+            "然后，在体积光线行进中采用增强的空域跳过技术：利用BVH计算光线与高斯包围盒的首次交点以跳过初始空域；随后在各区间的行进中，动态检测是否存在有效高斯图元（不存在则跳过空域），仅对存在图元的区间进行色彩与透射率累积计算。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        }
+      ]
+    },
+    {
+      "num": 8,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Memory Access Efficiency：",
+            "用Z-order曲线（多维数据映射到一维索引）对高斯中心位置（需归一化、整数化）进行xyz编码＋重排序，进行空间局部性优化，将相邻高斯的参数分组存储在连续内存块中。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Optimizing Ray Coherence：",
+            "为了提升GPU线程的并行效率，需要提高光线一致性。由于同一tile中的光线通常会采样相似的区域，因此将空间相邻光线按图像的tiles来分组，可减少warp divergence开销。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 9",
+          "texts": [
+            "Limiting Highly Anisotropic Gaussian：",
+            "针对部分包围盒过大（严重各向异性）的高斯，提出体积约束比r（设置最大上界r_max：旋转使得xyz三轴上的投影长度完全相同）及新的“考虑体积比与阈值之间平均差值”的损失函数L_s，惩罚那些包围盒体积远大于椭球体积（r＞10）的高斯，极大提升训练、渲染效率。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 10",
+          "texts": [
+            "A Novel Densification Criterion：",
+            "RayGauss使用世界空间梯度，受深度影响很大（梯度反比于距离），远处高斯难以被有效增密。而RayGaussX在增密条件公式中，引入距离归一化因子α_i = ∥µ_l−o_i∥/ f，忽略距离带来的径向梯度变化，只考虑切向梯度，将不同距离的梯度按 α=z/f 归一化到以f为半径的标准球面上。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 9,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table：",
+            "在白背景合成数据集上，视觉效果达到SOTA，且FPS均为RayGauss的3倍。",
+            "在三大real-world数据集上，实现了比3DGS-based系列方法更高的渲染质量；与RayGauss相比，训练速度加速5.4倍，渲染速度FPS加速48倍。特别地，得益于新的增密化策略，RayGaussX在户外数据集上的表现全面优于RayGauss。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Figure：",
+            "图中为内存索引方式的效果对比。与默认索引相比，用Z-order曲线优化后，成功地将相似区域高斯放入连续内存分配。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 10"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 12"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 13"
+        }
+      ]
+    },
+    {
+      "num": 10,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "通过空域跳过、自适应采样、各向同性损失函数三个策略，大幅加速 RayGauss。",
+            "修复了“远距离增密化”问题，支持大场景的效果显著提升。",
+            "引入Z-order曲线，优化索引模式，提升内存访问效率。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "由于仍需求交点（BVHClosestHit开销大）、解析地求射线积分，渲染速度仍然比3DGS慢很多。",
+            "每个gaussian依旧包括SG×SH（为了解析地求体积积分）、AABB（BVH包围盒），模型复杂度较高。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 11,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题3&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：Quadratic Gaussian Splatting: High Quality Surface Reconstruction with Second-order Geometric Primitives"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Ziyu Zhang, Binbin Huang, Hanqing Jiang, Liyang Zhou, Xiaojun Xiang, Shuhan Shen  （from CASIA、UCAS、The University of Hong Kong、SenseTime Research）"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "现有的GS改进技术往往侧重高质量的外观渲染，一定程度上忽略了几何重建精度。",
+            "在表面重建上，现有方法如2DGS使用平面高斯圆盘，与物体表面实现一阶近似对齐，然而面对高曲率表面时需密集采样，导致内存爆炸和渲染延迟。",
+            "在曲面可变形时，若仍用传统的欧几里得距离来计算密度，会忽略弯曲的表面。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "①使用抛物面（椭圆、双曲）或平面圆盘作为二次曲面表示，实现自适应曲率。",
+            "②使用测地线距离来计算表面点的高斯权重，从而沿弯曲表面测量密度。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 12,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 11"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 10"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Quadratic Gaussian Model：",
+            "定义隐式二次型函数f(x,y,z)=0，通过合同变换、坐标变换得到一般抛物面形式：",
+            "，其中符号函数用于在不同曲面类型之间平滑可微过渡。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Gaussian Density Distribution on Quadric：",
+            "对柱坐标使用曲线积分计算测地线距离，基于测地线距离与方向标准差定义密度分布函数："
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 2"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "Curvature Guided Normal Consistency：",
+            "针对2DGS原有法线一致性损失易导致“边缘处过于平滑”的问题，引入曲率图（α-blending计算得出）作为权重，在高曲率区域减弱损失惩罚："
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        }
+      ]
+    },
+    {
+      "num": 13,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table2：",
+            "在真实场景TNT数据集上，QGS的F1-Score达到0.50，超越了2DGS、Geo-NeuS，追平N-angelo（仅用其1/128的时间）。即使无多视图正则化损失，F1-Score也有0.46。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Table1：",
+            "在经典DTU数据集上，QGS以0.54mm的Chamfer距离刷新记录，较2DGS（0.80mm）提升33%，较GOF（0.74mm）提升27%。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 5"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 8"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Figure：",
+            "图中为无多视图一致性损失的QGS与2DGS在Meetingroom（低纹理区域）与kitchen（高曲率区域）上的对比。QGS能保留更加精确的几何细节。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 14,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "将二次曲面作为基元，更精确地拟合复杂的表面曲率，提供更丰富的几何细节。",
+            "使用测地线距离定义高斯密度分布，确保曲面变形时密度权重保持一致性。",
+            "解析曲率指导法线一致性损失，解决了2DGS在边缘区域的模糊问题。",
+            "屏幕空间渲染能力强大，益于新视角合成。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "在户外数据集上的渲染质量较差，白幕伪影较严重。",
+            "求测地线距离、曲率等计算较为复杂；高斯有法线、曲率等参数。使训练时间延长。",
+            "存在凹曲面，使得包围盒需要的边界判断更复杂；同时测地线逆函数不可闭式求解，需要使用近似多项式估计测地线公式，而近似误差使包围盒变松，降低渲染效率。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 15,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题4&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：RegGS: Unposed Sparse Views Gaussian Splatting with 3DGS Registration"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Chong Cheng, Yu Hu, Sicheng Yu, Beizhen Zhao, Zijian Wang, Hao Wang",
+            "（ from The Hong Kong University of Science and Technology (Guangzhou) ）"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "传统NeRF、3DGS方法的场景初始化（colmap）均需已知的相机姿态。",
+            "其他NeRF-based、3DGS-based方法虽然均实现了无姿态重建，但前者训练缓慢，且极端视角变化下效果不佳；后者难以处理稀疏视图。",
+            "前馈方法利用几何先验实现了无姿态重建，但通常只能处理有限数量的输入图像。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "①将前馈方法初始化的场景表示为统一的概率分布GMM。",
+            "②定义可微的 Gaussian-to-Gaussian MW2 距离，实现 GMM 间的可微对齐。",
+            "③使用MW2全局对齐损失、光度损失、深度损失进行联合优化。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 16,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Registration Problem Modeling and aligning：",
+            "图像经前馈网络重建场景后（scale-normalization以保持尺度一致），用高斯混合模型GMM表示成独立的概率分布，再使用Sim(3)变换（包括R,t,s）将场景与main map对齐。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Diffrentiable MW2 Distance Between GMMs：",
+            "利用运输问题与Sinkhorn近似，将高斯对的W2距离加权求和得到GMM间的MW2距离，以衡量GMM对齐损失，并提供一个支持Sim(3)对齐的可微梯度优化路径。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        }
+      ]
+    },
+    {
+      "num": 17,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Table：",
+            "在室内数据集及景观航拍数据集（如表）中，新视角合成的质量远胜现有方法，特别是2×视图作main map场景下，RegGS相比NoPoSplat，PSNR提升1.02dB，SSIM提升0.021，LPIPS降低0.037。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Figure：",
+            "图中为RE10K数据集上的16×视图的相机位姿估计对比，RegGS的估计轨迹与相机真实轨迹几乎完全重合，绝对轨迹均方根误差（ATE RSME）远低于其他方法。在8×视图和32×视图的场景下，相比于VideoLifter和NoPeNeRF，实现了数量级的提升。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        }
+      ]
+    },
+    {
+      "num": 18,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "无Colmap的sparse-view 3DGS pipeline，实现“相机位姿 + 重建”的联合优化。",
+            "极稀疏视图的重建质量仍然较好，相机位姿估计的精度实现突破。",
+            "Sinkhorn算法、MW2距离、Cholesky 分解都以batch tensors实现，GPU效率极高。",
+            "联合优化MW2、光度、深度损失，实现了相机姿态和场景结构的渐进式粗到细注册。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "仍然依赖上游的前馈GS模型的表现，表现差时可能导致注册失败。",
+            "随着视图数量的增加，MW2距离的计算时间呈平方级增长，远超其他方法；GPU存储空间占用也较高。",
+            "从视频中采样视图时，大幅度的帧间运动可能导致优化过程发散。",
+            "仍然存在少量噪声伪影。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 19,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题5&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：StochasticSplats: Stochastic Rasterization for Sorting-Free 3D Gaussian Splatting"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Shakiba Kheradmand, Delio Vicini, George Kopanas, Dmitry Lagun, Kwang Moo Yi2  ...",
+            "（from Google DeepMind, University of British Columbia, Google, Runway ML, ...)"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "3DGS依赖深度排序、α混合，计算开销巨大，且相机微小扰动时易产生popping伪影。",
+            "现有改进方法引入近似的非随机方法来消除伪影，但都存在代价：如Stopthepop的“逐像素排序”、EVER的“连续体积渲染”计算成本很高；Hybrid Transparency可同时消除伪影、减少计算成本，但由于使用GPGPU而可移植性较低。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "引入随机透明度方法，使用无偏的蒙特卡洛估计器，将α混合转化为多重概率采样。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 20,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 7"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Stochastic Transparency：",
+            "对α混合构造无偏重要性采样Monte Carlo估计器：                        ，P(i)用于表示“高斯被抽取到且作为最小深度高斯”的概率分布，被定义为权重项 αi * Π (1-αk)，实现零方差估计。将所有接受的高斯中深度最小的样本颜色ci，直接作为采样结果。多样本平均后得到对原始 alpha 混合的估计。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Gradient Estimator and Path Replay Backprop：",
+            "由于二元随机采样无法反向传播，不能对采样过程求导，因此对采样路径（c_i、α_1至α_i）求梯度。构造蒙特卡洛梯度估计器，用采样估计梯度。此外，引入三阶段路径replay，将∂L/∂θ​≈(∂L/∂C​)*​(∇_θ​[f(i​)]/P(i))分为两个不相关样本计算，避免由于噪声相关而产生偏差。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 8"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        }
+      ]
+    },
+    {
+      "num": 21,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 5"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Table：",
+            "表一、表二为前向传播、反向传播时间，当单像素SPP较小时，StochasticSplats的计算时间极具竞争力。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Figure1：",
+            "在Mip-NeRF360数据集上，将StochasticSplats的不同采样数与α混合的渲染质量进行比较。每像素16SPP时渲染质量已经与α混合非常接近。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 8"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 10"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 12",
+          "texts": [
+            "Figure2：",
+            "该图为StochasticSplats在语义定位中的表现，虽然平均准确率下降了2.3％，但实现了4×的渲染速度。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 22,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "“单样本随机采样 + 蒙特卡洛估计”取代排序，显著降低渲染复杂度、提升渲染效率。",
+            "实现了可微、可逆渲染的随机梯度估计。",
+            "通过改进Stopthepop的最大密度面算法，在保持低计算成本的同时消除popping伪影。",
+            "可轻松调整“性能——质量”间的权衡，如调整SPP、引入其他popping-free方法、引入完全体积渲染等。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "单像素采样过少（如1次）时锯齿噪声严重，渲染质量差；采样过多（如16次）时前向、反向传播的计算时间较长。",
+            "蒙特卡洛梯度估计器使得梯度比较noisy，收敛速度慢。",
+            "三阶段路径replay导致渲染次数增多，超过普通渲染的2倍次数。",
+            "渲染的质量高度依赖随机性的质量。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 23,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题6&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：ResGS: Residual Densification of 3D Gaussian for Efficient Detail Recovery"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Yanzhe Lyu    Kai Cheng    Xin Kang    Xuejin Chen",
+            "( from MoE Key Laboratory of Brain-inspired Intelligent Perception and Cognition, University of Science and Technology of China )"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "3DGS的增密策略（分裂、克隆）通过固定阈值进行二元选择，难以同时兼顾几何重建与细节精度。此外，容易出现大量相近尺度的gaussians，产生冗余。",
+            "训练早期，高斯需要同时处理over-reconstruction和under-reconstruction两个问题。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "①结合分裂与克隆，提出residual split策略，避免选择增密/克隆的困境。",
+            "②引入由粗到精的渐进式训练方法。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 24,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Residual Split：",
+            "生成小尺度（λ∈[1.55, 2]较稳定，代码设为1.6）的下采样高斯，位置μ满足原始高斯的概率分布；并通过系数β（β∈[0.005, 0.4]效果较好，代码设置0.3）降低原高斯的不透明度α。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Revolution-Based Stages And Fineness-Based Substages：",
+            "将训练分L个阶段，每阶段使用不同分辨率图像来监督；每阶段又分K个子阶段，随着子阶段k的推进，允许的精细层级不断提升，通过阈值的调整，倾向于增密那些精细层级l_i",
+            "与k差距大的高斯。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        }
+      ]
+    },
+    {
+      "num": 25,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table2：",
+            "该表为将Residual Splat应用于3DGS及其他变体，在三大数据集上的平均指标提升，展现了其技术的延伸通用性。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Table1：",
+            "该表为ResGS与其他GS-based、NeRF-based方法的指标对比。其中在Mip-NeRF360数据集上，Residual Splat（基于AbsGS）达到了SOTA效果。而模型的小型版本在内存优化上有强大的竞争力。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        },
+        {
+          "type": "TABLE (19)",
+          "name": "表格 10",
+          "table": {
+            "rows": 4,
+            "cols": 4,
+            "data": [
+              [
+                "方法",
+                "PSNR",
+                "LPIPS",
+                "Memory"
+              ],
+              [
+                "3DGS+\nResiual",
+                "+0.39",
+                "-0.002",
+                "-20.3%"
+              ],
+              [
+                "AbsGS+\nResidual",
+                "+0.15",
+                "-0.003",
+                "-4.02%"
+              ],
+              [
+                "Pixel-GS+\nResidual",
+                "+0.15",
+                "-0.001",
+                "-6.40%"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "num": 26,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "通过residual split实现自适应增密化，同时提升几何重建质量与细节恢复精度（特别是在低纹理平滑区域）。",
+            "引入精细层级𝑙𝑖与coarse-to-fine渐进式训练，使得训练稳定性进一步提高。",
+            "能与多种3DGS pipelines结合（如AbsGS、Pixel-GS），且性能显著提升。",
+            "对随机初始化点云的robustness较好。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "在Deep Blending数据集上表现较差：训练早期被强烈下采样（[H/8, W/8]）时很难恢复几何结构；未专门处理遮挡错误的问题。",
+            "重建质量过于依赖大量超参数（λ、β、L、K）的调整。",
+            "缺少显式正则化：主要靠增密阈值与不透明度的“隐式约束”，损失函数没有直接惩罚项。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 27,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题7&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：AAA-Gaussians: Anti-Aliased and Artifact-Free 3D Gaussian Rendering"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Michael Steiner, Thomas Köhler*  ( from Graz University of Technology, University of Stuttgart, Huawei Technologies )"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "3DGS存在的核心问题：混叠伪影 (渲染时的采样频率无法表达高频细节)、投影误差 (由于对非线性透视投影进行的线性化近似) 、弹出伪影 (由于深度排序、边界计算不稳定) 。",
+            "过往工作有：①更精确的2D投影或混合2D/3D方法，但在边界、out-of-distribution时依然会出错;②光线行进替代splat，但计算量巨大;③2D Mip filter，但无法用于3D评估。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "①提出自适应3D平滑滤波器，以去除弹出和投影伪影；",
+            "②提出新的视图空间边界计算方法，防止视锥外的高斯弹出；",
+            "③提出新的视锥体裁剪方法，提高计算效率。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 28,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Adaptive 3D Smoothing Filter to Anti-Aliasing：",
+            "3D smoothing时用垂直截面尺度变化               代替总体积变化作为幅度因子，仅对与视线垂直的协方差分量进行卷积膨胀，转为低频信息，并给出避免求逆的高效计算方法。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 12"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Frustum-Based Culling：",
+            "为每个tile构建4个平面组成的3D视锥体，求高斯在视锥体内的最小马氏距离（加速计算策略：使用高斯位置μ作先验以筛选近平面、变换回高斯局部空间使得概率密度仅与到原点的欧氏距离有关），若仍大于阈值𝜏𝜌则丢弃该高斯。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "Perspective Correct Bounding：",
+            "弃用AABB与在屏幕空间的不稳定bounding，在相机空间求高斯切平面在x、y方向上的极值角θ_1,2、φ_1,2（已给出完整闭式解），投射到屏幕形成紧密边界，并处理特殊情况。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 29,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table2：",
+            "该表测试在广角(out-of-distribution)情况下的鲁棒性。在视场角Fov扩大三倍的前提下，相比于其他方法，AAA-gaussians仍然保持高质量的渲染。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 6",
+          "texts": [
+            "Table1：",
+            "在三大标准数据集上in-distribution的表现，基本持平3DGS-MCMC的同时，全面超越其他方法。优化了视图一致性，同时避免了“依赖popping补偿曝光变化”而伪造出的高分指标。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Table3：",
+            "该表测试Mip-NeRF360数据集中，在不同分辨率(out-of-distribution)情况下的鲁棒性。1×分辨率下AAA-gaussians与3DGS-MCMC质量基本持平；但在1/2×和2×分辨率下仍然能保持较好的渲染图像质量。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 30,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "解决了采样率不匹配导致的aliasing、近似投影导致的popping，避免了传统3D filter导致的透明高斯问题，提升渲染图像质量。",
+            "提出在相机空间中正确透视的包围盒方法，替代过去的数值平面拟合。",
+            "使用StopThePop的分层光栅化+创新的Culling方法，使性能明显提升。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "3D smoothing filter使用各向同性高斯来对原高斯卷积，协方差均匀膨胀，这种近似可能会降低渲染质量。",
+            "相比过往方法（如MCMC），在标准图像（in-distribution）上的质量指标没有特别显著的提高。",
+            "虽然使用了hierarchical rasterizer，但仍然依赖每射线-排序。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 31,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题8&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：EVER: Exact Volumetric Ellipsoid Rendering for Real-time View Synthesis"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Alexander Mai, Peter Hedman, George Kopanas, Dor Verbin, David Futschik, Qiangeng Xu  ( from University of California, Google. work done while at Google )"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "神经体渲染模型使用真正的体积积分，渲染质量高，但计算量大，训练与渲染很慢。",
+            "3DGS渲染速度快，但缺乏一致的密度场，只能做近似体渲染。同时由于“按中心点排序＋不重叠”两条假设的存在，也产生了popping和3D不一致性的问题。",
+            "部分工作将高斯引入体渲染框架进行体积积分，如 RayGauss，却需要数值求积、速度极慢，同时限制了高斯重叠程度。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "将场景中的基元表示为常量密度高斯椭球，并用光线追踪双面交点进行精确的3D基元体积渲染。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 32,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Exact Primitive-based Rendering：",
+            "将场景表示为恒定密度（为了获得积分闭式解）椭球集合，通过光线追踪交点精确地划分存在混合高斯的区间，区间内密度和、颜色贡献和均累加，到区间外则减去相应高斯的密度、颜色贡献，从而恢复ray上所有区间的确切密度与颜色，进而进行解析体积积分。"
+          ]
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "Optimization：",
+            "①若直接优化密度σ，当密度不断增加导致“峰值不透明度”接近1时，梯度会几乎消失。因此引入新的可学习参数α_k∈[0, 1]",
+            "，来控制σ(α_k)使最短轴对应的“峰值不透明度”为0.99α_k。②增加额外的split条件：沿着最",
+            "长轴视角的区间累积不透明度",
+            "1−exp(−σi*∆ti) >= 0.99，若达",
+            "到则进行split操作。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        }
+      ]
+    },
+    {
+      "num": 33,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table1：",
+            "该表展示各数据集上EVER的新视角合成质量，其中在SSIM、LPIPS指标上均超越了过往3DGS-based方法，特别是在Zip-NeRF数据集，超越了Zip-NeRF方法（目前非实时渲染方法的SOTA）。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Table2：",
+            "该表引入了StopThePop测量popping数量的指标FLIP（扭曲帧与渲染帧间的平均FLIP误差）。相比于3DGS与StP，EVER在step=1时达到了更好的效果，在step=7时达到了最好的效果，完全消除popping伪影。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 8"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 10"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Figure1：",
+            "该图展示了同一场景下相机运动时捕捉的极平面图像，从而可视化跨视角的颜色、几何一致性。3DGS与StopThePop在视角移动时均存在明显断层突变，而EVER能做到红蓝轨迹平滑交错，并实现正确的颜色混合(紫色)。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 34,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "在实时渲染、物理精确性上达到了平衡。",
+            "将精确基元混合与光线追踪（BVH加速）结合，完全消除popping，实现平滑视角变化。",
+            "调整了增密化策略（如增加split条件、split体积变小的同时密度减半），更加稳定。",
+            "相对于3D高斯永远平滑的不透明度投影面，EVER可通过改变密度σ的大小，来调整平滑/尖锐，有利于边缘重建。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "训练计算时间比3DGS稍长。",
+            "椭球基元数量剧增（如bicycle户外场景的高斯数量达到6m-8m），内存占用极高。",
+            "增密化策略过于依赖启发式，如可学习参数α_k对应公式、额外的split条件、radii的计算（由于ever没有2D投影半径，需要经验性公式估算radii）。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 35,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题9&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：QuickSplat: Fast 3D Surface Reconstruction via Learned Gaussian Initialization"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Yueh-Cheng Liu,  Lukas Hollein,  Matthias Nießner,  Angela Dai",
+            "( from Technical University of Munich )"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "2DGS表面重建方法需对每个场景单独优化（大量梯度下降迭代），从而降低效率。此外，大规模场景中难以获取充分多样的视角，使得高度依赖观测输入的表面重建方法容易在欠观测或无纹理区域出现几何缺失或变形。",
+            "部分3DGS优化方法聚焦学习先验知识，用前馈网络进行稀疏重建。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "提出学习的初始化网络，利用场景先验有效地初始化2D高斯；",
+            "使用优化网络，预测参数的更新向量；用密集化器生成新高斯。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 36,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Initialization Prior：",
+            "将SfM点云voxelize得到occupied voxel的64维特征，作为稀疏3D-CNN（encoder-decoder架构）的输入。对于被decoder中的occupancy head预测将要增密的voxel，用decoder-MLP解码为高斯参数，并作reparameterization。以及使用多项监督参与训练。"
+          ]
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "Densification - Optimization ( jointly training loop)：",
+            "MLP解码高斯参数，计算损失与参数梯度。循环：densifier(需要梯度信息指导)预测新高斯(梯度初始化为0)、occupancy重要性采样、与原高斯拼接为voxel grid。然后optimizer（3D UNet，输入Gt、∇Gt与步数t，输出预测更新向量ΔGt）进行多步latent refine，解",
+            "码为高斯后计算损失(L_c、",
+            "L_d、L_dist)，反向传播",
+            "梯度用于更新densifier",
+            "与optimizer。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 37,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 6"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 3"
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table1：",
+            "该表展示ScanNet++室内数据集表现（w/opt表示增加额外的SGD迭代，有助于优化细节）。QuickSplat的深度误差与精度与MonoSDF相当，但优化速度大幅领先。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Figure2：",
+            "该图展示了不同方法的mesh重建与真实mesh的对比。从数据中学习的几何先验在室内大面积无纹理区域（如地板、墙面）上表现十分优异，而其他仅依赖光度误差的方法容易在这些区域产生曲面、漂浮伪影。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Figure1：",
+            "该图为消融实验可视化结果。若optimizer仅依赖稀疏SfM，无法正确表达表面；densifier有助于进一步增强几何细节；initializer中预测的高斯属性（color、opacity、scale、rotation）越多，表面重建的质量越好。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 4"
+        }
+      ]
+    },
+    {
+      "num": 38,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "通过从数据中学习几何先验，实现更加稳定的初始化，在室内数据集上表现优异。",
+            "重要性采样专注于关键区域优化，实现速度与质量的平衡。",
+            "用小型MLP decode输出高斯参数，有效约束高斯位置、其他参数。",
+            "optimizer基于meta learning思想，实现在latent voxel中用网络预测下一步优化更新。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "依赖光度误差引导导致难以处理镜面反射，会把镜中影像当成真实几何去拟合，出现噪声与伪影。",
+            "对voxel分类的occupancy head，若其预测准确性不高，容易导致局部高斯过密。",
+            "训练时间长，且无法实时渲染。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 39,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "标题10&作者&动机"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 1",
+          "texts": [
+            "标题：No Pose at All: Self-Supervised Pose-Free 3D Gaussian Splatting from Sparse Views"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 4",
+          "texts": [
+            "作者：Ranran Huang, Krystian Mikolajczyk ( from Imperial College London )"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "动机：",
+            "传统方法（pose-required）依赖SfM进行密集视角的精确姿态标注，且计算开销大。",
+            "部分无姿态工作（supervised pose-free）在训练时仍需输入GT姿态来监督损失优化。",
+            "一些真正的无姿态工作（self-supervised pose-free）却又因将3D重建和姿态估计分为独立模块，从而容易陷入负反馈循环，几何对齐质量较差。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "下箭头 7"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "提出SPFSplat框架（训练与推理阶段均无需姿态标注）：",
+            "同时预测高斯点和相机姿态，并实现自监督的几何与位姿联合优化。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 40,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 1"
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Pipeline：",
+            "采用共享权重的ViT架构（decoder用cross-attention建立跨视角关系）处理多视角输入，输出的特征被并行送入高斯预测头（pixel-aligned）和姿态预测头（轻量级MLP，以第一个输入视角作为全局参考坐标系预测相对位姿）。训练时引入目标视角图片作为分支，通过decoder聚合context与自身特征，仅预测相对位姿用于渲染损失，实现自监督训练。"
+          ]
+        },
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Method"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 8",
+          "texts": [
+            "Loss Function Setting：",
+            "使用target的真实RGB图像与预测的相对位姿下渲染合成图像，设置渲染损失（像素级L2损失与感知级LPIPS损失）、重投影误差（为了约束pixel-3D对齐，将context view中每个像素对应的canonical space高斯中心点，通过估计的姿态P投影回原视角）。"
+          ]
+        }
+      ]
+    },
+    {
+      "num": 41,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Experimental Results"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 7",
+          "texts": [
+            "Table1：",
+            "该表展示新视角合成任务。SPFSplat在所有重叠度（small、medium、large）场景下均显著优于过去方法，在视角重叠度低、弱纹理区域等情况下的优势更明显。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 5",
+          "texts": [
+            "Figure1：",
+            "该图展示模型跨数据集的泛化能力，在RE10K（室内）训练的模型直接应用于ACID（户外）和DTU（航拍）数据集，视角合成质量依然远超其他方法。"
+          ]
+        },
+        {
+          "type": "TEXT_BOX (17)",
+          "name": "文本框 11",
+          "texts": [
+            "Table2：",
+            "该表展示相对位姿的估计精度，指标为累计位姿误差曲线（阈值5°、10°、20°）下的面积，位姿误差取旋转误差和平移误差中的更大值。直接通过pose head预测出的相对位姿精度，远超其他依赖几何先验的方法（如MASt3R）。"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 8"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 9"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 10"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "图片 12"
+        }
+      ]
+    },
+    {
+      "num": 42,
+      "layout": "内页",
+      "shapes": [
+        {
+          "type": "PLACEHOLDER (14)",
+          "name": "标题 2",
+          "texts": [
+            "Summary"
+          ]
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 0"
+        },
+        {
+          "type": "PICTURE (13)",
+          "name": "Image 1"
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 0",
+          "texts": [
+            "Advantages"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 1",
+          "texts": [
+            "实现了稀疏视图下自监督pose-free的新视角合成。",
+            "通过几何与位姿的联合优化，避免过去分模块单独优化时导致的负反馈循环。",
+            "使用reprojection loss提供显式几何约束，显著提升训练稳定性与重建质量。",
+            "训练时target分支不参与高斯重建，推理时完全抛弃target分支，避免数据泄露。"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 2",
+          "texts": [
+            "Limitations"
+          ]
+        },
+        {
+          "type": "AUTO_SHAPE (1)",
+          "name": "Text 3",
+          "texts": [
+            "将canonical space固定在第一张context视角，容易受到该视角限制（如遮挡等）。",
+            "对光照变化大等影响外观一致性的场景仍然敏感。",
+            "由于不是生成式方法，因而对看不见的精细纹理区域无法重建。"
+          ]
+        }
+      ]
+    }
+  ]
+}
