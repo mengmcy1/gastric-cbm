@@ -135,6 +135,10 @@
 
 ## GitHub 推送规则
 
+### 提交约定
+
+用户说"提交"即表示 **commit + push 一步完成**：先 `git commit`，然后立即 `git push`，不需要额外确认。
+
 ### 仓库地址
 
 `https://github.com/mengmcy1/2Dto3D.git`
