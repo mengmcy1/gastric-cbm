@@ -50,7 +50,7 @@ DEBUG_SAMPLES = 200
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR   = os.path.join(BASE_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 CSV_PATH   = os.path.join(BASE_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
-OUTPUT_DIR = os.path.join(BASE_DIR, '程序', '结果')
+OUTPUT_DIR = os.path.join(BASE_DIR, '结果')
 
 BATCH_SIZE     = 32
 NUM_WORKERS    = 0 if DEBUG else 4
@@ -376,7 +376,7 @@ def run_stage(model, train_loader, val_loader, criterion, optimizer,
 
 def main():
     seed_everything(RANDOM_SEED)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_DIR, '模型权重'), exist_ok=True)
 
     print(f'当前设备: {DEVICE}')
     if torch.cuda.is_available():
@@ -449,7 +449,7 @@ def main():
     # ===== 保存 =====
     # DataParallel 包装时需从 .module 取 state_dict
     state = model.module.state_dict() if hasattr(model, 'module') else model.state_dict()
-    save_path = os.path.join(OUTPUT_DIR, 'efficientnet_b0_best.pth')
+    save_path = os.path.join(OUTPUT_DIR, '模型权重', 'efficientnet_b0_best.pth')
     torch.save({
         'model_state_dict': state,
         'best_val_auc': best_s2_auc,

@@ -128,7 +128,7 @@ def main():
     args = parser.parse_args()
 
     weight_file, default_th = MODEL_REGISTRY[args.model]
-    model_path = os.path.join(BASE_DIR, '结果', weight_file)
+    model_path = os.path.join(os.path.dirname(BASE_DIR), '结果', '模型权重', weight_file)
     THRESHOLD = args.threshold if args.threshold is not None else default_th
 
     # 没传参数 → 用默认单张图片

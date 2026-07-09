@@ -37,7 +37,7 @@ from resnet_train_final import GastricDataset, compute_metrics, format_metrics
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR   = os.path.join(BASE_DIR, '..', '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 CSV_PATH   = os.path.join(BASE_DIR, '..', '数据', '胃图文标签表格-添加瘤变标签.csv')
-OUTPUT_DIR = os.path.join(BASE_DIR, '结果')
+OUTPUT_DIR = os.path.join(os.path.dirname(BASE_DIR), '结果')
 
 # 模型名 → (权重文件名, 构建函数)
 MODEL_REGISTRY = {
@@ -173,7 +173,7 @@ def main():
 
     # ---- 加载数据 ----
     weight_file, _ = MODEL_REGISTRY[args.model]
-    model_path = os.path.join(OUTPUT_DIR, weight_file)
+    model_path = os.path.join(OUTPUT_DIR, '模型权重', weight_file)
 
     print(f'当前设备: {DEVICE}')
     print(f'模型: {args.model}')
@@ -221,7 +221,7 @@ def main():
         print(f'  每 100 例非癌误报 {fp/(tn+fp)*100:.0f} 例')
 
         output_csv = os.path.join(
-            OUTPUT_DIR,
+            OUTPUT_DIR, '阈值扫描',
             f'fixed_threshold_{args.model}_{args.data}_th{args.fixed_threshold:.2f}.csv',
         )
         pd.DataFrame([{**m, 'Threshold': args.fixed_threshold, 'Youden': youden}]
@@ -253,7 +253,7 @@ def main():
     print(f'  每 100 例非癌误报 {fp/(tn+fp)*100:.0f} 例')
 
     # ---- 保存 ----
-    output_csv = os.path.join(OUTPUT_DIR, f'threshold_scan_{args.model}_{args.data}_sens{args.sens:.0f}.csv')
+    output_csv = os.path.join(OUTPUT_DIR, '阈值扫描', f'threshold_scan_{args.model}_{args.data}_sens{args.sens:.0f}.csv')
     pd.DataFrame(results).to_csv(output_csv, index=False, encoding='utf-8-sig')
     print(f'\n扫描结果已保存至: {output_csv}')
 

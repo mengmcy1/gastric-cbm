@@ -47,7 +47,7 @@ DEBUG_SAMPLES = 200         # 调试时使用的总样本数
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR   = os.path.join(BASE_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 CSV_PATH   = os.path.join(BASE_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
-OUTPUT_DIR = os.path.join(BASE_DIR, '程序', '结果')
+OUTPUT_DIR = os.path.join(BASE_DIR, '结果')
 
 BATCH_SIZE     = 32
 NUM_WORKERS    = 0 if DEBUG else 4    # 调试时单进程，报错信息更清晰
@@ -387,7 +387,7 @@ def run_stage(model, train_loader, val_loader, criterion, optimizer,
 
 def main():
     seed_everything(RANDOM_SEED)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(os.path.join(OUTPUT_DIR, '模型权重'), exist_ok=True)
 
     print(f'当前设备: {DEVICE}')
     train_loader, val_loader, test_loader = build_loaders()
@@ -451,7 +451,7 @@ def main():
     print(f'Test Confusion Matrix (TN, FP, FN, TP): {test_metrics["CM"]}')
 
     # ===== 保存 =====
-    save_path = os.path.join(OUTPUT_DIR, 'resnet50_transfer_best.pth')
+    save_path = os.path.join(OUTPUT_DIR, '模型权重', 'resnet50_transfer_best.pth')
     torch.save({
         'model_state_dict': model.state_dict(),
         'best_val_auc': best_s2_auc,
