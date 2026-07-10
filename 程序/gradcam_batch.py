@@ -61,10 +61,10 @@ MODEL_SPECS = {
 
 # ---- 手动配置区 ----
 # 一次只跑一个模型；可选：'efficientnet_b0' 或 'resnet50'
-RUN_MODEL = 'efficientnet_b0'
+RUN_MODEL = 'resnet50'
 
 # 调试时填数字，例如 5；正式全量生成时改为 None
-DEBUG_N = 5
+DEBUG_N = None
 
 # 三联图固定版式，保证不同原图的标题大小和位置一致
 PANEL_WIDTH = 560
