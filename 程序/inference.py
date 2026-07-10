@@ -96,10 +96,6 @@ def predict_batch(model, img_dir, threshold):
         if os.path.splitext(f)[1].lower() in valid_exts
     ])
 
-    if not files:
-        print(f'未在 {img_dir} 中找到图像文件')
-        return None
-
     for fname in files:
         fpath = os.path.join(img_dir, fname)
         prob, pred, cls_name = predict_one(model, fpath, threshold)
@@ -150,11 +146,10 @@ def main():
 
     elif args.dir:
         df = predict_batch(model, args.dir, THRESHOLD)
-        if df is not None:
-            print(df.to_string(index=False))
-            if args.output:
-                df.to_csv(args.output, index=False, encoding='utf-8-sig')
-                print(f'\n结果已保存至: {args.output}')
+        print(df.to_string(index=False))
+        if args.output:
+            df.to_csv(args.output, index=False, encoding='utf-8-sig')
+            print(f'\n结果已保存至: {args.output}')
 
 
 if __name__ == '__main__':

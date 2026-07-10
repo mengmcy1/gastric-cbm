@@ -15,9 +15,10 @@ import csv
 
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+import cv2
 
 import torch
 import torch.nn as nn
@@ -25,11 +26,6 @@ from torchvision import transforms
 from torchvision.models import efficientnet_b0, resnet50
 
 from resnet_train_final import load_matched_dataframe
-
-try:
-    import cv2
-except ImportError:
-    cv2 = None
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -73,10 +69,6 @@ PANEL_GAP = 12
 LABEL_HEIGHT = 48
 LABEL_FONT_SIZE = 22
 
-# 每次运行前清理当前模型输出目录中的旧热图，避免不同排序规则的结果混在一起
-CLEAR_OLD_OUTPUTS = True
-
-
 eval_transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -84,17 +76,9 @@ eval_transform = transforms.Compose([
 ])
 
 
-def load_label_font(size):
-    font_paths = [
-        '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
-        '/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf',
-        '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc',
-        '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
-    ]
-    for font_path in font_paths:
-        if os.path.exists(font_path):
-            return ImageFont.truetype(font_path, size=size)
-    return ImageFont.load_default()
+LABEL_FONT = ImageFont.truetype(
+    '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size=LABEL_FONT_SIZE,
+)
 
 
 def fit_panel(image_array):
@@ -160,10 +144,7 @@ class GradCAM:
         cam = torch.relu(cam)
 
         cam_min, cam_max = cam.min(), cam.max()
-        if cam_max - cam_min > 1e-8:
-            cam = (cam - cam_min) / (cam_max - cam_min)
-        else:
-            cam = torch.zeros_like(cam)
+        cam = (cam - cam_min) / (cam_max - cam_min)
 
         heatmap = cam.detach().cpu().numpy()
         self.activations = None
@@ -180,23 +161,11 @@ def make_triptych(img_path, heatmap, prob, pred, true_label, save_path):
     original_rgb = np.array(original)
     h, w = original_rgb.shape[:2]
 
-    if cv2 is not None:
-        heatmap_resized = cv2.resize(heatmap, (w, h), interpolation=cv2.INTER_CUBIC)
-        heatmap_uint8 = np.uint8(255 * np.clip(heatmap_resized, 0, 1))
-        heatmap_bgr = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
-        heatmap_rgb = cv2.cvtColor(heatmap_bgr, cv2.COLOR_BGR2RGB)
-        overlay = cv2.addWeighted(original_rgb, 0.60, heatmap_rgb, 0.40, 0)
-    else:
-        heatmap_img = Image.fromarray(heatmap)
-        heatmap_img = heatmap_img.resize((w, h), resample=Image.Resampling.BICUBIC)
-        heatmap_resized = np.array(heatmap_img, dtype=np.float32)
-        heatmap_rgb = (
-            plt.get_cmap('jet')(np.clip(heatmap_resized, 0, 1))[..., :3] * 255
-        ).astype(np.uint8)
-        overlay = (
-            original_rgb.astype(np.float32) * 0.60 +
-            heatmap_rgb.astype(np.float32) * 0.40
-        ).clip(0, 255).astype(np.uint8)
+    heatmap_resized = cv2.resize(heatmap, (w, h), interpolation=cv2.INTER_CUBIC)
+    heatmap_uint8 = np.uint8(255 * np.clip(heatmap_resized, 0, 1))
+    heatmap_bgr = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
+    heatmap_rgb = cv2.cvtColor(heatmap_bgr, cv2.COLOR_BGR2RGB)
+    overlay = cv2.addWeighted(original_rgb, 0.60, heatmap_rgb, 0.40, 0)
 
     panels = [
         fit_panel(original_rgb),
@@ -212,15 +181,13 @@ def make_triptych(img_path, heatmap, prob, pred, true_label, save_path):
         output.paste(panel, (x, LABEL_HEIGHT))
 
     draw = ImageDraw.Draw(output)
-    font = load_label_font(LABEL_FONT_SIZE)
-
     labels = [
         f'原图  真实: {CLASS_NAMES[true_label]} ({true_label})',
         'Grad-CAM 热图',
         f'叠加图  预测: {CLASS_NAMES[pred]} ({pred})  癌概率: {prob:.3f}',
     ]
     for x, label_text in zip(x_positions, labels):
-        draw.text((x + 8, 9), label_text, fill=(20, 20, 20), font=font)
+        draw.text((x + 8, 9), label_text, fill=(20, 20, 20), font=LABEL_FONT)
 
     output.save(save_path)
 
@@ -235,13 +202,9 @@ def load_output_dataframe(debug_n):
 
 
 def clear_old_outputs(out_dir):
-    if not CLEAR_OLD_OUTPUTS:
-        return
-
     for filename in os.listdir(out_dir):
-        path = os.path.join(out_dir, filename)
-        if os.path.isfile(path) and (filename.endswith('.png') or filename == 'manifest.csv'):
-            os.remove(path)
+        if filename.endswith('.png') or filename == 'manifest.csv':
+            os.remove(os.path.join(out_dir, filename))
 
 
 def generate_for_model(model_name, df):
@@ -300,9 +263,6 @@ def generate_for_model(model_name, df):
 
 
 def main():
-    if RUN_MODEL not in MODEL_SPECS:
-        raise ValueError(f'RUN_MODEL 不支持: {RUN_MODEL}')
-
     print(f'设备: {DEVICE}')
     print(f'手动指定模型: {RUN_MODEL}')
     print(f'DEBUG_N: {DEBUG_N}')

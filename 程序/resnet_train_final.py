@@ -121,8 +121,7 @@ class GastricDataset(Dataset):
         image = Image.open(img_path).convert('RGB')          # 统一为 3 通道 RGB
         label = int(row['瘤变标签'])
 
-        if self.transform is not None:
-            image = self.transform(image)
+        image = self.transform(image)
 
         return image, label
 
@@ -134,12 +133,6 @@ def load_matched_dataframe(csv_path, img_dir):
     """
     df = pd.read_csv(csv_path, encoding='gbk')
 
-    # 校验必要列
-    needed_cols = {'图片名字', '瘤变标签'}
-    missing = needed_cols - set(df.columns)
-    if missing:
-        raise ValueError(f'CSV 缺少必要列: {missing}')
-
     # 过滤无效标签（888 等缺失值）
     df = df[df['瘤变标签'].isin([0, 1])].copy()
     df['图片名字'] = df['图片名字'].astype(str)
@@ -149,9 +142,6 @@ def load_matched_dataframe(csv_path, img_dir):
         lambda name: os.path.exists(os.path.join(img_dir, name))
     )
     df_valid = df[exists_mask].copy()
-
-    if len(df_valid) == 0:
-        raise RuntimeError('没有找到 CSV 与图片文件成功匹配的有效样本。')
 
     print(f'有效样本数: {len(df_valid)}')
     print(f'标签分布 — 早癌/瘤变(1): {(df_valid["瘤变标签"]==1).sum()}, '
@@ -373,9 +363,6 @@ def run_stage(model, train_loader, val_loader, criterion, optimizer,
             if early_stop_patience and no_improve >= early_stop_patience:
                 print(f'Early Stop — 连续 {early_stop_patience} epoch 验证 AUC 未提升')
                 break
-
-    if best_state is None:
-        raise RuntimeError(f'{stage_name} 未产生可用最佳模型。')
 
     model.load_state_dict(best_state)
     return model, best_auc
