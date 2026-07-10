@@ -46,7 +46,7 @@ from sklearn.metrics import (
 
 # 使用脚本自身位置来构建路径，这样无论从项目根目录还是从“程序”文件夹运行，
 # 都能正确找到数据文件。
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 DATA_DIR = os.path.join(BASE_DIR, "数据", "胃图文带特征标签数据集 3600+ 1933瘤变")
 CSV_PATH = os.path.join(BASE_DIR, "数据", "胃图文标签表格-添加瘤变标签.csv")
 OUTPUT_DIR = os.path.join(BASE_DIR, "程序", "outputs")

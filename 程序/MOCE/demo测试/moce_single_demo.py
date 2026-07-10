@@ -2,6 +2,7 @@
 
 import csv
 import os
+import sys
 
 os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
@@ -12,11 +13,14 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 import torch
 from torchvision import transforms
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
+TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')
+sys.path.insert(0, TRAIN_DIR)
+
 from inference import DEVICE, MODEL_REGISTRY, load_model
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE单图演示')
 
@@ -103,7 +107,7 @@ def crop_and_resize(original, mask):
     canvas = Image.new('RGB', (224, 224))
     position = ((224 - crop.width) // 2, (224 - crop.height) // 2)
     canvas.paste(crop, position)
-    return canvas, (x1, y1, x2, y2)
+    return canvas, tuple(map(int, (x1, y1, x2, y2)))
 
 
 def extract_candidate_masks(model, capture, image, target_class):
@@ -251,7 +255,7 @@ def save_results(candidates, full_probability, output_dir):
         'full_probability', 'keep_probability', 'removed_probability', 'probability_drop',
     ]
     with open(csv_path, 'w', newline='', encoding='utf-8-sig') as file:
-        writer = csv.DictWriter(file, fieldnames=fields)
+        writer = csv.DictWriter(file, fieldnames=fields, lineterminator='\n')
         writer.writeheader()
         for rank, item in enumerate(candidates, 1):
             writer.writerow({

@@ -52,10 +52,11 @@ from torchvision.models import resnet50, efficientnet_b0
 
 # ---- 路径配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR   = os.path.join(os.path.dirname(BASE_DIR), '数据',
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据',
                           '胃图文带特征标签数据集 3600+ 1933瘤变')
-OUTPUT_DIR = os.path.join(os.path.dirname(BASE_DIR), '结果')
-CSV_PATH   = os.path.join(os.path.dirname(BASE_DIR), '数据', '胃图文标签表格-添加瘤变标签.csv')
+OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
+CSV_PATH   = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
 
 # 模型配置：名称 → (权重文件, 目标层获取函数, 架构构建)
 MODEL_SPECS = {

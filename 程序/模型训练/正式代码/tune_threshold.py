@@ -35,9 +35,10 @@ from resnet_train_final import GastricDataset, compute_metrics, format_metrics
 
 # ---- 路径配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR   = os.path.join(BASE_DIR, '..', '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-CSV_PATH   = os.path.join(BASE_DIR, '..', '数据', '胃图文标签表格-添加瘤变标签.csv')
-OUTPUT_DIR = os.path.join(os.path.dirname(BASE_DIR), '结果')
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
+CSV_PATH   = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
+OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
 
 # 模型名 → (权重文件名, 构建函数)
 MODEL_REGISTRY = {

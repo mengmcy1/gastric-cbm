@@ -26,6 +26,7 @@ from torchvision.models import resnet50, efficientnet_b0
 
 # ---- 配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
 
 # 模型名 → (权重文件名, Sens≥0.90 最佳阈值)
 MODEL_REGISTRY = {
@@ -34,7 +35,7 @@ MODEL_REGISTRY = {
 }
 
 # ★ 默认推理图片 —— 不传参数时直接用这个，点 ▶ 按钮就能跑
-DATA_DIR   = os.path.join(os.path.dirname(BASE_DIR), '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 DEFAULT_IMG = os.path.join(DATA_DIR, '01.0000000000296_16_2016-11-09_10_49_17.jpg')
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -124,7 +125,7 @@ def main():
     args = parser.parse_args()
 
     weight_file, default_th = MODEL_REGISTRY[args.model]
-    model_path = os.path.join(os.path.dirname(BASE_DIR), '结果', '模型权重', weight_file)
+    model_path = os.path.join(PROJECT_DIR, '结果', '模型权重', weight_file)
     THRESHOLD = args.threshold if args.threshold is not None else default_th
 
     # 没传参数 → 用默认单张图片

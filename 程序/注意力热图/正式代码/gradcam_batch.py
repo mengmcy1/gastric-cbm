@@ -9,6 +9,7 @@
 """
 
 import os
+import sys
 os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
 import csv
@@ -25,11 +26,14 @@ import torch.nn as nn
 from torchvision import transforms
 from torchvision.models import efficientnet_b0, resnet50
 
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')
+sys.path.insert(0, TRAIN_DIR)
+
 from resnet_train_final import load_matched_dataframe
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
 CSV_PATH = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
