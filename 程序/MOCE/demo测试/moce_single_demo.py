@@ -13,34 +13,34 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 import torch
 from torchvision import transforms
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 当前脚本目录
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))  # 项目根目录
+TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')  # 推理代码目录
 sys.path.insert(0, TRAIN_DIR)
 
 from inference import DEVICE, MODEL_REGISTRY, load_model
 
 
-DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE单图演示')
+DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')  # 图片目录
+OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE单图演示')  # 演示结果目录
 
 # 手动配置区：选用一张 EfficientNet 高置信度早癌图片。
-MODEL_NAME = 'efficientnet_b0'
-IMAGE_NAME = '01.0000000179724.0039.1615258257.jpg'
-TARGET_CLASS = 1
+MODEL_NAME = 'efficientnet_b0'  # 使用的分类模型
+IMAGE_NAME = '01.0000000179724.0039.1615258257.jpg'  # 待解释图片
+TARGET_CLASS = 1   # 要解释的类别：0=非癌，1=早癌/瘤变
 
 # MOCE 论文默认设置：保留前 50% 通道，每张激活图取 top 10% 区域。
-KEEP_CHANNEL_RATIO = 0.5
-GAMMA = 0.10
-MIN_AREA_RATIO = 0.005
-MAX_JACCARD = 0.5
-DISPLAY_PARTS = 8
+KEEP_CHANNEL_RATIO = 0.5    # 保留重要性最高的 50% 通道
+GAMMA = 0.10                # 每个通道仅保留激活最高的 10% 区域
+MIN_AREA_RATIO = 0.005      # 候选区域最小面积占比
+MAX_JACCARD = 0.5           # 掩码重叠超过该值时视为重复
+DISPLAY_PARTS = 8           # 演示图展示的候选区域数量
 
-TARGET_LAYERS = {
+TARGET_LAYERS = {  # 不同模型用于提取高层语义特征的目标层
     'resnet50': lambda model: model.layer4[-1],
     'efficientnet_b0': lambda model: model.features[-1],
 }
-CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}
+CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}  # 类别编号对应名称
 FONT = ImageFont.truetype(
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size=22,
 )
@@ -48,7 +48,7 @@ SMALL_FONT = ImageFont.truetype(
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size=17,
 )
 
-MODEL_TRANSFORM = transforms.Compose([
+MODEL_TRANSFORM = transforms.Compose([  # 原图和移除区域图的预处理
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
     transforms.Normalize(
@@ -57,7 +57,7 @@ MODEL_TRANSFORM = transforms.Compose([
     ),
 ])
 
-CONCEPT_TRANSFORM = transforms.Compose([
+CONCEPT_TRANSFORM = transforms.Compose([  # 已缩放候选区域的预处理
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.485, 0.456, 0.406],
@@ -67,36 +67,40 @@ CONCEPT_TRANSFORM = transforms.Compose([
 
 
 class ActivationCapture:
-    """保存目标层输出，并在需要时保留该输出的梯度。"""
+    """通过前向 Hook 保存目标层激活及其梯度。"""
 
     def __init__(self, layer):
+        """注册目标层，layer 是需要观察的卷积层。"""
         self.output = None
         self.handle = layer.register_forward_hook(self._capture)
 
     def _capture(self, _module, _inputs, output):
+        """每次前向传播时保存该层输出。"""
         self.output = output
         if output.requires_grad:
             output.retain_grad()
 
     def close(self):
+        """移除 Hook，结束中间特征捕获。"""
         self.handle.remove()
 
 
 def largest_component(mask):
-    """只保留二值掩码的最大连通区域。"""
+    """从二值掩码中只保留面积最大的连通区域。"""
     count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
     component = 1 + np.argmax(stats[1:count, cv2.CC_STAT_AREA])
     return (labels == component).astype(np.uint8)
 
 
 def jaccard(mask_a, mask_b):
+    """计算两个掩码的交并比，用于删除重叠候选。"""
     intersection = np.logical_and(mask_a, mask_b).sum()
     union = np.logical_or(mask_a, mask_b).sum()
     return intersection / union
 
 
 def crop_and_resize(original, mask):
-    """按掩码裁剪区域，并保持宽高比缩放到模型输入尺寸。"""
+    """裁剪掩码区域，保持宽高比放入 224×224 画布。"""
     ys, xs = np.where(mask)
     x1, x2 = xs.min(), xs.max() + 1
     y1, y2 = ys.min(), ys.max() + 1
@@ -111,34 +115,34 @@ def crop_and_resize(original, mask):
 
 
 def extract_candidate_masks(model, capture, image, target_class):
-    """执行 MOCE A1-A3：通道筛选、二值掩码、连通分量和去重。"""
+    """根据目标类别梯度提取并去重候选概念掩码。"""
     tensor = MODEL_TRANSFORM(Image.fromarray(image)).unsqueeze(0).to(DEVICE)
     model.zero_grad(set_to_none=True)
     logits = model(tensor)
-    probability = torch.softmax(logits, dim=1)[0, target_class].item()
-    logits[0, target_class].backward()
+    probability = torch.softmax(logits, dim=1)[0, target_class].item()         #只对早癌类别计算概率
+    logits[0, target_class].backward()                                          
 
-    activations = capture.output[0].detach()
-    gradients = capture.output.grad[0].detach()
+    activations = capture.output[0].detach()        #激活程度
+    gradients = capture.output.grad[0].detach()     #梯度信息
     channel_scores = torch.relu(
         gradients.mean(dim=(1, 2)) * activations.mean(dim=(1, 2))
     )
 
-    keep_count = round(len(channel_scores) * KEEP_CHANNEL_RATIO)
+    keep_count = round(len(channel_scores) * KEEP_CHANNEL_RATIO)                 #只保留最重要的50%的通道数量1280/2个
     channel_order = torch.argsort(channel_scores, descending=True)[:keep_count]
     height, width = image.shape[:2]
     candidates = []
 
     for channel in channel_order.tolist():
         activation = activations[channel].cpu().numpy()
-        activation = cv2.resize(activation, (width, height), interpolation=cv2.INTER_CUBIC)
-        cutoff = np.quantile(activation, 1 - GAMMA)
-        mask = largest_component((activation >= cutoff).astype(np.uint8))
+        activation = cv2.resize(activation, (width, height), interpolation=cv2.INTER_CUBIC)  
+        cutoff = np.quantile(activation, 1 - GAMMA)                      #90% 分位 = top 10%
+        mask = largest_component((activation >= cutoff).astype(np.uint8))#生成掩码
         area_ratio = mask.mean()
 
-        if area_ratio < MIN_AREA_RATIO:
+        if area_ratio < MIN_AREA_RATIO:  #保留面积大于0.5%的候选区域
             continue
-        if any(jaccard(mask, item['mask']) >= MAX_JACCARD for item in candidates):
+        if any(jaccard(mask, item['mask']) >= MAX_JACCARD for item in candidates): #交并比大于0.5的重复区域跳过
             continue
 
         candidates.append({
@@ -153,7 +157,7 @@ def extract_candidate_masks(model, capture, image, target_class):
 
 @torch.no_grad()
 def encode_and_evaluate(model, capture, original, candidates, target_class):
-    """执行 MOCE A4，并计算单图候选区域的移除/保留效果。"""
+    """编码候选区域，并计算仅保留和移除后的类别概率。"""
     concept_images = []
     removed_images = []
 
@@ -182,6 +186,7 @@ def encode_and_evaluate(model, capture, original, candidates, target_class):
 
 
 def mask_overlay(original, mask, bbox):
+    """在原图上用红色覆盖掩码并绘制黄色边框。"""
     overlay = original.copy()
     color = np.zeros_like(original)
     color[..., 0] = 255
@@ -195,6 +200,7 @@ def mask_overlay(original, mask, bbox):
 
 
 def fit_panel(image, size=(300, 230)):
+    """保持图片比例，将其居中放入固定大小的展示面板。"""
     image = ImageOps.contain(image.convert('RGB'), size, Image.Resampling.LANCZOS)
     panel = Image.new('RGB', size)
     panel.paste(image, ((size[0] - image.width) // 2, (size[1] - image.height) // 2))
@@ -202,6 +208,7 @@ def fit_panel(image, size=(300, 230)):
 
 
 def save_visualization(original, candidates, full_probability, output_path):
+    """将排名靠前的候选区域保存为三列对比图。"""
     shown = candidates[:DISPLAY_PARTS]
     panel_width, panel_height = 300, 230
     row_height = 285
@@ -249,6 +256,7 @@ def save_visualization(original, candidates, full_probability, output_path):
 
 
 def save_results(candidates, full_probability, output_dir):
+    """保存候选指标 CSV 和用于后续聚类的特征向量。"""
     csv_path = os.path.join(output_dir, 'candidate_concepts.csv')
     fields = [
         'rank', 'channel', 'channel_score', 'area_ratio', 'bbox',
@@ -278,6 +286,7 @@ def save_results(candidates, full_probability, output_dir):
 
 
 def main():
+    """加载模型和图片，依次执行提取、评价与结果保存。"""
     image_path = os.path.join(DATA_DIR, IMAGE_NAME)
     weight_file = MODEL_REGISTRY[MODEL_NAME][0]
     weight_path = os.path.join(PROJECT_DIR, '结果', '模型权重', weight_file)
