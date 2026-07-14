@@ -204,6 +204,54 @@
   - ResNet50 残差块梯度流直观、Grad-CAM 在 ResNet 架构上验证最成熟，适合作为热图解释的参考基线
   - 两个模型都生成 Grad-CAM，对照分析能区分"模型看到的" vs "架构特性造成的"，增强结论可信度
 
+## Phase 2 MOCE 进度（2026-07-14）
+
+### 论文精读
+
+- MOCE（Kim & Chae, TPAMI 2024）全文精读完成，逐段带读 16 段
+- 产出文献/：`1_MOCE_Kim_TPAMI2024.pdf`、`moce.txt`（pdftotext 提取）、`MOCE_一页纸精读总结.md`（含算法流程图 + 超参速查表 + 项目落地映射 + 小数据集风险预警）
+- 精读流程见 memory `paper-reading-workflow.md`，MOCE 局限记录见 `moce-small-dataset-risk.md`
+- 未读：[2] M-CBM 和 [3] ProtoMIL — ProtoMIL 即 SAE 路线，下一步精读
+
+### MOCE 代码实现
+
+#### 单图 Demo — `程序/MOCE/demo测试/moce_single_demo.py`
+- 完成且 review 通过
+- 功能：单张图 → A1-A3（通道重要性 L=ReLU(g·a) → top 50% 通道 → 上采样 → top γ=10% 二值化 → 连通域 → IoU≥0.5 去冗余）→ A4（抠块 GAP 特征 + keep/removed 概率）
+- 输出：三联对比图 + candidate_concepts.csv + candidate_features.npz
+- 不包含聚类，仅作单图自检和素材采集
+
+#### 正式聚类脚本 — `程序/MOCE/正式代码/moce_cluster.py`
+- 完整 MOCE 管线：候选提取 → GAP 编码 → K-Means(k=25) → S^R/S^E/S_h → SSC/SDC
+- 已 review，以下问题已确认/修复：
+  - **提前 Resize 224×224**：已删，保留原生分辨率，掩码质量和 demo 一致（全量运行关注 CPU 内存）
+  - **三层判空**：单图无候选 continue / len(records)<N_CLUSTERS 跳过 / assignment.empty 跳过
+  - **掩码存 PNG**：每块候选区域存一张二值掩码 PNG，后续概念级合并可还原
+  - **S_h 分母**：`/ len(importance)` 即除以概念数 k，与论文式(7)和作者代码一致（不是除以 total_images）
+  - **select_cluster_masks**：同图同簇只取距离中心最近的一个候选区域（符合作者实现），不做掩码并集
+  - **SSC/SDC threshold=0.5**：模型原始决策边界，用于概念忠实性评价；临床诊断用模型调优阈值（需新数据重标定）
+- α=1.0, β=0.5, k=25, γ=10%, SSC_SDC_TOP_K=5（论文默认）
+- 输出目录结构：`结果/MOCE聚类/{model_name}/class_{0,1}/`
+  - `候选区域/` + `候选掩码/`：原始素材
+  - `kmeans_model.joblib` + `candidate_features.npz`：聚类模型和特征
+  - `cluster_assignments.csv` + `cluster_summary.csv`：簇分配和统计
+  - `concept_clusters.png`：每簇 top-5 最近邻可视化
+  - `concept_scores_per_image.csv` + `concept_importance.csv`：S^R/S^E/S_h
+  - `ssc_sdc_per_image.csv` + `ssc_sdc_summary.csv`：SSC/SDC 曲线数据
+
+### 待做
+
+- **新数据集**：院方提供了按患者分文件夹的新数据（`癌/患者A/`, `非癌/患者B/`），旧数据集存在划分错误
+- 新数据到位后：重新训练模型（ResNet50 + EfficientNet-B0），患者级划分（70/20/10），旧阈值 0.22 需在新验证集重标定
+- MOCE 验证阶段（独立验证集 SSC/SDC + 1-NN 匹配到发现阶段的 KMeans，不重训聚类）
+- 路线 B：ProtoMIL（SAE 概念发现）精读 → 复现
+
+### 关键词口径
+
+- activation map / 激活图 → **特征图**
+- 公式用纯文本 + 代码块，不用 LaTeX
+- 候选区域 ≠ 概念 —— 候选区域聚类后才形成概念簇
+
 ## 本地脚本编码约定
 
 - 首次编写或修改脚本时保持现有主体结构，优先做局部、必要的修改，不主动进行大规模抽象或拆分。
