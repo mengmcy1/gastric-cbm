@@ -44,17 +44,18 @@
 推荐模型路线：
 
 1. 主模型：ResNet50
+
    - 使用 ImageNet 预训练权重。
    - 替换最后全连接层为二分类输出。
    - 作为第一阶段主模型，用于训练癌/非癌分类器。
    - 优点是结构经典、训练稳定、Grad-CAM 支持成熟，适合后续生成注意力热图和接入 MOCE。
-
 2. 对照模型：EfficientNet-B0
+
    - 同样使用 ImageNet 预训练权重。
    - 作为轻量对照模型，比较其 AUC、敏感度、特异度和 F1。
    - 如果 EfficientNet-B0 明显优于 ResNet50，可作为性能增强版本。
-
 3. 暂缓模型：Swin Transformer / ConvNeXt
+
    - 可作为后续增强实验。
    - 不建议第一阶段作为主线，因为样本规模不大，训练和解释成本更高，且注意力热图工作流不如 ResNet50 直接。
 
@@ -95,15 +96,16 @@
 后续再基于 MOCE 进一步提取模型导向概念，回答“模型反复关注的视觉概念是什么”。三篇参考文献的优先级如下：
 
 1. MOCE：优先精读并复现
+
    - 最贴近当前任务。
    - 适合解释已训练好的图像分类模型。
    - 可从模型自身视角提取概念区域。
-
 2. ProtoMIL：第二阶段参考
+
    - 重点参考 SAE 概念发现、原型图像和人工干预伪相关概念的思路。
    - 原文面向病理 WSI/MIL，与当前白光胃镜单图分类不完全一致。
-
 3. M-CBM：作为最终框架参考
+
    - 适合指导后续概念瓶颈模型构建。
    - 当前更适合作为理论框架，不建议作为第一阶段复现主线。
 
@@ -123,48 +125,48 @@
 
 ### 共同配置
 
-| 配置项 | 值 |
-|--------|-----|
-| 随机种子 | 42 |
-| 数据划分 | 训练 2319 / 验证 497 / 测试 498（分层随机） |
-| 类别分布 | 早癌 1918 / 非癌 1396（1.37:1） |
-| Batch Size | 32 |
-| 优化器 | AdamW, weight_decay=1e-4 |
-| 第一阶段 | 冻结 backbone, LR=1e-3, 10 epochs |
-| 第二阶段 | CosineAnnealing + EarlyStop(patience=8), LR=1e-4, 20 epochs |
-| BN 冻结 | freeze_bn_stats()：冻结层 requires_grad=False 时同步设为 eval |
+| 配置项     | 值                                                            |
+| ---------- | ------------------------------------------------------------- |
+| 随机种子   | 42                                                            |
+| 数据划分   | 训练 2319 / 验证 497 / 测试 498（分层随机）                   |
+| 类别分布   | 早癌 1918 / 非癌 1396（1.37:1）                               |
+| Batch Size | 32                                                            |
+| 优化器     | AdamW, weight_decay=1e-4                                      |
+| 第一阶段   | 冻结 backbone, LR=1e-3, 10 epochs                             |
+| 第二阶段   | CosineAnnealing + EarlyStop(patience=8), LR=1e-4, 20 epochs   |
+| BN 冻结    | freeze_bn_stats()：冻结层 requires_grad=False 时同步设为 eval |
 
 ### ResNet50
 
-| 配置项 | 值 |
-|--------|-----|
-| 预训练权重 | ImageNet1K_V2 |
-| 第二阶段解冻范围 | layer4 + fc |
-| Label Smoothing | **0.05**（0.1 过强压低了概率分布） |
-| Best Val AUC | 0.8468 |
-| Test AUC | 0.8427 |
-| Test Accuracy | 0.7751 |
-| Test Sensitivity | 0.8160 |
-| Test Specificity | 0.7190 |
-| Test Precision | 0.7993 |
-| Test F1 | 0.8076 |
+| 配置项                         | 值                                       |
+| ------------------------------ | ---------------------------------------- |
+| 预训练权重                     | ImageNet1K_V2                            |
+| 第二阶段解冻范围               | layer4 + fc                              |
+| Label Smoothing                | **0.05**（0.1 过强压低了概率分布） |
+| Best Val AUC                   | 0.8468                                   |
+| Test AUC                       | 0.8427                                   |
+| Test Accuracy                  | 0.7751                                   |
+| Test Sensitivity               | 0.8160                                   |
+| Test Specificity               | 0.7190                                   |
+| Test Precision                 | 0.7993                                   |
+| Test F1                        | 0.8076                                   |
 | **推荐阈值 @Sens≥0.90** | **0.20**（Sens=0.913, Spec=0.522） |
 
 ### EfficientNet-B0
 
-| 配置项 | 值 |
-|--------|-----|
-| 预训练权重 | ImageNet1K_V1 |
-| 第二阶段解冻范围 | features[5:] + classifier |
-| Label Smoothing | **0.1**（训练动态健康，无过强压制迹象） |
-| Best Val AUC | 0.8718 |
-| Test AUC | **0.8806** |
-| Test Accuracy | 0.8012 |
-| Test Sensitivity | 0.8160 |
-| Test Specificity | **0.7810** |
-| Test Precision | 0.8363 |
-| Test F1 | 0.8260 |
-| **推荐阈值 @Sens≥0.90** | **0.22**（Sens=0.903, Spec=0.617） |
+| 配置项                         | 值                                            |
+| ------------------------------ | --------------------------------------------- |
+| 预训练权重                     | ImageNet1K_V1                                 |
+| 第二阶段解冻范围               | features[5:] + classifier                     |
+| Label Smoothing                | **0.1**（训练动态健康，无过强压制迹象） |
+| Best Val AUC                   | 0.8718                                        |
+| Test AUC                       | **0.8806**                              |
+| Test Accuracy                  | 0.8012                                        |
+| Test Sensitivity               | 0.8160                                        |
+| Test Specificity               | **0.7810**                              |
+| Test Precision                 | 0.8363                                        |
+| Test F1                        | 0.8260                                        |
+| **推荐阈值 @Sens≥0.90** | **0.22**（Sens=0.903, Spec=0.617）      |
 
 ### 测试集最终评估（验证集调阈值 → 测试集锁定评估）
 
@@ -172,27 +174,27 @@
 
 #### ResNet50（阈值 0.20）
 
-| 指标 | 验证集 | 测试集 |
-|------|--------|--------|
-| Sensitivity | 0.913 | 0.892 |
-| Specificity | 0.522 | 0.514 |
-| Accuracy | 0.748 | 0.733 |
-| Precision | 0.725 | 0.716 |
-| F1 | 0.808 | 0.794 |
-| Youden | 0.435 | 0.407 |
-| CM | (109,100,25,263) | (108,102,31,257) |
+| 指标        | 验证集           | 测试集           |
+| ----------- | ---------------- | ---------------- |
+| Sensitivity | 0.913            | 0.892            |
+| Specificity | 0.522            | 0.514            |
+| Accuracy    | 0.748            | 0.733            |
+| Precision   | 0.725            | 0.716            |
+| F1          | 0.808            | 0.794            |
+| Youden      | 0.435            | 0.407            |
+| CM          | (109,100,25,263) | (108,102,31,257) |
 
 #### EfficientNet-B0（阈值 0.22）
 
-| 指标 | 验证集 | 测试集 |
-|------|--------|--------|
-| Sensitivity | 0.903 | 0.906 |
-| Specificity | 0.617 | 0.595 |
-| Accuracy | 0.783 | 0.775 |
-| Precision | 0.765 | 0.754 |
-| F1 | 0.828 | 0.823 |
-| Youden | 0.520 | 0.501 |
-| CM | (129,80,28,260) | (125,85,27,261) |
+| 指标        | 验证集          | 测试集          |
+| ----------- | --------------- | --------------- |
+| Sensitivity | 0.903           | 0.906           |
+| Specificity | 0.617           | 0.595           |
+| Accuracy    | 0.783           | 0.775           |
+| Precision   | 0.765           | 0.754           |
+| F1          | 0.828           | 0.823           |
+| Youden      | 0.520           | 0.501           |
+| CM          | (129,80,28,260) | (125,85,27,261) |
 
 #### 结论
 
@@ -216,12 +218,14 @@
 ### MOCE 代码实现
 
 #### 单图 Demo — `程序/MOCE/demo测试/moce_single_demo.py`
+
 - 完成且 review 通过
 - 功能：单张图 → A1-A3（通道重要性 L=ReLU(g·a) → top 50% 通道 → 上采样 → top γ=10% 二值化 → 连通域 → IoU≥0.5 去冗余）→ A4（抠块 GAP 特征 + keep/removed 概率）
 - 输出：三联对比图 + candidate_concepts.csv + candidate_features.npz
 - 不包含聚类，仅作单图自检和素材采集
 
 #### 正式聚类脚本 — `程序/MOCE/正式代码/moce_cluster.py`
+
 - 完整 MOCE 管线：候选提取 → GAP 编码 → K-Means(k=25) → S^R/S^E/S_h → SSC/SDC
 - 已 review，以下问题已确认/修复：
   - **提前 Resize 224×224**：已删，保留原生分辨率，掩码质量和 demo 一致（全量运行关注 CPU 内存）
