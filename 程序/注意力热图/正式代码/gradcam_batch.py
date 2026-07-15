@@ -210,7 +210,7 @@ def clear_old_outputs(out_dir):
 
 def generate_for_model(model_name, df):
     threshold = MODEL_REGISTRY[model_name][1]
-    out_dir = os.path.join(OUTPUT_DIR, '热图批量', model_name)
+    out_dir = os.path.join(OUTPUT_DIR, '热图批量', '第二批', model_name)
     os.makedirs(out_dir, exist_ok=True)
     clear_old_outputs(out_dir)
 

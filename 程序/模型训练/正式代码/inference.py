@@ -30,8 +30,8 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
 
 # 新模型完成阈值调优前使用0.5；调优后将对应值更新到这里
 MODEL_REGISTRY = {
-    'resnet50':        ('resnet50_transfer_best.pth', 0.50),
-    'efficientnet_b0': ('efficientnet_b0_best.pth',   0.50),
+    'resnet50':        ('resnet50_transfer_best.pth', 0.30),
+    'efficientnet_b0': ('efficientnet_b0_best.pth',   0.22),
 }
 
 # ★ 默认推理图片 —— 不传参数时直接用这个，点 ▶ 按钮就能跑

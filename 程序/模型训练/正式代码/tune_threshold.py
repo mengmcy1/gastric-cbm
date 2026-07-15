@@ -158,7 +158,7 @@ def print_threshold_table(results):
 
 def main():
     parser = argparse.ArgumentParser(description='阈值调优')
-    parser.add_argument('--model', type=str, default='resnet50',
+    parser.add_argument('--model', type=str, default='efficientnet_b0',
                         choices=['resnet50', 'efficientnet_b0'],
                         help='模型选择，默认 resnet50')
     parser.add_argument('--sens', type=float, default=0.90,
