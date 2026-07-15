@@ -10,8 +10,8 @@
   python tune_threshold.py                                          # 默认 ResNet50 + Sens 0.90
   python tune_threshold.py --model efficientnet_b0                   # EfficientNet-B0 对照
   python tune_threshold.py --sens 0.85 --model resnet50             # 指定 Sens 底线
-  python tune_threshold.py --model resnet50 --data test --fixed-threshold 0.20      # 固定阈值评估
-  python tune_threshold.py --model efficientnet_b0 --data test --fixed-threshold 0.22
+  python tune_threshold.py --model resnet50 --data test --fixed-threshold 0.50      # 固定阈值评估
+  python tune_threshold.py --model efficientnet_b0 --data test --fixed-threshold 0.50
 """
 
 import os
@@ -36,8 +36,8 @@ from resnet_train_final import GastricDataset, compute_metrics, format_metrics
 # ---- 路径配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-CSV_PATH   = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
+CSV_PATH   = os.path.join(DATA_DIR, 'dataset_manifest.csv')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
 
 # 模型名 → (权重文件名, 构建函数)
@@ -171,6 +171,7 @@ def main():
     parser.add_argument('--fixed-threshold', type=float, default=None,
                         help='固定阈值评估模式：不扫描、不推荐，仅输出该阈值下的完整指标')
     args = parser.parse_args()
+    os.makedirs(os.path.join(OUTPUT_DIR, '阈值扫描'), exist_ok=True)
 
     # ---- 加载数据 ----
     weight_file, _ = MODEL_REGISTRY[args.model]
@@ -180,7 +181,7 @@ def main():
     print(f'模型: {args.model}')
     print(f'权重: {model_path}')
 
-    # 读 CSV 并重复训练时的数据划分逻辑
+    # 使用与训练脚本完全相同的患者级划分
     from resnet_train_final import load_matched_dataframe, split_dataframe
 
     df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR)

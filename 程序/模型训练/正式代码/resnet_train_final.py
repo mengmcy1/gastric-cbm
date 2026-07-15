@@ -7,8 +7,8 @@ ResNet50 迁移学习训练脚本（最终版）
   第二阶段 — 仅微调 layer4 + FC，低学习率 + CosineAnnealing + Early Stop
 
 参照 agents.md：
-  仅使用 CSV 中能与图片匹配的 3314 张有效样本
-  目标列：瘤变标签（1=早癌/瘤变，0=非癌）
+  使用第二批整理后的 5229 张图片，并按患者划分数据集
+  目标标签：1=癌/高级别，0=非癌
 """
 
 import os
@@ -41,12 +41,12 @@ from sklearn.metrics import (
 
 # ---- 调试模式：仅用少量数据快速跑通，检查有无 bug ----
 DEBUG = False                # ← 正式训练时改为 False
-DEBUG_SAMPLES = 200         # 调试时使用的总样本数
+DEBUG_PATIENTS_PER_CLASS = 20  # 调试时每类使用的患者数
 
 # 基于脚本自身位置构建绝对路径，无论从哪个目录启动都能正确找到数据
 BASE_DIR   = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-DATA_DIR   = os.path.join(BASE_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-CSV_PATH   = os.path.join(BASE_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
+DATA_DIR   = os.path.join(BASE_DIR, '数据', '第二批整理后')
+CSV_PATH   = os.path.join(DATA_DIR, 'dataset_manifest.csv')
 OUTPUT_DIR = os.path.join(BASE_DIR, '结果')
 
 BATCH_SIZE     = 32
@@ -127,55 +127,66 @@ class GastricDataset(Dataset):
 
 
 def load_matched_dataframe(csv_path, img_dir):
-    """
-    读取 GBK 编码的 CSV，过滤出标签为 0/1 且图片文件真实存在的有效样本。
-    返回干净的 DataFrame。
-    """
-    df = pd.read_csv(csv_path, encoding='gbk')
+    '''读取第二批整理后的图片清单。'''
+    df = pd.read_csv(csv_path, encoding='utf-8-sig')
+    df = df.rename(columns={'image_path': '图片名字', 'label': '瘤变标签'})
 
-    # 过滤无效标签（888 等缺失值）
-    df = df[df['瘤变标签'].isin([0, 1])].copy()
-    df['图片名字'] = df['图片名字'].astype(str)
+    print(f'有效样本数: {len(df)}')
+    print(f'标签分布 — 癌/高级别(1): {(df["瘤变标签"] == 1).sum()}, '
+          f'非癌(0): {(df["瘤变标签"] == 0).sum()}')
+    return df
 
-    # 向量化检查图片是否存在（比 iterrows 快）
-    exists_mask = df['图片名字'].apply(
-        lambda name: os.path.exists(os.path.join(img_dir, name))
-    )
-    df_valid = df[exists_mask].copy()
-
-    print(f'有效样本数: {len(df_valid)}')
-    print(f'标签分布 — 早癌/瘤变(1): {(df_valid["瘤变标签"]==1).sum()}, '
-          f'非癌(0): {(df_valid["瘤变标签"]==0).sum()}')
-
-    return df_valid
 
 
 def split_dataframe(df):
-    """按标签分层划分训练/验证/测试集 = 70/15/15。"""
-    train_val_df, test_df = train_test_split(
-        df, test_size=0.15, stratify=df['瘤变标签'], random_state=RANDOM_SEED,
+    '''以患者为单位分层划分训练/验证/测试集 = 70/15/15。'''
+    patients = df[['patient_id', '瘤变标签']].drop_duplicates()
+    train_val_patients, test_patients = train_test_split(
+        patients, test_size=0.15, stratify=patients['瘤变标签'],
+        random_state=RANDOM_SEED,
     )
-    train_df, val_df = train_test_split(
-        train_val_df, test_size=0.15 / 0.85,
-        stratify=train_val_df['瘤变标签'], random_state=RANDOM_SEED,
+    train_patients, val_patients = train_test_split(
+        train_val_patients, test_size=0.15 / 0.85,
+        stratify=train_val_patients['瘤变标签'], random_state=RANDOM_SEED,
     )
-    print(f'数据划分 — 训练: {len(train_df)}, 验证: {len(val_df)}, 测试: {len(test_df)}')
+
+    train_df = df[df['patient_id'].isin(train_patients['patient_id'])].copy()
+    val_df = df[df['patient_id'].isin(val_patients['patient_id'])].copy()
+    test_df = df[df['patient_id'].isin(test_patients['patient_id'])].copy()
+    print(
+        f'患者划分 — 训练: {len(train_patients)}人/{len(train_df)}张，'
+        f'验证: {len(val_patients)}人/{len(val_df)}张，'
+        f'测试: {len(test_patients)}人/{len(test_df)}张'
+    )
     return train_df, val_df, test_df
+
 
 
 def build_loaders():
     """构建训练/验证/测试 DataLoader。"""
     df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR)
 
-    # 调试模式：分层采样少量数据，快速验证代码能否跑通
-    if DEBUG and len(df_valid) > DEBUG_SAMPLES:
-        df_valid, _ = train_test_split(
-            df_valid, train_size=DEBUG_SAMPLES,
-            stratify=df_valid['瘤变标签'], random_state=RANDOM_SEED,
-        )
-        print(f'[DEBUG] 仅使用 {DEBUG_SAMPLES} 张样本进行快速验证')
+    # 调试模式也按患者抽样，避免同一患者图片被拆开。
+    if DEBUG:
+        patients = df_valid[['patient_id', '瘤变标签']].drop_duplicates()
+        selected = pd.concat([
+            group.sample(n=min(DEBUG_PATIENTS_PER_CLASS, len(group)), random_state=RANDOM_SEED)
+            for _, group in patients.groupby('瘤变标签')
+        ])
+        df_valid = df_valid[df_valid['patient_id'].isin(selected['patient_id'])].copy()
+        print(f'[DEBUG] 使用 {len(selected)} 位患者、{len(df_valid)} 张图片')
 
     train_df, val_df, test_df = split_dataframe(df_valid)
+    split_path = os.path.join(OUTPUT_DIR, '数据划分')
+    os.makedirs(split_path, exist_ok=True)
+    pd.concat([
+        train_df.assign(split='train'),
+        val_df.assign(split='val'),
+        test_df.assign(split='test'),
+    ]).to_csv(
+        os.path.join(split_path, f'image_split_seed{RANDOM_SEED}.csv'),
+        index=False, encoding='utf-8-sig',
+    )
 
     train_set = GastricDataset(train_df, DATA_DIR, transform=train_transform)
     val_set   = GastricDataset(val_df,   DATA_DIR, transform=eval_transform)
@@ -222,7 +233,7 @@ def set_trainable_stage2(model):
     """
     第二阶段：仅微调 layer4（最高层语义特征）+ FC。
 
-    相比解冻全网络，对 3314 张的中小医学数据集更保守、更不易过拟合。
+    相比解冻全网络，对当前中小规模医学图像数据集更保守、更不易过拟合。
     """
     for param in model.parameters():
         param.requires_grad = False
@@ -258,7 +269,7 @@ def evaluate(model, loader, criterion):
         loss = criterion(logits, labels)
 
         total_loss += loss.item() * images.size(0)
-        probs = torch.softmax(logits, dim=1)[:, 1]    # 取「早癌」概率
+        probs = torch.softmax(logits, dim=1)[:, 1]    # 取「癌/高级别」概率
         all_labels.extend(labels.cpu().numpy())
         all_probs.extend(probs.cpu().numpy())
 
@@ -288,7 +299,7 @@ def compute_metrics(y_true, y_prob, threshold=0.5):
     return {
         'AUC':         roc_auc_score(y_true, y_prob),         # ROC 曲线下面积
         'Accuracy':    accuracy_score(y_true, y_pred),        # 总体准确率
-        'Sensitivity': tp / (tp + fn) if (tp + fn) > 0 else 0.0,  # 早癌检出率，关键指标
+        'Sensitivity': tp / (tp + fn) if (tp + fn) > 0 else 0.0,  # 癌/高级别检出率，关键指标
         'Specificity': tn / (tn + fp) if (tn + fp) > 0 else 0.0,  # 非癌正确排除率
         'Precision':   tp / (tp + fp) if (tp + fp) > 0 else 0.0,  # 判癌中有多少是真癌
         'F1':          f1_score(y_true, y_pred),                    # P 和 R 的调和平均
@@ -381,9 +392,11 @@ def main():
 
     model = build_model(num_classes=2).to(DEVICE)
 
-    # 不做类别加权（1918:1396 = 1.37:1，不平衡较轻）
-    # 胃早癌筛查优先关注 Sensitivity，评估时重点看该指标即可
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.05)
+    label_counts = train_loader.dataset.df['瘤变标签'].value_counts().sort_index()
+    class_weights = label_counts.sum() / (2 * label_counts.to_numpy())
+    class_weights = torch.tensor(class_weights, dtype=torch.float32, device=DEVICE)
+    criterion = nn.CrossEntropyLoss(weight=class_weights, label_smoothing=0.05)
+    print(f'类别权重: 非癌={class_weights[0].item():.3f}, 癌/高级别={class_weights[1].item():.3f}')
 
     # ===== 第一阶段：冻结 backbone，仅训练 FC =====
     print('\n' + '=' * 60)
@@ -431,7 +444,7 @@ def main():
     print(f'Test Loss: {test_loss:.4f}')
     print(f'Test AUC:         {test_metrics["AUC"]:.4f}')
     print(f'Test Accuracy:    {test_metrics["Accuracy"]:.4f}')
-    print(f'Test Sensitivity: {test_metrics["Sensitivity"]:.4f}  ← 关键：早癌召回率')
+    print(f'Test Sensitivity: {test_metrics["Sensitivity"]:.4f}  ← 关键：癌/高级别召回率')
     print(f'Test Specificity: {test_metrics["Specificity"]:.4f}')
     print(f'Test Precision:   {test_metrics["Precision"]:.4f}')
     print(f'Test F1:          {test_metrics["F1"]:.4f}')

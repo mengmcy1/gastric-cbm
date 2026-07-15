@@ -28,22 +28,25 @@ from torchvision.models import resnet50, efficientnet_b0
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
 
-# 模型名 → (权重文件名, Sens≥0.90 最佳阈值)
+# 新模型完成阈值调优前使用0.5；调优后将对应值更新到这里
 MODEL_REGISTRY = {
-    'resnet50':        ('resnet50_transfer_best.pth',         0.20),
-    'efficientnet_b0': ('efficientnet_b0_best.pth',           0.22),
+    'resnet50':        ('resnet50_transfer_best.pth', 0.50),
+    'efficientnet_b0': ('efficientnet_b0_best.pth',   0.50),
 }
 
 # ★ 默认推理图片 —— 不传参数时直接用这个，点 ▶ 按钮就能跑
-DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-DEFAULT_IMG = os.path.join(DATA_DIR, '01.0000000000296_16_2016-11-09_10_49_17.jpg')
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
+DEFAULT_IMG = os.path.join(
+    DATA_DIR, '癌', '01.0000000129422',
+    '01.0000000129422_6_2019-09-18_14_27_45.jpg',
+)
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 
-CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}
+CLASS_NAMES = {0: '非癌', 1: '癌/高级别'}
 
 
 # ---- 模型加载 ----
@@ -92,10 +95,12 @@ def predict_batch(model, img_dir, threshold):
     results = []
     valid_exts = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif'}
 
-    files = sorted([
-        f for f in os.listdir(img_dir)
-        if os.path.splitext(f)[1].lower() in valid_exts
-    ])
+    files = sorted(
+        os.path.relpath(os.path.join(root, filename), img_dir)
+        for root, _, filenames in os.walk(img_dir)
+        for filename in filenames
+        if os.path.splitext(filename)[1].lower() in valid_exts
+    )
 
     for fname in files:
         fpath = os.path.join(img_dir, fname)

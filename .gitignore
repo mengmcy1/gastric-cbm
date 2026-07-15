@@ -2,7 +2,13 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+build/
 dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Virtual environments
 venv/
@@ -16,9 +22,14 @@ env/
 *.h5
 *.keras
 *.safetensors
+*.onnx
+*.joblib
+*.npy
+*.npz
 checkpoints/
 runs/
 logs/
+wandb/
 
 # IDE
 .vscode/
@@ -27,13 +38,30 @@ logs/
 # Jupyter
 .ipynb_checkpoints/
 
-# Large data & assets
+# Sensitive data and local records
 数据/
+数据整理记录/
 参考图片/
-*.pdf
 文献/
-结果/热图test/
-结果/热图批量/
+*.pdf
+
+# Generated results; keep final model weights only
+结果/*
+!结果/模型权重/
+!结果/模型权重/*.pth
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+~$*
 
 # OS
 .DS_Store

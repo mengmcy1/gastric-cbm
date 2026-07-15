@@ -2,7 +2,6 @@
 
 import csv
 import os
-import re
 import sys
 
 os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
@@ -35,8 +34,8 @@ from moce_single_demo import (
 )
 
 
-CSV_PATH = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
-OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE聚类')
+CSV_PATH = os.path.join(DATA_DIR, 'dataset_manifest.csv')
+OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE聚类', '第二批')
 
 MODEL_NAME = 'efficientnet_b0'  # 当前聚类使用的模型
 PATIENTS_PER_CLASS = 10  # 每类抽取的患者数；None 表示使用全部患者
@@ -48,7 +47,7 @@ BETA = 0.5  # S_h 中保留分数排名的权重
 SSC_SDC_TOP_K = 5  # SSC/SDC 依次加入或移除的重要概念数量
 RANDOM_SEED = 42  # 患者抽样和聚类随机种子
 
-CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}
+CLASS_NAMES = {0: '非癌', 1: '癌/高级别'}
 FONT = ImageFont.truetype(
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size=18,
 )
@@ -57,22 +56,15 @@ SMALL_FONT = ImageFont.truetype(
 )
 
 
-def patient_id_from_name(image_name):
-    """从图片名提取检查/患者编号，无法提取时使用图片主文件名。"""
-    matched = re.search(r'01\.[0-9]+', image_name)
-    return matched.group(0) if matched else os.path.splitext(image_name)[0]
-
-
 def load_patient_samples():
-    """读取有效图片，并在每个类别中为每位患者随机保留一张。"""
-    dataframe = pd.read_csv(CSV_PATH, encoding='gbk')
-    dataframe = dataframe[dataframe['瘤变标签'].isin([0, 1])].copy()
-    dataframe = dataframe[
-        dataframe['图片名字'].map(lambda name: os.path.isfile(os.path.join(DATA_DIR, name)))
-    ].copy()
-    dataframe['patient_id'] = dataframe['图片名字'].map(patient_id_from_name)
+    '''从整理清单读取图片，每个类别的每位患者随机保留一张。'''
+    dataframe = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
+    dataframe = dataframe.rename(columns={
+        'image_path': '图片名字',
+        'label': '瘤变标签',
+    })
     dataframe = dataframe.sample(frac=1, random_state=RANDOM_SEED)
-    dataframe = dataframe.drop_duplicates(['瘤变标签', 'patient_id'])
+    dataframe = dataframe.drop_duplicates(['patient_id'])
 
     samples = {}
     for label in [0, 1]:
@@ -326,7 +318,7 @@ def evaluate_concept_importance(model, label, assignment, class_dir):
         weighted_rank_sum=('weighted_rank', 'sum'),
     ).reset_index()
     importance['image_coverage'] = importance['image_count'] / total_images
-    importance['S_h'] = importance['weighted_rank_sum'] / len(importance)
+    importance['S_h'] = importance['weighted_rank_sum'] / total_images
     importance['importance_rank'] = importance['S_h'].rank(
         method='min', ascending=False,
     ).astype(int)

@@ -21,13 +21,16 @@ sys.path.insert(0, TRAIN_DIR)
 from inference import DEVICE, MODEL_REGISTRY, load_model
 
 
-DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')  # 图片目录
-OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE单图演示')  # 演示结果目录
+DATA_DIR = os.path.join(PROJECT_DIR, '数据', '第二批整理后')  # 图片目录
+OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE单图演示', '第二批')  # 演示结果目录
 
 # 手动配置区：选用一张 EfficientNet 高置信度早癌图片。
 MODEL_NAME = 'efficientnet_b0'  # 使用的分类模型
-IMAGE_NAME = '01.0000000179724.0039.1615258257.jpg'  # 待解释图片
-TARGET_CLASS = 1   # 要解释的类别：0=非癌，1=早癌/瘤变
+IMAGE_NAME = os.path.join(
+    '癌', '01.0000000129422',
+    '01.0000000129422_6_2019-09-18_14_27_45.jpg',
+)  # 待解释图片
+TARGET_CLASS = 1   # 要解释的类别：0=非癌，1=癌/高级别
 
 # MOCE 论文默认设置：保留前 50% 通道，每张激活图取 top 10% 区域。
 KEEP_CHANNEL_RATIO = 0.5    # 保留重要性最高的 50% 通道
@@ -40,7 +43,7 @@ TARGET_LAYERS = {  # 不同模型用于提取高层语义特征的目标层
     'resnet50': lambda model: model.layer4[-1],
     'efficientnet_b0': lambda model: model.features[-1],
 }
-CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}  # 类别编号对应名称
+CLASS_NAMES = {0: '非癌', 1: '癌/高级别'}  # 类别编号对应名称
 FONT = ImageFont.truetype(
     '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size=22,
 )
@@ -119,7 +122,7 @@ def extract_candidate_masks(model, capture, image, target_class):
     tensor = MODEL_TRANSFORM(Image.fromarray(image)).unsqueeze(0).to(DEVICE)
     model.zero_grad(set_to_none=True)
     logits = model(tensor)
-    probability = torch.softmax(logits, dim=1)[0, target_class].item()         #只对早癌类别计算概率
+    probability = torch.softmax(logits, dim=1)[0, target_class].item()         #只对目标类别计算概率
     logits[0, target_class].backward()                                          
 
     activations = capture.output[0].detach()        #激活程度

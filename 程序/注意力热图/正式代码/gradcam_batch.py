@@ -1,7 +1,7 @@
 """
 批量生成全部有效样本 Grad-CAM 三联图
 ==============================
-按 labels.csv 原始顺序逐张保存全部有效样本：原图 / Grad-CAM 热图 / 叠加图。
+按第二批整理清单顺序逐张保存全部样本：原图 / Grad-CAM 热图 / 叠加图。
 
 用法：
   1. 在下面“手动配置区”修改 RUN_MODEL 和 DEBUG_N
@@ -30,12 +30,13 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os
 TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')
 sys.path.insert(0, TRAIN_DIR)
 
+from inference import MODEL_REGISTRY
 from resnet_train_final import load_matched_dataframe
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(PROJECT_DIR, '数据', '胃图文带特征标签数据集 3600+ 1933瘤变')
-CSV_PATH = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
+DATA_DIR = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
+CSV_PATH = os.path.join(DATA_DIR, 'dataset_manifest.csv')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -43,18 +44,14 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
-CLASS_NAMES = {0: '非癌', 1: '早癌瘤变'}
-MODEL_THRESHOLDS = {
-    'resnet50': 0.20,
-    'efficientnet_b0': 0.22,
-}
+CLASS_NAMES = {0: '非癌', 1: '癌/高级别'}
 MODEL_SPECS = {
     'resnet50': {
-        'weight_file': 'resnet50_transfer_best.pth',
+        'weight_file': MODEL_REGISTRY['resnet50'][0],
         'target_layer': lambda model: model.layer4[-1],
     },
     'efficientnet_b0': {
-        'weight_file': 'efficientnet_b0_best.pth',
+        'weight_file': MODEL_REGISTRY['efficientnet_b0'][0],
         'target_layer': lambda model: model.features[-1],
     },
 }
@@ -197,7 +194,7 @@ def make_triptych(img_path, heatmap, prob, pred, true_label, save_path):
 
 
 def load_output_dataframe(debug_n):
-    # 生成全部有效样本；load_matched_dataframe 会保留 labels.csv/原始标签表顺序。
+    # 默认生成整理清单中的全部图片。
     df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR).reset_index(drop=True)
 
     if debug_n is not None:
@@ -212,7 +209,7 @@ def clear_old_outputs(out_dir):
 
 
 def generate_for_model(model_name, df):
-    threshold = MODEL_THRESHOLDS[model_name]
+    threshold = MODEL_REGISTRY[model_name][1]
     out_dir = os.path.join(OUTPUT_DIR, '热图批量', model_name)
     os.makedirs(out_dir, exist_ok=True)
     clear_old_outputs(out_dir)
@@ -229,13 +226,14 @@ def generate_for_model(model_name, df):
     with open(manifest_path, 'w', newline='', encoding='utf-8-sig') as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=['order', 'image_name', 'true_label', 'cancer_prob', 'pred_label', 'output_file'],
+            fieldnames=['order', 'patient_id', 'image_name', 'true_label', 'cancer_prob', 'pred_label', 'output_file'],
         )
         writer.writeheader()
 
         for i, row in df.iterrows():
             order = i + 1
             image_name = row['图片名字']
+            patient_id = row['patient_id']
             true_label = int(row['瘤变标签'])
             img_path = os.path.join(DATA_DIR, image_name)
 
@@ -244,13 +242,14 @@ def generate_for_model(model_name, df):
 
             heatmap, prob, pred = gradcam.generate(img_tensor, threshold)
 
-            stem = os.path.splitext(image_name)[0]
+            stem = os.path.splitext(os.path.basename(image_name))[0]
             output_name = f'{order:04d}_{stem}_true{true_label}_pred{pred}.png'
             output_path = os.path.join(out_dir, output_name)
             make_triptych(img_path, heatmap, prob, pred, true_label, output_path)
 
             writer.writerow({
                 'order': order,
+                'patient_id': patient_id,
                 'image_name': image_name,
                 'true_label': true_label,
                 'cancer_prob': round(prob, 4),

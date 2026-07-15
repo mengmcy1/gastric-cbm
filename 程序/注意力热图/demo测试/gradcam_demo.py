@@ -53,10 +53,9 @@ from torchvision.models import resnet50, efficientnet_b0
 # ---- 路径配置 ----
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-DATA_DIR   = os.path.join(PROJECT_DIR, '数据',
-                          '胃图文带特征标签数据集 3600+ 1933瘤变')
+DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果')
-CSV_PATH   = os.path.join(PROJECT_DIR, '数据', '胃图文标签表格-添加瘤变标签.csv')
+CSV_PATH   = os.path.join(DATA_DIR, 'dataset_manifest.csv')
 
 # 模型配置：名称 → (权重文件, 目标层获取函数, 架构构建)
 MODEL_SPECS = {
@@ -75,7 +74,7 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 
-CLASS_NAMES = {0: '非癌', 1: '早癌/瘤变'}
+CLASS_NAMES = {0: '非癌', 1: '癌/高级别'}
 
 # 预处理：与训练和推理完全一致
 transform = transforms.Compose([
@@ -300,10 +299,11 @@ def main():
                         help='模型选择，默认两个都跑')
     args = parser.parse_args()
 
-    # 默认测试图
+    # 默认测试图（与推理脚本保持一致）
     if args.img is None:
         args.img = os.path.join(
-            DATA_DIR, '01.0000000000296_16_2016-11-09_10_49_17.jpg'
+            DATA_DIR, '癌', '01.0000000129422',
+            '01.0000000129422_6_2019-09-18_14_27_45.jpg',
         )
         print(f'未指定图片，使用默认测试图: {os.path.basename(args.img)}')
     else:
@@ -319,13 +319,10 @@ def main():
     basename = os.path.basename(args.img)
     true_label = None
     if os.path.exists(CSV_PATH):
-        df = pd.read_csv(CSV_PATH, encoding='gbk')
-        # 列名可能是 '图片名' 或 '图片名字'
-        img_col = '图片名字' if '图片名字' in df.columns else '图片名'
-        row = df[df[img_col] == basename]
+        df = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
+        row = df[df['image_name'] == basename]
         if not row.empty:
-            lbl = row.iloc[0]['瘤变标签']
-            true_label = int(lbl)
+            true_label = int(row.iloc[0]['label'])
             print(f'真实标签: {CLASS_NAMES[true_label]} ({true_label})')
         else:
             print(f'⚠ 未在 CSV 中找到 {basename} 的标签')
