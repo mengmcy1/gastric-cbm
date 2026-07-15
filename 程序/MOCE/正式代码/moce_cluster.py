@@ -37,8 +37,8 @@ from moce_single_demo import (
 CSV_PATH = os.path.join(DATA_DIR, 'dataset_manifest.csv')
 OUTPUT_DIR = os.path.join(PROJECT_DIR, '结果', 'MOCE聚类', '第二批')
 
-MODEL_NAME = 'efficientnet_b0'  # 当前聚类使用的模型
-PATIENTS_PER_CLASS = 10  # 每类抽取的患者数；None 表示使用全部患者
+MODEL_NAME = 'efficientnet_b0'  # 当前聚类使用的模型resnet50/efficientnet_b0
+PATIENTS_PER_CLASS = None  # 每类抽取的患者数；None 表示使用全部患者
 N_CLUSTERS = 25  # 每个类别的概念簇数量，沿用 MOCE 默认值
 REPRESENTATIVES = 5  # 每个概念簇展示的代表区域数
 ENCODE_BATCH_SIZE = 32  # 候选区域分批编码，控制显存占用

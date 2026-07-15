@@ -58,7 +58,7 @@ MODEL_SPECS = {
 
 # ---- 手动配置区 ----
 # 一次只跑一个模型；可选：'efficientnet_b0' 或 'resnet50'
-RUN_MODEL = 'efficientnet_b0'
+RUN_MODEL = 'resnet50'
 
 # 调试时填数字，例如 5；正式全量生成时改为 None
 DEBUG_N = None
