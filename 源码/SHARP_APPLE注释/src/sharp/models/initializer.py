@@ -187,10 +187,10 @@ class MultiLayerInitializer(nn.Module):
         # 第一层视差: 取对应深度
         if self.first_layer_depth_option == "surface_min":
             # surface_min: 取最小池化(视差取最大池化) = 选最近表面
-            first_disparity = _create_surface_layer(depth[:, 0:1], "min")
+            first_disparity = _create_surface_layer(depth[:, 0:1], "min", self.stride)
         elif self.first_layer_depth_option == "surface_max":
             # surface_max: 取最大池化(视差取最小池化) = 选最远表面
-            first_disparity = _create_surface_layer(depth[:, 0:1], "max")
+            first_disparity = _create_surface_layer(depth[:, 0:1], "max", self.stride)
         elif self.first_layer_depth_option in ("base_depth", "linear_disparity"):
             # 用固定或等距的深度平面(1/base_depth 到 0)
             first_disparity = _create_disparity_layers()
@@ -209,9 +209,9 @@ class MultiLayerInitializer(nn.Module):
                 depth if depth.shape[1] == 1 else depth[:, 1:]
             )
             if self.rest_layer_depth_option == "surface_min":
-                following_disparity = _create_surface_layer(following_depth, "min")
+                following_disparity = _create_surface_layer(following_depth, "min", self.stride)
             elif self.rest_layer_depth_option == "surface_max":
-                following_disparity = _create_surface_layer(following_depth, "max")
+                following_disparity = _create_surface_layer(following_depth, "max", self.stride)
             elif self.rest_layer_depth_option == "base_depth":
                 following_disparity = torch.cat(
                     [
@@ -380,7 +380,7 @@ def _create_disparity_layers(num_layers: int = 1) -> torch.Tensor:
 
 
 def _create_surface_layer(
-    depth: torch.Tensor, depth_pooling_mode: str,
+    depth: torch.Tensor, depth_pooling_mode: str, stride: int,
 ) -> torch.Tensor:
     """创建"表面层"的视差。
 

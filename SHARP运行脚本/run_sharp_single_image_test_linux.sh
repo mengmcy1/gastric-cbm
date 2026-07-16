@@ -140,7 +140,7 @@ fi
     printf 'Conda 环境：%s\n' "$CONDA_ENV"
     printf 'CUDA_VISIBLE_DEVICES：%s\n' "$CUDA_VISIBLE_DEVICES"
     python -c 'import torch; print("PyTorch：", torch.__version__); print("CUDA可用：", torch.cuda.is_available()); print("进程可见GPU数量：", torch.cuda.device_count()); print("进程cuda:0：", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "不可用")'
-    python -c 'import sys; from PIL import Image; p=sys.argv[1]; im=Image.open(p); exif=im.getexif(); print("图片格式：", im.format); print("原始分辨率：", im.size); print("EXIF项目数：", len(exif)); print("35mm等效焦距：", exif.get(41989, "缺失，将由SHARP尝试其他字段或使用默认30mm"))' "$COPIED_INPUT"
+    python -c 'import sys; from PIL import Image; p=sys.argv[1]; im=Image.open(p); exif=im.getexif(); nested=exif.get_ifd(34665) if 34665 in exif else {}; f35=exif.get(41989, nested.get(41989, "缺失，将由SHARP尝试其他字段或使用默认30mm")); print("图片格式：", im.format); print("原始分辨率：", im.size); print("EXIF项目数：", len(exif)); print("35mm等效焦距：", f35)' "$COPIED_INPUT"
 } 2>&1 | tee "$LOG_DIR/environment.log"
 
 python -c 'import torch,sys; ok=torch.cuda.is_available() and torch.cuda.device_count()==1; sys.exit(0 if ok else 1)'
