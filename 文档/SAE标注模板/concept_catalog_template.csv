@@ -1,0 +1,2 @@
+concept_id,concept_name,source_feature_ids,concept_group,definition,positive_criteria,negative_criteria,exclusion_criteria,use_for_cbl,version
+EXAMPLE_001,示例概念（正式使用前删除）,13;20,不明确,这里只演示字段格式,写明标为1的可见条件,写明标为0的条件,写明容易混淆但应排除的表现,0,v0

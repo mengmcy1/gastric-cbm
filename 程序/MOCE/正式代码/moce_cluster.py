@@ -499,6 +499,7 @@ def main():
         )
         ssc_sdc = evaluate_ssc_sdc(
             model, label, assignment, importance, class_dir,
+            
         )
         print(f'候选区域总数: {len(features)}')
         print(f'平均每簇患者数: {summary["patient_count"].mean():.2f}')
