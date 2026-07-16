@@ -43,6 +43,23 @@ SHARP真实图片测试/输入图片/
 
 脚本也接受项目外部的图片路径，但会在本次输出目录中保存一份输入副本。
 
+### 2.1 当前测试批次
+
+目前输入图片已经按照测试目的分为三轮：
+
+```text
+SHARP真实图片测试/输入图片/
+├── 01_第一轮_基础与主展示/       6张
+├── 02_第二轮_困难与问题分析/     7张
+└── 03_第三轮_补充低优先级/       4张
+```
+
+- 第一轮用于检查正常场景下的基础效果，并选择 PPT 主展示图；
+- 第二轮用于主动测试细结构、遮挡、反射、虚化和复杂深度；
+- 第三轮用于补充远景、道路、山景等低优先级场景。
+
+脚本支持读取子文件夹中的图片，不需要因为图片归类而修改脚本代码，只需在运行命令中传入图片移动后的完整路径。
+
 ## 3. Linux 服务器运行方法
 
 ### 3.1 当前服务器配置
@@ -53,22 +70,48 @@ SHARP真实图片测试/输入图片/
 
 ### 3.2 运行命令
 
+先进入脚本目录：
+
 ```bash
-bash /home/mcy/2Dto3D/SHARP运行脚本/run_sharp_single_image_test_linux.sh \
-  "/home/mcy/2Dto3D/SHARP真实图片测试/输入图片/room.jpg" \
-  房间测试
+cd /home/mcy/2Dto3D/SHARP运行脚本
+```
+
+建议先运行第一轮中的一张校园图片：
+
+```bash
+bash ./run_sharp_single_image_test_linux.sh \
+  "../SHARP真实图片测试/输入图片/01_第一轮_基础与主展示/IMG_20220628_134917.jpg" \
+  "第一轮_校园建筑"
 ```
 
 第一个参数是输入图片路径，第二个参数是可选的测试名称。省略测试名称时，脚本使用图片文件名作为测试名称。
 
-### 3.3 指定其他 GPU
+脚本会自动激活 `sharp` 环境、固定使用物理 GPU 1、加载现有权重，并依次完成预测、首次渲染、热启动渲染、关键帧提取和问题分析记录生成。
+
+### 3.3 运行第一轮全部图片
+
+确认单张图片可以成功运行后，可以串行处理第一轮全部6张图片：
+
+```bash
+cd /home/mcy/2Dto3D/SHARP运行脚本
+
+for image in "../SHARP真实图片测试/输入图片/01_第一轮_基础与主展示/"*.jpg; do
+    bash ./run_sharp_single_image_test_linux.sh "$image"
+done
+```
+
+该循环会逐张运行，不会同时占用多份 GPU 显存。每张图片会创建独立的时间戳输出目录，不会覆盖其他测试结果。
+
+不建议并行运行多张图片，否则可能因为多个 SHARP 进程同时占用 GPU 而出现显存不足。
+
+### 3.4 指定其他 GPU
 
 默认使用物理 GPU 1。如需临时指定 GPU 0：
 
 ```bash
 SHARP_GPU_INDEX=0 bash /home/mcy/2Dto3D/SHARP运行脚本/run_sharp_single_image_test_linux.sh \
-  "/home/mcy/2Dto3D/SHARP真实图片测试/输入图片/room.jpg" \
-  房间测试_GPU0
+  "/home/mcy/2Dto3D/SHARP真实图片测试/输入图片/01_第一轮_基础与主展示/IMG_20220628_134917.jpg" \
+  "第一轮_校园建筑_GPU0"
 ```
 
 查看帮助：
@@ -76,6 +119,16 @@ SHARP_GPU_INDEX=0 bash /home/mcy/2Dto3D/SHARP运行脚本/run_sharp_single_image
 ```bash
 bash /home/mcy/2Dto3D/SHARP运行脚本/run_sharp_single_image_test_linux.sh --help
 ```
+
+### 3.5 观察 GPU 状态
+
+运行脚本时，可以在另一个终端持续观察 GPU 和显存占用：
+
+```bash
+watch -n 1 nvidia-smi
+```
+
+脚本通过 `CUDA_VISIBLE_DEVICES=1` 选择物理 GPU 1。因为该进程只看得到这一张显卡，所以它在 PyTorch 和日志中显示为 `cuda:0`，这是正常的设备重编号现象。
 
 ## 4. Windows 笔记本运行方法
 
@@ -117,8 +170,8 @@ cd "C:\Users\MCY\Desktop\2D转3D\SHARP运行脚本"
 ```powershell
 powershell -ExecutionPolicy Bypass -File `
   ".\run_sharp_single_image_test_windows.ps1" `
-  "..\SHARP真实图片测试\输入图片\room.jpg" `
-  房间测试
+  "..\SHARP真实图片测试\输入图片\01_第一轮_基础与主展示\IMG_20220628_134917.jpg" `
+  第一轮_校园建筑
 ```
 
 Windows 笔记本通常只有一张可供 CUDA 使用的 NVIDIA 独立显卡，因此脚本默认使用 GPU 0。Intel 或 AMD 核显不会占用 CUDA 的 GPU 编号。
@@ -130,8 +183,8 @@ Windows 笔记本通常只有一张可供 CUDA 使用的 NVIDIA 独立显卡，�
 ```powershell
 powershell -ExecutionPolicy Bypass -File `
   ".\run_sharp_single_image_test_windows.ps1" `
-  "..\SHARP真实图片测试\输入图片\room.jpg" `
-  房间测试 `
+  "..\SHARP真实图片测试\输入图片\01_第一轮_基础与主展示\IMG_20220628_134917.jpg" `
+  第一轮_校园建筑 `
   -CondaEnvironment "你的环境名"
 ```
 
@@ -140,8 +193,8 @@ powershell -ExecutionPolicy Bypass -File `
 ```powershell
 powershell -ExecutionPolicy Bypass -File `
   ".\run_sharp_single_image_test_windows.ps1" `
-  "..\SHARP真实图片测试\输入图片\room.jpg" `
-  房间测试 `
+  "..\SHARP真实图片测试\输入图片\01_第一轮_基础与主展示\IMG_20220628_134917.jpg" `
+  第一轮_校园建筑 `
   -GpuIndex 1
 ```
 
