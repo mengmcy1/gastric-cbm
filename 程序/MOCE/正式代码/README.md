@@ -10,6 +10,10 @@
 6. 对同图同簇保留距离簇中心最近的区域，计算概念级 S^R、S^E 和 S_h；
 7. 按重要性依次加入或移除前5个概念，生成 SSC/SDC 结果。
 
+S^R只对正向概率下降进行归一化：`probability_drop <= 0`时S^R和rank_R记为0，
+原始负下降仍保留在CSV中用于异常分析。这样可避免一张图的总下降量为负时发生符号和
+排名方向翻转。
+
 运行：
 
 ```bash
@@ -38,6 +42,13 @@ python 程序/MOCE/正式代码/render_cluster_overview.py
 
 ```bash
 python 程序/MOCE/正式代码/analyze_moce_results.py
+```
+
+对于在S^R修正前已经完成聚类的结果，可用下列脚本只重算重要性和SSC/SDC，不重新提取
+候选区域或训练K-Means，且默认先输出旁路验证结果、不覆盖正式结果：
+
+```bash
+python 程序/MOCE/正式代码/reevaluate_moce_sr.py --model resnet50
 ```
 
 自动分析使用 `matplotlib` 和 `openpyxl`，输出位于：

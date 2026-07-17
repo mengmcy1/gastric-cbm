@@ -147,6 +147,26 @@ cluster_quality.png
 - 单患者贡献偏高时应回看原图；医院来源必须与该类别整体来源基线比较；
 - `concept_number = cluster_id + 1`，所有医生材料统一使用1～25编号。
 
+### S_R修正后的既有结果重算
+
+当前正式规则只对正向 `probability_drop` 归一化S_R，非正下降的S_R和rank_R为0。
+EfficientNet-B0已经按该规则完成重算并更新正式结果。
+
+ResNet50后台任务启动时加载的是修正前代码，修改磁盘脚本不会改变已经运行的Python
+进程。因此该任务完成后，不需要重新提取候选区域或重新执行K-Means，但必须运行：
+
+```bash
+cd /home/mcy/gastric-cbm
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+程序/MOCE/正式代码/reevaluate_moce_sr.py \
+--model resnet50
+```
+
+先核对旁路输出中的排名对照和SSC/SDC，再将四个修正文件写回正式结果，并重新运行
+`render_cluster_overview.py` 与 `analyze_moce_results.py`。不要直接采用该后台任务产生的
+旧S_R、旧S_h和旧SSC/SDC作为论文结果。
+
 ## 四、分开保存自动分析结果与MOCE原始结果
 
 不再额外建立整理目录，也不需要运行新的整理脚本。第三步中的

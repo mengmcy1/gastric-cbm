@@ -220,11 +220,11 @@ def select_cluster_masks(image_assignment, image_shape):
     return cluster_masks
 
 
-def relative_ranks(values, skip_negative=False):
+def relative_ranks(values, positive_only=False):
     """按作者实现把同图概念排名转换到 [0, 1)，较大值排名更高。"""
     ranks = np.zeros(len(values), dtype=np.float32)
     for position, index in enumerate(np.argsort(values)):
-        if skip_negative and values[index] < 0:
+        if positive_only and values[index] <= 0:
             continue
         ranks[index] = position / len(values)
     return ranks
@@ -262,11 +262,12 @@ def evaluate_concept_importance(model, label, assignment, class_dir):
         )
         full_probability = float(image_assignment.iloc[0]['class_probability'])
         removal_drops = full_probability - removed_probabilities
-        removal_total = removal_drops.sum()
+        positive_drops = np.clip(removal_drops, 0, None)
+        removal_total = positive_drops.sum()
         if np.isclose(removal_total, 0):
-            removal_scores = np.zeros_like(removal_drops)
+            removal_scores = np.zeros_like(positive_drops)
         else:
-            removal_scores = removal_drops / removal_total
+            removal_scores = positive_drops / removal_total
         extraction_scores = keep_probabilities / keep_probabilities.sum()
 
         image_scores = pd.DataFrame({
@@ -278,7 +279,7 @@ def evaluate_concept_importance(model, label, assignment, class_dir):
             'S_E': extraction_scores,
         })
         image_scores['rank_R'] = relative_ranks(
-            image_scores['S_R'].to_numpy(), skip_negative=True,
+            image_scores['S_R'].to_numpy(), positive_only=True,
         )
         image_scores['rank_E'] = relative_ranks(
             image_scores['S_E'].to_numpy(),
