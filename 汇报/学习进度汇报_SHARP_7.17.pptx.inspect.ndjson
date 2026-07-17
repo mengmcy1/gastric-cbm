@@ -1,0 +1,519 @@
+{"kind":"deck","id":"pr/ofrodb","name":"Deck"}
+{"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"","type":"master","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"body","type":"body","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"标题幻灯片","type":"title","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"subtitle","type":"subtitle","textPreview":"单击此处编辑母版副标题样式"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout2.xml","name":"标题和内容","type":"obj","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"2","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout3.xml","name":"节标题","type":"secHead","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑标题"},{"name":"body","type":"body","textPreview":"单击此处编辑文本"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout4.xml","name":"两栏内容","type":"twoObj","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"2","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"3","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout5.xml","name":"比较","type":"twoTxTwoObj","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"body","type":"body","textPreview":"单击此处编辑文本"},{"name":"3","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"body","type":"body","textPreview":"单击此处编辑文本"},{"name":"5","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout6.xml","name":"仅标题","type":"titleOnly","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout7.xml","name":"空白","type":"blank","placeholders":[{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout8.xml","name":"图片与标题","placeholders":[{"name":"picture","type":"picture"},{"name":"body","type":"body","textPreview":"单击此处编辑母版文本样式"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"},{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout9.xml","name":"竖排标题与文本","type":"vertTitleAndTx","placeholders":[{"name":"title","type":"title","textPreview":"单击此处编辑标题"},{"name":"body","type":"body","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout10.xml","name":"内容","placeholders":[{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"},{"name":"6","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级 | 第五级"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout11.xml","name":"末尾幻灯片","placeholders":[{"name":"dateTime","type":"dateTime","textPreview":"2026/7/10"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"},{"name":"title","type":"title","textPreview":"单击此处编辑标题"},{"name":"body","type":"body","textPreview":"单击此处编辑母版文本样式"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout12.xml","name":"封面","placeholders":[{"name":"body","type":"body","textPreview":"单击此处编辑"},{"name":"title","type":"title","textPreview":"编辑标题样式"},{"name":"body","type":"body","textPreview":"电子信息与通信学院"},{"name":"body","type":"body","textPreview":"编辑副标题"},{"name":"body","type":"body","textPreview":"xxx"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout13.xml","name":"内页","placeholders":[{"name":"3","textPreview":"单击此处编辑母版文本样式 | 第二级 | 第三级 | 第四级"},{"name":"title","type":"title","textPreview":"单击此处编辑母版标题样式"}]}
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"SHARP论文精读、源码复现","textShapes":4}
+{"kind":"textbox","id":"sh/547294r6","slide":1,"name":"标题 1","placeholder":"title","text":"SHARP论文精读、源码复现\n与课题启发","textPreview":"SHARP论文精读、源码复现 | 与课题启发","textChars":20,"textLines":2,"bbox":[160,185.2,960,205.73]}
+{"kind":"shape","id":"sh/sfqdkrep","slide":1,"name":"Shape 1","bbox":[350.2,474.13,228.8,52.8]}
+{"kind":"textbox","id":"sh/sryl4zqx","slide":1,"name":"文本占位符 6","placeholder":"body","text":"汇报人：孟辰洋","textPreview":"汇报人：孟辰洋","textChars":7,"textLines":1,"bbox":[331.73,480.87,265.73,46.07]}
+{"kind":"shape","id":"sh/dgzetcfa","slide":1,"name":"Shape 1","bbox":[662.2,474.13,228.8,52.8]}
+{"kind":"textbox","id":"sh/1cvuxc7e","slide":1,"name":"文本占位符 6","text":"时间：2026.7.17","textPreview":"时间：2026.7.17","textChars":12,"textLines":1,"bbox":[643.73,480.87,265.73,46.07]}
+{"kind":"textbox","id":"sh/0bmd476t","slide":1,"name":"text-1","text":"单图新视角合成 / 前馈式3DGS","textPreview":"单图新视角合成 / 前馈式3DGS","textChars":17,"textLines":1,"bbox":[220,386,840,38]}
+{"kind":"notes","id":"nt/y90nupkv","slide":1,"text":"本次汇报围绕SHARP展开，重点不是复述全文，而是说明我对方法、源码和复现进度的理解。"}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"本阶段完成工作","textShapes":19}
+{"kind":"textbox","id":"sh/mxgjm5s7","slide":2,"name":"text-2","text":"本阶段完成工作","textPreview":"本阶段完成工作","textChars":7,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/9072xkry","slide":2,"name":"text-3","text":"SHARP PAPER READING · SOURCE REVIEW · REPRODUCTION","textPreview":"SHARP PAPER READING · SOURCE REVIEW · REPRODUCTION","textChars":50,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/ozy1ofad","slide":2,"name":"rule-4","bbox":[74,145,238,5]}
+{"kind":"textbox","id":"sh/b29kza94","slide":2,"name":"text-5","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[74,164,64,44]}
+{"kind":"textbox","id":"sh/a10jqpsj","slide":2,"name":"text-6","text":"论文精读","textPreview":"论文精读","textChars":4,"textLines":1,"bbox":[74,218,236,38]}
+{"kind":"textbox","id":"sh/x4r21kru","slide":2,"name":"text-7","text":"完成方法、训练策略、附录与消融实验阅读","textPreview":"完成方法、训练策略、附录与消融实验阅读","textChars":19,"textLines":1,"bbox":[74,269,236,136]}
+{"kind":"shape","id":"sh/w3i1sfa9","slide":2,"name":"rule-8","bbox":[368,145,238,5]}
+{"kind":"textbox","id":"sh/r65knqtk","slide":2,"name":"text-9","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[368,164,64,44]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"name":"text-10","text":"源码梳理","textPreview":"源码梳理","textChars":4,"textLines":1,"bbox":[368,218,236,38]}
+{"kind":"textbox","id":"sh/ove9o7yd","slide":2,"name":"text-11","text":"梳理预测主链路以及各模块的输入输出","textPreview":"梳理预测主链路以及各模块的输入输出","textChars":17,"textLines":1,"bbox":[368,269,236,136]}
+{"kind":"shape","id":"sh/9wnqhczy","slide":2,"name":"rule-12","bbox":[662,145,238,5]}
+{"kind":"textbox","id":"sh/mtwrmxg7","slide":2,"name":"text-13","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[662,164,64,44]}
+{"kind":"textbox","id":"sh/nu58f2hs","slide":2,"name":"text-14","text":"模型准备","textPreview":"模型准备","textChars":4,"textLines":1,"bbox":[662,218,236,38]}
+{"kind":"textbox","id":"sh/wjy9sry9","slide":2,"name":"text-15","text":"完成官方权重准备与推理入口检查","textPreview":"完成官方权重准备与推理入口检查","textChars":15,"textLines":1,"bbox":[662,269,236,136]}
+{"kind":"shape","id":"sh/xk7qlczu","slide":2,"name":"rule-16","bbox":[956,145,238,5]}
+{"kind":"textbox","id":"sh/ahwrqhgj","slide":2,"name":"text-17","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[956,164,64,44]}
+{"kind":"textbox","id":"sh/bip8jmho","slide":2,"name":"text-18","text":"运行复现","textPreview":"运行复现","textChars":4,"textLines":1,"bbox":[956,218,236,38]}
+{"kind":"textbox","id":"sh/cnupgny5","slide":2,"name":"text-19","text":"跑通预测、PLY导出和新视角渲染","textPreview":"跑通预测、PLY导出和新视角渲染","textChars":16,"textLines":1,"bbox":[956,269,236,136]}
+{"kind":"shape","id":"sh/do3q9szq","slide":2,"name":"box-20","bbox":[74,424,1120,116]}
+{"kind":"textbox","id":"sh/t8byxkn2","slide":2,"name":"text-21","text":"复现输出","textPreview":"复现输出","textChars":4,"textLines":1,"bbox":[98,451,146,44]}
+{"kind":"shape","id":"sh/s72xofmh","slide":2,"name":"rule-22","bbox":[266,446,2,58]}
+{"kind":"textbox","id":"sh/76twva5c","slide":2,"name":"text-23","text":"1,179,648个高斯","textPreview":"1,179,648个高斯","textChars":12,"textLines":1,"bbox":[294,451,238,44]}
+{"kind":"shape","id":"sh/65kfmpor","slide":2,"name":"rule-24","bbox":[550,446,2,58]}
+{"kind":"textbox","id":"sh/hcvy14ne","slide":2,"name":"text-25","text":"约64 MB PLY","textPreview":"约64 MB PLY","textChars":10,"textLines":1,"bbox":[576,451,220,44]}
+{"kind":"shape","id":"sh/gbmxszmt","slide":2,"name":"rule-26","bbox":[816,446,2,58]}
+{"kind":"textbox","id":"sh/fadgzu58","slide":2,"name":"text-27","text":"60帧彩色与深度新视角视频","textPreview":"60帧彩色与深度新视角视频","textChars":13,"textLines":1,"bbox":[842,451,320,44]}
+{"kind":"shape","id":"sh/u94fqp4n","slide":2,"name":"box-433","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/p0vy54na","slide":2,"name":"text-434","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/hwbqtkby","slide":2,"text":"这一阶段完成了论文方法、训练策略和消融实验阅读，梳理了推理主链路，并跑通预测、PLY导出与新视角渲染流程。"}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"SHARP解决的问题","textShapes":17}
+{"kind":"textbox","id":"sh/by1svqlc","slide":3,"name":"text-28","text":"SHARP解决的问题","textPreview":"SHARP解决的问题","textChars":10,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/cza94vmx","slide":3,"name":"text-29","text":"SINGLE-IMAGE HIGH-ACCURACY REAL-TIME PARALLAX","textPreview":"SINGLE-IMAGE HIGH-ACCURACY REAL-TIME PARALLAX","textChars":45,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"textbox","id":"sh/d0jax03i","slide":3,"name":"text-30","text":"单张RGB","textPreview":"单张RGB","textChars":5,"textLines":1,"bbox":[78,152,210,40]}
+{"kind":"shape","id":"sh/298ryl4v","slide":3,"name":"arrow-31","bbox":[290,159,46,24]}
+{"kind":"textbox","id":"sh/3ah8rqlg","slide":3,"name":"text-32","text":"一次前向生成\nmetric 3DGS","textPreview":"一次前向生成 | metric 3DGS","textChars":18,"textLines":2,"bbox":[338,137,270,78]}
+{"kind":"shape","id":"sh/obq90bml","slide":3,"name":"arrow-33","bbox":[612,159,46,24]}
+{"kind":"textbox","id":"sh/pcjqtg36","slide":3,"name":"text-34","text":"附近视角实时渲染","textPreview":"附近视角实时渲染","textChars":8,"textLines":1,"bbox":[664,152,350,46]}
+{"kind":"textbox","id":"sh/m5cra54z","slide":3,"name":"text-35","text":"目标运动范围以相机基线衡量，主要面向小于约0.5 m的附近视角。","textPreview":"目标运动范围以相机基线衡量，主要面向小于约0.5 m的附近视角。","textChars":32,"textLines":1,"bbox":[80,232,970,42]}
+{"kind":"shape","id":"sh/n6ls3alk","slide":3,"name":"rule-36","bbox":[76,300,1120,2]}
+{"kind":"textbox","id":"sh/n2l4fq98","slide":3,"name":"text-37","text":"25-34%","textPreview":"25-34%","textChars":6,"textLines":1,"bbox":[90,338,250,58]}
+{"kind":"textbox","id":"sh/m1c3mlsn","slide":3,"name":"text-38","text":"LPIPS降低","textPreview":"LPIPS降低","textChars":7,"textLines":1,"bbox":[90,390,250,44]}
+{"kind":"textbox","id":"sh/943mhgre","slide":3,"name":"text-39","text":"21-43%","textPreview":"21-43%","textChars":6,"textLines":1,"bbox":[365,338,250,58]}
+{"kind":"textbox","id":"sh/83ulovat","slide":3,"name":"text-40","text":"DISTS降低","textPreview":"DISTS降低","textChars":7,"textLines":1,"bbox":[365,390,250,44]}
+{"kind":"textbox","id":"sh/v6l4jq94","slide":3,"name":"text-41","text":"< 1 s","textPreview":"< 1 s","textChars":5,"textLines":1,"bbox":[640,338,250,58]}
+{"kind":"textbox","id":"sh/a5c3ql8z","slide":3,"name":"text-42","text":"A100表示生成","textPreview":"A100表示生成","textChars":8,"textLines":1,"bbox":[640,390,250,44]}
+{"kind":"textbox","id":"sh/x8nml0ra","slide":3,"name":"text-43","text":"~100 FPS","textPreview":"~100 FPS","textChars":8,"textLines":1,"bbox":[915,338,250,58]}
+{"kind":"textbox","id":"sh/w7ulsvqp","slide":3,"name":"text-44","text":"常驻GPU纯渲染","textPreview":"常驻GPU纯渲染","textChars":8,"textLines":1,"bbox":[915,390,250,44]}
+{"kind":"textbox","id":"sh/ja54na9g","slide":3,"name":"text-45","text":"对本课题的匹配点：单图输入、显式3D表示、交互阶段无需再次运行生成网络。","textPreview":"对本课题的匹配点：单图输入、显式3D表示、交互阶段无需再次运行生成网络。","textChars":36,"textLines":1,"bbox":[102,492,1070,58]}
+{"kind":"textbox","id":"sh/i9w3u58v","slide":3,"name":"text-46","text":"图源/数据：SHARP原论文 Abstract、Tables 1-6；指标按论文各测试集口径。","textPreview":"图源/数据：SHARP原论文 Abstract、Tables 1-6；指标按论文各测试集口径。","textChars":47,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/e10f2twf","slide":3,"name":"box-435","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/f29gbyx0","slide":3,"name":"text-436","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/ofy9wn61","slide":3,"text":"SHARP从单张RGB一次前向生成可度量3DGS，面向小于约0.5米基线的附近视角。这里的论文速度口径与本地CLI口径不同。"}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"完整输入输出链路","textShapes":10}
+{"kind":"textbox","id":"sh/e9sj2tsv","slide":4,"name":"text-47","text":"完整输入输出链路","textPreview":"完整输入输出链路","textChars":8,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/1cj2d8b6","slide":4,"name":"text-48","text":"四个可学习模块与固定高斯模块共同完成一次前向预测","textPreview":"四个可学习模块与固定高斯模块共同完成一次前向预测","textChars":24,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/rm1k7yt4","slide":4,"name":"box-49","bbox":[862,126,320,338]}
+{"kind":"textbox","id":"sh/ql8jytsj","slide":4,"name":"text-50","text":"关键张量","textPreview":"关键张量","textChars":4,"textLines":1,"bbox":[888,146,190,28]}
+{"kind":"shape","id":"sh/doj29oba","slide":4,"name":"box-51","bbox":[890,198,8,8]}
+{"kind":"textbox","id":"sh/sna103ap","slide":4,"name":"text-52","text":"输入RGB：[B,3,1536,1536]","textPreview":"输入RGB：[B,3,1536,1536]","textChars":21,"textLines":1,"bbox":[908,190,252,50]}
+{"kind":"shape","id":"sh/3ihk3et8","slide":4,"name":"box-53","bbox":[890,250,8,8]}
+{"kind":"textbox","id":"sh/ih8ju9sn","slide":4,"name":"text-54","text":"双层深度：[B,2,1536,1536]","textPreview":"双层深度：[B,2,1536,1536]","textChars":20,"textLines":1,"bbox":[908,242,252,50]}
+{"kind":"shape","id":"sh/kbm987y5","slide":4,"name":"box-55","bbox":[890,302,8,8]}
+{"kind":"textbox","id":"sh/5cva1cfq","slide":4,"name":"text-56","text":"Delta：[B,14,2,768,768]","textPreview":"Delta：[B,14,2,768,768]","textChars":22,"textLines":1,"bbox":[908,294,252,50]}
+{"kind":"shape","id":"sh/i94r6xgz","slide":4,"name":"box-57","bbox":[890,354,8,8]}
+{"kind":"textbox","id":"sh/jadsz2xk","slide":4,"name":"text-58","text":"输出：1,179,648个高斯","textPreview":"输出：1,179,648个高斯","textChars":15,"textLines":1,"bbox":[908,346,252,50]}
+{"kind":"textbox","id":"sh/w72947yt","slide":4,"name":"text-59","text":"Depth Adjustment仅用于Stage 1合成训练；Stage 2与推理阶段直接使用预测深度。","textPreview":"Depth Adjustment仅用于Stage 1合成训练；Stage 2与推理阶段直接使用预测深度。","textChars":52,"textLines":1,"bbox":[110,522,1020,42]}
+{"kind":"textbox","id":"sh/x8vaxsfe","slide":4,"name":"text-60","text":"图源：SHARP原论文 Fig.3；张量形状结合论文与本地源码整理。","textPreview":"图源：SHARP原论文 Fig.3；张量形状结合论文与本地源码整理。","textChars":34,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/a5kr2xg3","slide":4,"name":"box-437","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/v6tsv2xo","slide":4,"name":"text-438","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"image","id":"im/p0ju1gjm","slide":4,"name":"","alt":"SHARP model overview, cropped from Figure 3","bbox":[70,126,772,334]}
+{"kind":"notes","id":"nt/jyx0ra1s","slide":4,"text":"图中绿色和橙色分别代表可学习模块，蓝色代表固定可微模块。Depth Adjustment需要预测深度和精确深度共同输入，因此只在Stage 1合成训练中使用；Stage 2和推理阶段使用恒等映射。最终输出约118万个高斯。"}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"模型模块与代码职责","textShapes":25}
+{"kind":"textbox","id":"sh/qd0bahob","slide":5,"name":"text-61","text":"模型模块与代码职责","textPreview":"模型模块与代码职责","textChars":9,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/dgbulwnm","slide":5,"name":"text-62","text":"区分网络学习的内容与固定规则完成的内容","textPreview":"区分网络学习的内容与固定规则完成的内容","textChars":19,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/cf2tcr61","slide":5,"name":"box-63","bbox":[72,124,1120,48]}
+{"kind":"textbox","id":"sh/z2tcnm5s","slide":5,"name":"text-64","text":"模块","textPreview":"模块","textChars":2,"textLines":1,"bbox":[76,134,255,30]}
+{"kind":"textbox","id":"sh/yhkbe1o7","slide":5,"name":"text-65","text":"性质","textPreview":"性质","textChars":2,"textLines":1,"bbox":[340,134,198,30]}
+{"kind":"textbox","id":"sh/l4bupwny","slide":5,"name":"text-66","text":"主要职责","textPreview":"主要职责","textChars":4,"textLines":1,"bbox":[548,134,630,30]}
+{"kind":"shape","id":"sh/032tgr6d","slide":5,"name":"box-67","bbox":[72,173,1120,62]}
+{"kind":"textbox","id":"sh/n6dcr65o","slide":5,"name":"text-68","text":"Feature Encoder","textPreview":"Feature Encoder","textChars":15,"textLines":1,"bbox":[76,185,255,38]}
+{"kind":"textbox","id":"sh/m5kbi1oj","slide":5,"name":"text-69","text":"可学习","textPreview":"可学习","textChars":3,"textLines":1,"bbox":[340,185,198,38]}
+{"kind":"textbox","id":"sh/w32dkbuh","slide":5,"name":"text-70","text":"提取全局与局部多尺度图像特征","textPreview":"提取全局与局部多尺度图像特征","textChars":14,"textLines":1,"bbox":[548,185,630,38]}
+{"kind":"shape","id":"sh/x4vedgvm","slide":5,"name":"box-71","bbox":[72,237,1120,62]}
+{"kind":"textbox","id":"sh/ahkvi1cb","slide":5,"name":"text-72","text":"Depth Decoder","textPreview":"Depth Decoder","textChars":13,"textLines":1,"bbox":[76,249,255,38]}
+{"kind":"textbox","id":"sh/v2twb6dw","slide":5,"name":"text-73","text":"可学习","textPreview":"可学习","textChars":3,"textLines":1,"bbox":[340,249,198,38]}
+{"kind":"textbox","id":"sh/k7mxovud","slide":5,"name":"text-74","text":"从共享特征预测双层深度","textPreview":"从共享特征预测双层深度","textChars":11,"textLines":1,"bbox":[548,249,630,38]}
+{"kind":"shape","id":"sh/58vehgvy","slide":5,"name":"box-75","bbox":[72,301,1120,62]}
+{"kind":"textbox","id":"sh/i54fmlc7","slide":5,"name":"text-76","text":"Depth Adjustment","textPreview":"Depth Adjustment","textChars":16,"textLines":1,"bbox":[76,313,255,38]}
+{"kind":"textbox","id":"sh/j6dwfqds","slide":5,"name":"text-77","text":"仅训练可学习","textPreview":"仅训练可学习","textChars":6,"textLines":1,"bbox":[340,313,198,38]}
+{"kind":"textbox","id":"sh/sb6xsvu9","slide":5,"name":"text-78","text":"利用精确深度生成训练阶段的深度修正","textPreview":"利用精确深度生成训练阶段的深度修正","textChars":17,"textLines":1,"bbox":[548,313,630,38]}
+{"kind":"shape","id":"sh/tcfel0vu","slide":5,"name":"box-79","bbox":[72,365,1120,62]}
+{"kind":"textbox","id":"sh/hgrmpwj2","slide":5,"name":"text-80","text":"Gaussian Initializer","textPreview":"Gaussian Initializer","textChars":20,"textLines":1,"bbox":[76,377,255,38]}
+{"kind":"textbox","id":"sh/gfi5grih","slide":5,"name":"text-81","text":"固定、可微","textPreview":"固定、可微","textChars":5,"textLines":1,"bbox":[340,377,198,38]}
+{"kind":"textbox","id":"sh/fe94nm1w","slide":5,"name":"text-82","text":"由RGB与双层深度构造Base Gaussians","textPreview":"由RGB与双层深度构造Base Gaussians","textChars":25,"textLines":1,"bbox":[548,377,630,38]}
+{"kind":"shape","id":"sh/ud0ne10b","slide":5,"name":"box-83","bbox":[72,429,1120,62]}
+{"kind":"textbox","id":"sh/pkr6tgjy","slide":5,"name":"text-84","text":"Gaussian Decoder","textPreview":"Gaussian Decoder","textChars":16,"textLines":1,"bbox":[76,441,255,38]}
+{"kind":"textbox","id":"sh/4ji5kbid","slide":5,"name":"text-85","text":"可学习","textPreview":"可学习","textChars":3,"textLines":1,"bbox":[340,441,198,38]}
+{"kind":"textbox","id":"sh/3i94r61s","slide":5,"name":"text-86","text":"预测位置3维与其他属性11维残差","textPreview":"预测位置3维与其他属性11维残差","textChars":16,"textLines":1,"bbox":[548,441,630,38]}
+{"kind":"shape","id":"sh/2h0ni107","slide":5,"name":"box-87","bbox":[72,493,1120,62]}
+{"kind":"textbox","id":"sh/5o7mhcju","slide":5,"name":"text-88","text":"Composer / Renderer","textPreview":"Composer / Renderer","textChars":19,"textLines":1,"bbox":[76,505,255,38]}
+{"kind":"textbox","id":"sh/kny587i9","slide":5,"name":"text-89","text":"固定实现","textPreview":"固定实现","textChars":4,"textLines":1,"bbox":[340,505,198,38]}
+{"kind":"textbox","id":"sh/atcjidg7","slide":5,"name":"text-90","text":"合成最终高斯参数并完成可微渲染","textPreview":"合成最终高斯参数并完成可微渲染","textChars":15,"textLines":1,"bbox":[548,505,630,38]}
+{"kind":"textbox","id":"sh/vu5kbihc","slide":5,"name":"text-91","text":"说明：官方仓库公开模型与推理代码，未公开完整训练循环、训练数据集和损失实现。","textPreview":"说明：官方仓库公开模型与推理代码，未公开完整训练循环、训练数据集和损失实现。","textChars":38,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/wve1knyx","slide":5,"name":"box-439","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/xwn2dszi","slide":5,"name":"text-440","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/i107q5of","slide":5,"text":"从实现性质看，Feature Encoder、Depth Decoder和Gaussian Decoder由网络学习；Initializer、Composer和Renderer主要由固定规则完成。Depth Adjustment只服务于Stage 1训练。"}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"Depth Pro特征编码器","textShapes":15}
+{"kind":"textbox","id":"sh/lkrqp4ra","slide":6,"name":"text-92","text":"Depth Pro特征编码器","textPreview":"Depth Pro特征编码器","textChars":14,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"name":"text-93","text":"全局ViT与局部ViT并行提取信息，输出由细到粗的多尺度特征","textPreview":"全局ViT与局部ViT并行提取信息，输出由细到粗的多尺度特征","textChars":30,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/zi98nu94","slide":6,"name":"box-94","bbox":[72,214,202,194]}
+{"kind":"textbox","id":"sh/87ipkzal","slide":6,"name":"text-95","text":"输入RGB","textPreview":"输入RGB","textChars":5,"textLines":1,"bbox":[94,246,158,34]}
+{"kind":"textbox","id":"sh/98rqt4r6","slide":6,"name":"text-96","text":"[B,3,1536,1536]","textPreview":"[B,3,1536,1536]","textChars":15,"textLines":1,"bbox":[88,310,170,36]}
+{"kind":"textbox","id":"sh/ml07i9sv","slide":6,"name":"text-97","text":"并行送入两路ViT","textPreview":"并行送入两路ViT","textChars":9,"textLines":1,"bbox":[86,360,174,34]}
+{"kind":"shape","id":"sh/7m98ru9g","slide":6,"name":"arrow-98","bbox":[292,204,38,20]}
+{"kind":"shape","id":"sh/oryp8fah","slide":6,"name":"arrow-99","bbox":[292,389,38,20]}
+{"kind":"shape","id":"sh/pc76hkr2","slide":6,"name":"box-100","bbox":[344,148,314,148]}
+{"kind":"textbox","id":"sh/h4bupgn6","slide":6,"name":"text-101","text":"全局ViT\n低分辨率全局结构","textPreview":"全局ViT | 低分辨率全局结构","textChars":14,"textLines":2,"bbox":[352,153,298,138]}
+{"kind":"shape","id":"sh/w32twb6l","slide":6,"name":"box-102","bbox":[344,334,314,148]}
+{"kind":"textbox","id":"sh/v2tcn650","slide":6,"name":"text-103","text":"局部ViT\n高分辨率局部细节","textPreview":"局部ViT | 高分辨率局部细节","textChars":14,"textLines":2,"bbox":[352,339,298,138]}
+{"kind":"shape","id":"sh/u1kbu1ov","slide":6,"name":"arrow-104","bbox":[680,206,42,22]}
+{"kind":"shape","id":"sh/5svutgni","slide":6,"name":"arrow-105","bbox":[680,392,42,22]}
+{"kind":"shape","id":"sh/47mt0b6x","slide":6,"name":"box-106","bbox":[744,136,432,372]}
+{"kind":"textbox","id":"sh/j6dcr65c","slide":6,"name":"text-107","text":"多尺度特征输出","textPreview":"多尺度特征输出","textChars":7,"textLines":1,"bbox":[782,158,356,36]}
+{"kind":"shape","id":"sh/i54bylor","slide":6,"name":"box-108","bbox":[795,214,330,42]}
+{"kind":"textbox","id":"sh/twfux0ne","slide":6,"name":"text-109","text":"f₁  高分辨率局部边界","textPreview":"f₁  高分辨率局部边界","textChars":12,"textLines":1,"bbox":[803,223,314,24]}
+{"kind":"shape","id":"sh/svmt4v6t","slide":6,"name":"box-110","bbox":[815,272,290,42]}
+{"kind":"textbox","id":"sh/cbe5g3ih","slide":6,"name":"text-111","text":"f₂  中高分辨率细节","textPreview":"f₂  中高分辨率细节","textChars":11,"textLines":1,"bbox":[823,281,274,24]}
+{"kind":"shape","id":"sh/dcnm98zm","slide":6,"name":"box-112","bbox":[835,330,250,42]}
+{"kind":"textbox","id":"sh/qpwnet0b","slide":6,"name":"text-113","text":"f₃  中尺度场景结构","textPreview":"f₃  中尺度场景结构","textChars":11,"textLines":1,"bbox":[843,339,234,24]}
+{"kind":"shape","id":"sh/bq547yhw","slide":6,"name":"box-114","bbox":[855,388,210,42]}
+{"kind":"textbox","id":"sh/0fy5k3id","slide":6,"name":"text-115","text":"f₄  低分辨率全局语义","textPreview":"f₄  低分辨率全局语义","textChars":12,"textLines":1,"bbox":[863,397,194,24]}
+{"kind":"textbox","id":"sh/lg76d8zy","slide":6,"name":"text-116","text":"共享给Depth Decoder与Gaussian Decoder","textPreview":"共享给Depth Decoder与Gaussian Decoder","textChars":33,"textLines":1,"bbox":[780,458,360,30]}
+{"kind":"textbox","id":"sh/ydgnit07","slide":6,"name":"text-117","text":"依据：SHARP Section 3.1；本地源码 monodepth.py 与 encoders/spn_encoder.py。","textPreview":"依据：SHARP Section 3.1；本地源码 monodepth.py 与 encoders/spn_encoder.py。","textChars":65,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/zep4byhs","slide":6,"name":"box-441","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/gju58ji9","slide":6,"name":"text-442","text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/x8f69ofe","slide":6,"text":"Depth Pro的全局ViT负责低分辨率全局结构，局部ViT负责高分辨率细节。两路并行提取后形成由细到粗的多尺度特征，并同时提供给Depth Decoder和Gaussian Decoder。"}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"双层Depth Decoder","textShapes":17}
+{"kind":"textbox","id":"sh/batcbq94","slide":7,"name":"text-118","text":"双层Depth Decoder","textPreview":"双层Depth Decoder","textChars":15,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/cb2tkvap","slide":7,"name":"text-119","text":"融合多尺度特征，先输出双层视差，再结合相机参数转换为metric depth","textPreview":"融合多尺度特征，先输出双层视差，再结合相机参数转换为metric depth","textChars":38,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/dcbud0ra","slide":7,"name":"box-120","bbox":[74,170,224,126]}
+{"kind":"textbox","id":"sh/ydkbm5sv","slide":7,"name":"text-121","text":"多尺度特征\nf₁ · f₂ · f₃ · f₄","textPreview":"多尺度特征 | f₁ · f₂ · f₃ · f₄","textChars":23,"textLines":2,"bbox":[82,175,208,116]}
+{"kind":"shape","id":"sh/zedcfa9g","slide":7,"name":"arrow-122","bbox":[318,220,46,24]}
+{"kind":"shape","id":"sh/kzmdova1","slide":7,"name":"box-123","bbox":[382,170,250,126]}
+{"kind":"textbox","id":"sh/l0vuh0rm","slide":7,"name":"text-124","text":"卷积解码器\n逐级融合与上采样","textPreview":"卷积解码器 | 逐级融合与上采样","textChars":14,"textLines":2,"bbox":[390,175,234,116]}
+{"kind":"shape","id":"sh/eh0ba1sr","slide":7,"name":"arrow-125","bbox":[652,220,46,24]}
+{"kind":"shape","id":"sh/fi9c369c","slide":7,"name":"box-126","bbox":[700,170,260,126]}
+{"kind":"textbox","id":"sh/baxkjqlk","slide":7,"name":"text-127","text":"Depth Head\n末层卷积复制为2通道","textPreview":"Depth Head | 末层卷积复制为2通道","textChars":21,"textLines":2,"bbox":[708,175,244,116]}
+{"kind":"shape","id":"sh/a9ojq5kz","slide":7,"name":"arrow-128","bbox":[978,220,38,24]}
+{"kind":"shape","id":"sh/xcz2l03q","slide":7,"name":"box-129","bbox":[1030,170,178,126]}
+{"kind":"textbox","id":"sh/cbq1sv25","slide":7,"name":"text-130","text":"双层metric depth\n[B,2,1536,1536]","textPreview":"双层metric depth | [B,2,1536,1536]","textChars":30,"textLines":2,"bbox":[1038,175,162,116]}
+{"kind":"textbox","id":"sh/n6x0fqlo","slide":7,"name":"text-131","text":"视差 → 使用焦距与相机内参完成尺度转换","textPreview":"视差 → 使用焦距与相机内参完成尺度转换","textChars":20,"textLines":1,"bbox":[694,310,506,34]}
+{"kind":"shape","id":"sh/25ojml43","slide":7,"name":"rule-132","bbox":[82,350,1090,2]}
+{"kind":"shape","id":"sh/p8fih03e","slide":7,"name":"box-133","bbox":[88,382,508,176]}
+{"kind":"textbox","id":"sh/o761ov2t","slide":7,"name":"text-134","text":"第一层深度","textPreview":"第一层深度","textChars":5,"textLines":1,"bbox":[112,402,460,30]}
+{"kind":"shape","id":"sh/f2d0b6lc","slide":7,"name":"box-135","bbox":[120,454,8,8]}
+{"kind":"textbox","id":"sh/eh4jil4r","slide":7,"name":"text-136","text":"主要描述输入图像中的可见表面","textPreview":"主要描述输入图像中的可见表面","textChars":14,"textLines":1,"bbox":[138,446,412,32]}
+{"kind":"shape","id":"sh/id4ju1oz","slide":7,"name":"box-137","bbox":[120,488,8,8]}
+{"kind":"textbox","id":"sh/jedkn654","slide":7,"name":"text-138","text":"Stage 1使用精确深度监督","textPreview":"Stage 1使用精确深度监督","textChars":15,"textLines":1,"bbox":[138,480,412,32]}
+{"kind":"shape","id":"sh/4fm1wb6p","slide":7,"name":"box-139","bbox":[120,522,8,8]}
+{"kind":"textbox","id":"sh/50v2pgna","slide":7,"name":"text-140","text":"直接决定大部分Base位置","textPreview":"直接决定大部分Base位置","textChars":13,"textLines":1,"bbox":[138,514,412,32]}
+{"kind":"shape","id":"sh/q143ylov","slide":7,"name":"box-141","bbox":[626,382,536,176]}
+{"kind":"textbox","id":"sh/r2dkrq5g","slide":7,"name":"text-142","text":"第二层深度","textPreview":"第二层深度","textChars":5,"textLines":1,"bbox":[650,402,488,30]}
+{"kind":"shape","id":"sh/s3ml0v61","slide":7,"name":"box-143","bbox":[658,454,8,8]}
+{"kind":"textbox","id":"sh/d4f2t0nm","slide":7,"name":"text-144","text":"学习辅助遮挡与视角相关结构","textPreview":"学习辅助遮挡与视角相关结构","textChars":13,"textLines":1,"bbox":[676,446,448,32]}
+{"kind":"shape","id":"sh/e5o32lor","slide":7,"name":"box-145","bbox":[658,488,8,8]}
+{"kind":"textbox","id":"sh/f6xkvq5c","slide":7,"name":"text-146","text":"没有隐藏深度GT","textPreview":"没有隐藏深度GT","textChars":8,"textLines":1,"bbox":[676,480,448,32]}
+{"kind":"shape","id":"sh/p0zmlk7u","slide":7,"name":"box-147","bbox":[658,522,8,8]}
+{"kind":"textbox","id":"sh/ozq5szq9","slide":7,"name":"text-148","text":"由渲染、感知、Alpha损失和TV正则约束","textPreview":"由渲染、感知、Alpha损失和TV正则约束","textChars":21,"textLines":1,"bbox":[676,514,448,32]}
+{"kind":"textbox","id":"sh/nyh4jupo","slide":7,"name":"text-149","text":"注意：默认 sorting_monodepth=False，两层深度不依靠硬排序强制形成前后关系。","textPreview":"注意：默认 sorting_monodepth=False，两层深度不依靠硬排序强制形成前后关系。","textChars":49,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/2x8nqp83","slide":7,"name":"box-443","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/x4j6p47q","slide":7,"name":"text-444","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"Depth Decoder逐级融合多尺度特征，深度头的末层卷积被复制为两个输出通道。网络先预测双层视差，再结合焦距和相机内参转换为metric depth。第一层主要描述可见表面；第二层没有隐藏深度真值，主要通过渲染相关损失学习。"}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"Gaussian Initializer","textShapes":18}
+{"kind":"textbox","id":"sh/elkf2pg7","slide":8,"name":"text-150","text":"Gaussian Initializer","textPreview":"Gaussian Initializer","textChars":20,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/18byd4zy","slide":8,"name":"text-151","text":"固定、可微、不可学习：由RGB与双层深度构造Base Gaussians","textPreview":"固定、可微、不可学习：由RGB与双层深度构造Base Gaussians","textChars":36,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/g72x4zyd","slide":8,"name":"arrow-152","bbox":[232,256,24,16]}
+{"kind":"shape","id":"sh/ri9g7uhw","slide":8,"name":"arrow-153","bbox":[422,256,24,16]}
+{"kind":"shape","id":"sh/6h0fypgb","slide":8,"name":"arrow-154","bbox":[612,256,24,16]}
+{"kind":"shape","id":"sh/tkby9kzm","slide":8,"name":"arrow-155","bbox":[802,256,24,16]}
+{"kind":"shape","id":"sh/sjix0zy1","slide":8,"name":"arrow-156","bbox":[992,256,24,16]}
+{"kind":"shape","id":"sh/je9g3ahk","slide":8,"name":"box-157","bbox":[70,178,158,174]}
+{"kind":"textbox","id":"sh/id0fu50z","slide":8,"name":"text-158","text":"RGB + 双层深度","textPreview":"RGB + 双层深度","textChars":10,"textLines":1,"bbox":[78,195,142,38]}
+{"kind":"textbox","id":"sh/o7ydoret","slide":8,"name":"text-159","text":"[3+2,1536,1536]","textPreview":"[3+2,1536,1536]","textChars":15,"textLines":1,"bbox":[80,249,138,72]}
+{"kind":"shape","id":"sh/98rehwve","slide":8,"name":"box-160","bbox":[260,178,158,174]}
+{"kind":"textbox","id":"sh/m5gvmhwn","slide":8,"name":"text-161","text":"2倍下采样","textPreview":"2倍下采样","textChars":5,"textLines":1,"bbox":[268,195,142,38]}
+{"kind":"textbox","id":"sh/n6pwfmd8","slide":8,"name":"text-162","text":"RGB平均池化\nDepth最小池化","textPreview":"RGB平均池化 | Depth最小池化","textChars":17,"textLines":2,"bbox":[270,249,138,72]}
+{"kind":"shape","id":"sh/0jydkreh","slide":8,"name":"box-163","bbox":[450,178,158,174]}
+{"kind":"textbox","id":"sh/1k7edwv2","slide":8,"name":"text-164","text":"NDC位置","textPreview":"NDC位置","textChars":5,"textLines":1,"bbox":[458,195,142,38]}
+{"kind":"textbox","id":"sh/ehgvihwr","slide":8,"name":"text-165","text":"x/z, y/z, 1/z","textPreview":"x/z, y/z, 1/z","textChars":13,"textLines":1,"bbox":[460,249,138,72]}
+{"kind":"shape","id":"sh/zipwbmdc","slide":8,"name":"box-166","bbox":[640,178,158,174]}
+{"kind":"textbox","id":"sh/kfixwbe1","slide":8,"name":"text-167","text":"基础属性","textPreview":"基础属性","textChars":4,"textLines":1,"bbox":[648,195,142,38]}
+{"kind":"textbox","id":"sh/lgbepgvm","slide":8,"name":"text-168","text":"scale∝depth\nquat=(1,0,0,0)","textPreview":"scale∝depth | quat=(1,0,0,0)","textChars":26,"textLines":2,"bbox":[650,249,138,72]}
+{"kind":"shape","id":"sh/tw7e9gnq","slide":8,"name":"box-169","bbox":[830,178,158,174]}
+{"kind":"textbox","id":"sh/svydgb65","slide":8,"name":"text-170","text":"颜色与透明度","textPreview":"颜色与透明度","textChars":6,"textLines":1,"bbox":[838,195,142,38]}
+{"kind":"textbox","id":"sh/7u5w765k","slide":8,"name":"text-171","text":"RGB复制到两层\nopacity=0.5","textPreview":"RGB复制到两层 | opacity=0.5","textChars":20,"textLines":2,"bbox":[840,249,138,72]}
+{"kind":"shape","id":"sh/6twve1oz","slide":8,"name":"box-172","bbox":[1020,178,158,174]}
+{"kind":"textbox","id":"sh/5sne5wne","slide":8,"name":"text-173","text":"Base Gaussians","textPreview":"Base Gaussians","textChars":14,"textLines":1,"bbox":[1028,195,142,38]}
+{"kind":"textbox","id":"sh/kredcr6t","slide":8,"name":"text-174","text":"2×768×768\n=1,179,648","textPreview":"2×768×768 | =1,179,648","textChars":20,"textLines":2,"bbox":[1030,249,138,72]}
+{"kind":"shape","id":"sh/jq5w365o","slide":8,"name":"box-175","bbox":[112,411,1056,116]}
+{"kind":"textbox","id":"sh/i5wva1o3","slide":8,"name":"text-176","text":"为什么先构造Base？","textPreview":"为什么先构造Base？","textChars":11,"textLines":1,"bbox":[138,431,240,32]}
+{"kind":"textbox","id":"sh/x4ne1wni","slide":8,"name":"text-177","text":"网络不必从零预测全部高斯参数，只需学习相对稳定初值的残差，降低回归难度。","textPreview":"网络不必从零预测全部高斯参数，只需学习相对稳定初值的残差，降低回归难度。","textChars":36,"textLines":1,"bbox":[370,424,760,66]}
+{"kind":"textbox","id":"sh/w3ed8r6x","slide":8,"name":"text-178","text":"依据：SHARP Section 3.1；本地源码 models/initializer.py。","textPreview":"依据：SHARP Section 3.1；本地源码 models/initializer.py。","textChars":48,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/m9sb2x4v","slide":8,"name":"box-445","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/na1sb2lg","slide":8,"name":"text-446","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/fu1gfa1s","slide":8,"text":"Initializer用固定规则把RGB和双层深度变成Base Gaussians。这样Decoder学习的是相对初值的修正，而不是从零回归全部属性。"}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"Gaussian Decoder","textShapes":14}
+{"kind":"textbox","id":"sh/eponml43","slide":9,"name":"text-179","text":"Gaussian Decoder","textPreview":"Gaussian Decoder","textChars":16,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/1cfmhgne","slide":9,"name":"text-180","text":"两路输入融合后输出14维双层Delta，位置分支与其他属性分支职责不同","textPreview":"两路输入融合后输出14维双层Delta，位置分支与其他属性分支职责不同","textChars":35,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/0b65obm9","slide":9,"name":"box-181","bbox":[72,138,300,170]}
+{"kind":"textbox","id":"sh/nex4jq5k","slide":9,"name":"text-182","text":"像素输入","textPreview":"像素输入","textChars":4,"textLines":1,"bbox":[92,158,260,34]}
+{"kind":"textbox","id":"sh/mdonql4z","slide":9,"name":"text-183","text":"RGB 3通道\n+ 归一化双层视差 2通道","textPreview":"RGB 3通道 | + 归一化双层视差 2通道","textChars":21,"textLines":2,"bbox":[96,206,252,70]}
+{"kind":"shape","id":"sh/9gzml0nq","slide":9,"name":"box-184","bbox":[72,338,300,170]}
+{"kind":"textbox","id":"sh/ofq5svm5","slide":9,"name":"text-185","text":"特征输入","textPreview":"特征输入","textChars":4,"textLines":1,"bbox":[92,358,260,34]}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"name":"text-186","text":"Depth Pro / SPN\n多尺度特征","textPreview":"Depth Pro / SPN | 多尺度特征","textChars":21,"textLines":2,"bbox":[96,406,252,70]}
+{"kind":"shape","id":"sh/ah8nu54b","slide":9,"name":"arrow-187","bbox":[398,274,64,30]}
+{"kind":"shape","id":"sh/oza1gfyh","slide":9,"name":"box-188","bbox":[486,212,304,150]}
+{"kind":"textbox","id":"sh/p0ji9kf2","slide":9,"name":"text-189","text":"Gaussian Dense\nPrediction Transformer","textPreview":"Gaussian Dense | Prediction Transformer","textChars":37,"textLines":2,"bbox":[494,217,288,140]}
+{"kind":"shape","id":"sh/2xsjepgb","slide":9,"name":"arrow-190","bbox":[812,274,64,30]}
+{"kind":"shape","id":"sh/3y107axw","slide":9,"name":"box-191","bbox":[908,138,300,170]}
+{"kind":"textbox","id":"sh/cnu1kzyd","slide":9,"name":"text-192","text":"Geometry Head","textPreview":"Geometry Head","textChars":13,"textLines":1,"bbox":[928,158,260,34]}
+{"kind":"textbox","id":"sh/do3id4fy","slide":9,"name":"text-193","text":"位置 3维","textPreview":"位置 3维","textChars":5,"textLines":1,"bbox":[932,206,252,76]}
+{"kind":"shape","id":"sh/qlcjipgn","slide":9,"name":"box-194","bbox":[908,338,300,170]}
+{"kind":"textbox","id":"sh/bml0buxs","slide":9,"name":"text-195","text":"Texture Head","textPreview":"Texture Head","textChars":12,"textLines":1,"bbox":[928,358,260,34]}
+{"kind":"textbox","id":"sh/0ru1ozyp","slide":9,"name":"text-196","text":"尺度3 + 旋转4\n颜色3 + 不透明度1\n= 11维","textPreview":"尺度3 + 旋转4 | 颜色3 + 不透明度1 | = 11维","textChars":27,"textLines":3,"bbox":[932,406,252,76]}
+{"kind":"textbox","id":"sh/lsn2h4fa","slide":9,"name":"text-197","text":"最终输出：[B,14,2,768,768]","textPreview":"最终输出：[B,14,2,768,768]","textChars":21,"textLines":1,"bbox":[420,444,430,54]}
+{"kind":"textbox","id":"sh/98ji147e","slide":9,"name":"text-198","text":"依据：本地源码 models/gaussian_decoder.py 与 models/heads.py。","textPreview":"依据：本地源码 models/gaussian_decoder.py 与 models/heads.py。","textChars":53,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/87a18zqt","slide":9,"name":"box-447","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/76h0zup8","slide":9,"name":"text-448","text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/udsvah03","slide":9,"text":"Decoder有两路输入，最终输出14维Delta。源码显示位置分支只预测3维，其他11维由纹理分支预测，这是我重点核对过的实现细节。"}
+{"kind":"slide","id":"sl/m90b6t0r","slide":10,"title":"Base + Delta与Composer","textShapes":35}
+{"kind":"textbox","id":"sh/q9sn69kb","slide":10,"name":"text-199","text":"Base + Delta与Composer","textPreview":"Base + Delta与Composer","textChars":21,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/xc3mho32","slide":10,"name":"text-200","text":"在各属性的激活空间中叠加残差，再映射回合法参数范围","textPreview":"在各属性的激活空间中叠加残差，再映射回合法参数范围","textChars":25,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/cbu58j2h","slide":10,"name":"box-201","bbox":[84,124,1110,116]}
+{"kind":"shape","id":"sh/ydcnatkn","slide":10,"name":"rule-202","bbox":[84,265,248,4]}
+{"kind":"textbox","id":"sh/l036l83y","slide":10,"name":"text-203","text":"G₀","textPreview":"G₀","textChars":2,"textLines":1,"bbox":[84,280,62,42]}
+{"kind":"textbox","id":"sh/kzu5c32t","slide":10,"name":"text-204","text":"Base Gaussians","textPreview":"Base Gaussians","textChars":14,"textLines":1,"bbox":[146,283,186,38]}
+{"kind":"shape","id":"sh/725onyl4","slide":10,"name":"rule-205","bbox":[362,265,248,4]}
+{"kind":"textbox","id":"sh/m1cnetkj","slide":10,"name":"text-206","text":"ΔG","textPreview":"ΔG","textChars":2,"textLines":1,"bbox":[362,280,62,42]}
+{"kind":"textbox","id":"sh/s7yt4b21","slide":10,"name":"text-207","text":"Decoder预测的残差","textPreview":"Decoder预测的残差","textChars":12,"textLines":1,"bbox":[424,283,186,38]}
+{"kind":"shape","id":"sh/d87uxg3m","slide":10,"name":"rule-208","bbox":[640,265,248,4]}
+{"kind":"textbox","id":"sh/q5gb21kb","slide":10,"name":"text-209","text":"η","textPreview":"η","textChars":1,"textLines":1,"bbox":[640,280,62,42]}
+{"kind":"textbox","id":"sh/r6pcv6lw","slide":10,"name":"text-210","text":"不同属性的残差倍率","textPreview":"不同属性的残差倍率","textChars":9,"textLines":1,"bbox":[702,283,186,38]}
+{"kind":"shape","id":"sh/0bit8b2d","slide":10,"name":"rule-211","bbox":[918,265,248,4]}
+{"kind":"textbox","id":"sh/1cru1g3y","slide":10,"name":"text-212","text":"γ","textPreview":"γ","textChars":1,"textLines":1,"bbox":[918,280,62,42]}
+{"kind":"textbox","id":"sh/e9gb61k7","slide":10,"name":"text-213","text":"映射到合法参数范围","textPreview":"映射到合法参数范围","textChars":9,"textLines":1,"bbox":[980,283,186,38]}
+{"kind":"textbox","id":"sh/fapcz6ls","slide":10,"name":"text-214","text":"属性","textPreview":"属性","textChars":2,"textLines":1,"bbox":[92,350,220,30]}
+{"kind":"textbox","id":"sh/ozitcv29","slide":10,"name":"text-215","text":"激活 γ","textPreview":"激活 γ","textChars":4,"textLines":1,"bbox":[322,350,220,30]}
+{"kind":"textbox","id":"sh/p0ru503u","slide":10,"name":"text-216","text":"残差倍率 η","textPreview":"残差倍率 η","textChars":6,"textLines":1,"bbox":[552,350,220,30]}
+{"kind":"shape","id":"sh/xwnupgvy","slide":10,"name":"box-217","bbox":[90,384,690,30]}
+{"kind":"textbox","id":"sh/wvetgbud","slide":10,"name":"text-218","text":"位置 x/z,y/z","textPreview":"位置 x/z,y/z","textChars":10,"textLines":1,"bbox":[96,387,210,24]}
+{"kind":"textbox","id":"sh/bu5cnqd8","slide":10,"name":"text-219","text":"identity","textPreview":"identity","textChars":8,"textLines":1,"bbox":[326,387,210,24]}
+{"kind":"textbox","id":"sh/atwbelcn","slide":10,"name":"text-220","text":"1e-3","textPreview":"1e-3","textChars":4,"textLines":1,"bbox":[556,387,210,24]}
+{"kind":"shape","id":"sh/lk7ut0va","slide":10,"name":"box-221","bbox":[90,418,690,30]}
+{"kind":"textbox","id":"sh/kjytkvup","slide":10,"name":"text-222","text":"位置 1/z","textPreview":"位置 1/z","textChars":6,"textLines":1,"bbox":[96,421,210,24]}
+{"kind":"textbox","id":"sh/jypcrqd4","slide":10,"name":"text-223","text":"softplus","textPreview":"softplus","textChars":8,"textLines":1,"bbox":[326,421,210,24]}
+{"kind":"textbox","id":"sh/yxgbilcj","slide":10,"name":"text-224","text":"1e-3","textPreview":"1e-3","textChars":4,"textLines":1,"bbox":[556,421,210,24]}
+{"kind":"shape","id":"sh/1o3ahwvq","slide":10,"name":"box-225","bbox":[90,452,690,30]}
+{"kind":"textbox","id":"sh/0nut8rul","slide":10,"name":"text-226","text":"尺度","textPreview":"尺度","textChars":2,"textLines":1,"bbox":[96,455,210,24]}
+{"kind":"textbox","id":"sh/q9srixs3","slide":10,"name":"text-227","text":"sigmoid","textPreview":"sigmoid","textChars":7,"textLines":1,"bbox":[326,455,210,24]}
+{"kind":"textbox","id":"sh/ru18r2to","slide":10,"name":"text-228","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[556,455,210,24]}
+{"kind":"shape","id":"sh/cva9k7a9","slide":10,"name":"box-229","bbox":[90,486,690,30]}
+{"kind":"textbox","id":"sh/dwjqtcbu","slide":10,"name":"text-230","text":"旋转","textPreview":"旋转","textChars":2,"textLines":1,"bbox":[96,489,210,24]}
+{"kind":"textbox","id":"sh/exsrmhsf","slide":10,"name":"text-231","text":"identity","textPreview":"identity","textChars":8,"textLines":1,"bbox":[326,489,210,24]}
+{"kind":"textbox","id":"sh/zyl8vmt0","slide":10,"name":"text-232","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[556,489,210,24]}
+{"kind":"shape","id":"sh/0zu9ora5","slide":10,"name":"box-233","bbox":[90,520,690,30]}
+{"kind":"textbox","id":"sh/103qxcbq","slide":10,"name":"text-234","text":"颜色RGB","textPreview":"颜色RGB","textChars":5,"textLines":1,"bbox":[96,523,210,24]}
+{"kind":"textbox","id":"sh/u187adsv","slide":10,"name":"text-235","text":"sigmoid","textPreview":"sigmoid","textChars":7,"textLines":1,"bbox":[326,523,210,24]}
+{"kind":"textbox","id":"sh/f2h8jitg","slide":10,"name":"text-236","text":"1e-1","textPreview":"1e-1","textChars":4,"textLines":1,"bbox":[556,523,210,24]}
+{"kind":"shape","id":"sh/bmpgrah8","slide":10,"name":"box-237","bbox":[90,554,690,30]}
+{"kind":"textbox","id":"sh/algfy50n","slide":10,"name":"text-238","text":"不透明度","textPreview":"不透明度","textChars":4,"textLines":1,"bbox":[96,557,210,24]}
+{"kind":"textbox","id":"sh/xo7ytkzy","slide":10,"name":"text-239","text":"sigmoid","textPreview":"sigmoid","textChars":7,"textLines":1,"bbox":[326,557,210,24]}
+{"kind":"textbox","id":"sh/wnyx0fit","slide":10,"name":"text-240","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[556,557,210,24]}
+{"kind":"shape","id":"sh/jq9gvuh4","slide":10,"name":"box-241","bbox":[842,382,326,164]}
+{"kind":"textbox","id":"sh/ip0f2p0j","slide":10,"name":"text-242","text":"零残差性质","textPreview":"零残差性质","textChars":5,"textLines":1,"bbox":[866,406,278,34]}
+{"kind":"textbox","id":"sh/5cryx4za","slide":10,"name":"text-243","text":"当 ΔG = 0 时\n最终高斯严格等于Base","textPreview":"当 ΔG = 0 时 | 最终高斯严格等于Base","textChars":23,"textLines":2,"bbox":[866,460,278,64]}
+{"kind":"textbox","id":"sh/kbix4zyp","slide":10,"name":"text-244","text":"公式来源：SHARP Eq.3.2。L_delta中的δ=400是原始残差阈值；位置倍率0.001后约对应0.4 NDC，并非400像素。","textPreview":"公式来源：SHARP Eq.3.2。L_delta中的δ=400是原始残差阈值；位置倍率0.001后约对应0.4 NDC，并非400像素。","textChars":69,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/7e9gzuhg","slide":10,"name":"box-449","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/6d0f6pgv","slide":10,"name":"text-450","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"image","id":"im/6xgry54n","slide":10,"name":"","alt":"Gaussian Composer equation from SHARP Equation 3.2","bbox":[108,139,1062,86]}
+{"kind":"notes","id":"nt/m90b6t0r","slide":10,"text":"Composer先把Base映射到属性对应的激活空间，再叠加带倍率的Delta。这样既保证参数范围合法，又保留Delta为零时结果等于Base的性质。δ等于400是残差阈值，不是像素范围。"}
+{"kind":"slide","id":"sl/rh687i","slide":11,"title":"为什么采用两阶段训练","textShapes":16}
+{"kind":"textbox","id":"sh/y18b6hgz","slide":11,"name":"text-245","text":"为什么采用两阶段训练","textPreview":"为什么采用两阶段训练","textChars":10,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/l4zu1czq","slide":11,"name":"text-246","text":"先用精确监督建立几何能力，再用真实图像适应复杂外观","textPreview":"先用精确监督建立几何能力，再用真实图像适应复杂外观","textChars":25,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/k3qt87y5","slide":11,"name":"box-247","bbox":[72,132,430,184]}
+{"kind":"textbox","id":"sh/7q1c3mhg","slide":11,"name":"text-248","text":"Stage 1 · 合成多视图","textPreview":"Stage 1 · 合成多视图","textChars":15,"textLines":1,"bbox":[98,152,300,28]}
+{"kind":"shape","id":"sh/mp8vahgv","slide":11,"name":"box-249","bbox":[102,206,8,8]}
+{"kind":"textbox","id":"sh/9sju5wzm","slide":11,"name":"text-250","text":"多视图RGB + 精确深度和相机参数","textPreview":"多视图RGB + 精确深度和相机参数","textChars":18,"textLines":1,"bbox":[120,198,352,34]}
+{"kind":"shape","id":"sh/8radcry1","slide":11,"name":"box-251","bbox":[102,242,8,8]}
+{"kind":"textbox","id":"sh/nuxcr2hc","slide":11,"name":"text-252","text":"学习几何、遮挡关系与可微渲染","textPreview":"学习几何、遮挡关系与可微渲染","textChars":14,"textLines":1,"bbox":[120,234,352,34]}
+{"kind":"shape","id":"sh/2tobyxgr","slide":11,"name":"box-253","bbox":[102,278,8,8]}
+{"kind":"textbox","id":"sh/wfq1sjmx","slide":11,"name":"text-254","text":"避免真实单图缺少监督的问题","textPreview":"避免真实单图缺少监督的问题","textChars":13,"textLines":1,"bbox":[120,270,352,34]}
+{"kind":"shape","id":"sh/xgz214ni","slide":11,"name":"arrow-255","bbox":[516,210,54,28]}
+{"kind":"shape","id":"sh/atojq947","slide":11,"name":"box-256","bbox":[584,132,598,184]}
+{"kind":"textbox","id":"sh/buhkze5s","slide":11,"name":"text-257","text":"Stage 2 · 真实图像SSFT","textPreview":"Stage 2 · 真实图像SSFT","textChars":18,"textLines":1,"bbox":[610,152,340,28]}
+{"kind":"shape","id":"sh/kjq1wjm9","slide":11,"name":"box-258","bbox":[614,206,8,8]}
+{"kind":"textbox","id":"sh/lkz25onu","slide":11,"name":"text-259","text":"真实单图没有新视角真值","textPreview":"真实单图没有新视角真值","textChars":11,"textLines":1,"bbox":[632,198,510,34]}
+{"kind":"shape","id":"sh/yh8ju943","slide":11,"name":"box-260","bbox":[614,242,8,8]}
+{"kind":"textbox","id":"sh/jihk3e5o","slide":11,"name":"text-261","text":"先生成伪新视角，再与原图交换输入和目标","textPreview":"先生成伪新视角，再与原图交换输入和目标","textChars":19,"textLines":1,"bbox":[632,234,510,34]}
+{"kind":"shape","id":"sh/0n61kzm5","slide":11,"name":"box-262","bbox":[614,278,8,8]}
+{"kind":"textbox","id":"sh/1of2tkna","slide":11,"name":"text-263","text":"适应真实纹理、反射与视角相关外观","textPreview":"适应真实纹理、反射与视角相关外观","textChars":16,"textLines":1,"bbox":[632,270,510,34]}
+{"kind":"textbox","id":"sh/hk7ihgfe","slide":11,"name":"text-264","text":"为什么不能只用一个阶段？","textPreview":"为什么不能只用一个阶段？","textChars":12,"textLines":1,"bbox":[76,354,420,34]}
+{"kind":"shape","id":"sh/gjyhobyt","slide":11,"name":"box-265","bbox":[82,412,8,8]}
+{"kind":"textbox","id":"sh/fi50f6x8","slide":11,"name":"text-266","text":"只用合成数据：几何监督准确，但真实外观分布不足","textPreview":"只用合成数据：几何监督准确，但真实外观分布不足","textChars":23,"textLines":1,"bbox":[100,404,482,44]}
+{"kind":"shape","id":"sh/uhwzmlgn","slide":11,"name":"box-267","bbox":[82,458,8,8]}
+{"kind":"textbox","id":"sh/p87il0fa","slide":11,"name":"text-268","text":"只用真实单图：缺少真实的新视角监督","textPreview":"只用真实单图：缺少真实的新视角监督","textChars":17,"textLines":1,"bbox":[100,450,482,44]}
+{"kind":"shape","id":"sh/4nyhsvyp","slide":11,"name":"box-269","bbox":[82,504,8,8]}
+{"kind":"textbox","id":"sh/3mp0jqx4","slide":11,"name":"text-270","text":"两阶段组合：几何稳定性与真实感分别解决","textPreview":"两阶段组合：几何稳定性与真实感分别解决","textChars":19,"textLines":1,"bbox":[100,496,482,44]}
+{"kind":"textbox","id":"sh/dcrip0fm","slide":11,"name":"text-271","text":"图源：SHARP原论文 Fig.11；训练流程根据 Section 3.3 整理。SSFT指标并非一致改善，但主观结果更锐利。","textPreview":"图源：SHARP原论文 Fig.11；训练流程根据 Section 3.3 整理。SSFT指标并非一致改善，但主观结果更锐利。","textChars":63,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/cbihwvy1","slide":11,"name":"box-451","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/axsfqxwj","slide":11,"name":"text-452","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"image","id":"im/tsvyd4re","slide":11,"name":"","alt":"SHARP Figure 11 comparing Stage 1 and Stage 1 plus Stage 2","bbox":[620,346,548,250]}
+{"kind":"notes","id":"nt/rh687i","slide":11,"text":"Stage 1使用合成多视图、精确深度和相机参数学习几何与渲染。Stage 2面对没有新视角真值的真实单图，先生成伪新视角，再交换输入和目标进行自监督微调。论文Fig.11显示结果主观上更锐利。"}
+{"kind":"slide","id":"sl/eumt4b","slide":12,"title":"核心损失：分别约束什么问题","textShapes":20}
+{"kind":"textbox","id":"sh/hwru1kv6","slide":12,"name":"text-272","text":"核心损失：分别约束什么问题","textPreview":"核心损失：分别约束什么问题","textChars":13,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/utgbq5wv","slide":12,"name":"text-273","text":"图像质量、几何稳定性与高斯退化需要由不同损失共同处理","textPreview":"图像质量、几何稳定性与高斯退化需要由不同损失共同处理","textChars":26,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/vu9czad0","slide":12,"name":"rule-274","bbox":[72,132,270,5]}
+{"kind":"textbox","id":"sh/8rytovep","slide":12,"name":"text-275","text":"渲染重建","textPreview":"渲染重建","textChars":4,"textLines":1,"bbox":[72,150,270,30]}
+{"kind":"textbox","id":"sh/9s7ux0va","slide":12,"name":"text-276","text":"L_color · L_alpha · L_percep","textPreview":"L_color · L_alpha · L_percep","textChars":28,"textLines":1,"bbox":[72,188,270,28]}
+{"kind":"textbox","id":"sh/m5gbm5wj","slide":12,"name":"text-277","text":"颜色、覆盖关系与新视角视觉质量","textPreview":"颜色、覆盖关系与新视角视觉质量","textChars":15,"textLines":1,"bbox":[72,226,270,58]}
+{"kind":"shape","id":"sh/7qpcvad4","slide":12,"name":"rule-278","bbox":[372,132,270,5]}
+{"kind":"textbox","id":"sh/k3ytkved","slide":12,"name":"text-279","text":"深度约束","textPreview":"深度约束","textChars":4,"textLines":1,"bbox":[372,150,270,30]}
+{"kind":"textbox","id":"sh/l47ut0vy","slide":12,"name":"text-280","text":"L_depth · L_TV","textPreview":"L_depth · L_TV","textChars":14,"textLines":1,"bbox":[372,188,270,28]}
+{"kind":"textbox","id":"sh/9gvixoni","slide":12,"name":"text-281","text":"第一层锚定可见表面，第二层保持平滑","textPreview":"第一层锚定可见表面，第二层保持平滑","textChars":17,"textLines":1,"bbox":[372,226,270,58]}
+{"kind":"shape","id":"sh/ofmhojmx","slide":12,"name":"rule-282","bbox":[72,316,270,5]}
+{"kind":"textbox","id":"sh/net0ve5c","slide":12,"name":"text-283","text":"高斯正则","textPreview":"高斯正则","textChars":4,"textLines":1,"bbox":[72,334,270,30]}
+{"kind":"textbox","id":"sh/mtkzm94r","slide":12,"name":"text-284","text":"L_grad · L_delta · L_splat","textPreview":"L_grad · L_delta · L_splat","textChars":26,"textLines":1,"bbox":[72,372,270,28]}
+{"kind":"textbox","id":"sh/1sbit4n6","slide":12,"name":"text-285","text":"抑制漂浮、过大和退化高斯","textPreview":"抑制漂浮、过大和退化高斯","textChars":12,"textLines":1,"bbox":[72,410,270,58]}
+{"kind":"shape","id":"sh/0r2hkj61","slide":12,"name":"rule-286","bbox":[372,316,270,5]}
+{"kind":"textbox","id":"sh/zqt0re5g","slide":12,"name":"text-287","text":"深度修正瓶颈","textPreview":"深度修正瓶颈","textChars":6,"textLines":1,"bbox":[372,334,270,30]}
+{"kind":"textbox","id":"sh/epkzi9ov","slide":12,"name":"text-288","text":"L_scale · L_multiscale-TV","textPreview":"L_scale · L_multiscale-TV","textChars":25,"textLines":1,"bbox":[372,372,270,28]}
+{"kind":"textbox","id":"sh/dobip4na","slide":12,"name":"text-289","text":"允许必要修正，限制任意改变深度","textPreview":"允许必要修正，限制任意改变深度","textChars":15,"textLines":1,"bbox":[372,410,270,58]}
+{"kind":"shape","id":"sh/47mhwzel","slide":12,"name":"box-290","bbox":[72,520,584,74]}
+{"kind":"textbox","id":"sh/58vi54v6","slide":12,"name":"text-291","text":"ScanNet++ DISTS","textPreview":"ScanNet++ DISTS","textChars":15,"textLines":1,"bbox":[92,538,180,24]}
+{"kind":"textbox","id":"sh/i54zupwf","slide":12,"name":"text-292","text":"0.229  →  0.162  →  0.063","textPreview":"0.229  →  0.162  →  0.063","textChars":25,"textLines":1,"bbox":[270,533,358,34]}
+{"kind":"textbox","id":"sh/36d03ud0","slide":12,"name":"text-293","text":"仅重建损失      +深度      +感知","textPreview":"仅重建损失      +深度      +感知","textChars":23,"textLines":1,"bbox":[285,568,332,20]}
+{"kind":"textbox","id":"sh/g3mhszep","slide":12,"name":"text-294","text":"结论：感知损失带来主要质量提升；正则项主要减少退化高斯并改善渲染速度。","textPreview":"结论：感知损失带来主要质量提升；正则项主要减少退化高斯并改善渲染速度。","textChars":35,"textLines":1,"bbox":[688,566,490,38]}
+{"kind":"textbox","id":"sh/h4vi14vu","slide":12,"name":"text-295","text":"图源：SHARP原论文 Fig.9；数据来自 Tables 8-10。","textPreview":"图源：SHARP原论文 Fig.9；数据来自 Tables 8-10。","textChars":35,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/u14zqpwj","slide":12,"name":"box-453","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/v2d0zud4","slide":12,"name":"text-454","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"image","id":"im/36dw7upc","slide":12,"name":"","alt":"SHARP Figure 9 showing the visual effects of loss terms","bbox":[688,128,492,430]}
+{"kind":"notes","id":"nt/eumt4b","slide":12,"text":"损失分为渲染重建、深度约束、高斯正则和Depth Adjustment信息瓶颈四组。消融显示深度损失把ScanNet++ DISTS从0.229降到0.162，感知损失进一步降到0.063，是质量提升的主要来源；正则项主要减少退化高斯并改善速度。"}
+{"kind":"slide","id":"sl/jetc3ut0","slide":13,"title":"其他消融结论","textShapes":26}
+{"kind":"textbox","id":"sh/a90z21on","slide":13,"name":"text-296","text":"其他消融结论","textPreview":"其他消融结论","textChars":6,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/xcryxg7y","slide":13,"name":"text-297","text":"Depth Adjustment、深度骨干和高斯数量分别影响不同环节","textPreview":"Depth Adjustment、深度骨干和高斯数量分别影响不同环节","textChars":34,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"textbox","id":"sh/wbih4b6d","slide":13,"name":"text-298","text":"Depth Adjustment","textPreview":"Depth Adjustment","textChars":16,"textLines":1,"bbox":[76,132,310,34]}
+{"kind":"textbox","id":"sh/n69grmpw","slide":13,"name":"text-299","text":"未使用","textPreview":"未使用","textChars":3,"textLines":1,"bbox":[78,182,174,28]}
+{"kind":"shape","id":"sh/250zy18b","slide":13,"name":"box-300","bbox":[258,186,270,16]}
+{"kind":"shape","id":"sh/98rytw72","slide":13,"name":"box-301","bbox":[258,186,173.25,16]}
+{"kind":"textbox","id":"sh/o7ih0r6h","slide":13,"name":"text-302","text":"0.077","textPreview":"0.077","textChars":5,"textLines":1,"bbox":[536,181,66,26]}
+{"kind":"textbox","id":"sh/72t03qp0","slide":13,"name":"text-303","text":"使用","textPreview":"使用","textChars":2,"textLines":1,"bbox":[78,226,174,28]}
+{"kind":"shape","id":"sh/61kzalof","slide":13,"name":"box-304","bbox":[258,230,270,16]}
+{"kind":"shape","id":"sh/ofqtgnyt","slide":13,"name":"box-305","bbox":[258,230,144,16]}
+{"kind":"textbox","id":"sh/9gza9sze","slide":13,"name":"text-306","text":"0.064","textPreview":"0.064","textChars":5,"textLines":1,"bbox":[536,225,66,26]}
+{"kind":"textbox","id":"sh/mdobedg3","slide":13,"name":"text-307","text":"训练时修正深度后，感知指标稳定改善。","textPreview":"训练时修正深度后，感知指标稳定改善。","textChars":18,"textLines":1,"bbox":[78,276,500,38]}
+{"kind":"textbox","id":"sh/nehs7iho","slide":13,"name":"text-308","text":"解冻Depth骨干","textPreview":"解冻Depth骨干","textChars":9,"textLines":1,"bbox":[76,350,310,34]}
+{"kind":"textbox","id":"sh/0b6tc3yx","slide":13,"name":"text-309","text":"冻结","textPreview":"冻结","textChars":2,"textLines":1,"bbox":[78,400,174,28]}
+{"kind":"shape","id":"sh/1cfa58zi","slide":13,"name":"box-310","bbox":[258,404,270,16]}
+{"kind":"shape","id":"sh/epobatgr","slide":13,"name":"box-311","bbox":[258,404,189,16]}
+{"kind":"textbox","id":"sh/zaxs3yhc","slide":13,"name":"text-312","text":"0.084","textPreview":"0.084","textChars":5,"textLines":1,"bbox":[536,399,66,26]}
+{"kind":"textbox","id":"sh/cn6t83y1","slide":13,"name":"text-313","text":"解冻","textPreview":"解冻","textChars":2,"textLines":1,"bbox":[78,444,174,28]}
+{"kind":"shape","id":"sh/dofa18z6","slide":13,"name":"box-314","bbox":[258,448,270,16]}
+{"kind":"shape","id":"sh/tsnip0ny","slide":13,"name":"box-315","bbox":[258,448,144,16]}
+{"kind":"textbox","id":"sh/87ehgv6d","slide":13,"name":"text-316","text":"0.064","textPreview":"0.064","textChars":5,"textLines":1,"bbox":[536,443,66,26]}
+{"kind":"textbox","id":"sh/7650nq5s","slide":13,"name":"text-317","text":"允许深度特征适应新视角合成目标。","textPreview":"允许深度特征适应新视角合成目标。","textChars":16,"textLines":1,"bbox":[78,494,500,38]}
+{"kind":"shape","id":"sh/65wzelo7","slide":13,"name":"rule-318","bbox":[630,130,2,430]}
+{"kind":"textbox","id":"sh/l43ilgn2","slide":13,"name":"text-319","text":"高斯数量","textPreview":"高斯数量","textChars":4,"textLines":1,"bbox":[676,132,260,34]}
+{"kind":"textbox","id":"sh/k3uhcb6h","slide":13,"name":"text-320","text":"2×192²","textPreview":"2×192²","textChars":6,"textLines":1,"bbox":[678,182,174,28]}
+{"kind":"shape","id":"sh/j2lgjq5w","slide":13,"name":"box-321","bbox":[858,186,250,16]}
+{"kind":"shape","id":"sh/y1czalob","slide":13,"name":"box-322","bbox":[858,186,229.17,16]}
+{"kind":"textbox","id":"sh/p07ixkn6","slide":13,"name":"text-323","text":"0.110","textPreview":"0.110","textChars":5,"textLines":1,"bbox":[1116,181,66,26]}
+{"kind":"textbox","id":"sh/4zyhofml","slide":13,"name":"text-324","text":"2×384²","textPreview":"2×384²","textChars":6,"textLines":1,"bbox":[678,226,174,28]}
+{"kind":"shape","id":"sh/m58fih43","slide":13,"name":"box-325","bbox":[858,230,250,16]}
+{"kind":"shape","id":"sh/n61wbmlo","slide":13,"name":"box-326","bbox":[858,230,160.42,16]}
+{"kind":"textbox","id":"sh/o7axk7m9","slide":13,"name":"text-327","text":"0.077","textPreview":"0.077","textChars":5,"textLines":1,"bbox":[1116,225,66,26]}
+{"kind":"textbox","id":"sh/98jedc3u","slide":13,"name":"text-328","text":"2×768²","textPreview":"2×768²","textChars":6,"textLines":1,"bbox":[678,270,174,28]}
+{"kind":"shape","id":"sh/eh8fex47","slide":13,"name":"box-329","bbox":[858,274,250,16]}
+{"kind":"shape","id":"sh/z2hw72lc","slide":13,"name":"box-330","bbox":[858,274,133.33,16]}
+{"kind":"textbox","id":"sh/03qxg7mx","slide":13,"name":"text-331","text":"0.064","textPreview":"0.064","textChars":5,"textLines":1,"bbox":[1116,269,66,26]}
+{"kind":"textbox","id":"sh/14ze9c3i","slide":13,"name":"text-332","text":"更多高斯提升细节表达，但同时增加场景大小。","textPreview":"更多高斯提升细节表达，但同时增加场景大小。","textChars":21,"textLines":1,"bbox":[678,324,470,42]}
+{"kind":"shape","id":"sh/ydcfq1kb","slide":13,"name":"box-333","bbox":[678,394,478,146]}
+{"kind":"textbox","id":"sh/jylwj6lw","slide":13,"name":"text-334","text":"SSFT","textPreview":"SSFT","textChars":4,"textLines":1,"bbox":[704,416,100,30]}
+{"kind":"textbox","id":"sh/3qhsfypc","slide":13,"name":"text-335","text":"ScanNet++指标没有一致改善，Tanks and Temples部分指标改善；Fig.11显示主观结果更锐利。","textPreview":"ScanNet++指标没有一致改善，Tanks and Temples部分指标改善；Fig.11显示主观结果更锐利。","textChars":58,"textLines":1,"bbox":[704,460,420,62]}
+{"kind":"textbox","id":"sh/ip8bmtor","slide":13,"name":"text-336","text":"数据：SHARP原论文 Tables 11-14。DISTS均采用ScanNet++口径。","textPreview":"数据：SHARP原论文 Tables 11-14。DISTS均采用ScanNet++口径。","textChars":45,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/5sjah872","slide":13,"name":"box-455","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/4rato36h","slide":13,"name":"text-456","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/jetc3ut0","slide":13,"text":"其他消融表明，Depth Adjustment和解冻深度骨干都能改善感知指标；高斯数量从两层192平方增加到两层768平方时，DISTS由0.110降到0.064。SSFT数值改善不一致，但主观图像更锐利。"}
+{"kind":"slide","id":"sl/8f2psfyx","slide":14,"title":"本地复现结果","textShapes":26}
+{"kind":"textbox","id":"sh/edk3ed4j","slide":14,"name":"text-337","text":"本地复现结果","textPreview":"本地复现结果","textChars":6,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/1gbm9s3a","slide":14,"name":"text-338","text":"已跑通官方预测、PLY导出与新视角渲染流程","textPreview":"已跑通官方预测、PLY导出与新视角渲染流程","textChars":21,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/0f2lgnmp","slide":14,"name":"rule-339","bbox":[72,132,210,4]}
+{"kind":"textbox","id":"sh/ra943il8","slide":14,"name":"text-340","text":"流程","textPreview":"流程","textChars":2,"textLines":1,"bbox":[72,146,210,26]}
+{"kind":"textbox","id":"sh/q903ad4n","slide":14,"name":"text-341","text":"预测、PLY导出\n与渲染已跑通","textPreview":"预测、PLY导出 | 与渲染已跑通","textChars":15,"textLines":2,"bbox":[72,176,210,52]}
+{"kind":"shape","id":"sh/dcbm583y","slide":14,"name":"rule-342","bbox":[312,132,210,4]}
+{"kind":"textbox","id":"sh/sb2lcnmd","slide":14,"name":"text-343","text":"输出","textPreview":"输出","textChars":2,"textLines":1,"bbox":[312,146,210,26]}
+{"kind":"textbox","id":"sh/b6d4f2lc","slide":14,"name":"text-344","text":"1,179,648个高斯","textPreview":"1,179,648个高斯","textChars":12,"textLines":1,"bbox":[312,176,210,52]}
+{"kind":"shape","id":"sh/a543mx4r","slide":14,"name":"rule-345","bbox":[552,132,210,4]}
+{"kind":"textbox","id":"sh/wvupgz6t","slide":14,"name":"text-346","text":"文件","textPreview":"文件","textChars":2,"textLines":1,"bbox":[552,146,210,26]}
+{"kind":"textbox","id":"sh/xw3q94ne","slide":14,"name":"text-347","text":"PLY约64 MB","textPreview":"PLY约64 MB","textChars":9,"textLines":1,"bbox":[552,176,210,52]}
+{"kind":"shape","id":"sh/atc7epon","slide":14,"name":"rule-348","bbox":[72,244,210,4]}
+{"kind":"textbox","id":"sh/bulo7u58","slide":14,"name":"text-349","text":"网络前向","textPreview":"网络前向","textChars":4,"textLines":1,"bbox":[72,258,210,26]}
+{"kind":"textbox","id":"sh/orapcf6h","slide":14,"name":"text-350","text":"约1.26 s","textPreview":"约1.26 s","textChars":7,"textLines":1,"bbox":[72,288,210,52]}
+{"kind":"shape","id":"sh/9sj65kn2","slide":14,"name":"rule-351","bbox":[312,244,210,4]}
+{"kind":"textbox","id":"sh/mps7a5or","slide":14,"name":"text-352","text":"后处理","textPreview":"后处理","textChars":3,"textLines":1,"bbox":[312,258,210,26]}
+{"kind":"textbox","id":"sh/nq1o3a5w","slide":14,"name":"text-353","text":"约4.23 s","textPreview":"约4.23 s","textChars":7,"textLines":1,"bbox":[312,288,210,52]}
+{"kind":"shape","id":"sh/0nap8f6l","slide":14,"name":"rule-354","bbox":[552,244,210,4]}
+{"kind":"textbox","id":"sh/1oj61kn6","slide":14,"name":"text-355","text":"冷启动predict","textPreview":"冷启动predict","textChars":10,"textLines":1,"bbox":[552,258,210,26]}
+{"kind":"textbox","id":"sh/hkbm5wzu","slide":14,"name":"text-356","text":"约28 s","textPreview":"约28 s","textChars":5,"textLines":1,"bbox":[552,288,210,52]}
+{"kind":"shape","id":"sh/gj25cry9","slide":14,"name":"box-357","bbox":[800,132,382,208]}
+{"kind":"textbox","id":"sh/fit436ho","slide":14,"name":"text-358","text":"渲染端到端记录","textPreview":"渲染端到端记录","textChars":7,"textLines":1,"bbox":[826,154,240,28]}
+{"kind":"shape","id":"sh/uh0na1g3","slide":14,"name":"box-359","bbox":[830,210,8,8]}
+{"kind":"textbox","id":"sh/tgrm1wzy","slide":14,"name":"text-360","text":"首次渲染约91 s，其中扩展初始化约77.6 s","textPreview":"首次渲染约91 s，其中扩展初始化约77.6 s","textChars":24,"textLines":1,"bbox":[848,202,308,40]}
+{"kind":"shape","id":"sh/sfi58ryd","slide":14,"name":"box-361","bbox":[830,252,8,8]}
+{"kind":"textbox","id":"sh/7u94zmhs","slide":14,"name":"text-362","text":"热启动60帧约13.98 s","textPreview":"热启动60帧约13.98 s","textChars":14,"textLines":1,"bbox":[848,244,308,40]}
+{"kind":"shape","id":"sh/6t0n6hg7","slide":14,"name":"box-363","bbox":[830,294,8,8]}
+{"kind":"textbox","id":"sh/dcv6dgz2","slide":14,"name":"text-364","text":"CLI端到端约4.29 FPS","textPreview":"CLI端到端约4.29 FPS","textChars":15,"textLines":1,"bbox":[848,286,308,40]}
+{"kind":"shape","id":"sh/cbm5kbyh","slide":14,"name":"box-365","bbox":[74,390,334,150]}
+{"kind":"textbox","id":"sh/alwbitsn","slide":14,"name":"text-366","text":"输入图","textPreview":"输入图","textChars":3,"textLines":1,"bbox":[94,430,294,32]}
+{"kind":"textbox","id":"sh/bm5sryt8","slide":14,"name":"text-367","text":"截图待补","textPreview":"截图待补","textChars":4,"textLines":1,"bbox":[94,475,294,28]}
+{"kind":"shape","id":"sh/wnetkjat","slide":14,"name":"box-368","bbox":[444,390,334,150]}
+{"kind":"textbox","id":"sh/xonutobe","slide":14,"name":"text-369","text":"渲染帧 / 视频截图","textPreview":"渲染帧 / 视频截图","textChars":10,"textLines":1,"bbox":[464,430,294,32]}
+{"kind":"textbox","id":"sh/mhcbe9sr","slide":14,"name":"text-370","text":"截图待补","textPreview":"截图待补","textChars":4,"textLines":1,"bbox":[464,475,294,28]}
+{"kind":"shape","id":"sh/nilsnetc","slide":14,"name":"box-371","bbox":[814,390,334,150]}
+{"kind":"textbox","id":"sh/ojutgjah","slide":14,"name":"text-372","text":"深度或PLY检查图","textPreview":"深度或PLY检查图","textChars":9,"textLines":1,"bbox":[834,430,294,32]}
+{"kind":"textbox","id":"sh/9k3apob2","slide":14,"name":"text-373","text":"截图待补","textPreview":"截图待补","textChars":4,"textLines":1,"bbox":[834,475,294,28]}
+{"kind":"textbox","id":"sh/6dgbqdsv","slide":14,"name":"text-374","text":"测试口径：官方CLI端到端，含初始化、数据搬运与文件处理；不可与论文常驻GPU纯渲染约100 FPS直接比较。截图待补。","textPreview":"测试口径：官方CLI端到端，含初始化、数据搬运与文件处理；不可与论文常驻GPU纯渲染约100 FPS直接比较。截图待补。","textChars":60,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/7epczitg","slide":14,"name":"box-457","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/r6l8vaxw","slide":14,"name":"text-458","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/8f2psfyx","slide":14,"text":"本地已经跑通官方预测、PLY导出和新视角渲染流程。单张图像输出1,179,648个高斯，PLY约64 MB。网络前向约1.26秒，后处理约4.23秒，冷启动完整预测约28秒。首次渲染约91秒，其中CUDA扩展初始化约77.6秒；热启动60帧约13.98秒，CLI端到端约4.29 FPS。这些是完整命令行流程数据，不能直接与论文常驻GPU纯渲染约100 FPS比较。"}
+{"kind":"slide","id":"sl/hgzapcr6","slide":15,"title":"局限与失败案例","textShapes":13}
+{"kind":"textbox","id":"sh/dsr6t8bu","slide":15,"name":"text-375","text":"局限与失败案例","textPreview":"局限与失败案例","textChars":7,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/q50nydsj","slide":15,"name":"text-376","text":"主要风险来自单目深度错误、附近视角范围与当前工程实现成本","textPreview":"主要风险来自单目深度错误、附近视角范围与当前工程实现成本","textChars":28,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"shape","id":"sh/o3i5w3ad","slide":15,"name":"box-377","bbox":[812,130,370,408]}
+{"kind":"textbox","id":"sh/p4r6p8by","slide":15,"name":"text-378","text":"论文失败场景","textPreview":"论文失败场景","textChars":6,"textLines":1,"bbox":[840,152,220,28]}
+{"kind":"shape","id":"sh/21gnuts7","slide":15,"name":"box-379","bbox":[844,206,8,8]}
+{"kind":"textbox","id":"sh/32ponyts","slide":15,"name":"text-380","text":"微距景深：前后关系误判","textPreview":"微距景深：前后关系误判","textChars":11,"textLines":1,"bbox":[862,198,292,44]}
+{"kind":"shape","id":"sh/gzy5s3a1","slide":15,"name":"box-381","bbox":[844,252,8,8]}
+{"kind":"textbox","id":"sh/1076lobm","slide":15,"name":"text-382","text":"星空纹理：远景被解释为弯曲表面","textPreview":"星空纹理：远景被解释为弯曲表面","textChars":15,"textLines":1,"bbox":[862,244,292,44]}
+{"kind":"shape","id":"sh/hcfy9k3u","slide":15,"name":"box-383","bbox":[844,298,8,8]}
+{"kind":"textbox","id":"sh/gb6x0zm9","slide":15,"name":"text-384","text":"水面反射：反射被解释为远处几何","textPreview":"水面反射：反射被解释为远处几何","textChars":15,"textLines":1,"bbox":[862,290,292,44]}
+{"kind":"textbox","id":"sh/vaxg7ulo","slide":15,"name":"text-385","text":"工程约束","textPreview":"工程约束","textChars":4,"textLines":1,"bbox":[840,360,180,28]}
+{"kind":"shape","id":"sh/u9ofyp43","slide":15,"name":"box-386","bbox":[844,410,8,8]}
+{"kind":"textbox","id":"sh/t8fy5k3i","slide":15,"name":"text-387","text":"702M总参数，约64 MB/场景","textPreview":"702M总参数，约64 MB/场景","textChars":17,"textLines":1,"bbox":[862,402,292,32]}
+{"kind":"shape","id":"sh/876xwfmx","slide":15,"name":"box-388","bbox":[844,444,8,8]}
+{"kind":"textbox","id":"sh/7mdg3als","slide":15,"name":"text-389","text":"CPU float64 SVD后处理","textPreview":"CPU float64 SVD后处理","textChars":18,"textLines":1,"bbox":[862,436,292,32]}
+{"kind":"shape","id":"sh/6l4fu547","slide":15,"name":"box-390","bbox":[844,478,8,8]}
+{"kind":"textbox","id":"sh/lkvy103m","slide":15,"name":"text-391","text":"官方gsplat实现依赖CUDA","textPreview":"官方gsplat实现依赖CUDA","textChars":16,"textLines":1,"bbox":[862,470,292,32]}
+{"kind":"shape","id":"sh/kjmxsfm1","slide":15,"name":"box-392","bbox":[844,512,8,8]}
+{"kind":"textbox","id":"sh/cnqh8fux","slide":15,"name":"text-393","text":"主要面向附近视角","textPreview":"主要面向附近视角","textChars":8,"textLines":1,"bbox":[862,504,292,32]}
+{"kind":"textbox","id":"sh/xozyhkbi","slide":15,"name":"text-394","text":"图源：SHARP原论文 Fig.8；参数与工程行为结合论文 Table 3及本地源码整理。","textPreview":"图源：SHARP原论文 Fig.8；参数与工程行为结合论文 Table 3及本地源码整理。","textChars":45,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/q18f65cr","slide":15,"name":"box-459","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/bmhgfatc","slide":15,"name":"text-460","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"image","id":"im/ed4n6p8j","slide":15,"name":"","alt":"SHARP depth failure cases, cropped from Figure 8","bbox":[72,132,706,414]}
+{"kind":"notes","id":"nt/hgzapcr6","slide":15,"text":"失败案例主要由深度初始化错误引起。工程上还要考虑模型参数量、单场景大小、CPU SVD后处理、CUDA渲染器和附近视角限制。"}
+{"kind":"slide","id":"sl/6lsnupw7","slide":16,"title":"对课题的启发与下一步","textShapes":26}
+{"kind":"textbox","id":"sh/a9gvid8v","slide":16,"name":"text-395","text":"对课题的启发与下一步","textPreview":"对课题的启发与下一步","textChars":10,"textLines":1,"bbox":[66,19,1050,44]}
+{"kind":"textbox","id":"sh/xc7eds76","slide":16,"name":"text-396","text":"先验证浅3D质量和表示成本，再决定移动端最终表达路线","textPreview":"先验证浅3D质量和表示成本，再决定移动端最终表达路线","textChars":26,"textLines":1,"bbox":[69,67,1080,28]}
+{"kind":"textbox","id":"sh/wbydknq1","slide":16,"name":"text-397","text":"可直接借鉴的设计","textPreview":"可直接借鉴的设计","textChars":8,"textLines":1,"bbox":[76,126,280,34]}
+{"kind":"shape","id":"sh/jepwf2pc","slide":16,"name":"box-398","bbox":[76,174,350,44]}
+{"kind":"textbox","id":"sh/idgvmx8r","slide":16,"name":"text-399","text":"Base + Delta","textPreview":"Base + Delta","textChars":12,"textLines":1,"bbox":[90,183,320,28]}
+{"kind":"shape","id":"sh/5grehs7i","slide":16,"name":"box-400","bbox":[76,232,350,44]}
+{"kind":"textbox","id":"sh/kfidonqx","slide":16,"name":"text-401","text":"双层深度","textPreview":"双层深度","textChars":4,"textLines":1,"bbox":[90,241,320,28]}
+{"kind":"shape","id":"sh/zi5c3y98","slide":16,"name":"box-402","bbox":[76,290,350,44]}
+{"kind":"textbox","id":"sh/ehwvat8n","slide":16,"name":"text-403","text":"训练专用Depth Adjustment","textPreview":"训练专用Depth Adjustment","textChars":20,"textLines":1,"bbox":[90,299,320,28]}
+{"kind":"shape","id":"sh/c3e1gjyd","slide":16,"name":"box-404","bbox":[76,348,350,44]}
+{"kind":"textbox","id":"sh/x4ni9ofy","slide":16,"name":"text-405","text":"感知损失","textPreview":"感知损失","textChars":4,"textLines":1,"bbox":[90,357,320,28]}
+{"kind":"shape","id":"sh/a1wze9g7","slide":16,"name":"box-406","bbox":[76,406,350,44]}
+{"kind":"textbox","id":"sh/b2507exs","slide":16,"name":"text-407","text":"合成到真实课程学习","textPreview":"合成到真实课程学习","textChars":9,"textLines":1,"bbox":[90,415,320,28]}
+{"kind":"shape","id":"sh/kre1k3y9","slide":16,"name":"arrow-408","bbox":[454,284,60,28]}
+{"kind":"textbox","id":"sh/ls7idofu","slide":16,"name":"text-409","text":"移动端表示路线","textPreview":"移动端表示路线","textChars":7,"textLines":1,"bbox":[540,126,280,34]}
+{"kind":"shape","id":"sh/y5wjitgj","slide":16,"name":"box-410","bbox":[540,176,300,140]}
+{"kind":"textbox","id":"sh/z650byxo","slide":16,"name":"text-411","text":"路线 A","textPreview":"路线 A","textChars":4,"textLines":1,"bbox":[562,194,100,28]}
+{"kind":"textbox","id":"sh/0buh8zy5","slide":16,"name":"text-412","text":"压缩3DGS\nMetal / Vulkan / OpenGL ES / WebGPU","textPreview":"压缩3DGS | Metal / Vulkan / OpenGL ES / WebGPU","textChars":42,"textLines":2,"bbox":[560,228,260,66]}
+{"kind":"shape","id":"sh/1w3i14fq","slide":16,"name":"box-413","bbox":[540,340,300,140]}
+{"kind":"textbox","id":"sh/hsvy50re","slide":16,"name":"text-414","text":"路线 B","textPreview":"路线 B","textChars":4,"textLines":1,"bbox":[562,358,100,28]}
+{"kind":"textbox","id":"sh/grmxwvqt","slide":16,"name":"text-415","text":"蒸馏或转换\nMesh / LDI","textPreview":"蒸馏或转换 | Mesh / LDI","textChars":16,"textLines":2,"bbox":[560,393,260,62]}
+{"kind":"textbox","id":"sh/fqdg3q98","slide":16,"name":"text-416","text":"下一步实验","textPreview":"下一步实验","textChars":5,"textLines":1,"bbox":[884,126,250,34]}
+{"kind":"shape","id":"sh/up4fal83","slide":16,"name":"box-417","bbox":[886,170,42,42]}
+{"kind":"textbox","id":"sh/pwvy90rq","slide":16,"name":"text-418","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[890,174,34,34]}
+{"kind":"textbox","id":"sh/4vmh0vq5","slide":16,"name":"text-419","text":"真实单张照片质量测试","textPreview":"真实单张照片质量测试","textChars":10,"textLines":1,"bbox":[942,176,238,34]}
+{"kind":"shape","id":"sh/3udg7q9k","slide":16,"name":"box-420","bbox":[886,236,42,42]}
+{"kind":"textbox","id":"sh/2t4fyl8z","slide":16,"name":"text-421","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[890,240,34,34]}
+{"kind":"textbox","id":"sh/d0fydk7m","slide":16,"name":"text-422","text":"分析空洞、漂浮和深度错误","textPreview":"分析空洞、漂浮和深度错误","textChars":12,"textLines":1,"bbox":[942,242,238,34]}
+{"kind":"shape","id":"sh/cz6h4fq1","slide":16,"name":"box-423","bbox":[886,302,42,42]}
+{"kind":"textbox","id":"sh/atg3idk7","slide":16,"name":"text-424","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[890,306,34,34]}
+{"kind":"textbox","id":"sh/bup4rils","slide":16,"name":"text-425","text":"高斯裁剪与量化","textPreview":"高斯裁剪与量化","textChars":7,"textLines":1,"bbox":[942,308,238,34]}
+{"kind":"shape","id":"sh/cvylkn2d","slide":16,"name":"box-426","bbox":[886,368,42,42]}
+{"kind":"textbox","id":"sh/xw7mts3y","slide":16,"name":"text-427","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[890,372,34,34]}
+{"kind":"textbox","id":"sh/yxgnmxkj","slide":16,"name":"text-428","text":"测场景大小与渲染速度","textPreview":"测场景大小与渲染速度","textChars":10,"textLines":1,"bbox":[942,374,238,34]}
+{"kind":"shape","id":"sh/jyp4fil4","slide":16,"name":"box-429","bbox":[886,434,42,42]}
+{"kind":"textbox","id":"sh/kzy5on2p","slide":16,"name":"text-430","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[890,438,34,34]}
+{"kind":"textbox","id":"sh/lkrmhsju","slide":16,"name":"text-431","text":"决定移动端表示路线","textPreview":"决定移动端表示路线","textChars":9,"textLines":1,"bbox":[942,440,238,34]}
+{"kind":"textbox","id":"sh/6l0nqxkf","slide":16,"name":"text-432","text":"判断原则：3DGS表示本身不限定CUDA；移动端可采用轻量3DGS渲染，也可转换为Mesh/LDI。","textPreview":"判断原则：3DGS表示本身不限定CUDA；移动端可采用轻量3DGS渲染，也可转换为Mesh/LDI。","textChars":50,"textLines":1,"bbox":[72,622,1120,22]}
+{"kind":"shape","id":"sh/7m94j210","slide":16,"name":"box-461","bbox":[610,688,60,24]}
+{"kind":"textbox","id":"sh/fi5432t4","slide":16,"name":"text-462","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[610,692,60,18]}
+{"kind":"notes","id":"nt/6lsnupw7","slide":16,"text":"下一步先用真实照片建立失败案例集，再测试裁剪、量化、场景大小和速度。根据数据决定继续压缩3DGS，还是转换为Mesh或LDI。"}
