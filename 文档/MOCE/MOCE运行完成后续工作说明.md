@@ -95,15 +95,24 @@ cd /home/mcy/gastric-cbm
 
 ## 三、生成自动分析结果
 
-计划新增脚本：
+现有脚本：
 
 ```text
 程序/MOCE/正式代码/analyze_moce_results.py
 ```
 
-注意：截至本文档建立时，该脚本尚未正式完成。不要运行不存在的命令。应在两个模型最终CSV生成后，根据实际字段编写并验证。
+该脚本已在EfficientNet-B0的class_0和class_1正式结果上运行并验证。ResNet50完成后可直接复用。
 
-计划输出：
+运行：
+
+```bash
+cd /home/mcy/gastric-cbm
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+程序/MOCE/正式代码/analyze_moce_results.py
+```
+
+输出：
 
 ```text
 analysis_summary.xlsx
@@ -116,6 +125,8 @@ ssc_sdc_accuracy_curve.png
 ssc_sdc_probability_curve.png
 cluster_quality.png
 医生概念命名表.xlsx
+典型案例图/
+重要概念扩展图/
 ```
 
 主要分析内容：
@@ -124,7 +135,7 @@ cluster_quality.png
 2. 统计每位患者贡献的候选向量数量；
 3. 计算每个概念簇的单患者最大贡献比例和Top 5患者合计比例；
 4. 将 `cluster_assignments.csv` 与 `dataset_manifest.csv` 关联，统计医院来源构成；
-5. 综合S_h、重要性排名、患者覆盖和来源集中度筛选重要概念；
+5. 综合S_h、重要性排名、患者覆盖和相对类别基线的来源富集程度筛选重要概念；
 6. 筛选概率下降明显、单独保留概率较高和概率下降为负的典型/异常案例；
 7. 绐制SSC/SDC准确率曲线和平均目标概率曲线；
 8. 生成医生可填写的医学概念命名表。
@@ -133,37 +144,37 @@ cluster_quality.png
 
 - 自动筛选结果只是审核优先级，不是医学结论；
 - 高重要性概念仍需检查患者覆盖和医院来源；
-- 单患者或单医院占比高时，应回看原图；
+- 单患者贡献偏高时应回看原图；医院来源必须与该类别整体来源基线比较；
 - `concept_number = cluster_id + 1`，所有医生材料统一使用1～25编号。
 
-## 四、整理医生审核材料包
+## 四、分开保存自动分析结果与MOCE原始结果
 
-计划新增脚本：
-
-```text
-build_moce_review_package.py
-```
-
-注意：截至本文档建立时，该脚本尚未正式完成。
-
-建议输出结构：
+不再额外建立整理目录，也不需要运行新的整理脚本。第三步中的
+`analyze_moce_results.py` 会直接在原有 `结果/MOCE分析` 内生成以下结构：
 
 ```text
-结果/MOCE医生审核材料/第二批/
-├── MOCE聚类最终结果分析指南_医学生版.docx
-├── 01_ResNet50_主要模型/
-│   ├── class_1_癌高级别/
-│   │   ├── 01_自动分析结果/
-│   │   ├── 02_医生审阅图/
-│   │   ├── 03_医生填写表/
-│   │   └── 04_MOCE原始结果表/
-│   └── class_0_非癌对照/
-└── 02_EfficientNet_B0_对照模型/
-    ├── class_1_癌高级别/
-    └── class_0_非癌对照/
+结果/MOCE分析/{model}/class_{label}/
+├── 01_自动分析结果/
+└── 02_MOCE原始结果/
 ```
 
-材料包不再额外放置重复的文件夹说明，统一使用：
+`01_自动分析结果`包括汇总Excel、曲线、典型案例图、重要概念扩展图、医生概念命名表
+和清晰版概念聚类图。`02_MOCE原始结果`包括以下可追溯表格和原始总览图：
+
+```text
+concept_clusters.png
+cluster_assignments.csv
+cluster_summary.csv
+concept_importance.csv
+concept_scores_per_image.csv
+ssc_sdc_summary.csv
+ssc_sdc_per_image.csv
+```
+
+`candidate_features.npz`、`kmeans_model.joblib`、全部候选区域和全部候选掩码体积较大，
+并非医学生常规分析材料，因此不重复复制；它们仍保留在正式聚类目录中。
+
+分析目录不额外放置重复的文件夹说明，统一使用：
 
 ```text
 文档/MOCE/MOCE聚类最终结果分析指南_医学生版.docx
@@ -173,10 +184,12 @@ build_moce_review_package.py
 
 ```text
 自动分析结果
-→ 医生审阅图
-→ 医生填写表
-→ 按需追溯MOCE原始结果表
+→ 医生填写概念命名表
+→ 按需追溯MOCE原始结果
 ```
+
+当前分析目录仍包含患者编号和原始图像信息，不能直接发送给医学生。医生需要审核时，
+再单独建立一个经过匿名化的最终提交文件夹；平时不再维护重复的中间整理目录。
 
 ## 五、材料发送前匿名化
 
