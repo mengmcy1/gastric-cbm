@@ -25,8 +25,8 @@ SAE 激活不等于医学概念标签。不能把 `h_k>0` 直接转换成“概�
 模板位于：
 
 ```text
-文档/SAE标注模板/concept_catalog_template.csv
-文档/SAE标注模板/concept_annotations_template.csv
+文档/SAE/标注模板/concept_catalog_template.csv
+文档/SAE/标注模板/concept_annotations_template.csv
 ```
 
 ## 3. 概念目录 `concept_catalog.csv`
