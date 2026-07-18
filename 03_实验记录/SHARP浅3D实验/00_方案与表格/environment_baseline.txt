@@ -1,0 +1,37 @@
+SHARP 浅 3D 先导实验：环境基线（阶段 0）
+记录时间：2026-07-17
+
+项目 Git
+- HEAD: ad055697f1d228afd0fb9f79d3b6cf2bc2814602
+- commit subject: 更新 SHARP 学习进度汇报 PPT
+- working tree: 存在未跟踪 .claude/settings.local.json；不属于本实验输出。
+
+权重
+- 文件：99_过程文件_可删除或归档/临时文件/SHARP环境验证/torch_cache/hub/checkpoints/sharp_2572gikvuh.pt
+- 大小：2,809,738,232 bytes
+- SHA256: 94211A75198C47F61FCA7D739BA08A215418D8D398D48FDDF023BACCC24F073D
+- 注意：源码 checkpoints/ 目录当前未发现该文件；独立实验入口必须显式使用上述冻结路径或后续受控副本。
+
+软件与设备
+- Conda 环境：sharp
+- Python: 3.13.14
+- PyTorch: 2.8.0+cu128
+- PyTorch CUDA runtime: 12.8
+- gsplat: 1.5.3
+- NVIDIA driver: 591.91
+- GPU: NVIDIA GeForce RTX 5060 Laptop GPU
+- 当前物理 GPU 编号：0；CUDA 可见 GPU 数量：1；进程内设备名：cuda:0
+- LPIPS: 0.1.4；已使用预训练 AlexNet 感知网络完成一次 CPU 前向计算验证（probe=0.0174204595）。
+- LPIPS 权重：首次验证已下载 AlexNet ImageNet 权重至 PyTorch 缓存；后续正式指标不再依赖下载。
+
+渲染默认口径（来自上游代码，尚未作为正式结果）
+- 轨迹：swipe
+- 帧数：60
+- max_disparity 候选：0 / 0.02 / 0.04 / 0.08
+- 颜色与深度输出：MP4
+- 写入帧率：30 FPS
+- 编码：由 imageio-ffmpeg 后端决定；正式实验入口将固定并记录实际 codec、pix_fmt、分辨率和逐帧数。
+
+已知环境事项
+- 当前 conda run 受 activate.d 脚本异常影响；直接使用 sharp 环境解释器可检查 CUDA、PyTorch 与 gsplat。
+- 不重装 Python、PyTorch、CUDA 或 Conda。
