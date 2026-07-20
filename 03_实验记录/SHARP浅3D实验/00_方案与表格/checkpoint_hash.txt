@@ -1,0 +1,8 @@
+SHARP 模型权重冻结记录
+记录时间：2026-07-20
+
+- 文件：99_过程文件_可删除或归档/临时文件/SHARP环境验证/torch_cache/hub/checkpoints/sharp_2572gikvuh.pt
+- 文件大小：2,809,738,232 bytes
+- SHA256：94211A75198C47F61FCA7D739BA08A215418D8D398D48FDDF023BACCC24F073D
+
+正式实验必须使用同一 SHA256。当前源码 checkpoints/ 目录未保存该权重。

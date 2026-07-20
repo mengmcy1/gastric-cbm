@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "experiment_tool_version": "v2.1",
+  "trajectory": "swipe",
+  "num_steps": 60,
+  "fps": 30,
+  "max_disparity_levels": [0.0, 0.02, 0.04, 0.08],
+  "gaussian_keep_percent": 100,
+  "crop_single_side_percent": 0,
+  "codec": "libx264",
+  "pixel_format": "yuv420p",
+  "macro_block_size": 2,
+  "color_space": "from_ply_metadata",
+  "render_resolution": "from_create_camera_model; record actual width and height per config.json",
+  "encoded_video_resolution": "probe after encoding; must equal render_resolution",
+  "projection_proxy_primary": "P95",
+  "projection_proxy_diagnostics": ["P99", "max"],
+  "projection_proxy_validity": "center/current UV in actual render bounds; center/current camera depth > 0; finite displacement",
+  "device": "physical GPU 0; process cuda:0",
+  "output_policy": "new non-empty output directories are rejected unless explicit --allow-overwrite",
+  "notes": "Projection displacement is a Gaussian-center proxy, not optical flow or a fixed camera angle. Change only max_disparity in the formal motion matrix."
+}

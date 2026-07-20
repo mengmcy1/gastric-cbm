@@ -1,0 +1,20 @@
+SHARP 浅 3D 正式实验代码版本
+记录时间：2026-07-20
+
+Git HEAD
+- commit: fc2ff64901e4365a36a9448a665a69718f303199
+- subject: 更新实验规则与进度：新增 SHARP 浅3D 实验记录、先导样本与实验脚本
+
+正式实验入口
+- 03_实验记录/SHARP浅3D实验/scripts/sharp_experiment_render.py
+- 03_实验记录/SHARP浅3D实验/scripts/sharp_static_metrics.py
+- 03_实验记录/SHARP浅3D实验/scripts/run_motion_matrix.ps1
+- 03_实验记录/SHARP浅3D实验/scripts/summarize_motion_matrix.py
+- 工具版本：v2.1
+
+当前工作区状态
+- 上述两份实验脚本存在未提交的 v2.1 校准修改。
+- AGENTS.md 与实验进度台账存在本轮进度更新。
+- .claude/ 为无关未跟踪本地配置，不属于实验输入或输出。
+
+正式运动实验开始前应再次记录 Git HEAD 和 git status；若代码尚未提交，以脚本文件内容和输出 config.json 为最终追溯依据。
