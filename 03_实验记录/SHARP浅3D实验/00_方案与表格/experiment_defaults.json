@@ -1,10 +1,12 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "experiment_tool_version": "v2.1",
   "trajectory": "swipe",
   "num_steps": 60,
   "fps": 30,
-  "max_disparity_levels": [0.0, 0.02, 0.04, 0.08],
+  "frozen_max_disparity": 0.04,
+  "frozen_date": "2026-07-21",
+  "frozen_by": "五样本四档人工评分：0.04 最低质量分=2，全部通过",
   "gaussian_keep_percent": 100,
   "crop_single_side_percent": 0,
   "codec": "libx264",
@@ -18,5 +20,5 @@
   "projection_proxy_validity": "center/current UV in actual render bounds; center/current camera depth > 0; finite displacement",
   "device": "physical GPU 0; process cuda:0",
   "output_policy": "new non-empty output directories are rejected unless explicit --allow-overwrite",
-  "notes": "Projection displacement is a Gaussian-center proxy, not optical flow or a fixed camera angle. Change only max_disparity in the formal motion matrix."
+  "notes": "Projection displacement is a Gaussian-center proxy, not optical flow or a fixed camera angle. Next phase: 0/3/5/10% single-side crop with frozen max_disparity=0.04."
 }
