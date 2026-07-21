@@ -150,10 +150,12 @@ cluster_quality.png
 ### S_R修正后的既有结果重算
 
 当前正式规则只对正向 `probability_drop` 归一化S_R，非正下降的S_R和rank_R为0。
-EfficientNet-B0已经按该规则完成重算并更新正式结果。
+EfficientNet-B0和ResNet50均已按该规则完成重算，四个修正文件、概念总览和自动分析
+材料都已更新到正式结果目录。两次修正均沿用原候选区域、特征向量和K-Means聚类，
+没有重新训练模型，也没有改变聚类归属。
 
-ResNet50后台任务启动时加载的是修正前代码，修改磁盘脚本不会改变已经运行的Python
-进程。因此该任务完成后，不需要重新提取候选区域或重新执行K-Means，但必须运行：
+正常情况下不需要再次运行修正脚本。只有恢复了旧版结果，或需要从原始表重新生成
+S_R、S_h和SSC/SDC时，才运行：
 
 ```bash
 cd /home/mcy/gastric-cbm
@@ -163,9 +165,8 @@ cd /home/mcy/gastric-cbm
 --model resnet50
 ```
 
-先核对旁路输出中的排名对照和SSC/SDC，再将四个修正文件写回正式结果，并重新运行
-`render_cluster_overview.py` 与 `analyze_moce_results.py`。不要直接采用该后台任务产生的
-旧S_R、旧S_h和旧SSC/SDC作为论文结果。
+论文分析应使用当前正式目录中的修正版S_R、S_h和SSC/SDC，不要使用此前后台任务
+直接产生的旧版指标。
 
 ## 四、分开保存自动分析结果与MOCE原始结果
 

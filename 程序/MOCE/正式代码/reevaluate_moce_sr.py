@@ -151,6 +151,65 @@ def evaluate_corrected_importance(model, label, assignment, output_dir):
     return per_image, importance
 
 
+def recalculate_importance_from_existing(source_dir, output_dir):
+    """复用已有前向概率，只修正S_R、rank_R、weighted_rank和S_h。"""
+    per_image = pd.read_csv(
+        os.path.join(source_dir, "concept_scores_per_image.csv"),
+        encoding="utf-8-sig",
+    )
+    corrected_groups = []
+    for _, image_scores in per_image.groupby("image_name", sort=False):
+        image_scores = image_scores.copy()
+        positive_drops = image_scores["probability_drop"].clip(lower=0).to_numpy()
+        positive_total = positive_drops.sum()
+        removal_scores = (
+            np.zeros_like(positive_drops)
+            if np.isclose(positive_total, 0)
+            else positive_drops / positive_total
+        )
+        image_scores["S_R"] = removal_scores
+        image_scores["rank_R"] = positive_relative_ranks(removal_scores)
+        image_scores["rank_E"] = moce.relative_ranks(
+            image_scores["S_E"].to_numpy()
+        )
+        image_scores["weighted_rank"] = (
+            moce.ALPHA * image_scores["rank_R"]
+            + moce.BETA * image_scores["rank_E"]
+        )
+        corrected_groups.append(image_scores)
+
+    per_image = pd.concat(corrected_groups, ignore_index=True)
+    total_images = per_image["image_name"].nunique()
+    importance = per_image.groupby("cluster_id").agg(
+        image_count=("image_name", "nunique"),
+        patient_count=("patient_id", "nunique"),
+        mean_S_R=("S_R", "mean"),
+        mean_S_E=("S_E", "mean"),
+        mean_probability_drop=("probability_drop", "mean"),
+        weighted_rank_sum=("weighted_rank", "sum"),
+    ).reset_index()
+    importance["image_coverage"] = importance["image_count"] / total_images
+    importance["S_h"] = importance["weighted_rank_sum"] / total_images
+    importance["importance_rank"] = importance["S_h"].rank(
+        method="min", ascending=False
+    ).astype(int)
+    importance = importance.sort_values(
+        ["importance_rank", "cluster_id"]
+    ).reset_index(drop=True)
+
+    per_image.to_csv(
+        os.path.join(output_dir, "concept_scores_per_image.csv"),
+        index=False,
+        encoding="utf-8-sig",
+    )
+    importance.to_csv(
+        os.path.join(output_dir, "concept_importance.csv"),
+        index=False,
+        encoding="utf-8-sig",
+    )
+    return per_image, importance
+
+
 def save_comparison(source_dir, output_dir, corrected_scores, corrected_importance):
     """保存旧/新排名和S_R诊断对照。"""
     old_scores = pd.read_csv(
@@ -259,9 +318,11 @@ def main():
     )
     args = parser.parse_args()
 
-    weight_file = moce.MODEL_REGISTRY[args.model][0]
-    weight_path = os.path.join(PROJECT_DIR, "结果", "模型权重", weight_file)
-    model = moce.load_model(args.model, weight_path)
+    model = None
+    if args.stage in ["all", "ssc"]:
+        weight_file = moce.MODEL_REGISTRY[args.model][0]
+        weight_path = os.path.join(PROJECT_DIR, "结果", "模型权重", weight_file)
+        model = moce.load_model(args.model, weight_path)
     labels = [0, 1] if args.class_label == "all" else [int(args.class_label)]
     model_output_dir = os.path.join(OUTPUT_DIR, args.model)
     os.makedirs(model_output_dir, exist_ok=True)
@@ -275,9 +336,13 @@ def main():
             encoding="utf-8-sig",
         )
 
-        if args.stage in ["all", "importance"]:
+        if args.stage == "all":
             corrected_scores, corrected_importance = evaluate_corrected_importance(
                 model, label, assignment, output_dir
+            )
+        elif args.stage == "importance":
+            corrected_scores, corrected_importance = (
+                recalculate_importance_from_existing(source_dir, output_dir)
             )
         else:
             corrected_scores = pd.read_csv(
