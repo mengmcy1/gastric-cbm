@@ -1,6 +1,9 @@
 # LibreOffice / render cache
 99_过程文件_可删除或归档/
 
+# Git merge/rebase artifacts
+*.orig
+
 # Temp Word files
 ~$*
 
