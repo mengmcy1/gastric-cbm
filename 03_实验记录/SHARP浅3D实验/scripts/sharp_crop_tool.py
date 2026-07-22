@@ -14,7 +14,9 @@ import sys
 from pathlib import Path
 
 import imageio.v2 as iio
+import lpips
 import numpy as np
+import torch
 from PIL import Image
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 
@@ -27,7 +29,7 @@ CROP_LEVELS = (0, 3, 5, 10)
 
 # v2.0 人工评分模板
 VIDEO_MANUAL_TEMPLATE = {
-    "schema_version": "2.0",
+    "schema_version": "2.1-crop",
     "review_status": "",
     "overall_quality_score": "",
     "hole_severity": "",
@@ -36,6 +38,9 @@ VIDEO_MANUAL_TEMPLATE = {
     "paper_feel_severity": "",
     "occlusion_error_severity": "",
     "reflection_deformation_severity": "",
+    "edge_artifact_reduction_score": "",
+    "sharpness_loss_severity": "",
+    "framing_loss_severity": "",
     "first_artifact_frame_left": "",
     "first_artifact_frame_right": "",
     "worst_frame": "",
@@ -54,6 +59,10 @@ def parse_args() -> argparse.Namespace:
                         help=f"裁剪比例（默认：{' '.join(str(l) for l in CROP_LEVELS)}）")
     parser.add_argument("--ffmpeg", type=str, default="ffmpeg",
                         help="ffmpeg 可执行文件路径或命令名")
+    parser.add_argument("--lpips-max-side", type=int, default=1024,
+                        help="LPIPS 输入图像最长边（默认 1024，与静止基线一致）")
+    parser.add_argument("--lpips-device", choices=("auto", "cpu", "cuda"), default="auto",
+                        help="LPIPS 计算设备（默认 auto：CUDA 可用时使用 CUDA）")
     parser.add_argument("--crf", type=int, default=18,
                         help="FFmpeg 视频编码 CRF（默认 18）")
     parser.add_argument("--allow-overwrite", action="store_true",
@@ -75,6 +84,8 @@ def _crop_video(
     crop_percent: int,
     ffmpeg_cmd: str,
     crf: int,
+    target_width: int,
+    target_height: int,
 ) -> None:
     """用 FFmpeg 对视频做四边单边裁剪并放大回原尺寸。"""
     # 单边 X% → 裁后宽度 = 原宽 × (1 - 2X/100)，然后放大回原宽
@@ -86,7 +97,10 @@ def _crop_video(
     crop_x = f"iw*{p}"
     crop_y = f"ih*{p}"
 
-    vf = f"crop={crop_w}:{crop_h}:{crop_x}:{crop_y},scale=iw:ih"
+    vf = (
+        f"crop={crop_w}:{crop_h}:{crop_x}:{crop_y},"
+        f"scale={target_width}:{target_height}"
+    )
 
     cmd = [
         ffmpeg_cmd, "-y", "-i", str(src),
@@ -115,25 +129,63 @@ def _crop_frame(src: Path, dst: Path, crop_percent: int) -> tuple[int, int]:
     return w, h
 
 
+def _resize_rgb(image: np.ndarray, max_side: int) -> np.ndarray:
+    height, width = image.shape[:2]
+    scale = min(1.0, max_side / max(height, width))
+    if scale == 1.0:
+        return image
+    size = (round(width * scale), round(height * scale))
+    return np.asarray(Image.fromarray(image).resize(size, Image.Resampling.BICUBIC))
+
+
 def _compute_crop_metrics(
     original_frame: Path,
     cropped_frame: Path,
+    lpips_model: torch.nn.Module,
+    lpips_device: torch.device,
+    lpips_max_side: int,
 ) -> dict:
-    """计算裁剪帧与原帧的 PSNR/SSIM。"""
+    """计算裁剪帧相对未裁剪渲染帧的 PSNR、SSIM 和 LPIPS。"""
     orig = np.asarray(Image.open(original_frame).convert("RGB"))
     crop = np.asarray(Image.open(cropped_frame).convert("RGB"))
     if orig.shape != crop.shape:
         crop_img = Image.fromarray(crop).resize((orig.shape[1], orig.shape[0]), Image.Resampling.LANCZOS)
         crop = np.asarray(crop_img)
+    orig_lpips = _resize_rgb(orig, lpips_max_side).copy()
+    crop_lpips = _resize_rgb(crop, lpips_max_side).copy()
+    orig_tensor = (
+        torch.from_numpy(orig_lpips).permute(2, 0, 1).unsqueeze(0).float().to(lpips_device)
+        / 127.5 - 1
+    )
+    crop_tensor = (
+        torch.from_numpy(crop_lpips).permute(2, 0, 1).unsqueeze(0).float().to(lpips_device)
+        / 127.5 - 1
+    )
+    with torch.inference_mode():
+        lpips_value = float(lpips_model(orig_tensor, crop_tensor).item())
+    psnr_value = float(peak_signal_noise_ratio(orig, crop, data_range=255))
     return {
-        "psnr_db": round(float(peak_signal_noise_ratio(orig, crop, data_range=255)), 6),
+        "metric_version": "crop_v2.1",
+        "comparison": "cropped-and-rescaled center render vs uncropped center render",
+        "psnr_db": None if not np.isfinite(psnr_value) else round(psnr_value, 6),
+        "psnr_is_infinite": bool(np.isinf(psnr_value)),
         "ssim": round(float(structural_similarity(orig, crop, channel_axis=2, data_range=255)), 6),
+        "lpips_alex": round(lpips_value, 6),
+        "lpips_resolution": [int(orig_lpips.shape[1]), int(orig_lpips.shape[0])],
     }
 
 
 def main() -> None:
     args = parse_args()
     _check_ffmpeg(args.ffmpeg)
+    if args.lpips_device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("指定了 --lpips-device cuda，但当前环境 CUDA 不可用")
+    if args.lpips_device == "auto":
+        lpips_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    else:
+        lpips_device = torch.device(args.lpips_device)
+    lpips_model = lpips.LPIPS(net="alex", verbose=False).to(lpips_device).eval()
+    print(f"LPIPS 设备：{lpips_device}")
 
     for sample in args.samples:
         if sample not in SAMPLES:
@@ -150,6 +202,8 @@ def main() -> None:
         if not color_mp4.is_file() or not center_png.is_file():
             print(f"缺少 color.mp4 或 frame_center.png：{src_dir}，跳过 {sample}")
             continue
+        with Image.open(center_png) as center_image:
+            target_width, target_height = center_image.size
 
         for level in args.levels:
             dst_dir = args.dst_root / sample / f"crop{level:02d}"
@@ -165,7 +219,9 @@ def main() -> None:
                 else:
                     shutil.copy2(color_mp4, dst_video)
                     shutil.copy2(center_png, dst_frame)
-                    metrics = _compute_crop_metrics(center_png, center_png)
+                    metrics = _compute_crop_metrics(
+                        center_png, center_png, lpips_model, lpips_device, args.lpips_max_side
+                    )
                     metrics["crop_level"] = 0
                     metrics["note"] = "crop00 直接复用 md004 原始视频，无裁剪、无放大损失"
                     (dst_dir / "crop_metrics.json").write_text(
@@ -184,14 +240,24 @@ def main() -> None:
 
             # 裁剪视频
             dst_video = dst_dir / "color.mp4"
-            _crop_video(color_mp4, dst_video, level, args.ffmpeg, args.crf)
+            _crop_video(
+                color_mp4,
+                dst_video,
+                level,
+                args.ffmpeg,
+                args.crf,
+                target_width,
+                target_height,
+            )
 
             # 裁剪中心帧
             dst_frame = dst_dir / "frame_center.png"
             _crop_frame(center_png, dst_frame, level)
 
-            # 计算 PSNR/SSIM
-            metrics = _compute_crop_metrics(center_png, dst_frame)
+            # 计算 PSNR/SSIM/LPIPS
+            metrics = _compute_crop_metrics(
+                center_png, dst_frame, lpips_model, lpips_device, args.lpips_max_side
+            )
             metrics["crop_level"] = level
             metrics["crop_definition"] = (
                 f"单边裁剪 {level}%，四边各裁掉 {level}% 后放大回原显示尺寸。"
