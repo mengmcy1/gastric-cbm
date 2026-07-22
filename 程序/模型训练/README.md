@@ -8,6 +8,7 @@
 - `resnet_train_debiased.py`：ResNet50 去偏重训练入口。
 - `efficientnet_train_debiased.py`：EfficientNet-B0 去偏重训练入口。
 - `summarize_cv_results.py`：合并5折OOF预测，并用每折验证集选择临床阈值。
+- `summarize_holdout_results.py`：固定划分实验在验证集选阈值并锁定测试集。
 - `compare_cv_models.py`：在相同OOF患者上配对bootstrap比较两个模型。
 - `evaluate_legacy_on_preprocessed.py`：旧权重不重训，在旧测试患者上比较原图、v1.1裁剪和限图结果。
 - `tune_threshold.py`：验证集阈值扫描和测试集固定阈值评估。
