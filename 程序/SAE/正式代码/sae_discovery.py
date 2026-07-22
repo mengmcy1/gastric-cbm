@@ -32,6 +32,7 @@ OUTPUT_ROOT = os.path.join(PROJECT_DIR, '结果', 'SAE', '第二批', 'resnet50'
 INPUT_DIM = 2048
 CLINICAL_THRESHOLD = 0.30  # 第二批验证集锁定的 ResNet50 临床阈值
 ACTIVE_EPS = 1e-8
+MAX_PRUNING_CURVE_POINTS = 100
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
@@ -54,7 +55,7 @@ def parse_args(argv=None):
     parser.add_argument('--epochs', type=int, default=None, help='最大训练轮数')
     parser.add_argument('--patience', type=int, default=None, help='验证损失早停轮数')
     parser.add_argument('--image-batch-size', type=int, default=32, help='ResNet50 特征提取 batch')
-    parser.add_argument('--sae-batch-size', type=int, default=256, help='SAE 特征 batch')
+    parser.add_argument('--sae-batch-size', type=int, default=32, help='SAE 特征 batch')
     parser.add_argument('--num-workers', type=int, default=None, help='图片读取进程数')
     parser.add_argument('--demo-patients-per-class', type=int, default=4,
                         help='demo 每个 split、每类抽取患者数')
@@ -62,6 +63,10 @@ def parse_args(argv=None):
                         help='生成概览的 feature 数')
     parser.add_argument('--top-images', type=int, default=6,
                         help='每个 feature 展示的不同患者图片数')
+    parser.add_argument('--pruning-min-active-patients', type=int, default=5,
+                        help='候选 feature 至少激活的训练患者数')
+    parser.add_argument('--pruning-ce-tolerance', type=float, default=0.01,
+                        help='剪枝后 recovered CE 允许的最大下降')
     parser.add_argument('--seed', type=int, default=42, help='随机种子')
     return parser.parse_args(argv)
 
@@ -292,8 +297,8 @@ def make_feature_loader(features, batch_size):
 
 
 def sae_loss(reconstructed, features, hidden, lambda_l1):
-    """按样本计算 L2 重构和隐藏激活 L1。"""
-    reconstruction = (reconstructed - features).pow(2).sum(dim=1).mean()
+    """逐元素 MSE 与隐藏激活 L1（对齐 M-CBM 官方损失尺度）。"""
+    reconstruction = (reconstructed - features).pow(2).mean()
     sparsity = hidden.abs().sum(dim=1).mean()
     return reconstruction + lambda_l1 * sparsity, reconstruction, sparsity
 
@@ -313,7 +318,7 @@ def evaluate_sae_loss(sae, features, metadata, lambda_l1, batch_size, device):
     for features, sample_weights in loader:
         features = features.to(device)
         reconstructed, hidden = sae(features)
-        reconstruction = (reconstructed - features).pow(2).sum(dim=1)
+        reconstruction = (reconstructed - features).pow(2).mean(dim=1)
         sparsity = hidden.abs().sum(dim=1)
         l0 = (hidden > ACTIVE_EPS).sum(dim=1).float()
         sample_weights = sample_weights.numpy()
@@ -357,6 +362,12 @@ def train_sae(
                 reconstructed, features, hidden, args.lambda_l1,
             )
             total.backward()
+            with torch.no_grad():
+                dw = sae.decoder_weight
+                g = dw.grad
+                dot = (g * dw).sum(dim=1, keepdim=True)
+                norm_sq = (dw * dw).sum(dim=1, keepdim=True).clamp_min(1e-12)
+                g -= dot / norm_sq * dw
             optimizer.step()
             sae.normalize_decoder()
             count = len(features)
@@ -431,6 +442,16 @@ def project_features(sae, features, batch_size, device):
     )
 
 
+@torch.no_grad()
+def reconstruct_masked_features(sae, activations, kept_mask, batch_size, device):
+    """仅用保留的 SAE feature 重构 [N,2048] 特征。"""
+    mask = torch.as_tensor(kept_mask, dtype=torch.float32, device=device)
+    reconstructed_all = []
+    for (batch,) in make_feature_loader(activations, batch_size):
+        reconstructed_all.append(sae.decode(batch.to(device) * mask).cpu().numpy())
+    return np.concatenate(reconstructed_all).astype(np.float32)
+
+
 def softmax_numpy(logits):
     """计算二分类 softmax 概率。"""
     shifted = logits - logits.max(axis=1, keepdims=True)
@@ -442,6 +463,178 @@ def cross_entropy_numpy(logits, labels):
     """返回平均交叉熵。"""
     probabilities = softmax_numpy(logits)
     return float(-np.log(probabilities[np.arange(len(labels)), labels] + 1e-12).mean())
+
+
+def weighted_head_metrics(features, reconstructed, metadata, fc_weight, fc_bias):
+    """按患者和类别平衡评估重构特征的分类恢复。"""
+    labels = metadata['label'].to_numpy(dtype=int)
+    weights = patient_class_weights(metadata).astype(np.float64)
+    weights /= weights.sum()
+    original_logits = features @ fc_weight.T + fc_bias
+    reconstructed_logits = reconstructed @ fc_weight.T + fc_bias
+    zero_logits = np.zeros_like(features) @ fc_weight.T + fc_bias
+    original_probabilities = softmax_numpy(original_logits)
+    reconstructed_probabilities = softmax_numpy(reconstructed_logits)
+    zero_probabilities = softmax_numpy(zero_logits)
+    row_indices = np.arange(len(labels))
+    original_ce = float(np.sum(
+        -np.log(original_probabilities[row_indices, labels] + 1e-12) * weights
+    ))
+    reconstructed_ce = float(np.sum(
+        -np.log(reconstructed_probabilities[row_indices, labels] + 1e-12) * weights
+    ))
+    zero_ce = float(np.sum(
+        -np.log(zero_probabilities[row_indices, labels] + 1e-12) * weights
+    ))
+    recovered_ce = 1 - (reconstructed_ce - original_ce) / (
+        zero_ce - original_ce + 1e-12
+    )
+    reconstructed_labels = reconstructed_logits.argmax(axis=1)
+    original_labels = original_logits.argmax(axis=1)
+    return {
+        'recovered_cross_entropy': float(recovered_ce),
+        'reconstructed_cross_entropy': reconstructed_ce,
+        'reconstructed_accuracy': float(np.sum(
+            (reconstructed_labels == labels) * weights
+        )),
+        'prediction_agreement': float(np.sum(
+            (reconstructed_labels == original_labels) * weights
+        )),
+        'cancer_probability_mae': float(np.sum(
+            np.abs(reconstructed_probabilities[:, 1] - original_probabilities[:, 1])
+            * weights
+        )),
+    }
+
+
+def patient_active_counts(activations, metadata):
+    """统计每个 feature 激活的不同患者数。"""
+    patient_codes, patients = pd.factorize(metadata['patient_id'], sort=True)
+    patient_max = np.zeros((len(patients), activations.shape[1]), dtype=np.float32)
+    np.maximum.at(patient_max, patient_codes, activations)
+    return (patient_max > ACTIVE_EPS).sum(axis=0).astype(np.int64)
+
+
+def pruning_thresholds(active_patient_counts, min_active_patients):
+    """返回按训练患者激活数剪枝的候选阈值。"""
+    minimum_threshold = min_active_patients - 1
+    maximum_count = int(active_patient_counts.max())
+    thresholds = {minimum_threshold}
+    thresholds.update(
+        int(count) for count in np.unique(active_patient_counts)
+        if minimum_threshold <= int(count) < maximum_count
+    )
+    return sorted(thresholds)
+
+
+def run_feature_pruning(
+    sae, train_activations, train_metadata, val_features, val_activations,
+    val_metadata, fc_weight, fc_bias, args, device,
+):
+    """以训练患者覆盖率剪枝，用验证 recovered CE 选严格阈值。"""
+    active_counts = patient_active_counts(train_activations, train_metadata)
+    all_mask = np.ones(args.hidden_dim, dtype=bool)
+    baseline_reconstructed = reconstruct_masked_features(
+        sae, val_activations, all_mask, args.sae_batch_size, device,
+    )
+    baseline_metrics = weighted_head_metrics(
+        val_features, baseline_reconstructed, val_metadata, fc_weight, fc_bias,
+    )
+    thresholds = pruning_thresholds(
+        active_counts, args.pruning_min_active_patients,
+    )
+    curve = []
+    selected = None
+    first_failed = False
+    post_failure_indices = None
+
+    for threshold_index, threshold in enumerate(thresholds):
+        if post_failure_indices is not None and threshold_index not in post_failure_indices:
+            continue
+        kept_mask = active_counts > threshold
+        kept_count = int(kept_mask.sum())
+        if kept_count == 0:
+            continue
+        reconstructed = reconstruct_masked_features(
+            sae, val_activations, kept_mask, args.sae_batch_size, device,
+        )
+        current = weighted_head_metrics(
+            val_features, reconstructed, val_metadata, fc_weight, fc_bias,
+        )
+        recovered_drop = (
+            baseline_metrics['recovered_cross_entropy']
+            - current['recovered_cross_entropy']
+        )
+        if not first_failed and recovered_drop <= args.pruning_ce_tolerance:
+            selected = {
+                'threshold': int(threshold),
+                'kept_mask': kept_mask.copy(),
+                'metrics': current,
+                'recovered_ce_drop': float(recovered_drop),
+            }
+        elif not first_failed:
+            first_failed = True
+            remaining = list(range(threshold_index + 1, len(thresholds)))
+            if len(remaining) > MAX_PRUNING_CURVE_POINTS:
+                positions = np.linspace(
+                    0, len(remaining) - 1,
+                    MAX_PRUNING_CURVE_POINTS, dtype=int,
+                )
+                remaining = [remaining[position] for position in positions]
+            post_failure_indices = set(remaining)
+        curve.append({
+            'active_patient_threshold': int(threshold),
+            'kept_feature_count': kept_count,
+            'pruned_feature_count': int(args.hidden_dim - kept_count),
+            'recovered_cross_entropy': current['recovered_cross_entropy'],
+            'recovered_ce_drop': float(recovered_drop),
+            'reconstructed_accuracy': current['reconstructed_accuracy'],
+            'prediction_agreement': current['prediction_agreement'],
+            'cancer_probability_mae': current['cancer_probability_mae'],
+        })
+
+    if selected is None:
+        fallback_threshold = args.pruning_min_active_patients - 1
+        fallback_mask = active_counts > fallback_threshold
+        if not fallback_mask.any():
+            fallback_threshold = -1
+            fallback_mask = all_mask
+        fallback_reconstructed = reconstruct_masked_features(
+            sae, val_activations, fallback_mask,
+            args.sae_batch_size, device,
+        )
+        fallback_metrics = weighted_head_metrics(
+            val_features, fallback_reconstructed,
+            val_metadata, fc_weight, fc_bias,
+        )
+        selected = {
+            'threshold': int(fallback_threshold),
+            'kept_mask': fallback_mask,
+            'metrics': fallback_metrics,
+            'recovered_ce_drop': float(
+                baseline_metrics['recovered_cross_entropy']
+                - fallback_metrics['recovered_cross_entropy']
+            ),
+        }
+    kept_indices = np.flatnonzero(selected['kept_mask'])
+    summary = {
+        'total_feature_count': int(args.hidden_dim),
+        'kept_feature_count': int(len(kept_indices)),
+        'pruned_feature_count': int(args.hidden_dim - len(kept_indices)),
+        'selected_active_patient_threshold': int(selected['threshold']),
+        'minimum_active_patients': int(args.pruning_min_active_patients),
+        'recovered_ce_tolerance': float(args.pruning_ce_tolerance),
+        'baseline_recovered_cross_entropy': baseline_metrics['recovered_cross_entropy'],
+        'selected_recovered_cross_entropy': selected['metrics']['recovered_cross_entropy'],
+        'recovered_ce_drop': selected['recovered_ce_drop'],
+        'selection_within_tolerance': bool(
+            selected['recovered_ce_drop'] <= args.pruning_ce_tolerance
+        ),
+        'selected_reconstructed_accuracy': selected['metrics']['reconstructed_accuracy'],
+        'selected_prediction_agreement': selected['metrics']['prediction_agreement'],
+        'selected_cancer_probability_mae': selected['metrics']['cancer_probability_mae'],
+    }
+    return kept_indices, active_counts, curve, summary
 
 
 def reconstruction_metrics(
@@ -610,6 +803,7 @@ def make_feature_overviews(
     candidates = feature_summary[
         (feature_summary['active_patient_count'] >= 2)
         & (~feature_summary['dead_feature'])
+        & (feature_summary['kept_after_pruning'])
     ].nlargest(args.overview_features, 'mean_abs_margin_contribution')
     title_font = load_font(22)
     text_font = load_font(15)
@@ -694,9 +888,11 @@ def main(argv=None):
     feature_dir = os.path.join(output_dir, '特征缓存')
     model_dir = os.path.join(output_dir, 'SAE模型')
     overview_dir = os.path.join(output_dir, 'feature概览')
+    pruning_dir = os.path.join(output_dir, 'feature筛选')
     os.makedirs(feature_dir)
     os.makedirs(model_dir)
     os.makedirs(overview_dir)
+    os.makedirs(pruning_dir)
 
     with open(os.path.join(output_dir, 'config.json'), 'w', encoding='utf-8') as file:
         json.dump(vars(args), file, ensure_ascii=False, indent=2)
@@ -726,6 +922,7 @@ def main(argv=None):
     fc_bias = model.fc.bias.detach().cpu().numpy()
     all_activations = []
     all_metadata = []
+    split_activations = {}
     metrics = {'best_epoch': int(best_checkpoint['epoch']), 'splits': {}}
 
     for split, features in split_features.items():
@@ -751,8 +948,60 @@ def main(argv=None):
             ((activations > ACTIVE_EPS).sum(axis=0) == 0).sum()
         )
         metrics['splits'][split] = split_metrics
+        split_activations[split] = activations
         all_activations.append(activations)
         all_metadata.append(split_metadata[split])
+
+    kept_indices, train_active_counts, pruning_curve, pruning_summary = (
+        run_feature_pruning(
+            sae,
+            split_activations['train'], split_metadata['train'],
+            split_features['val'], split_activations['val'], split_metadata['val'],
+            fc_weight, fc_bias, args, device,
+        )
+    )
+    kept_mask = np.zeros(args.hidden_dim, dtype=bool)
+    kept_mask[kept_indices] = True
+    pruning_split_metrics = {}
+    for split, split_activation_array in split_activations.items():
+        pruned_reconstructed = reconstruct_masked_features(
+            sae, split_activation_array, kept_mask,
+            args.sae_batch_size, device,
+        )
+        pruning_split_metrics[split] = reconstruction_metrics(
+            split_features[split], pruned_reconstructed,
+            split_metadata[split], fc_weight, fc_bias,
+        )
+    pruning_summary['splits'] = pruning_split_metrics
+    metrics['pruning'] = pruning_summary
+    pd.DataFrame({
+        'feature_id': np.arange(args.hidden_dim),
+        'active_patient_count_train': train_active_counts,
+        'kept_after_pruning': kept_mask,
+    }).to_csv(
+        os.path.join(pruning_dir, 'feature_pruning_decisions.csv'),
+        index=False,
+        encoding='utf-8-sig',
+    )
+    pd.DataFrame(pruning_curve).to_csv(
+        os.path.join(pruning_dir, 'pruning_curve.csv'),
+        index=False,
+        encoding='utf-8-sig',
+    )
+    with open(
+        os.path.join(pruning_dir, 'pruning_summary.json'), 'w', encoding='utf-8',
+    ) as file:
+        json.dump(pruning_summary, file, ensure_ascii=False, indent=2)
+    print(
+        f'Feature 筛选: 保留 {len(kept_indices)}/{args.hidden_dim}，'
+        f'训练患者阈值>{pruning_summary["selected_active_patient_threshold"]}，'
+        f'recovered CE 下降={pruning_summary["recovered_ce_drop"]:.4f}'
+    )
+    if not pruning_summary['selection_within_tolerance']:
+        print(
+            '警告: 最低激活患者门槛已超过 recovered CE 容差，'
+            '该次筛选需要人工复核。'
+        )
 
     activations = np.concatenate(all_activations)
     metadata = pd.concat(all_metadata, ignore_index=True)
@@ -761,9 +1010,12 @@ def main(argv=None):
         activations[development_mask], metadata.loc[development_mask].reset_index(drop=True),
         sae, fc_weight,
     )
+    feature_summary['kept_after_pruning'] = kept_mask
+    feature_summary['pruning_active_patient_count_train'] = train_active_counts
+    feature_summary['pruning_status'] = np.where(kept_mask, 'kept', 'pruned')
     for split in metadata['split'].unique():
         split_mask = metadata['split'].to_numpy() == split
-        split_activations = activations[split_mask]
+        current_activations = activations[split_mask]
         split_metadata_frame = metadata.loc[split_mask].reset_index(drop=True)
         split_codes, split_patients = pd.factorize(
             split_metadata_frame['patient_id'], sort=True,
@@ -771,7 +1023,7 @@ def main(argv=None):
         split_patient_max = np.zeros(
             (len(split_patients), activations.shape[1]), dtype=np.float32,
         )
-        np.maximum.at(split_patient_max, split_codes, split_activations)
+        np.maximum.at(split_patient_max, split_codes, current_activations)
         feature_summary[f'active_patient_count_{split}'] = (
             split_patient_max > ACTIVE_EPS
         ).sum(axis=0)
