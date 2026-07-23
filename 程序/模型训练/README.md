@@ -9,6 +9,7 @@
 - `summarize_holdout_results.py`：固定划分实验在验证集选阈值并锁定测试集。
 - `compare_cv_models.py`：在相同OOF患者上配对bootstrap比较两个模型。
 - `evaluate_debiased_multicenter.py`：v1.1裁剪重训练模型的多中心验证。
+- `evaluate_ensemble_tta.py`：在实验A冻结验证/测试集上选择患者聚合、双模型集成权重，并评估水平翻转TTA。
 - `inference.py`：单图及批量推理。
 
 旧训练、阈值扫描和一次性评估脚本已移动到`程序/归档/模型训练/`；新实验使用
@@ -27,6 +28,12 @@ python 程序/模型训练/正式代码/resnet_train_debiased.py \
   --manifest 数据整理记录/第二批/训练划分_v1/strict_common_support_1to1_folds5_seed42.csv \
   --fold 0 \
   --run-name expC_strict_resnet_fold0_seed42
+```
+
+集成与TTA评估：
+
+```bash
+python 程序/模型训练/正式代码/evaluate_ensemble_tta.py
 ```
 
 调试时增加 `--debug --debug-units 2 --no-pretrained`；正式训练不要使用这三个参数。完整冻结参数见`数据去偏重训练_参数与报告/数据训练参数_v1.md`。

@@ -8,6 +8,8 @@
 - `moce_core.py`：梯度通道评分、候选掩码提取、区域裁剪和模型变换。
 - `moce_cluster.py`：候选编码、K-Means、S_R/S_E/S_h及SSC/SDC实现；由当前入口调用，
   不再作为当前数据的直接运行命令。
+- `render_curated_cluster_overview.py`：为严格平衡结果生成分页清晰版概念总览。
+- `analyze_curated_moce_results.py`：生成`结果/MOCE分析`中的自动分析、医生命名表和原始追溯层。
 
 每个类别输出候选区域、候选掩码、聚类模型、分配清单、概念重要性、代表区域总览和
 SSC/SDC逐图及汇总结果。S_R仅对正向概率下降归一化；负下降保留在CSV中用于异常分析。
@@ -40,3 +42,18 @@ python 程序/MOCE/正式代码/moce_curated_concept.py \
 K-Means中心和重要性排名，在独立数据上做1-NN概念匹配和SSC/SDC，不重新聚类。
 
 旧第二批MOCE脚本和结果分别位于`程序/归档/MOCE/`与`结果/归档/历史MOCE第二批/`。
+
+## 自动分析整理
+
+EfficientNet-B0全量MOCE完成后运行：
+
+```bash
+python 程序/MOCE/正式代码/render_curated_cluster_overview.py \
+  --model efficientnet_b0 --class-label all
+python 程序/MOCE/正式代码/analyze_curated_moce_results.py \
+  --model efficientnet_b0 --class-label all
+```
+
+输出沿用历史层级，位于`结果/MOCE分析/efficientnet_b0/class_{0,1}/`；每类包含
+`01_自动分析结果`和`02_MOCE原始结果`。特征缓存、K-Means模型、全部候选区域和掩码
+仍保留在正式聚类目录，不重复复制。

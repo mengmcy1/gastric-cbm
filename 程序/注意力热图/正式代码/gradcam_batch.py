@@ -17,6 +17,7 @@ import csv
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np
+import pandas as pd
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 import cv2
@@ -31,7 +32,6 @@ TRAIN_DIR = os.path.join(PROJECT_DIR, '程序', '模型训练', '正式代码')
 sys.path.insert(0, TRAIN_DIR)
 
 from inference import MODEL_REGISTRY
-from resnet_train_final import load_matched_dataframe
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -145,7 +145,11 @@ class GradCAM:
         cam = torch.relu(cam)
 
         cam_min, cam_max = cam.min(), cam.max()
-        cam = (cam - cam_min) / (cam_max - cam_min)
+        cam_range = cam_max - cam_min
+        if cam_range.item() <= torch.finfo(cam.dtype).eps:
+            cam = torch.zeros_like(cam)
+        else:
+            cam = (cam - cam_min) / cam_range
 
         heatmap = cam.detach().cpu().numpy()
         self.activations = None
@@ -195,7 +199,16 @@ def make_triptych(img_path, heatmap, prob, pred, true_label, save_path):
 
 def load_output_dataframe(debug_n):
     # 默认生成整理清单中的全部图片。
-    df_valid = load_matched_dataframe(CSV_PATH, DATA_DIR).reset_index(drop=True)
+    df_valid = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
+    df_valid = df_valid.rename(columns={
+        'image_path': '图片名字',
+        'label': '瘤变标签',
+    }).reset_index(drop=True)
+    print(f'有效样本数: {len(df_valid)}')
+    print(
+        f'标签分布 — 癌/高级别(1): {(df_valid["瘤变标签"] == 1).sum()}, '
+        f'非癌(0): {(df_valid["瘤变标签"] == 0).sum()}'
+    )
 
     if debug_n is not None:
         df_valid = df_valid.head(debug_n).copy()
