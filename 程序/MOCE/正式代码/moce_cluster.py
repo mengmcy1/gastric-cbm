@@ -2,7 +2,6 @@
 
 import csv
 import os
-import sys
 
 os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
@@ -17,10 +16,8 @@ import torch
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-DEMO_DIR = os.path.join(PROJECT_DIR, '程序', 'MOCE', 'demo测试')
-sys.path.insert(0, DEMO_DIR)
 
-from moce_single_demo import (
+from moce_core import (
     ActivationCapture,
     CONCEPT_TRANSFORM,
     DATA_DIR,

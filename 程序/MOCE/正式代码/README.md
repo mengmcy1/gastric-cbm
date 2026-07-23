@@ -1,67 +1,42 @@
 # MOCE 正式代码
 
-`moce_cluster.py` 在不修改单图 demo 的情况下扩展多患者概念聚类：
+当前入口为`moce_curated_concept.py`，读取冻结的严格1:1图片平衡清单，使用v1.1裁剪图
+和实验A重训练权重，分别运行ResNet50与EfficientNet-B0。
 
-1. 从第二批整理清单读取患者编号，每个类别中每位患者保留一张图片；
-2. 每个类别中每位患者随机保留一张图片；
-3. 复用单图 demo 提取候选掩码和1280维特征；
-4. 对非癌和早癌候选区域分别执行 K-Means；
-5. 保存聚类模型、分配清单、簇统计和代表区域总览；
-6. 对同图同簇保留距离簇中心最近的区域，计算概念级 S^R、S^E 和 S_h；
-7. 按重要性依次加入或移除前5个概念，生成 SSC/SDC 结果。
+共享模块：
 
-S^R只对正向概率下降进行归一化：`probability_drop <= 0`时S^R和rank_R记为0，
-原始负下降仍保留在CSV中用于异常分析。这样可避免一张图的总下降量为负时发生符号和
-排名方向翻转。
+- `moce_core.py`：梯度通道评分、候选掩码提取、区域裁剪和模型变换。
+- `moce_cluster.py`：候选编码、K-Means、S_R/S_E/S_h及SSC/SDC实现；由当前入口调用，
+  不再作为当前数据的直接运行命令。
 
-运行：
+每个类别输出候选区域、候选掩码、聚类模型、分配清单、概念重要性、代表区域总览和
+SSC/SDC逐图及汇总结果。S_R仅对正向概率下降归一化；负下降保留在CSV中用于异常分析。
 
-```bash
-python 程序/MOCE/正式代码/moce_cluster.py
-```
+## 已完成 Debug
 
-正式运行使用 `PATIENTS_PER_CLASS=None` 和25个概念簇。
+两个模型均已用相同20个匹配对完成40张全链路debug：
 
-每个类别的主要输出：
+- ResNet50：非癌1836个、癌2092个候选区域。
+- EfficientNet-B0：非癌2966个、癌3004个候选区域。
+- 两类均形成25簇并完成5步SSC/SDC，结果位于
+  `结果/MOCE聚类/概念严格平衡_v1/debug/{model}/`。
 
-- `候选区域/`：用于查看和聚类的概念区域；
-- `候选掩码/`：原生分辨率二值掩码；
-- `cluster_assignments.csv`：候选区域的聚类编号；
-- `concept_importance.csv`：各概念簇的 S_h 和全局排名；
-- `concept_scores_per_image.csv`：每张图的 S^R、S^E 及排名；
-- `ssc_sdc_summary.csv`：逐步加入/移除概念后的准确率和概率；
-- `ssc_sdc_per_image.csv`：SSC/SDC 的逐图明细。
+## 全量运行
 
-聚类完成后生成分页清晰版：
+全量由用户运行，每个模型使用严格清单全部502张：
 
 ```bash
-python 程序/MOCE/正式代码/render_cluster_overview.py
+python 程序/MOCE/正式代码/moce_curated_concept.py \
+  --model resnet50 --mode full
+
+python 程序/MOCE/正式代码/moce_curated_concept.py \
+  --model efficientnet_b0 --mode full
 ```
 
-生成自动分析、曲线、典型案例图、重要概念扩展图和医生命名表：
+脚本保存冻结清单快照、清单SHA、权重SHA和运行参数。已有同模型同模式输出时默认拒绝
+覆盖；确认重跑才添加`--overwrite`。
 
-```bash
-python 程序/MOCE/正式代码/analyze_moce_results.py
-```
+当前概念发现和SSC/SDC仍使用同一批图片，属于内部忠实性分析。论文验证阶段应固定
+K-Means中心和重要性排名，在独立数据上做1-NN概念匹配和SSC/SDC，不重新聚类。
 
-对于在S^R修正前已经完成聚类的结果，可用下列脚本只重算重要性和SSC/SDC，不重新提取
-候选区域或训练K-Means，且默认先输出旁路验证结果、不覆盖正式结果：
-
-```bash
-python 程序/MOCE/正式代码/reevaluate_moce_sr.py --model resnet50
-```
-
-自动分析使用 `matplotlib` 和 `openpyxl`，输出位于：
-
-```text
-结果/MOCE分析/{model}/class_{label}/
-├── 01_自动分析结果/
-└── 02_MOCE原始结果/
-```
-
-`01_自动分析结果`保存统计表、曲线、案例图、扩展图、清晰版聚类图和医生命名表；
-`02_MOCE原始结果`保存分析时需要追溯的MOCE原始CSV与总览图。正式聚类目录只会被读取，
-不会被移动或覆盖。当前分析目录仍包含患者编号和原始图像信息，发送前必须匿名化。
-
-当前概念发现和 SSC/SDC 使用同一批抽样图片，属于内部忠实性分析。正式论文还应
-在概念发现集建立K-Means与S_h排名，再在独立验证集固定中心和排名执行SSC/SDC。
+旧第二批MOCE脚本和结果分别位于`程序/归档/MOCE/`与`结果/归档/历史MOCE第二批/`。
