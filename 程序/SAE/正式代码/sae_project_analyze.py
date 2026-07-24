@@ -14,8 +14,7 @@ from sklearn.metrics import roc_auc_score
 import torch
 
 from sae_discovery import (
-    ACTIVE_EPS, CLINICAL_THRESHOLD, DATA_DIR, EVAL_TRANSFORM, OUTPUT_ROOT,
-    SPLIT_CSV, ActivationCapture, SparseAutoencoder, derive_source,
+    ACTIVE_EPS, EVAL_TRANSFORM, ActivationCapture, SparseAutoencoder, derive_source,
     extract_split_features, fit_panel, heatmap_overlay, load_font,
     load_resnet50, project_features, reconstruct_masked_features,
     reconstruction_metrics, seed_everything, softmax_numpy,
@@ -43,9 +42,9 @@ def parse_args():
     return parser.parse_args()
 
 
-def confusion_types(labels, probabilities):
+def confusion_types(labels, probabilities, threshold):
     """按固定临床阈值返回 TP/TN/FP/FN。"""
-    predicted = (probabilities >= CLINICAL_THRESHOLD).astype(int)
+    predicted = (probabilities >= threshold).astype(int)
     return np.select(
         [(labels == 1) & (predicted == 1), (labels == 0) & (predicted == 0),
          (labels == 0) & (predicted == 1), (labels == 1) & (predicted == 0)],
@@ -53,21 +52,21 @@ def confusion_types(labels, probabilities):
     )
 
 
-def classification_metrics(labels, probabilities):
+def classification_metrics(labels, probabilities, threshold):
     """计算固定阈值下的常用分类指标。"""
-    predicted = (probabilities >= CLINICAL_THRESHOLD).astype(int)
+    predicted = (probabilities >= threshold).astype(int)
     tn = int(((labels == 0) & (predicted == 0)).sum())
     fp = int(((labels == 0) & (predicted == 1)).sum())
     fn = int(((labels == 1) & (predicted == 0)).sum())
     tp = int(((labels == 1) & (predicted == 1)).sum())
     return {
         'auc': float(roc_auc_score(labels, probabilities)),
-        'sensitivity': float(tp / (tp + fn)),
-        'specificity': float(tn / (tn + fp)),
+        'sensitivity': float(tp / max(tp + fn, 1)),
+        'specificity': float(tn / max(tn + fp, 1)),
         'accuracy': float((tp + tn) / len(labels)),
-        'precision': float(tp / (tp + fp)),
-        'f1': float(2 * tp / (2 * tp + fp + fn)),
-        'threshold': CLINICAL_THRESHOLD,
+        'precision': float(tp / max(tp + fp, 1)),
+        'f1': float(2 * tp / max(2 * tp + fp + fn, 1)),
+        'threshold': threshold,
         'tn': tn, 'fp': fp, 'fn': fn, 'tp': tp,
     }
 
@@ -104,14 +103,24 @@ def load_or_extract_features(args, output_cache, model, capture, device):
         metadata = pd.read_csv(metadata_path, encoding='utf-8-sig')
         print(f'复用 {args.split} 特征缓存: {features.shape}')
         return features, metadata
-    dataframe = pd.read_csv(SPLIT_CSV, encoding='utf-8-sig').rename(
+    dataframe = pd.read_csv(args.split_csv, encoding='utf-8-sig').rename(
         columns={'瘤变标签': 'label'},
     )
-    source = dataframe['source_path'].apply(derive_source)
+    if 'image_relpath' not in dataframe:
+        for column in ['processed_path', '图片名字', 'image_path']:
+            if column in dataframe:
+                dataframe['image_relpath'] = dataframe[column]
+                break
+    if 'image_relpath' not in dataframe:
+        raise ValueError('划分CSV缺少 image_relpath/processed_path/图片名字/image_path')
+    if 'center' not in dataframe:
+        raise ValueError('划分CSV缺少center字段')
+    source = dataframe['center'].apply(derive_source)
     dataframe['domain'] = source.str[0]
     dataframe['hospital'] = source.str[1]
     extract_args = SimpleNamespace(
         image_batch_size=args.image_batch_size, num_workers=args.num_workers,
+        data_dir=args.data_dir, image_threshold=args.image_threshold,
     )
     return extract_split_features(
         model, capture, dataframe, args.split, extract_args, device, output_cache,
@@ -120,6 +129,7 @@ def load_or_extract_features(args, output_cache, model, capture, device):
 
 def make_prediction_tables(
     metadata, features, reconstructed, pruned_reconstructed, fc_weight, fc_bias,
+    image_threshold, patient_threshold,
 ):
     """生成图像级、患者级概率、混淆类型及SAE错误转换。"""
     labels = metadata['label'].to_numpy(dtype=int)
@@ -136,10 +146,10 @@ def make_prediction_tables(
     for name, values in probabilities.items():
         images[name] = values
     images['original_confusion'] = confusion_types(
-        labels, probabilities['original_probability'],
+        labels, probabilities['original_probability'], image_threshold,
     )
     images['sae_pruned_confusion'] = confusion_types(
-        labels, probabilities['sae_pruned_probability'],
+        labels, probabilities['sae_pruned_probability'], image_threshold,
     )
     images['prediction_transition'] = (
         images['original_confusion'] + '_to_' + images['sae_pruned_confusion']
@@ -150,16 +160,16 @@ def make_prediction_tables(
     patients = images.groupby('patient_id', sort=True).agg(
         label=('label', 'first'), domain=('domain', 'first'),
         hospital=('hospital', 'first'), image_count=('label', 'size'),
-        original_probability=('original_probability', 'max'),
-        sae_full_probability=('sae_full_probability', 'max'),
-        sae_pruned_probability=('sae_pruned_probability', 'max'),
+        original_probability=('original_probability', 'mean'),
+        sae_full_probability=('sae_full_probability', 'mean'),
+        sae_pruned_probability=('sae_pruned_probability', 'mean'),
     ).reset_index()
     patient_labels = patients['label'].to_numpy(dtype=int)
     patients['original_confusion'] = confusion_types(
-        patient_labels, patients['original_probability'].to_numpy(),
+        patient_labels, patients['original_probability'].to_numpy(), patient_threshold,
     )
     patients['sae_pruned_confusion'] = confusion_types(
-        patient_labels, patients['sae_pruned_probability'].to_numpy(),
+        patient_labels, patients['sae_pruned_probability'].to_numpy(), patient_threshold,
     )
     patients['prediction_transition'] = (
         patients['original_confusion'] + '_to_' + patients['sae_pruned_confusion']
@@ -265,10 +275,12 @@ def build_feature_summary(
     base_margin = base_logits[:, 1] - base_logits[:, 0]
     feature_margin = activations * margin_direction[None, :] * kept_mask[None, :]
     ablated_probability = 1 / (1 + np.exp(-(base_margin[:, None] - feature_margin)))
-    patient_ablated_max = np.zeros_like(patient_max)
-    np.maximum.at(patient_ablated_max, patient_codes, ablated_probability)
+    patient_ablated_sum = np.zeros_like(patient_max)
+    np.add.at(patient_ablated_sum, patient_codes, ablated_probability)
+    patient_image_counts = np.bincount(patient_codes)[:, None]
+    patient_ablated_mean = patient_ablated_sum / patient_image_counts
     ablation_delta = (
-        patient_meta['sae_pruned_probability'].to_numpy()[:, None] - patient_ablated_max
+        patient_meta['sae_pruned_probability'].to_numpy()[:, None] - patient_ablated_mean
     )
     summary['mean_patient_ablation_delta'] = ablation_delta.mean(0)
     for group in GROUPS:
@@ -354,9 +366,10 @@ def category_mask(category, images):
 
 @torch.no_grad()
 def make_overviews(
-    model, capture, sae, activations, images, rankings, output_dir, top_images, device,
+    model, capture, sae, activations, images, rankings, output_dir, top_images,
+    data_dir, device,
 ):
-    """为每类候选feature保存不同患者的原图与decoder方向热图。"""
+    """为每类候选feature保存不同患者的原图与encoder激活热图。"""
     title_font, text_font = load_font(21), load_font(14)
     records = []
     for category, rows in rankings.groupby('category', sort=False):
@@ -382,10 +395,13 @@ def make_overviews(
                 f'score={rank_row.ranking_score:.4f}',
                 fill=(20, 20, 20), font=title_font,
             )
-            direction = sae.decoder_weight[feature_id].detach()
+            direction = sae.encoder.weight[feature_id].detach()
             for row_index, index in enumerate(selected):
                 item = images.iloc[index]
-                original = Image.open(os.path.join(DATA_DIR, item['图片名字'])).convert('RGB')
+                image_path = item['image_relpath']
+                if not os.path.isabs(image_path):
+                    image_path = os.path.join(data_dir, image_path)
+                original = Image.open(image_path).convert('RGB')
                 model(EVAL_TRANSFORM(original).unsqueeze(0).to(device))
                 concept_map = torch.relu(
                     (capture.output[0] * direction[:, None, None]).sum(0)
@@ -402,7 +418,7 @@ def make_overviews(
                 )
                 records.append({
                     'category': category, 'feature_id': feature_id,
-                    'rank': row_index + 1, 'image_name': item['图片名字'],
+                    'rank': row_index + 1, 'image_name': item['image_relpath'],
                     'patient_id': item['patient_id'], 'label': int(item['label']),
                     'domain': item['domain'], 'hospital': item['hospital'],
                     'original_confusion': item['original_confusion'],
@@ -446,7 +462,16 @@ def main():
     seed_everything(args.seed)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     args.sae_run = os.path.abspath(args.sae_run)
-    output_dir = os.path.join(OUTPUT_ROOT, args.experiment)
+    with open(os.path.join(args.sae_run, 'config.json'), encoding='utf-8') as file:
+        source_config = json.load(file)
+    for name in [
+        'data_dir', 'split_csv', 'weight_path', 'output_root',
+        'image_threshold', 'patient_threshold',
+    ]:
+        if name not in source_config:
+            raise ValueError(f'SAE训练配置缺少必要字段: {name}')
+        setattr(args, name, source_config[name])
+    output_dir = os.path.join(args.output_root, args.experiment)
     os.makedirs(output_dir, exist_ok=False)
     cache_dir = os.path.join(output_dir, '特征缓存')
     error_dir = os.path.join(output_dir, '错误病例')
@@ -454,7 +479,7 @@ def main():
     for directory in [cache_dir, error_dir, overview_dir]:
         os.makedirs(directory)
 
-    model = load_resnet50(device)
+    model = load_resnet50(device, args.weight_path)
     capture = ActivationCapture(model.layer4[-1])
     sae, checkpoint, kept_mask = load_locked_sae(args.sae_run, device)
     features, metadata = load_or_extract_features(args, cache_dir, model, capture, device)
@@ -478,6 +503,7 @@ def main():
     fc_bias = model.fc.bias.detach().cpu().numpy()
     images, patients = make_prediction_tables(
         metadata, features, reconstructed, pruned, fc_weight, fc_bias,
+        args.image_threshold, args.patient_threshold,
     )
     summary, patient_meta = build_feature_summary(
         activations, metadata, patients, sae, fc_weight, fc_bias,
@@ -523,9 +549,11 @@ def main():
         'total_feature_count': int(len(kept_mask)),
         'reconstruction_full': reconstruction_metrics(
             features, reconstructed, metadata, fc_weight, fc_bias,
+            args.patient_threshold,
         ),
         'reconstruction_pruned': reconstruction_metrics(
             features, pruned, metadata, fc_weight, fc_bias,
+            args.patient_threshold,
         ),
         'image_level': {}, 'patient_level': {},
         'image_transition_counts': images['prediction_transition'].value_counts().to_dict(),
@@ -534,9 +562,11 @@ def main():
     for name in ['original', 'sae_full', 'sae_pruned']:
         metrics['image_level'][name] = classification_metrics(
             image_labels, images[f'{name}_probability'].to_numpy(),
+            args.image_threshold,
         )
         metrics['patient_level'][name] = classification_metrics(
             patient_labels, patients[f'{name}_probability'].to_numpy(),
+            args.patient_threshold,
         )
     with open(os.path.join(output_dir, 'metrics.json'), 'w', encoding='utf-8') as file:
         json.dump(metrics, file, ensure_ascii=False, indent=2)
@@ -544,7 +574,7 @@ def main():
         json.dump(vars(args), file, ensure_ascii=False, indent=2)
     make_overviews(
         model, capture, sae, activations, images, rankings,
-        overview_dir, args.top_images, device,
+        overview_dir, args.top_images, args.data_dir, device,
     )
     capture.close()
     print(f'投影完成: {args.split}，未训练 SAE')

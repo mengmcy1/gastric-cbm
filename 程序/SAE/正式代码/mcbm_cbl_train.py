@@ -26,7 +26,7 @@ from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-OUTPUT_ROOT = os.path.join(PROJECT_DIR, '结果', 'M-CBM', '第二批', 'resnet50')
+OUTPUT_ROOT = os.path.join(PROJECT_DIR, '结果', 'M-CBM', '去偏重训练_v1', 'resnet50')
 INPUT_DIM = 2048
 
 
@@ -79,7 +79,12 @@ def load_feature_split(sae_run, split):
     metadata = pd.read_csv(
         os.path.join(feature_dir, f'{split}_metadata.csv'), encoding='utf-8-sig',
     )
-    metadata['image_path'] = metadata['图片名字']
+    if 'image_relpath' in metadata:
+        metadata['image_path'] = metadata['image_relpath']
+    elif '图片名字' in metadata:
+        metadata['image_path'] = metadata['图片名字']
+    else:
+        raise ValueError('SAE元数据缺少 image_relpath/图片名字')
     return features.astype(np.float32), metadata
 
 

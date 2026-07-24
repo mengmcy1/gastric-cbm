@@ -22,15 +22,19 @@ from torchvision.models import resnet50
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
-DATA_DIR = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
-SPLIT_CSV = os.path.join(PROJECT_DIR, '结果', '数据划分', 'image_split_seed42.csv')
-WEIGHT_PATH = os.path.join(
-    PROJECT_DIR, '结果', '模型权重', 'resnet50_transfer_best.pth',
+DEFAULT_DATA_DIR = os.path.join(PROJECT_DIR, '数据', '第二批裁剪后_v1_1')
+DEFAULT_RUN_DIR = os.path.join(
+    PROJECT_DIR, '结果', '去偏重训练_v1', 'expA_full_resnet50_seed42',
 )
-OUTPUT_ROOT = os.path.join(PROJECT_DIR, '结果', 'SAE', '第二批', 'resnet50')
+DEFAULT_SPLIT_CSV = os.path.join(DEFAULT_RUN_DIR, 'frozen_split_snapshot.csv')
+DEFAULT_WEIGHT_PATH = os.path.join(DEFAULT_RUN_DIR, 'resnet50_debiased_best.pth')
+DEFAULT_OUTPUT_ROOT = os.path.join(
+    PROJECT_DIR, '结果', 'SAE', '去偏重训练_v1', 'resnet50',
+)
 
 INPUT_DIM = 2048
-CLINICAL_THRESHOLD = 0.30  # 第二批验证集锁定的 ResNet50 临床阈值
+DEFAULT_IMAGE_THRESHOLD = 0.15484211
+DEFAULT_PATIENT_THRESHOLD = 0.3849397003650665
 ACTIVE_EPS = 1e-8
 MAX_PRUNING_CURVE_POINTS = 100
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -49,8 +53,14 @@ def parse_args(argv=None):
     parser.add_argument('--demo', action='store_true', help='少量患者快速验证完整流程')
     parser.add_argument('--include-test', action='store_true', help='锁定方案后投影测试集')
     parser.add_argument('--experiment', type=str, default=None, help='实验目录名；默认使用时间戳')
+    parser.add_argument('--data-dir', default=DEFAULT_DATA_DIR, help='裁剪后图片根目录')
+    parser.add_argument('--split-csv', default=DEFAULT_SPLIT_CSV, help='冻结患者划分CSV')
+    parser.add_argument('--weight-path', default=DEFAULT_WEIGHT_PATH, help='冻结ResNet50权重')
+    parser.add_argument('--output-root', default=DEFAULT_OUTPUT_ROOT, help='SAE结果根目录')
+    parser.add_argument('--image-threshold', type=float, default=DEFAULT_IMAGE_THRESHOLD)
+    parser.add_argument('--patient-threshold', type=float, default=DEFAULT_PATIENT_THRESHOLD)
     parser.add_argument('--hidden-dim', type=int, default=None, help='SAE 字典大小')
-    parser.add_argument('--lambda-l1', type=float, default=5e-4, help='隐藏激活 L1 权重')
+    parser.add_argument('--lambda-l1', type=float, default=7.5e-5, help='隐藏激活 L1 权重')
     parser.add_argument('--learning-rate', type=float, default=1e-4, help='SAE 学习率')
     parser.add_argument('--epochs', type=int, default=None, help='最大训练轮数')
     parser.add_argument('--patience', type=int, default=None, help='验证损失早停轮数')
@@ -86,6 +96,11 @@ def finalize_args(args):
     prefix = 'demo' if args.demo else 'formal'
     if args.experiment is None:
         args.experiment = f'{prefix}_{datetime.now().strftime("%Y%m%d_%H%M%S")}'
+    for name in ['data_dir', 'split_csv', 'weight_path', 'output_root']:
+        setattr(args, name, os.path.abspath(getattr(args, name)))
+    for name in ['image_threshold', 'patient_threshold']:
+        if not 0 < getattr(args, name) < 1:
+            raise ValueError(f'{name}必须位于(0, 1)')
     return args
 
 
@@ -99,21 +114,30 @@ def seed_everything(seed):
     torch.backends.cudnn.benchmark = False
 
 
-def derive_source(source_path):
-    """从原始来源路径派生省人民/外院和医院名称。"""
-    parts = str(source_path).replace('\\', '/').split('/')
-    if '外院数据' in parts:
-        index = parts.index('外院数据')
-        hospital = parts[index + 1]
-        return '外院', hospital
-    return '省人民', '武大省人民'
+def derive_source(center_value):
+    """从清单的结构化中心字段派生省人民/外院和医院名称。"""
+    center = str(center_value).strip()
+    if not center or center.lower() == 'nan':
+        raise ValueError('center字段存在空值')
+    if center == '武大省人民':
+        return '省人民', center
+    return '外院', center
 
 
 def load_split_dataframe(args):
     """读取固定患者划分，并在 demo 模式按患者抽样。"""
-    dataframe = pd.read_csv(SPLIT_CSV, encoding='utf-8-sig')
+    dataframe = pd.read_csv(args.split_csv, encoding='utf-8-sig')
     dataframe = dataframe.rename(columns={'瘤变标签': 'label'})
-    source = dataframe['source_path'].apply(derive_source)
+    if 'image_relpath' not in dataframe:
+        for column in ['processed_path', '图片名字', 'image_path']:
+            if column in dataframe:
+                dataframe['image_relpath'] = dataframe[column]
+                break
+    if 'image_relpath' not in dataframe:
+        raise ValueError('划分CSV缺少 image_relpath/processed_path/图片名字/image_path')
+    if 'center' not in dataframe:
+        raise ValueError('划分CSV缺少center字段')
+    source = dataframe['center'].apply(derive_source)
     dataframe['domain'] = source.str[0]
     dataframe['hospital'] = source.str[1]
 
@@ -134,20 +158,34 @@ def load_split_dataframe(args):
     requested_splits = ['train', 'val']
     if args.include_test and not args.demo:
         requested_splits.append('test')
-    return dataframe[dataframe['split'].isin(requested_splits)].reset_index(drop=True)
+    dataframe = dataframe[dataframe['split'].isin(requested_splits)].reset_index(drop=True)
+    missing_splits = set(requested_splits) - set(dataframe['split'])
+    if missing_splits:
+        raise ValueError(f'冻结划分缺少split: {sorted(missing_splits)}')
+    if dataframe.groupby('patient_id')['split'].nunique().max() > 1:
+        raise ValueError('同一患者出现在多个split中')
+    if dataframe.groupby('patient_id')['label'].nunique().max() > 1:
+        raise ValueError('同一患者存在多个分类标签')
+    for split in requested_splits:
+        if set(dataframe.loc[dataframe['split'] == split, 'label']) != {0, 1}:
+            raise ValueError(f'{split}未同时包含两个标签')
+    return dataframe
 
 
 class ImageFeatureDataset(Dataset):
     """读取胃镜图片；每个返回值保留对应 DataFrame 行号。"""
 
-    def __init__(self, dataframe):
+    def __init__(self, dataframe, data_dir):
         self.dataframe = dataframe.reset_index(drop=True)
+        self.data_dir = data_dir
 
     def __len__(self):
         return len(self.dataframe)
 
     def __getitem__(self, index):
-        image_path = os.path.join(DATA_DIR, self.dataframe.iloc[index]['图片名字'])
+        image_path = self.dataframe.iloc[index]['image_relpath']
+        if not os.path.isabs(image_path):
+            image_path = os.path.join(self.data_dir, image_path)
         image = Image.open(image_path).convert('RGB')
         return EVAL_TRANSFORM(image), index
 
@@ -166,11 +204,11 @@ class ActivationCapture:
         self.handle.remove()
 
 
-def load_resnet50(device):
+def load_resnet50(device, weight_path=DEFAULT_WEIGHT_PATH):
     """恢复正式 ResNet50 权重并冻结所有参数。"""
     model = resnet50(weights=None)
     model.fc = nn.Linear(model.fc.in_features, 2)
-    checkpoint = torch.load(WEIGHT_PATH, map_location=device, weights_only=False)
+    checkpoint = torch.load(weight_path, map_location=device, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.to(device).eval()
     for parameter in model.parameters():
@@ -183,7 +221,7 @@ def extract_split_features(model, capture, dataframe, split, args, device, featu
     """提取一个 split 的 GAP 特征、原模型预测和图片元数据。"""
     split_data = dataframe[dataframe['split'] == split].reset_index(drop=True)
     loader = DataLoader(
-        ImageFeatureDataset(split_data),
+        ImageFeatureDataset(split_data, args.data_dir),
         batch_size=args.image_batch_size,
         shuffle=False,
         num_workers=args.num_workers,
@@ -203,7 +241,7 @@ def extract_split_features(model, capture, dataframe, split, args, device, featu
     feature_array = np.concatenate(features).astype(np.float32)
     probability_array = np.concatenate(probabilities).astype(np.float32)
     split_data['cancer_probability'] = probability_array
-    split_data['pred_label'] = (probability_array >= CLINICAL_THRESHOLD).astype(int)
+    split_data['pred_label'] = (probability_array >= args.image_threshold).astype(int)
     split_data['confusion_type'] = np.select(
         [
             (split_data['label'] == 1) & (split_data['pred_label'] == 1),
@@ -639,6 +677,7 @@ def run_feature_pruning(
 
 def reconstruction_metrics(
     features, reconstructed, metadata, fc_weight, fc_bias,
+    patient_threshold=DEFAULT_PATIENT_THRESHOLD,
 ):
     """评估 SAE 重构质量和原分类头性能恢复情况。"""
     labels = metadata['label'].to_numpy(dtype=int)
@@ -658,8 +697,8 @@ def reconstruction_metrics(
         'reconstructed_probability': reconstructed_prob,
     }).groupby('patient_id').agg(
         label=('label', 'first'),
-        original_probability=('original_probability', 'max'),
-        reconstructed_probability=('reconstructed_probability', 'max'),
+        original_probability=('original_probability', 'mean'),
+        reconstructed_probability=('reconstructed_probability', 'mean'),
     )
     patient_labels = patient_results['label'].to_numpy(dtype=int)
     patient_original = patient_results['original_probability'].to_numpy()
@@ -690,9 +729,9 @@ def reconstruction_metrics(
         'patient_reconstructed_auc': float(
             roc_auc_score(patient_labels, patient_reconstructed)
         ),
-        'patient_prediction_agreement_at_0.30': float(np.mean(
-            (patient_original >= CLINICAL_THRESHOLD)
-            == (patient_reconstructed >= CLINICAL_THRESHOLD)
+        'patient_prediction_agreement_at_locked_threshold': float(np.mean(
+            (patient_original >= patient_threshold)
+            == (patient_reconstructed >= patient_threshold)
         )),
         'patient_cancer_probability_mae': float(np.mean(
             np.abs(patient_original - patient_reconstructed)
@@ -799,7 +838,7 @@ def make_feature_overviews(
     model, capture, sae, activations, metadata, feature_summary,
     overview_dir, args, device,
 ):
-    """为分类贡献较高的 feature 保存不同患者 Top 图片和 decoder 热图。"""
+    """为分类贡献较高的 feature 保存不同患者 Top 图片和 encoder 热图。"""
     candidates = feature_summary[
         (feature_summary['active_patient_count'] >= 2)
         & (~feature_summary['dead_feature'])
@@ -835,16 +874,18 @@ def make_feature_overviews(
             fill=(20, 20, 20),
             font=title_font,
         )
-        decoder_direction = sae.decoder_weight[feature_id].detach()
+        encoder_direction = sae.encoder.weight[feature_id].detach()
 
         for row_index, index in enumerate(selected):
             item = metadata.iloc[index]
-            image_path = os.path.join(DATA_DIR, item['图片名字'])
+            image_path = item['image_relpath']
+            if not os.path.isabs(image_path):
+                image_path = os.path.join(args.data_dir, image_path)
             original = Image.open(image_path).convert('RGB')
             model(EVAL_TRANSFORM(original).unsqueeze(0).to(device))
             feature_map = capture.output[0]
             concept_map = torch.relu(
-                (feature_map * decoder_direction[:, None, None]).sum(dim=0)
+                (feature_map * encoder_direction[:, None, None]).sum(dim=0)
             ).cpu().numpy()
             overlay = heatmap_overlay(original, concept_map)
             y = 70 + row_index * row_height
@@ -858,7 +899,7 @@ def make_feature_overviews(
             records.append({
                 'feature_id': feature_id,
                 'rank': row_index + 1,
-                'image_name': item['图片名字'],
+                'image_name': item['image_relpath'],
                 'patient_id': item['patient_id'],
                 'split': item['split'],
                 'label': int(item['label']),
@@ -883,7 +924,7 @@ def main(argv=None):
     args = finalize_args(parse_args(argv))
     seed_everything(args.seed)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    output_dir = os.path.join(OUTPUT_ROOT, args.experiment)
+    output_dir = os.path.join(args.output_root, args.experiment)
     os.makedirs(output_dir, exist_ok=False)
     feature_dir = os.path.join(output_dir, '特征缓存')
     model_dir = os.path.join(output_dir, 'SAE模型')
@@ -902,7 +943,7 @@ def main(argv=None):
     print(dataframe.groupby('split').agg(
         patients=('patient_id', 'nunique'), images=('patient_id', 'size')
     ))
-    model = load_resnet50(device)
+    model = load_resnet50(device, args.weight_path)
     capture = ActivationCapture(model.layer4[-1])
     split_features = {}
     split_metadata = {}
@@ -940,6 +981,7 @@ def main(argv=None):
             split_metadata[split],
             fc_weight,
             fc_bias,
+            args.patient_threshold,
         )
         split_metrics['mean_l0'] = float(
             (activations > ACTIVE_EPS).sum(axis=1).mean()
@@ -970,7 +1012,7 @@ def main(argv=None):
         )
         pruning_split_metrics[split] = reconstruction_metrics(
             split_features[split], pruned_reconstructed,
-            split_metadata[split], fc_weight, fc_bias,
+            split_metadata[split], fc_weight, fc_bias, args.patient_threshold,
         )
     pruning_summary['splits'] = pruning_split_metrics
     metrics['pruning'] = pruning_summary

@@ -14,7 +14,7 @@ SAE 激活不等于医学概念标签。不能把 `h_k>0` 直接转换成“概�
 真实标注建议保存到新的版本目录，不覆盖旧版本：
 
 ```text
-结果/SAE概念标注/第二批/resnet50/v1/
+结果/SAE概念标注/去偏重训练_v1/resnet50/v1/
 ├── concept_catalog.csv
 ├── annotations_doctor_a.csv
 ├── annotations_doctor_b.csv
@@ -54,7 +54,7 @@ SAE 激活不等于医学概念标签。不能把 `h_k>0` 直接转换成“概�
 
 | 字段 | 含义 |
 |---|---|
-| `image_path` | 相对 `数据/第二批整理后` 的路径，必须与特征缓存中的 `图片名字` 一致 |
+| `image_path` | 相对 `数据/第二批裁剪后_v1_1` 的路径，必须与特征缓存中的 `image_relpath` 一致 |
 | `patient_id` | 患者ID，用于审计和患者级抽样 |
 | `split` | `train`、`val` 或 `test`，必须沿用固定患者划分 |
 | `concept_id` | 对应概念目录中的稳定编号 |
