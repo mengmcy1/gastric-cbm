@@ -10,7 +10,10 @@ from PIL import Image
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
-DATA_ROOT = PROJECT_DIR / '数据' / '胃早癌概念提取训练集 - 平衡+整理后'
+DATA_ROOT = (
+    PROJECT_DIR / '数据' / '归档' / '原始数据_只读'
+    / '胃早癌概念提取训练集 - 平衡+整理后'
+)
 OUTPUT_ROOT = PROJECT_DIR / '数据整理记录' / '概念提取训练集_v1' / '原始审计'
 LABELS = {'非癌': 0, '早癌': 1}
 VALID_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'}
