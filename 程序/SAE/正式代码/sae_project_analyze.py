@@ -29,7 +29,11 @@ def parse_args():
     """读取冻结投影、概览数量和输出目录参数。"""
     parser = argparse.ArgumentParser(description='锁定 SAE 的独立数据投影与错误分析')
     parser.add_argument('--sae-run', required=True, help='已锁定的 SAE 实验目录')
-    parser.add_argument('--split', choices=['val', 'test'], default='val')
+    parser.add_argument('--split', choices=['val', 'test', 'external'], default='val')
+    parser.add_argument(
+        '--external-manifest', default=None,
+        help='外部预处理manifest；提供后自动使用external split，不参与训练或调参',
+    )
     parser.add_argument('--experiment', required=True, help='新建的独立输出目录名')
     parser.add_argument('--image-batch-size', type=int, default=32)
     parser.add_argument('--sae-batch-size', type=int, default=32)
@@ -98,12 +102,14 @@ def load_or_extract_features(args, output_cache, model, capture, device):
     source_cache = os.path.join(args.sae_run, '特征缓存')
     feature_path = os.path.join(source_cache, f'{args.split}_gap_features.npy')
     metadata_path = os.path.join(source_cache, f'{args.split}_metadata.csv')
-    if os.path.exists(feature_path) and os.path.exists(metadata_path):
+    if (args.external_manifest is None
+            and os.path.exists(feature_path) and os.path.exists(metadata_path)):
         features = np.load(feature_path).astype(np.float32)
         metadata = pd.read_csv(metadata_path, encoding='utf-8-sig')
         print(f'复用 {args.split} 特征缓存: {features.shape}')
         return features, metadata
-    dataframe = pd.read_csv(args.split_csv, encoding='utf-8-sig').rename(
+    manifest_path = args.external_manifest or args.split_csv
+    dataframe = pd.read_csv(manifest_path, encoding='utf-8-sig').rename(
         columns={'瘤变标签': 'label'},
     )
     if 'image_relpath' not in dataframe:
@@ -113,11 +119,23 @@ def load_or_extract_features(args, output_cache, model, capture, device):
                 break
     if 'image_relpath' not in dataframe:
         raise ValueError('划分CSV缺少 image_relpath/processed_path/图片名字/image_path')
-    if 'center' not in dataframe:
-        raise ValueError('划分CSV缺少center字段')
-    source = dataframe['center'].apply(derive_source)
-    dataframe['domain'] = source.str[0]
-    dataframe['hospital'] = source.str[1]
+    required = {'patient_id', 'label'}
+    missing = required - set(dataframe.columns)
+    if missing:
+        raise ValueError(f'清单缺少必要字段: {sorted(missing)}')
+    if args.external_manifest is not None:
+        dataframe['split'] = 'external'
+        dataframe['domain'] = '外院'
+        dataframe['hospital'] = (
+            dataframe['center'].fillna('外部多中心').astype(str)
+            if 'center' in dataframe else '外部多中心'
+        )
+    else:
+        if 'center' not in dataframe:
+            raise ValueError('划分CSV缺少center字段')
+        source = dataframe['center'].apply(derive_source)
+        dataframe['domain'] = source.str[0]
+        dataframe['hospital'] = source.str[1]
     extract_args = SimpleNamespace(
         image_batch_size=args.image_batch_size, num_workers=args.num_workers,
         data_dir=args.data_dir, image_threshold=args.image_threshold,
@@ -462,6 +480,11 @@ def main():
     seed_everything(args.seed)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     args.sae_run = os.path.abspath(args.sae_run)
+    if args.external_manifest is not None:
+        args.external_manifest = os.path.abspath(args.external_manifest)
+        args.split = 'external'
+    elif args.split == 'external':
+        raise ValueError('--split external 必须同时提供 --external-manifest')
     with open(os.path.join(args.sae_run, 'config.json'), encoding='utf-8') as file:
         source_config = json.load(file)
     for name in [
@@ -543,6 +566,7 @@ def main():
     patient_labels = patients['label'].to_numpy(dtype=int)
     metrics = {
         'source_sae_run': args.sae_run, 'split': args.split,
+        'external_manifest': args.external_manifest,
         'checkpoint_epoch': int(checkpoint['epoch']),
         'lambda_l1': float(checkpoint['lambda_l1']),
         'kept_feature_count': int(kept_mask.sum()),

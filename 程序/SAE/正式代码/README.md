@@ -14,19 +14,20 @@ train/val患者划分、`resnet50_debiased_best.pth`，以及图片/患者锁定
 python 程序/SAE/正式代码/sae_discovery.py --demo
 ```
 
-正式训练默认只使用固定划分中的训练集和验证集：
+正式训练默认只使用固定划分中的训练集和验证集。当前正式方案已经锁定为
+`lambda_l1=5e-4`：
 
 ```bash
-python 程序/SAE/正式代码/sae_discovery.py --experiment formal_expA_resnet50_sae_l1_000075_20260724
+python 程序/SAE/正式代码/sae_discovery.py \
+  --experiment formal_expA_resnet50_sae_l1_0005_20260724
 ```
 
 正式默认参数参考 M-CBM 的 ISIC2018/ResNet50 配置：输入 2048 维、隐藏 512 维、
-`lambda_l1=7.5e-5`、学习率 `1e-4`、SAE batch size 32、最多 1000 epochs、早停
-patience 50。L1初值沿用旧模型开发集锁定结果；新模型正式结果仍需根据验证集L0、dead
-feature、重构和分类恢复率验收。损失函数使用逐元素MSE（对齐M-CBM官方
-`L2ReconstructionLoss`），
+`lambda_l1=5e-4`、学习率 `1e-4`、SAE batch size 32、最多 1000 epochs、早停
+patience 50。该 L1 权重已根据验证集 L0、dead feature、重构和分类恢复率锁定。
+损失函数使用逐元素MSE（对齐M-CBM官方`L2ReconstructionLoss`），
 decoder 每次更新前移除沿自身方向的梯度分量再归一化（梯度正交投影）。参数均可
-通过命令行覆盖，正式定稿前仍需在验证集比较重构、L0、dead feature 和分类恢复率。
+通过命令行覆盖；训练日志分别保存 MSE、原始 L1、`lambda_l1 × L1` 和 L0。
 
 SAE 训练后按训练集激活患者数进行 feature 筛选：默认 feature 至少激活 5 位
 训练患者，并在验证集上选择 recovered cross-entropy 下降不超过 0.01 的最严格
@@ -44,6 +45,16 @@ Concept Bottleneck Layer；CBL 需要医生确认后的概念级 0/1 标签。
 投影测试集。输出同时保留原模型、完整SAE和筛选后SAE的图像
 及患者概率，并分别保存原模型 FP/FN、`TP_to_FN`、`TN_to_FP`、`FP_to_TN`、
 `FN_to_TP` 病例和 feature 排名。
+
+验证集复核通过后，可将同一个冻结 SAE 投影到外部多中心完整测试集。该过程不会
+重训练 SAE，不会根据外部标签修改剪枝掩码或阈值：
+
+```bash
+python 程序/SAE/正式代码/sae_project_analyze.py \
+  --sae-run 结果/SAE/去偏重训练_v1/resnet50/formal_expA_resnet50_sae_l1_0005_20260724 \
+  --external-manifest 结果/去偏重训练_v1/外部多中心完整测试_v1/preprocess_manifest.csv \
+  --experiment external_multicenter_resnet50_sae_20260727
+```
 
 `mcbm_cbl_train.py` 是概念标注完成后的备用脚本：读取 SAE 实验缓存的 GAP 特征，
 用医生共识标签训练线性 CBL，再用全部训练图片的癌/非癌标签训练 elastic-net 稀疏

@@ -60,7 +60,8 @@ def parse_args(argv=None):
     parser.add_argument('--image-threshold', type=float, default=DEFAULT_IMAGE_THRESHOLD)
     parser.add_argument('--patient-threshold', type=float, default=DEFAULT_PATIENT_THRESHOLD)
     parser.add_argument('--hidden-dim', type=int, default=None, help='SAE 字典大小')
-    parser.add_argument('--lambda-l1', type=float, default=7.5e-5, help='隐藏激活 L1 权重')
+    parser.add_argument('--lambda-l1', type=float, default=5e-4,
+                        help='隐藏激活 L1 权重；正式方案锁定为5e-4')
     parser.add_argument('--learning-rate', type=float, default=1e-4, help='SAE 学习率')
     parser.add_argument('--epochs', type=int, default=None, help='最大训练轮数')
     parser.add_argument('--patience', type=int, default=None, help='验证损失早停轮数')
@@ -425,16 +426,22 @@ def train_sae(
             'train_total_loss': train_metrics[0],
             'train_l2': train_metrics[1],
             'train_l1': train_metrics[2],
+            'train_weighted_l1': args.lambda_l1 * train_metrics[2],
             'train_l0': train_metrics[3],
             'val_total_loss': val_metrics[0],
             'val_l2': val_metrics[1],
             'val_l1': val_metrics[2],
+            'val_weighted_l1': args.lambda_l1 * val_metrics[2],
             'val_l0': val_metrics[3],
         })
         print(
             f'Epoch {epoch:03d}  '
-            f'train L2={train_metrics[1]:.4f} L0={train_metrics[3]:.2f}  '
-            f'val L2={val_metrics[1]:.4f} L0={val_metrics[3]:.2f}'
+            f'train MSE={train_metrics[1]:.4f} '
+            f'λL1={args.lambda_l1 * train_metrics[2]:.4f} '
+            f'L0={train_metrics[3]:.2f}  '
+            f'val MSE={val_metrics[1]:.4f} '
+            f'λL1={args.lambda_l1 * val_metrics[2]:.4f} '
+            f'L0={val_metrics[3]:.2f}'
         )
 
         if val_metrics[0] < best_loss:
