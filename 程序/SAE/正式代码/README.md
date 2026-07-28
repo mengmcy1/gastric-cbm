@@ -56,6 +56,16 @@ python 程序/SAE/正式代码/sae_project_analyze.py \
   --experiment external_multicenter_resnet50_sae_20260727
 ```
 
+投影完成后使用`analyze_sae_results.py`生成不含checkpoint和大体量特征缓存的医学生
+提交版。提交版包含Word阅读指南、核心指标、训练期候选feature图、独立投影概念图、
+错误病例清单、概念命名表和必要追溯数据：
+
+```bash
+python 程序/SAE/正式代码/analyze_sae_results.py \
+  --sae-run 结果/SAE/去偏重训练_v1/resnet50/formal_expA_resnet50_sae_l1_0005_20260724 \
+  --projection-run 结果/SAE/去偏重训练_v1/resnet50/external_multicenter_resnet50_sae_20260728
+```
+
 `mcbm_cbl_train.py` 是概念标注完成后的备用脚本：读取 SAE 实验缓存的 GAP 特征，
 用医生共识标签训练线性 CBL，再用全部训练图片的癌/非癌标签训练 elastic-net 稀疏
 分类器。默认在 `NCC95<=5` 的候选中按验证 AUC 选择，并保存、打印全部 C 候选的
