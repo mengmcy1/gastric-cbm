@@ -78,14 +78,17 @@ def load_clusters(class_dir):
     return clusters, pd.DataFrame(records)
 
 
-def draw_page(model_name, label, page_clusters, page, total_pages, output_path):
+def draw_page(
+    model_name, label, page_clusters, page, total_pages, cluster_count,
+    output_path,
+):
     """绘制一页概念簇，每页展示三个概念簇。"""
     height = HEADER_HEIGHT + ROW_HEIGHT * len(page_clusters)
     canvas = Image.new("RGB", (CANVAS_WIDTH, height), "white")
     draw = ImageDraw.Draw(canvas)
     title = (
         f"{model_name}  类别{label}（{CLASS_NAMES[label]}）MOCE概念聚类"
-        f"  第{page}/{total_pages}页"
+        f"  K={cluster_count}  第{page}/{total_pages}页"
     )
     draw.text((24, 20), title, fill=(20, 20, 20), font=TITLE_FONT)
 
@@ -140,6 +143,7 @@ def render_class(model_name, label):
             clusters[start:start + CLUSTERS_PER_PAGE],
             page_index + 1,
             total_pages,
+            len(clusters),
             output_path,
         )
 
@@ -152,11 +156,17 @@ def render_class(model_name, label):
 
 
 def main():
+    global RESULT_DIR
     parser = argparse.ArgumentParser(description="重新排版已有MOCE概念聚类图")
     parser.add_argument("--model", choices=["all", *MODEL_NAMES], default="all")
     parser.add_argument("--class-label", choices=["all", "0", "1"], default="all")
+    parser.add_argument(
+        "--result-dir", default=RESULT_DIR,
+        help="包含{model}/class_{label}的MOCE原始结果目录",
+    )
     args = parser.parse_args()
 
+    RESULT_DIR = os.path.abspath(args.result_dir)
     models = MODEL_NAMES if args.model == "all" else [args.model]
     labels = [0, 1] if args.class_label == "all" else [int(args.class_label)]
     for model_name in models:

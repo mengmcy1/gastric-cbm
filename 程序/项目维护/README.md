@@ -23,3 +23,10 @@ python 程序/项目维护/正式代码/manage_model_assets.py --package all
 
 生成的归档位于 `发布资产/模型权重/`，该目录被 Git 忽略。归档只包含权重及不含
 患者记录的配置、阈值、训练历史和指标摘要。
+
+`正式代码/export_safe_moce_summary.py` 使用严格列白名单，从完整MOCE结果中导出
+可提交GitHub的跨K汇总和概念簇级统计：
+
+```bash
+python 程序/项目维护/正式代码/export_safe_moce_summary.py
+```

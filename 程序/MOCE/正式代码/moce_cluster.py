@@ -145,7 +145,7 @@ def extract_class_features(model, capture, label, dataframe, class_dir):
     return np.asarray(features_all, dtype=np.float32), records
 
 
-def cluster_features(features, records, class_dir):
+def cluster_features(features, records, class_dir, save_feature_cache=True):
     """执行 K-Means，保存模型、特征、分配结果和簇统计。"""
     if len(records) < N_CLUSTERS:
         print(f'候选区域数少于聚类数 {N_CLUSTERS}，跳过聚类')
@@ -165,12 +165,13 @@ def cluster_features(features, records, class_dir):
         record['distance_to_center'] = float(distances[index, cluster_id])
 
     joblib.dump(kmeans, os.path.join(class_dir, 'kmeans_model.joblib'))
-    np.savez_compressed(
-        os.path.join(class_dir, 'candidate_features.npz'),
-        features=features,
-        cluster_ids=cluster_ids,
-        centers=kmeans.cluster_centers_,
-    )
+    if save_feature_cache:
+        np.savez_compressed(
+            os.path.join(class_dir, 'candidate_features.npz'),
+            features=features,
+            cluster_ids=cluster_ids,
+            centers=kmeans.cluster_centers_,
+        )
 
     assignment_path = os.path.join(class_dir, 'cluster_assignments.csv')
     fields = list(records[0].keys())

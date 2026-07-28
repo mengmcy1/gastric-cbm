@@ -43,6 +43,49 @@ K-Means中心和重要性排名，在独立数据上做1-NN概念匹配和SSC/SD
 
 旧第二批MOCE脚本和结果分别位于`程序/归档/MOCE/`与`结果/归档/历史MOCE第二批/`。
 
+## K-Means聚类数量敏感性分析
+
+`run_kmeans_sensitivity.py`复用正式K=25运行已经冻结的候选特征、候选区域和掩码，
+仅重新执行K-Means、概念重要性及SSC/SDC，不重复运行候选区域提取。结果统一保存到：
+
+```text
+结果/MOCE聚类数量分析/
+├── 原始结果/k_XX/{model}/class_{0,1}/
+└── 自动分析/
+    ├── k_XX/{model}/class_{0,1}/
+    ├── K敏感性汇总.csv
+    ├── K敏感性汇总.xlsx
+    └── {model}_class_{label}_K敏感性汇总.png
+```
+
+默认使用`K=10,15,20,25,30,35,40,45,50`。每个K均生成原始纵向大图、分页清晰大图、
+前10重要概念扩展图、典型案例、医生概念命名表、质量图及SSC/SDC曲线。K=25直接复用
+现有正式结果，其余K固定`random_state=42`并保持候选区域完全相同。
+
+两模型、两类别、九个K共36组已全部完成。脱敏后的跨K汇总、逐K概念簇级CSV和说明
+文档位于`研究结果摘要/MOCE聚类数量分析/`；患者级和图片级原始结果仅保留在服务器。
+
+建议分别运行两个模型，脚本会自动跳过已经完成的模型、类别和K，并累积更新跨K汇总：
+
+```bash
+CUDA_VISIBLE_DEVICES=1 python 程序/MOCE/正式代码/run_kmeans_sensitivity.py \
+  --model resnet50
+
+CUDA_VISIBLE_DEVICES=1 python 程序/MOCE/正式代码/run_kmeans_sensitivity.py \
+  --model efficientnet_b0
+```
+
+如确需逐整数扫描10至50，可添加：
+
+```bash
+--cluster-min 10 --cluster-max 50 --cluster-step 1
+```
+
+逐整数运行会生成41套完整图表，计算、磁盘和临床审核成本显著高于默认九点网格。
+K值不应只按聚类惯性最小选择；应共同检查惯性下降是否进入平台、相邻K的ARI/NMI、
+小患者簇数量、单患者主导比例、SSC/SDC、重要概念稳定性及医生可命名性。若多个K表现
+接近，优先选择更小、更容易解释的K。
+
 ## 自动分析整理
 
 EfficientNet-B0全量MOCE完成后运行：

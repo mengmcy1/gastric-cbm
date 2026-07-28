@@ -351,6 +351,7 @@ def save_important_concept_overviews(cluster_analysis, assignment, output_dir):
             )
             draw = ImageDraw.Draw(canvas)
             title = (
+                f"K={len(cluster_analysis)}  "
                 f"概念簇{int(concept.concept_number):02d}  "
                 f"重要性排名={int(concept.importance_rank)}  S_h={concept.S_h:.3f}  "
                 f"第{page_index + 1}/{total_pages}页"
@@ -435,9 +436,11 @@ def save_important_concept_overviews(cluster_analysis, assignment, output_dir):
     )
 
 
-def save_curves(ssc_sdc, model_name, label, output_dir):
+def save_curves(ssc_sdc, model_name, label, output_dir, cluster_count):
     """保存SSC/SDC准确率和目标概率曲线。"""
-    title = f"{model_name} 类别{label}（{CLASS_NAMES[label]}）"
+    title = (
+        f"{model_name} 类别{label}（{CLASS_NAMES[label]}） K={cluster_count}"
+    )
     plots = [
         (
             "ssc_sdc_accuracy_curve.png",
@@ -484,11 +487,14 @@ def save_cluster_quality(cluster_analysis, model_name, label, output_dir):
     for axis, (column, title, color) in zip(axes.flat, panels):
         axis.bar(x, data[column], color=color)
         axis.set_title(title, fontproperties=PLOT_FONT)
-        axis.set_xlabel("概念编号（1～25）", fontproperties=PLOT_FONT)
+        axis.set_xlabel(
+            f"概念编号（1～{len(data)}）", fontproperties=PLOT_FONT
+        )
         axis.set_ylim(0, max(1.0, float(data[column].max()) * 1.1))
         axis.grid(axis="y", alpha=0.25)
     fig.suptitle(
-        f"{model_name} 类别{label}（{CLASS_NAMES[label]}）概念质量总览",
+        f"{model_name} 类别{label}（{CLASS_NAMES[label]}）"
+        f"K={len(data)} 概念质量总览",
         fontproperties=PLOT_FONT,
         fontsize=16,
     )
@@ -610,7 +616,9 @@ def analyze_class(model_name, label, manifest):
         encoding="utf-8-sig",
     )
 
-    save_curves(ssc_sdc, model_name, label, output_dir)
+    save_curves(
+        ssc_sdc, model_name, label, output_dir, len(cluster_analysis)
+    )
     save_cluster_quality(cluster_analysis, model_name, label, output_dir)
     save_important_concept_overviews(cluster_analysis, assignment, output_dir)
 
@@ -668,12 +676,27 @@ def analyze_class(model_name, label, manifest):
 
 
 def main():
+    global MOCE_DIR, ANALYSIS_DIR
     parser = argparse.ArgumentParser(description="生成MOCE自动分析和医生审核辅助材料")
     parser.add_argument("--model", choices=["all", *MODEL_NAMES], default="all")
     parser.add_argument("--class-label", choices=["all", "0", "1"], default="all")
+    parser.add_argument(
+        "--moce-dir", default=MOCE_DIR,
+        help="包含{model}/class_{label}的MOCE原始结果目录",
+    )
+    parser.add_argument(
+        "--analysis-dir", default=ANALYSIS_DIR,
+        help="自动分析输出根目录",
+    )
+    parser.add_argument(
+        "--manifest", default=MANIFEST_PATH,
+        help="包含processed_relpath/source的冻结清单",
+    )
     args = parser.parse_args()
 
-    manifest = pd.read_csv(MANIFEST_PATH, encoding="utf-8-sig").rename(
+    MOCE_DIR = os.path.abspath(args.moce_dir)
+    ANALYSIS_DIR = os.path.abspath(args.analysis_dir)
+    manifest = pd.read_csv(args.manifest, encoding="utf-8-sig").rename(
         columns={"processed_relpath": "image_path", "source": "source_path"}
     )
     models = MODEL_NAMES if args.model == "all" else [args.model]
