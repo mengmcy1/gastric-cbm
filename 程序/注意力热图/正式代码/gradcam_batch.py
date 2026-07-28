@@ -104,7 +104,7 @@ def build_model(model_name):
         raise ValueError(f'不支持的模型: {model_name}')
 
     weight_path = os.path.join(
-        OUTPUT_DIR, '模型权重', MODEL_SPECS[model_name]['weight_file'],
+        OUTPUT_DIR, MODEL_SPECS[model_name]['weight_file'],
     )
     checkpoint = torch.load(weight_path, map_location=DEVICE, weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])

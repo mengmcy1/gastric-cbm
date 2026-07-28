@@ -16,6 +16,8 @@ venv/
 env/
 
 # Model checkpoints & weights
+# Weights are published as private GitHub Release assets. They stay out of normal
+# Git history; see 模型资产/README.md.
 *.pth
 *.pt
 *.ckpt
@@ -39,16 +41,21 @@ wandb/
 .ipynb_checkpoints/
 
 # Sensitive data and local records
-数据/
+数据/*
+!数据/README.md
 数据整理记录/
 参考图片/
-文献/
+文献/*
+!文献/MOCE_一页纸精读总结.md
+!文献/MOCE_精读笔记.md
 *.pdf
 
-# Generated results; keep final model weights only
+# Generated results. Only the directory guide belongs in normal Git history.
 结果/*
-!结果/模型权重/
-!结果/模型权重/*.pth
+!结果/README.md
+
+# Locally generated GitHub Release archives
+发布资产/
 
 # Secrets and local configuration
 .env

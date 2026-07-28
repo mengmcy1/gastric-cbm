@@ -3,13 +3,13 @@
 加载训练好的模型（ResNet50 / EfficientNet-B0），对单张或批量胃镜图像进行癌/非癌预测。
 
 用法：
-  python inference.py --img ../数据/某张图片.jpg                                # ResNet50 单张
-  python inference.py --model efficientnet_b0 --img ../数据/某张图片.jpg         # EfficientNet 单张
-  python inference.py --dir ../数据/某文件夹/                                    # 批量预测
-  python inference.py --dir ../数据/某文件夹/ --output result.csv                # 批量 + 导出 CSV
+  python inference.py --img ../数据/某张图片.jpg
+  python inference.py --model efficientnet_b0 --img ../数据/某张图片.jpg
+  python inference.py --dir ../数据/某文件夹/
+  python inference.py --dir ../数据/某文件夹/ --output result.csv
 
 阈值来源：
-  tune_threshold.py 在验证集上 Sens≥0.90 约束下的推荐值。
+  去偏重训练实验A在验证集上满足 Sens>=0.90 时锁定的图片级阈值。
 """
 
 import os
@@ -28,18 +28,23 @@ from torchvision.models import resnet50, efficientnet_b0
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(BASE_DIR)))
 
-# 新模型完成阈值调优前使用0.5；调优后将对应值更新到这里
+# 权重路径相对于“结果”目录。默认使用当前去偏重训练实验A正式模型。
 MODEL_REGISTRY = {
-    'resnet50':        ('resnet50_transfer_best.pth', 0.30),
-    'efficientnet_b0': ('efficientnet_b0_best.pth',   0.22),
+    'resnet50': (
+        os.path.join(
+            '去偏重训练_v1', 'expA_full_resnet50_seed42',
+            'resnet50_debiased_best.pth',
+        ),
+        0.15484211,
+    ),
+    'efficientnet_b0': (
+        os.path.join(
+            '去偏重训练_v1', 'expA_full_efficientnet_b0_seed42',
+            'efficientnet_b0_debiased_best.pth',
+        ),
+        0.2224278,
+    ),
 }
-
-# ★ 默认推理图片 —— 不传参数时直接用这个，点 ▶ 按钮就能跑
-DATA_DIR   = os.path.join(PROJECT_DIR, '数据', '第二批整理后')
-DEFAULT_IMG = os.path.join(
-    DATA_DIR, '癌', '01.0000000129422',
-    '01.0000000129422_6_2019-09-18_14_27_45.jpg',
-)
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -122,23 +127,27 @@ def main():
                         choices=['resnet50', 'efficientnet_b0'],
                         help='模型选择，默认 resnet50')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--img', type=str, help='单张图像路径（默认使用 DEFAULT_IMG）')
+    group.add_argument('--img', type=str, help='单张图像路径')
     group.add_argument('--dir', type=str, help='图像文件夹路径')
     parser.add_argument('--output', type=str, default=None, help='批量预测结果 CSV 路径')
+    parser.add_argument('--weights', type=str, default=None,
+                        help='临时覆盖模型权重路径')
     parser.add_argument('--threshold', type=float, default=None,
                         help='临时覆盖阈值（不修改注册表中的默认值）')
     args = parser.parse_args()
 
     weight_file, default_th = MODEL_REGISTRY[args.model]
-    model_path = os.path.join(PROJECT_DIR, '结果', '模型权重', weight_file)
+    model_path = (
+        os.path.abspath(args.weights) if args.weights
+        else os.path.join(PROJECT_DIR, '结果', weight_file)
+    )
     THRESHOLD = args.threshold if args.threshold is not None else default_th
 
-    # 没传参数 → 用默认单张图片
     if not args.img and not args.dir:
-        args.img = DEFAULT_IMG
-        print(f'未指定输入，使用默认图片: {args.img}')
+        parser.error('必须通过 --img 或 --dir 指定输入')
 
     print(f'模型: {args.model}')
+    print(f'权重: {model_path}')
     print(f'推理阈值: {THRESHOLD}')
     print(f'设备: {DEVICE}')
 
