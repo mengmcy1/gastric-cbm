@@ -66,6 +66,32 @@ python 程序/SAE/正式代码/analyze_sae_results.py \
   --projection-run 结果/SAE/去偏重训练_v1/resnet50/external_multicenter_resnet50_sae_20260728
 ```
 
+`sae_image_centered.py`按单张图片展示激活最高的Top-K保留feature。每张图输出原图、
+多颜色叠加图、各feature独立热图和统计表；统计表同时区分激活强度和癌方向贡献：
+
+```bash
+CUDA_VISIBLE_DEVICES=1 python 程序/SAE/正式代码/sae_image_centered.py \
+  --sae-run 结果/SAE/去偏重训练_v1/resnet50/formal_expA_resnet50_sae_l1_0005_20260724 \
+  --image /绝对路径/示例图.jpg \
+  --top-k 5 \
+  --rank-by activation \
+  --color-mode contribution
+```
+
+默认贡献配色为正向促癌高饱和红色、负向抑癌高饱和蓝色，绝对贡献越大颜色越明显。
+其叠加逻辑参考Grad-CAM：`--overlay-alpha`控制热点处的最大叠加强度（默认0.55），
+`--response-gamma`控制中等空间响应的显色程度（默认0.75，数值越小越显眼）。若需要
+让每个feature始终保持独立类别色，可改为`--color-mode feature`。
+
+批量调试可传入manifest，默认仅处理前5张；添加`--all`才处理筛选后的全部图片：
+
+```bash
+CUDA_VISIBLE_DEVICES=1 python 程序/SAE/正式代码/sae_image_centered.py \
+  --sae-run 结果/SAE/去偏重训练_v1/resnet50/formal_expA_resnet50_sae_l1_0005_20260724 \
+  --manifest 结果/去偏重训练_v1/外部多中心完整测试_v1/preprocess_manifest.csv \
+  --patient-id 患者ID --limit 3
+```
+
 `mcbm_cbl_train.py` 是概念标注完成后的备用脚本：读取 SAE 实验缓存的 GAP 特征，
 用医生共识标签训练线性 CBL，再用全部训练图片的癌/非癌标签训练 elastic-net 稀疏
 分类器。默认在 `NCC95<=5` 的候选中按验证 AUC 选择，并保存、打印全部 C 候选的
