@@ -147,7 +147,10 @@
 
 ### 5.1 分类器
 
-- 主模型为ResNet50，对照及性能模型为EfficientNet-B0。
+- 第二批v1.1已完成阶段的主模型为ResNet50，对照及性能模型为EfficientNet-B0。
+- 新数据M0-M5路线不预设永久主骨干：ResNet50与EfficientNet-B0先在同一M0患者划分
+  和train/val协议下比较，再只根据预先冻结的val规则选择主骨干；test和外部test不得
+  参与该选择。
 - 均使用ImageNet预训练，采用两阶段迁移学习和患者级冻结划分。
 - 模型选择只看验证集；测试集不参与epoch、阈值、TTA、聚合或集成权重选择。
 - 筛查场景重点报告Sensitivity，但不能脱离Specificity、AUC、混淆矩阵和置信区间。
