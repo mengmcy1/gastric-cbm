@@ -92,6 +92,14 @@ CUDA_VISIBLE_DEVICES=1 python 程序/SAE/正式代码/sae_image_centered.py \
   --patient-id 患者ID --limit 3
 ```
 
+锁定SAE完成内部test和外部投影后，使用`sae_cross_dataset_stability.py`对齐train、
+val、internal test和external test中的同一Feature。候选名单只由train/val筛选；
+test和external仅用于确认方向、覆盖和Top患者稳定性：
+
+```bash
+python 程序/SAE/正式代码/sae_cross_dataset_stability.py
+```
+
 `mcbm_cbl_train.py` 是概念标注完成后的备用脚本：读取 SAE 实验缓存的 GAP 特征，
 用医生共识标签训练线性 CBL，再用全部训练图片的癌/非癌标签训练 elastic-net 稀疏
 分类器。默认在 `NCC95<=5` 的候选中按验证 AUC 选择，并保存、打印全部 C 候选的
