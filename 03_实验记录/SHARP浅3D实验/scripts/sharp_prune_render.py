@@ -303,11 +303,13 @@ def main() -> None:
 
     # ── 人工评分模板 ──────────────────────────────────────────────────────
     video_manual = {
-        "schema_version": "2.0",
+        "schema_version": "2.1-prune",
         "score_interpretation": "absolute_quality",
         "review_status": "",
         "overall_quality_score": None,
         "hole_severity": None,
+        "floating_gaussian_severity": None,
+        "depth_layering_loss_severity": None,
         "stretching_severity": None,
         "flicker_severity": None,
         "paper_feel_severity": None,
@@ -318,6 +320,10 @@ def main() -> None:
         "worst_frame": None,
         "overall_pass": None,
         "notes": "",
+        "prune_field_note": (
+            "floating_gaussian_severity: 漂浮高斯/孤立斑块 (0=无 1=轻微 2=明显 3=严重)。"
+            "depth_layering_loss_severity: 纵深层次损失 (0=无 1=轻微 2=明显 3=严重)。"
+        ),
     }
     (output_dir / "video_manual.json").write_text(
         json.dumps(video_manual, ensure_ascii=False, indent=2), encoding="utf-8")
