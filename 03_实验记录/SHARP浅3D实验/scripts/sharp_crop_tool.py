@@ -27,24 +27,29 @@ SAMPLES = ("P01", "P02", "P03", "P04", "P05")
 SRC_CONFIG = "md004_swipe60_keep100_crop00"
 CROP_LEVELS = (0, 3, 5, 10)
 
-# v2.0 人工评分模板
+# v2.1-crop 人工评分模板
+# score_interpretation:
+#   "crop_effect"      → overall_quality_score 代表裁剪改善效果（0=无改善/3=完全消除缺口）
+#   "absolute_quality" → overall_quality_score 代表绝对整体视频质量（与运动阶段同口径）
+# 严重度量表：0=无, 1=轻微, 2=明显, 3=严重；null=本轮未评估
 VIDEO_MANUAL_TEMPLATE = {
     "schema_version": "2.1-crop",
+    "score_interpretation": "",
     "review_status": "",
-    "overall_quality_score": "",
-    "hole_severity": "",
-    "stretching_severity": "",
-    "flicker_severity": "",
-    "paper_feel_severity": "",
-    "occlusion_error_severity": "",
-    "reflection_deformation_severity": "",
-    "edge_artifact_reduction_score": "",
-    "sharpness_loss_severity": "",
-    "framing_loss_severity": "",
-    "first_artifact_frame_left": "",
-    "first_artifact_frame_right": "",
-    "worst_frame": "",
-    "overall_pass": "",
+    "overall_quality_score": None,
+    "hole_severity": None,
+    "stretching_severity": None,
+    "flicker_severity": None,
+    "paper_feel_severity": None,
+    "occlusion_error_severity": None,
+    "reflection_deformation_severity": None,
+    "edge_artifact_reduction_score": None,
+    "sharpness_loss_severity": None,
+    "framing_loss_severity": None,
+    "first_artifact_frame_left": None,
+    "first_artifact_frame_right": None,
+    "worst_frame": None,
+    "overall_pass": None,
     "notes": "",
 }
 
