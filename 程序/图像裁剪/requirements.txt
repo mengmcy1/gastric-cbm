@@ -1,0 +1,2 @@
+# 可选加速后端；未安装时自动使用gastric-cbm现有OpenCV DNN CPU后端。
+onnxruntime>=1.17,<2
