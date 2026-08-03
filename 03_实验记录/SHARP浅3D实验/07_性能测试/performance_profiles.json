@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "common": {
+    "warmup_runs": 1,
+    "formal_runs": 3,
+    "sample_id": "P01",
+    "input_image": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+    "input_ply": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+    "checkpoint": "源码/SHARP_APPLE注释/checkpoints/sharp_2572gikvuh.pt",
+    "checkpoint_sha256": "94211a75198c47f61fca7d739ba08a215418d8d398d48fddf023baccc24f073d",
+    "max_disparity": 0.04,
+    "crop_single_side_percent": 3,
+    "gaussian_keep_percent": 100,
+    "trajectory": "swipe",
+    "num_steps": 60,
+    "fps": 30
+  },
+  "profiles": {
+    "rtx5080_server": {
+      "expected_gpu_name": "NVIDIA GeForce RTX 5080",
+      "max_preflight_gpu_util_percent": 5,
+      "max_preflight_memory_used_fraction": 0.1,
+      "result_scope": "Company server baseline; keep separate from the laptop baseline."
+    },
+    "rtx5060_laptop": {
+      "expected_gpu_name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "max_preflight_gpu_util_percent": 5,
+      "max_preflight_memory_used_fraction": 0.25,
+      "result_scope": "Home laptop baseline; keep separate from the server baseline."
+    }
+  },
+  "comparison_policy": "Do not average absolute timings or FPS across the two hardware profiles. Compare each profile independently and report hardware, driver, CUDA, PyTorch, resolution and timing boundary with every result."
+}

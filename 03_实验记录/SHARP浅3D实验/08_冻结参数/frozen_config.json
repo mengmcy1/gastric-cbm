@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "status": "frozen",
+  "frozen_date": "2026-08-03",
+  "trajectory": "swipe",
+  "num_steps": 60,
+  "fps": 30,
+  "max_disparity": 0.04,
+  "crop_single_side_percent": 3,
+  "gaussian_keep_percent": 100,
+  "pruning_method_evaluated": "opacity_descending",
+  "decision_basis": {
+    "motion": "Five-sample full-video review: max_disparity=0.04 minimum overall quality score was 2.",
+    "crop": "Five-sample crop review: 3% was the smallest single-side crop that removed observed edge gaps without perceptible display loss.",
+    "gaussian_keep": "Five-sample full-video pruning review: keep100 scores were [3,3,3,3,3], keep075 [1,1,1,1,1], keep050 [0,0,0,0,0], and keep025 [0,0,0,0,0]."
+  },
+  "evidence": {
+    "motion_summary": "outputs/03_运动实验/motion_manual_review_summary.json",
+    "crop_summary": "outputs/04_裁剪实验/crop_results.csv",
+    "prune_summary": "outputs/06_剪枝实验_crop03正式/prune_results.json"
+  },
+  "decision_boundary": "This frozen configuration is for normalized performance testing and independent validation. Independent validation must not tune these values. The 100% result does not rule out future contribution-aware pruning, merging, quantization, or separately approved 90%/95% refinement experiments."
+}

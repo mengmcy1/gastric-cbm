@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "experiment_tool_version": "v2.1",
   "trajectory": "swipe",
   "num_steps": 60,
@@ -10,9 +10,13 @@
   "frozen_crop_single_side_percent": 3,
   "frozen_crop_date": "2026-08-01",
   "frozen_crop_by": "五样本三档裁剪效果评分（crop_effect口径）均为3；3% 是消除已有边缘缺口的最小有效档，放大代价完全感受不到，不损失3D纵深感和画面构图；5%/10%没有显示出足以抵消额外代价的必要收益",
+  "frozen_gaussian_keep_percent": 100,
+  "frozen_gaussian_keep_date": "2026-08-03",
+  "frozen_gaussian_keep_by": "五样本四档剪枝完整人工播放评分：keep100 整体质量分均为 3；keep075 均为 1；keep050 和 keep025 均为 0。在预设档位中只有 100% 满足五样本全部不低于 2 的通过标准。",
   "gaussian_keep_percent": 100,
   "crop_single_side_percent_tool_default": 0,
   "note_crop": "For all formal experiments use frozen_crop_single_side_percent=3. crop_single_side_percent_tool_default=0 is the script built-in default before any freeze and must NOT be used as the active experiment value.",
+  "note_gaussian_keep": "For normalized performance testing and independent validation use frozen_gaussian_keep_percent=100. This only shows that opacity-descending top-k at 75% or lower failed the pilot quality criterion; it does not rule out other pruning or compression methods.",
   "codec": "libx264",
   "pixel_format": "yuv420p",
   "macro_block_size": 2,
@@ -24,5 +28,5 @@
   "projection_proxy_validity": "center/current UV in actual render bounds; center/current camera depth > 0; finite displacement",
   "device": "physical GPU 0; process cuda:0",
   "output_policy": "new non-empty output directories are rejected unless explicit --allow-overwrite",
-  "notes": "Projection displacement is a Gaussian-center proxy, not optical flow or a fixed camera angle. Next phase: 100/75/50/25% gaussian keep percent with frozen max_disparity=0.04 and frozen_crop_single_side_percent=3."
+  "notes": "Projection displacement is a Gaussian-center proxy, not optical flow or a fixed camera angle. Motion, crop and gaussian keep percent are frozen for Benchmark v1. Next phase: normalized performance testing with max_disparity=0.04, crop_single_side_percent=3 and gaussian_keep_percent=100."
 }

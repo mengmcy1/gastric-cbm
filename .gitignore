@@ -1,6 +1,9 @@
 # LibreOffice / render cache
 99_过程文件_可删除或归档/
 
+# 浅 3D 实验的临时检查脚本与备份（仅本地保留）
+03_实验记录/SHARP浅3D实验/99_过程文件与临时备份/
+
 # Git merge/rebase artifacts
 *.orig
 
