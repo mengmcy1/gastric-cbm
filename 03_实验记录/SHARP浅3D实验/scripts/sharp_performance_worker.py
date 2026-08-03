@@ -31,6 +31,19 @@ SHARP_SRC = REPO_ROOT / "源码" / "SHARP_APPLE注释" / "src"
 if str(SHARP_SRC) not in sys.path:
     sys.path.insert(0, str(SHARP_SRC))
 
+# The project keeps the CUDA Toolkit inside the dedicated sharp Conda
+# environment. Expose it before importing gsplat so its CUDA extension can be
+# loaded on native Windows without changing the system-wide environment.
+CONDA_PREFIX = Path(sys.prefix)
+CUDA_TOOLKIT = CONDA_PREFIX / "Library"
+CUDA_BIN = CUDA_TOOLKIT / "bin"
+if (CUDA_BIN / "nvcc.exe").is_file():
+    os.environ.setdefault("CUDA_HOME", str(CUDA_TOOLKIT))
+    os.environ.setdefault("CUDA_PATH", str(CUDA_TOOLKIT))
+    os.environ["PATH"] = str(CUDA_BIN) + os.pathsep + os.environ.get("PATH", "")
+    if hasattr(os, "add_dll_directory"):
+        os.add_dll_directory(str(CUDA_BIN))
+
 from sharp.models import PredictorParams, create_predictor  # noqa: E402
 from sharp.utils import camera, gsplat, io as sharp_io  # noqa: E402
 from sharp.utils.gaussians import (  # noqa: E402

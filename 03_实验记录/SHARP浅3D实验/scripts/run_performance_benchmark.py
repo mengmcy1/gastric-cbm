@@ -32,6 +32,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--profiles-file", type=Path, default=DEFAULT_PROFILES)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        help="覆盖配置中的权重文件路径；仍强制校验配置记录的 SHA256",
+    )
+    parser.add_argument(
         "--resume",
         action="store_true",
         help="从已有运行目录续跑；只复用已存在且可解析的 metrics.json",
@@ -108,15 +113,26 @@ def gpu_preflight(physical_index: int, profile: dict[str, Any]) -> dict[str, Any
     for line in process_query.stdout.splitlines():
         parts = [part.strip() for part in line.split(",")]
         if len(parts) == 4 and parts[0] == gpu["uuid"]:
+            used_memory_mb = None
+            if parts[3] not in {"[N/A]", "N/A", ""}:
+                used_memory_mb = int(parts[3])
             processes.append(
                 {
                     "pid": int(parts[1]),
                     "process_name": parts[2],
-                    "used_memory_mb": int(parts[3]),
+                    "used_memory_mb": used_memory_mb,
                 }
             )
-    if processes:
-        raise RuntimeError(f"选定 GPU 存在其他计算进程，拒绝运行：{processes}")
+    blocking_processes = [
+        process for process in processes if process["used_memory_mb"] is not None
+    ]
+    if blocking_processes:
+        raise RuntimeError(
+            f"选定 GPU 存在其他可计量计算进程，拒绝运行：{blocking_processes}"
+        )
+    # Windows WDDM may report ordinary desktop C+G processes here with [N/A]
+    # memory. Keep them in the manifest for audit, while the utilization and
+    # total-memory thresholds above remain the enforceable idle checks.
     gpu["compute_processes"] = processes
     return gpu
 
@@ -325,7 +341,9 @@ def main() -> None:
     args = parse_args()
     profiles_path = args.profiles_file.resolve()
     profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
-    common = profiles["common"]
+    common = dict(profiles["common"])
+    if args.checkpoint is not None:
+        common["checkpoint"] = str(args.checkpoint.resolve())
     profile = profiles["profiles"][args.profile]
     for field in ("input_image", "input_ply", "checkpoint"):
         path = REPO_ROOT / common[field]
