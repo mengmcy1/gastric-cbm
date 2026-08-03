@@ -69,6 +69,7 @@ DEFAULT_CANDIDATE_THRESHOLD = 0.45
 DEFAULT_REVIEW_THRESHOLD = 0.30
 HIGH_CONFIDENCE_MIN_CONTENT = 0.55
 PREVIEW_PANEL = 720
+OPENCV_RNG_SEED = 0
 
 
 def parse_args():
@@ -664,6 +665,11 @@ def script_sha256():
 
 
 def main():
+    # HoughLinesP may otherwise change borderline proposals across runs when
+    # OpenCV schedules work differently. Candidate generation must be reproducible
+    # before thresholds and manual review lists are frozen.
+    cv2.setNumThreads(1)
+    cv2.setRNGSeed(OPENCV_RNG_SEED)
     args = parse_args()
     output = resolve_output(args)
     validate_args(args, output)

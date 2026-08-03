@@ -255,16 +255,20 @@ def write_contact_sheets(output, candidates):
     return paths
 
 
-def write_rows(path, rows):
+def write_rows(path, rows, fieldnames=None):
     clean_rows = []
     for row in rows:
         clean = {key: value for key, value in row.items() if key != "_image"}
         clean_rows.append(clean)
+    if fieldnames is None:
+        if not clean_rows:
+            raise ValueError("空表需要显式提供 fieldnames")
+        fieldnames = list(clean_rows[0])
     with path.open(
         "w", encoding="utf-8-sig", newline=""
     ) as handle:
         writer = csv.DictWriter(
-            handle, fieldnames=list(clean_rows[0])
+            handle, fieldnames=fieldnames
         )
         writer.writeheader()
         writer.writerows(clean_rows)
@@ -290,19 +294,25 @@ def main():
     candidates = [
         row for row in screened if row["screen_candidate"] == "yes"
     ]
-    if not candidates:
-        raise ValueError("初筛候选为空，拒绝生成无意义联系表")
-
     args.output.mkdir(parents=True, exist_ok=False)
     all_path = args.output / "screening_all.csv"
     candidate_path = args.output / "candidate_list.csv"
     write_rows(all_path, screened)
-    write_rows(candidate_path, candidates)
-    sheets = write_contact_sheets(args.output, candidates)
+    fieldnames = [key for key in screened[0] if key != "_image"]
+    write_rows(candidate_path, candidates, fieldnames=fieldnames)
+    sheets = (
+        write_contact_sheets(args.output, candidates)
+        if candidates
+        else []
+    )
 
     manifest = {
         "created_at": datetime.now().astimezone().isoformat(),
-        "status": "initial_screen_only_pending_human_review",
+        "status": (
+            "initial_screen_only_pending_human_review"
+            if candidates
+            else "initial_screen_no_candidates_pending_human_spot_check"
+        ),
         "script": str(Path(__file__)),
         "script_sha256": file_sha256(Path(__file__)),
         "mapping": str(args.mapping),

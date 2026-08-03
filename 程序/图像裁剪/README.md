@@ -30,10 +30,12 @@
 └── 正式代码/
     ├── config.py
     ├── brightness_crop_v2.py
+    ├── dark_crop_safety_review.py
     ├── onnx_infer.py
     ├── fov_mask_v1.py
     ├── pip_detector.py
     ├── pip_notch_full.py
+    ├── build_keep_notch_manifests.py
     └── pip_box_qc_initial_screen.py
 ```
 
@@ -57,6 +59,37 @@
 输出包含`crops/`、`previews/`和`mapping.csv`。非空输出目录会被拒绝，原图只读。
 调试抽样默认把图片直接父目录的完整相对路径作为患者单元，兼容
 `类别/中心/患者/图片`等多层目录；正式全量仍应由冻结manifest核对患者归属。
+
+### 1b. 暗部裁剪安全复核
+
+部分胃镜图的有效黏膜边缘本身较暗，单纯亮度轮廓可能把它误当黑边。第一阶段后可用
+原图FOV预测检查当前裁剪框是否排除了较多有效视野：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/图像裁剪/正式代码/dark_crop_safety_review.py \
+  --stage1-mapping <候选输出>/01_亮度四边裁剪/mapping.csv \
+  --onnx 程序/图像裁剪/模型/shiye_V1.onnx \
+  --output <候选输出>/01b_暗部裁剪安全复核
+```
+
+脚本输出`mapping.csv`、风险图的`保守裁剪候选/`、`保守裁剪_FOV遮罩候选/`、四联对照
+和人工复核分页。绿色框是当前裁剪，橙色框是按FOV越界方向单独放宽的保守候选，
+青色轮廓是原图FOV预测；四联图最后一列是保守扩框经过FOV遮罩后的预期正式外观。扩框
+可能暂时带回设备UI或视频进度条，只要它们位于FOV轮廓外，遮罩后会被统一置黑。
+如果第一阶段已检出底部视频进度条，安全复核会锁住当前底边，只允许恢复顶部、左侧或
+右侧暗部；`mapping.csv`中的`expanded_sides/blocked_sides`记录实际放宽和被阻止的方向。
+默认阈值仅用于形成待复核候选，不能未经人工验收直接替换正式裁剪。无风险图片仍沿用
+第一阶段结果；风险图片的最终选择必须记录为`keep_current`或`use_conservative`，之后再
+生成完整、冻结的裁剪清单。
+
+同一次运行还会在`多阈值联图/`输出敏感、中等、保守和强风险四档候选分页，并生成
+`阈值候选数量汇总.csv`。四档只改变“哪些图片进入人工复核”，不改变FOV模型阈值或
+候选裁剪内容；正式阈值必须在独立验收子集上、查看M0结果之前冻结。
+
+现有数据89张小样本肉眼验收后，已冻结本轮正式复核阈值为：框外FOV比例`>=0.05`或
+单边越界比例`>=0.06`（C保守档）。该阈值命中5/89张，数量与可见误裁风险较平衡。
+脚本默认值已同步为该口径；敏感和中等档只保留为审计联图，不进入正式`pending`清单。
 
 ### 2. FOV分割与视野外遮罩
 
@@ -96,21 +129,23 @@ OpenCV、PyTorch、torchvision或CUDA。
 
 ## 病灶框标注顺序
 
-正式病灶框采用“先冻结空间裁剪，再标注”的顺序：
+正式病灶框采用“先冻结空间几何，再在Keep图上标注”的顺序：
 
 1. 对新数据执行亮度四边裁剪，保留裁剪后的原始分辨率和宽高比；
-2. 分中心、标签和画面风格完成人工验收，确认病灶和必要黏膜没有被裁掉；
-3. 冻结裁剪参数、`mapping.csv`、裁剪图SHA256和数据版本；
-4. 将裁剪后的高分辨率无框图交给医学生标注，bbox坐标单独保存；
-5. 模型训练时才把图像resize/crop到网络输入尺寸，并对bbox执行完全相同的几何变换。
+2. 运行FOV遮罩，并按中心、标签和画面风格完成人工验收；
+3. 冻结高分辨率Keep图的尺寸、SHA256、`geometry_id`和原图到Keep的变换；
+4. 将无可视化框的Keep图交给医学生标注，bbox坐标单独保存；
+5. PIP复核、Notch生成和M0可以与病灶标注并行；Notch仅改变像素，不改变坐标；
+6. 模型训练时才把图像resize/crop到网络输入尺寸，并对bbox执行完全相同的几何变换。
 
 不要先把图像压缩到`224x224`再交给医学生，小病灶边界会更难判断。带可视化矩形框的
 图片只能用于复核，模型输入必须是无框图，坐标来自独立CSV/JSON。建议至少保存
-`image_path/image_sha256/image_width/image_height/patient_id/label/lesion_visible/x1/y1/x2/y2/coordinate_convention`，
+`image_path/image_sha256/geometry_id/image_width/image_height/patient_id/label/lesion_visible/x1/y1/x2/y2/coordinate_convention`，
 其中`coordinate_convention`固定为`xyxy_left_closed_right_open`（左闭右开）。
 
-FOV遮罩和Notch均保持画布尺寸不变，不会改变bbox坐标。正式路线不使用会再次改变尺寸和
-坐标系的Right分支。
+Notch保持画布尺寸不变，与Keep共享`geometry_id`和bbox坐标。若bbox与Notch黑块相交，
+必须单独人工复核病灶是否仍可见；不得默认将该图用于定位损失。正式路线不使用会再次
+改变尺寸和坐标系的Right分支。
 
 ## 画中画保留/去除消融
 
@@ -128,7 +163,8 @@ FOV遮罩和Notch均保持画布尺寸不变，不会改变bbox坐标。正式�
 3. 人工复核所有高置信和灰区候选，形成`confirmed_pip_labels.csv`；
 4. 运行`pip_notch_full.py`生成保持原尺寸的notch候选；
 5. 使用`pip_box_qc_initial_screen.py`和联系表复核处理框是否完整；
-6. 从同一冻结图片清单生成keep/remove两个manifest，禁止通过扫描输出目录组装训练集。
+6. 使用`build_keep_notch_manifests.py`从同一冻结图片清单生成Keep/Notch两个
+   manifest，禁止通过扫描输出目录组装训练集。
 
 示例命令：
 
@@ -144,10 +180,17 @@ FOV遮罩和Notch均保持画布尺寸不变，不会改变bbox坐标。正式�
 # 人工确认CSV准备完成后生成去除候选
 /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/图像裁剪/正式代码/pip_notch_full.py \
-  --image-root <候选输出>/01_亮度四边裁剪/crops \
+  --image-root <候选输出>/02_FOV遮罩/masked \
   --quality-flags <候选输出>/03_画中画筛查/quality_flags.csv \
   --pip-labels <候选输出>/03_画中画筛查/confirmed_pip_labels.csv \
   --output <候选输出>/04_画中画保留去除候选
+
+# 框QC和人工复核通过后，构建两份完整的配对manifest
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/图像裁剪/正式代码/build_keep_notch_manifests.py \
+  --base-mapping <候选输出>/02_FOV遮罩/mapping.csv \
+  --notch-mapping <候选输出>/04_画中画保留去除候选/mapping.csv \
+  --output <候选输出>/05_Keep_Notch配对manifest
 ```
 
 M0比较固定要求：
