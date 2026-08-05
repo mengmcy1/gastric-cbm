@@ -51,12 +51,18 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--keep-percent", type=int, required=True, choices=[100, 75, 50, 25],
                    help="高斯保留率（按不透明度从高到低保留）")
     p.add_argument("--crop-single-side-percent", type=int, default=3, choices=[0, 3, 5, 10],
-                   help="四边单边裁剪比例（%），默认3，与阶段3冻结值对齐")
+                   help="四边单边裁剪百分比，默认3，与阶段3冻结值对齐")
     p.add_argument("--max-disparity", type=float, choices=[0.0, 0.02, 0.04, 0.08],
                    default=0.04)
     p.add_argument("--num-steps", type=int, default=60)
     p.add_argument("--fps", type=int, default=30)
     p.add_argument("--device", default="cuda")
+    p.add_argument(
+        "--manual-schema",
+        choices=["prune", "validation"],
+        default="prune",
+        help="人工评分模板类型；独立验证使用 validation",
+    )
     p.add_argument("--allow-overwrite", action="store_true")
     return p.parse_args()
 
@@ -302,29 +308,54 @@ def main() -> None:
         json.dumps(prune_stats, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # ── 人工评分模板 ──────────────────────────────────────────────────────
-    video_manual = {
-        "schema_version": "2.1-prune",
-        "score_interpretation": "absolute_quality",
-        "review_status": "",
-        "overall_quality_score": None,
-        "hole_severity": None,
-        "floating_gaussian_severity": None,
-        "depth_layering_loss_severity": None,
-        "stretching_severity": None,
-        "flicker_severity": None,
-        "paper_feel_severity": None,
-        "occlusion_error_severity": None,
-        "reflection_deformation_severity": None,
-        "first_artifact_frame_left": None,
-        "first_artifact_frame_right": None,
-        "worst_frame": None,
-        "overall_pass": None,
-        "notes": "",
-        "prune_field_note": (
-            "floating_gaussian_severity: 漂浮高斯/孤立斑块 (0=无 1=轻微 2=明显 3=严重)。"
-            "depth_layering_loss_severity: 纵深层次损失 (0=无 1=轻微 2=明显 3=严重)。"
-        ),
-    }
+    if args.manual_schema == "validation":
+        video_manual = {
+            "schema_version": "1.0-validation",
+            "score_interpretation": "absolute_quality",
+            "review_status": "",
+            "overall_quality_score": None,
+            "overall_pass": None,
+            "depth_error_severity": None,
+            "disocclusion_hole_severity": None,
+            "coverage_edge_failure_severity": None,
+            "thin_structure_failure_severity": None,
+            "reflection_deformation_severity": None,
+            "temporal_flicker_severity": None,
+            "floating_gaussian_severity": None,
+            "stretching_severity": None,
+            "paper_feel_severity": None,
+            "occlusion_error_severity": None,
+            "first_artifact_frame_left": None,
+            "first_artifact_frame_right": None,
+            "worst_frame": None,
+            "notes": "",
+            "severity_scale": "0=无，1=轻微，2=明显，3=严重",
+            "pass_rule": "overall_quality_score >= 2 and no unacceptable blocking artifact",
+        }
+    else:
+        video_manual = {
+            "schema_version": "2.1-prune",
+            "score_interpretation": "absolute_quality",
+            "review_status": "",
+            "overall_quality_score": None,
+            "hole_severity": None,
+            "floating_gaussian_severity": None,
+            "depth_layering_loss_severity": None,
+            "stretching_severity": None,
+            "flicker_severity": None,
+            "paper_feel_severity": None,
+            "occlusion_error_severity": None,
+            "reflection_deformation_severity": None,
+            "first_artifact_frame_left": None,
+            "first_artifact_frame_right": None,
+            "worst_frame": None,
+            "overall_pass": None,
+            "notes": "",
+            "prune_field_note": (
+                "floating_gaussian_severity: 漂浮高斯/孤立斑块 (0=无 1=轻微 2=明显 3=严重)。"
+                "depth_layering_loss_severity: 纵深层次损失 (0=无 1=轻微 2=明显 3=严重)。"
+            ),
+        }
     (output_dir / "video_manual.json").write_text(
         json.dumps(video_manual, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -349,6 +380,7 @@ def main() -> None:
         "encoded_color_video": ec,
         "encoded_depth_video": ed,
         "static_metric_pose": "exact_zero_eye",
+        "manual_schema": args.manual_schema,
         "total_seconds": round(total_sec, 3),
         "device": str(device),
     }

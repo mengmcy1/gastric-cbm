@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "frozen_date": "2026-08-05",
+  "manifest": "09_独立验证/validation_manifest.csv",
+  "sample_count": 13,
+  "selection_policy": "Include every image remaining in the existing 18-image real-photo pool after SHA256 exclusion of P01-P05; do not cherry-pick by historical result.",
+  "independence_scope": "Not used for motion, crop, or Gaussian keep-rate tuning; historical exploratory outputs from 2026-07-16 exist, so this is parameter-tuning-independent validation rather than a never-seen blind set.",
+  "fixed_variables": {
+    "max_disparity": 0.04,
+    "crop_single_side_percent": 3,
+    "gaussian_keep_percent": 100,
+    "trajectory": "swipe",
+    "num_steps": 60,
+    "fps": 30
+  },
+  "checkpoint": "源码/SHARP_APPLE注释/checkpoints/sharp_2572gikvuh.pt",
+  "checkpoint_sha256": "94211a75198c47f61fca7d739ba08a215418d8d398d48fddf023baccc24f073d",
+  "execution_policy": {
+    "quality_parameters_must_not_change": true,
+    "failed_samples_must_be_retained": true,
+    "no_sample_may_be_removed_after_observing_output": true,
+    "automatic_metrics_do_not_replace_full_video_review": true,
+    "hardware_profiles_must_not_be_averaged": true
+  }
+}
