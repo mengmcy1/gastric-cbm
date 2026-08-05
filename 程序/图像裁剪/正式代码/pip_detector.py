@@ -71,6 +71,54 @@ HIGH_CONFIDENCE_MIN_CONTENT = 0.55
 PREVIEW_PANEL = 720
 OPENCV_RNG_SEED = 0
 
+# 候选矩形内 FOV 覆盖率门槛：低于该值说明矩形大部分落在 FOV 圆外，
+# 是圆弧边缘被误认成矩形边界的伪影；且圆外内容会被 FOV 遮罩遮黑，
+# 本身不需要 notch。
+MIN_RECT_FOV_COVERAGE = 0.5
+
+# 画中画可出现在四个角。通过翻转把每个角映射成“虚拟左上角”，
+# 复用下方以左上角为锚的矩形提议与内容验证逻辑。
+CORNERS = ("top_left", "top_right", "bottom_left", "bottom_right")
+
+
+def corner_transform(image, corner):
+    """把指定角翻转到虚拟左上角；尺寸不变。"""
+    if corner == "top_right":
+        return cv2.flip(image, 1)
+    if corner == "bottom_left":
+        return cv2.flip(image, 0)
+    if corner == "bottom_right":
+        return cv2.flip(image, -1)
+    return image
+
+
+def _map_point_back(x, y, corner, width, height):
+    if corner == "top_right":
+        return width - 1 - x, y
+    if corner == "bottom_left":
+        return x, height - 1 - y
+    if corner == "bottom_right":
+        return width - 1 - x, height - 1 - y
+    return x, y
+
+
+def map_rect_back(rect, corner, width, height):
+    x, y, w, h = rect
+    if corner == "top_right":
+        return width - x - w, y, w, h
+    if corner == "bottom_left":
+        return x, height - y - h, w, h
+    if corner == "bottom_right":
+        return width - x - w, height - y - h, w, h
+    return rect
+
+
+def map_line_back(line, corner, width, height):
+    x1, y1, x2, y2 = line
+    x1b, y1b = _map_point_back(x1, y1, corner, width, height)
+    x2b, y2b = _map_point_back(x2, y2, corner, width, height)
+    return x1b, y1b, x2b, y2b
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="画中画自动筛查 v2")
@@ -89,6 +137,10 @@ def parse_args():
     parser.add_argument("--validate-only", action="store_true")
     parser.add_argument("--validation-list", type=Path, default=VALIDATION_LIST)
     parser.add_argument("--validation-labels", type=Path, default=VALIDATION_LABELS)
+    parser.add_argument(
+        "--min-fov-coverage", type=float, default=MIN_RECT_FOV_COVERAGE,
+        help="候选矩形内FOV覆盖率门槛；低于则判为圆外伪影",
+    )
     return parser.parse_args()
 
 
@@ -496,6 +548,51 @@ def fuse_proposal(proposal, content_score):
     return score
 
 
+def detect_best_corner(
+    image, fov_mask=None, min_fov_coverage=MIN_RECT_FOV_COVERAGE
+):
+    """四角各检测一次，在各自翻转空间验证，返回全局最优（映射回原坐标）。
+
+    每个角通过 corner_transform 变成虚拟左上角，复用左上角锚定的矩形提议和
+    右/下内边界验证；验证在翻转空间进行，保证“哪两条边是内边界”随角自动正确。
+    fov_mask 非空时，过滤掉矩形内 FOV 覆盖率低于门槛的候选（FOV 圆弧边缘
+    伪影；且圆外内容会被 FOV 遮罩遮黑，本身不需要 notch）。
+    """
+    height, width = image.shape[:2]
+    best = None
+    for corner in CORNERS:
+        transformed = corner_transform(image, corner)
+        proposals, features = propose_rectangles(transformed)
+        for proposal in proposals:
+            content_score, content = verify_rectangle_content(
+                transformed, proposal["rect"]
+            )
+            fused = fuse_proposal(proposal, content_score)
+            rect_orig = map_rect_back(
+                proposal["rect"], corner, width, height
+            )
+            if fov_mask is not None:
+                rx, ry, rw, rh = rect_orig
+                if rw <= 0 or rh <= 0:
+                    continue
+                coverage = fov_mask[ry:ry + rh, rx:rx + rw].mean()
+                if coverage < min_fov_coverage:
+                    continue
+            if best is None or fused > best[0]:
+                mapped = dict(proposal)
+                mapped["rect"] = rect_orig
+                mapped["corner"] = corner
+                mapped["raw_count"] = features["raw_count"]
+                mapped["clustered_count"] = features["clustered_count"]
+                for key in ("h_line", "v_line"):
+                    if mapped.get(key):
+                        mapped[key] = map_line_back(
+                            mapped[key], corner, width, height
+                        )
+                best = (fused, mapped, content_score, content)
+    return best
+
+
 def load_paths(path):
     with path.open(encoding="utf-8-sig") as handle:
         rows = list(csv.DictReader(handle))
@@ -568,10 +665,11 @@ def make_preview(image, mask, row, proposal):
         cv2.drawContours(preview, contours, -1, (0, 180, 0), 1)
 
     rect = proposal["rect"]
-    _, _, rect_w, rect_h = rect
+    rx, ry, rect_w, rect_h = rect
     cv2.rectangle(
-        preview, (0, 0),
-        (int(rect_w * scale), int(rect_h * scale)),
+        preview,
+        (int(rx * scale), int(ry * scale)),
+        (int((rx + rect_w) * scale), int((ry + rect_h) * scale)),
         (0, 255, 255), 2,
     )
     for key, color in [("h_line", (255, 0, 255)), ("v_line", (255, 255, 0))]:
@@ -593,7 +691,7 @@ def make_preview(image, mask, row, proposal):
     canvas[header_h:] = preview
     line1 = (
         f"score={row['pip_score']:.3f} tier={row['auto_tier']} "
-        f"type={row['proposal_type']}"
+        f"corner={row.get('pip_corner', '')} type={row['proposal_type']}"
     )
     line2 = (
         f"geo={row['geometry_score']:.3f} "
@@ -697,6 +795,7 @@ def main():
             "pip_score": 0.0,
             "auto_tier": "negative",
             "proposal_type": "",
+            "pip_corner": "",
             "rect_xywh": "",
             "geometry_score": 0.0,
             "content_score": 0.0,
@@ -710,18 +809,21 @@ def main():
 
         try:
             image = read_image(crop_path)
-            proposals, features = propose_rectangles(image)
-            row["raw_line_count"] = features["raw_count"]
-            row["clustered_line_count"] = features["clustered_count"]
-            best = None
-            for proposal in proposals:
-                content_score, content = verify_rectangle_content(
-                    image, proposal["rect"]
-                )
-                fused = fuse_proposal(proposal, content_score)
-                result = (fused, proposal, content_score, content)
-                if best is None or result[0] > best[0]:
-                    best = result
+            fov_mask = None
+            raw_mask = cv2.imread(
+                str(mask_path), cv2.IMREAD_GRAYSCALE
+            )
+            if raw_mask is not None:
+                fov_mask = (raw_mask > 127).astype(np.uint8)
+            best = detect_best_corner(
+                image, fov_mask, args.min_fov_coverage
+            )
+            row["raw_line_count"] = (
+                best[1].get("raw_count", 0) if best else 0
+            )
+            row["clustered_line_count"] = (
+                best[1].get("clustered_count", 0) if best else 0
+            )
 
             if best is not None:
                 score, proposal, content_score, content = best
@@ -734,6 +836,7 @@ def main():
                         args.review_threshold,
                     ),
                     "proposal_type": proposal["proposal_type"],
+                    "pip_corner": proposal["corner"],
                     "rect_xywh": serialise_rect(proposal["rect"]),
                     "geometry_score": round(
                         proposal["geometry_score"], 4
@@ -803,6 +906,7 @@ def main():
         "candidate_threshold": args.candidate_threshold,
         "review_threshold": args.review_threshold,
         "high_confidence_min_content": HIGH_CONFIDENCE_MIN_CONTENT,
+        "min_fov_coverage": args.min_fov_coverage,
         "total_images": len(rows),
         "tier_counts": dict(tier_counts),
         "processing_errors": sum(

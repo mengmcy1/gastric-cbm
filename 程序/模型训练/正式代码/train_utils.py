@@ -297,6 +297,33 @@ def compute_metrics(y_true, y_prob, threshold=0.5):
     }
 
 
+def select_screening_threshold(y_true, y_prob, minimum_sensitivity=0.90):
+    y_true = np.asarray(y_true, dtype=int)
+    y_prob = np.asarray(y_prob, dtype=float)
+    if np.unique(y_true).size != 2:
+        raise ValueError('阈值选择数据必须同时包含两类')
+    candidates = np.unique(np.concatenate(([0.0], y_prob, [1.0])))
+    rows = []
+    for threshold in candidates:
+        metrics = compute_metrics(y_true, y_prob, float(threshold))
+        rows.append({'threshold': float(threshold), **metrics})
+    eligible = [
+        row for row in rows
+        if row['Sensitivity'] + 1e-12 >= minimum_sensitivity
+    ]
+    if not eligible:
+        raise RuntimeError(
+            f'无阈值能满足Sensitivity >= {minimum_sensitivity:.3f}'
+        )
+    best = max(
+        eligible,
+        key=lambda row: (
+            row['Specificity'], row['Sensitivity'], row['threshold']
+        ),
+    )
+    return best['threshold'], pd.DataFrame(rows)
+
+
 def format_metrics(values):
     return (
         f"AUC={values['AUC']:.4f} | Acc={values['Accuracy']:.4f} | "
@@ -353,25 +380,56 @@ def patient_prediction_frame(image_predictions):
             'cancer_probability': float(group['cancer_probability'].mean()),
             'image_count': len(group),
         }
-        for column in ['center', 'year', 'style_group', 'size_group', 'frame_profile']:
+        for column in [
+            'source',
+            'center',
+            'year',
+            'style_group',
+            'size_group',
+            'aspect_group',
+            'frame_profile',
+            'branch',
+        ]:
             if column in group:
                 values = group[column].dropna().astype(str)
                 row[column] = sorted(values.mode())[0] if not values.empty else ''
+        if 'pip_present_original' in group:
+            pip_values = (
+                group['pip_present_original']
+                .fillna(False)
+                .astype(str)
+                .str.lower()
+                .isin({'true', '1', 'yes'})
+            )
+            row['pip_present_original'] = bool(pip_values.any())
         rows.append(row)
     result = pd.DataFrame(rows)
     result['prediction'] = (result['cancer_probability'] >= 0.5).astype(int)
     return result
 
 
-def subgroup_metrics(predictions, level):
+def subgroup_metrics(predictions, level, threshold=0.5):
     rows = []
-    fields = ['center', 'year', 'style_group', 'size_group', 'frame_profile']
+    fields = [
+        'source',
+        'center',
+        'year',
+        'style_group',
+        'size_group',
+        'aspect_group',
+        'frame_profile',
+        'pip_present_original',
+        'analysis_group',
+        'branch',
+    ]
     for field in fields:
         if field not in predictions:
             continue
         values = predictions[field].fillna('__MISSING__').astype(str)
         for value, group in predictions.assign(_group=values).groupby('_group', sort=True):
-            metric = compute_metrics(group['label'], group['cancer_probability'])
+            metric = compute_metrics(
+                group['label'], group['cancer_probability'], threshold
+            )
             rows.append({
                 'level': level,
                 'field': field,
@@ -427,7 +485,16 @@ def run_stage(
         train_loss, elapsed = train_one_epoch(
             model, train_loader, criterion, optimizer, device
         )
-        val_loss, val_metrics = evaluate(model, val_loader, criterion, device)
+        val_loss, val_predictions = prediction_frame(
+            model, val_loader, device, criterion
+        )
+        val_patients = patient_prediction_frame(val_predictions)
+        val_image_metrics = compute_metrics(
+            val_predictions['label'], val_predictions['cancer_probability']
+        )
+        val_patient_metrics = compute_metrics(
+            val_patients['label'], val_patients['cancer_probability']
+        )
         current_lr = optimizer.param_groups[0]['lr']
         history.append({
             'stage': stage_name,
@@ -436,15 +503,24 @@ def run_stage(
             'val_loss': val_loss,
             'learning_rate': current_lr,
             'elapsed_seconds': elapsed,
-            **val_metrics,
+            **{
+                f'val_image_{key}': value
+                for key, value in val_image_metrics.items()
+            },
+            **{
+                f'val_patient_{key}': value
+                for key, value in val_patient_metrics.items()
+            },
         })
         print(
             f'{stage_name} Epoch {epoch:02d}/{epochs} | {elapsed:.0f}s | '
             f'TrainLoss={train_loss:.4f} | ValLoss={val_loss:.4f} | '
-            f'LR={current_lr:.2e} | {format_metrics(val_metrics)}'
+            f'LR={current_lr:.2e}\n'
+            f'  Val image: {format_metrics(val_image_metrics)}\n'
+            f'  Val patient: {format_metrics(val_patient_metrics)}'
         )
-        if val_metrics['AUC'] > best_auc:
-            best_auc = val_metrics['AUC']
+        if val_patient_metrics['AUC'] > best_auc:
+            best_auc = val_patient_metrics['AUC']
             best_state = deepcopy(model.state_dict())
             no_improve = 0
         else:
@@ -452,7 +528,10 @@ def run_stage(
         if scheduler is not None:
             scheduler.step()
         if early_stop_patience and no_improve >= early_stop_patience:
-            print(f'Early Stop: 连续 {early_stop_patience} epoch 验证 AUC 未提升')
+            print(
+                f'Early Stop: 连续 {early_stop_patience} epoch '
+                '验证患者级 AUC 未提升'
+            )
             break
     if best_state is None:
         raise RuntimeError(f'{stage_name} 未产生有效模型状态')
@@ -479,6 +558,11 @@ def create_training_parser(model_name):
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--debug-units', type=int, default=4)
     parser.add_argument('--no-pretrained', action='store_true')
+    parser.add_argument(
+        '--defer-test',
+        action='store_true',
+        help='只用验证集选模型和阈值，暂不读取内部测试集预测',
+    )
     parser.add_argument('--overwrite', action='store_true')
     return parser
 
@@ -629,28 +713,69 @@ def run_training(
     selected_auc = max(s1_auc, s2_auc)
     model.load_state_dict(s2_state if selected_stage == 'S2' else s1_state)
     print(
-        f'阶段选择: S1 AUC={s1_auc:.4f}, S2 AUC={s2_auc:.4f}; '
-        f'最终使用 {selected_stage}'
+        f'阶段选择（验证患者级 AUC）: '
+        f'S1={s1_auc:.4f}, S2={s2_auc:.4f}; 最终使用 {selected_stage}'
     )
 
     val_loss, val_predictions = prediction_frame(
         model, loaders['val'], device, criterion
     )
-    test_loss, test_predictions = prediction_frame(
-        model, loaders['test'], device, criterion
-    )
     val_patients = patient_prediction_frame(val_predictions)
-    test_patients = patient_prediction_frame(test_predictions)
+    selected_threshold, threshold_scan = select_screening_threshold(
+        val_patients['label'],
+        val_patients['cancer_probability'],
+        minimum_sensitivity=0.90,
+    )
+    val_predictions['prediction'] = (
+        val_predictions['cancer_probability'] >= selected_threshold
+    ).astype(int)
+    val_patients['prediction'] = (
+        val_patients['cancer_probability'] >= selected_threshold
+    ).astype(int)
     metrics_by_level = {
-        'val_image': compute_metrics(val_predictions.label, val_predictions.cancer_probability),
-        'val_patient': compute_metrics(val_patients.label, val_patients.cancer_probability),
-        'test_image': compute_metrics(test_predictions.label, test_predictions.cancer_probability),
-        'test_patient': compute_metrics(test_patients.label, test_patients.cancer_probability),
+        'val_image': compute_metrics(
+            val_predictions.label,
+            val_predictions.cancer_probability,
+            selected_threshold,
+        ),
+        'val_patient': compute_metrics(
+            val_patients.label,
+            val_patients.cancer_probability,
+            selected_threshold,
+        ),
     }
+    print(f'验证患者筛查阈值: {selected_threshold:.6f}')
     print(f'Val image: {format_metrics(metrics_by_level["val_image"])}')
     print(f'Val patient: {format_metrics(metrics_by_level["val_patient"])}')
-    print(f'Test image: {format_metrics(metrics_by_level["test_image"])}')
-    print(f'Test patient: {format_metrics(metrics_by_level["test_patient"])}')
+
+    evaluated_splits = [('val', val_predictions, val_patients)]
+    test_loss = None
+    if args.defer_test:
+        print('内部测试集评估已延后（--defer-test）')
+    else:
+        test_loss, test_predictions = prediction_frame(
+            model, loaders['test'], device, criterion
+        )
+        test_patients = patient_prediction_frame(test_predictions)
+        test_predictions['prediction'] = (
+            test_predictions['cancer_probability'] >= selected_threshold
+        ).astype(int)
+        test_patients['prediction'] = (
+            test_patients['cancer_probability'] >= selected_threshold
+        ).astype(int)
+        metrics_by_level['test_image'] = compute_metrics(
+            test_predictions.label,
+            test_predictions.cancer_probability,
+            selected_threshold,
+        )
+        metrics_by_level['test_patient'] = compute_metrics(
+            test_patients.label,
+            test_patients.cancer_probability,
+            selected_threshold,
+        )
+        evaluated_splits.append(('test', test_predictions, test_patients))
+        print(f'Test image: {format_metrics(metrics_by_level["test_image"])}')
+        print(f'Test patient: {format_metrics(metrics_by_level["test_patient"])}')
 
     pd.DataFrame(history).to_csv(
         os.path.join(run_dir, 'training_history.csv'), index=False, encoding='utf-8-sig'
@@ -658,10 +783,12 @@ def run_training(
     frame.to_csv(
         os.path.join(run_dir, 'frozen_split_snapshot.csv'), index=False, encoding='utf-8-sig'
     )
-    for split, image_frame, patient_frame in [
-        ('val', val_predictions, val_patients),
-        ('test', test_predictions, test_patients),
-    ]:
+    threshold_scan.to_csv(
+        os.path.join(run_dir, 'val_patient_threshold_scan.csv'),
+        index=False,
+        encoding='utf-8-sig',
+    )
+    for split, image_frame, patient_frame in evaluated_splits:
         image_frame.to_csv(
             os.path.join(run_dir, f'{split}_image_predictions.csv'),
             index=False,
@@ -673,8 +800,8 @@ def run_training(
             encoding='utf-8-sig',
         )
         pd.concat([
-            subgroup_metrics(image_frame, 'image'),
-            subgroup_metrics(patient_frame, 'patient'),
+            subgroup_metrics(image_frame, 'image', selected_threshold),
+            subgroup_metrics(patient_frame, 'patient', selected_threshold),
         ], ignore_index=True).to_csv(
             os.path.join(run_dir, f'{split}_subgroup_metrics.csv'),
             index=False,
@@ -698,10 +825,21 @@ def run_training(
         'label_smoothing': label_smoothing,
         'stage2_description': stage2_description,
         'augmentation': AUGMENTATION_CONFIG,
+        'selection_metric': 'val_patient_auc',
+        'threshold_selection': {
+            'dataset': 'val_patient',
+            'rule': 'maximum_specificity_subject_to_sensitivity_at_least_0.90',
+            'threshold': selected_threshold,
+            'minimum_sensitivity': 0.90,
+            'minimum_specificity_screen': 0.50,
+            'passes_minimum_specificity': (
+                metrics_by_level['val_patient']['Specificity'] >= 0.50
+            ),
+        },
         'selected_stage': selected_stage,
-        'best_val_auc': selected_auc,
-        'stage1_best_val_auc': s1_auc,
-        'stage2_best_val_auc': s2_auc,
+        'best_val_patient_auc': selected_auc,
+        'stage1_best_val_patient_auc': s1_auc,
+        'stage2_best_val_patient_auc': s2_auc,
         'val_loss': val_loss,
         'test_loss': test_loss,
         'metrics': metrics_by_level,
@@ -712,7 +850,7 @@ def run_training(
     torch.save({
         'model_state_dict': model.state_dict(),
         'config': json_ready(config),
-        'test_metrics': metrics_by_level,
+        'metrics': metrics_by_level,
     }, os.path.join(run_dir, f'{model_slug}_best.pth'))
     print(f'运行结果: {run_dir}')
     return run_dir

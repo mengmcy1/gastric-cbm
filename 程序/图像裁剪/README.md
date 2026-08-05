@@ -181,6 +181,7 @@ Notch保持画布尺寸不变，与Keep共享`geometry_id`和bbox坐标。若bbo
 /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/图像裁剪/正式代码/pip_notch_full.py \
   --image-root <候选输出>/02_FOV遮罩/masked \
+  --image-manifest <候选输出>/冻结Keep清单.csv \
   --quality-flags <候选输出>/03_画中画筛查/quality_flags.csv \
   --pip-labels <候选输出>/03_画中画筛查/confirmed_pip_labels.csv \
   --output <候选输出>/04_画中画保留去除候选
@@ -188,10 +189,21 @@ Notch保持画布尺寸不变，与Keep共享`geometry_id`和bbox坐标。若bbo
 # 框QC和人工复核通过后，构建两份完整的配对manifest
 /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/图像裁剪/正式代码/build_keep_notch_manifests.py \
-  --base-mapping <候选输出>/02_FOV遮罩/mapping.csv \
+  --base-mapping <候选输出>/冻结Keep清单.csv \
+  --base-key-column processed_relative_path \
+  --base-path-column final_processed_path \
   --notch-mapping <候选输出>/04_画中画保留去除候选/mapping.csv \
+  --normal-after-notch-list <候选输出>/PIP外置处理为普通图片.csv \
+  --box-qc-review <候选输出>/box_qc_human_review.csv \
   --output <候选输出>/05_Keep_Notch配对manifest
 ```
+
+若冻结Keep清单中的图片来自多个实际根目录（例如部分图另行执行FOV紧裁），
+必须提供`--image-manifest`。脚本将按`final_processed_path`逐图读取冻结输入；
+`--image-root`只是未提供manifest时的兼容入口。
+对完全位于主视野外、Notch后需按普通图片统计的PIP，必须通过
+`--normal-after-notch-list`显式列出。原始PIP事实仍保留在`pip_present_original`，
+Notch分支使用`analysis_group=normal_after_external_pip_removal`。
 
 M0比较固定要求：
 

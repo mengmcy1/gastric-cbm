@@ -5,6 +5,7 @@ import argparse
 import csv
 import hashlib
 import json
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -20,6 +21,23 @@ def parse_args():
     parser.add_argument("--notch-mapping", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
+        "--normal-after-notch-list",
+        type=Path,
+        default=None,
+        help="Notch后按普通图片分组的特例清单。",
+    )
+    parser.add_argument(
+        "--box-qc-review",
+        type=Path,
+        default=None,
+        help="人工框QC复核表；所有行必须为accepted。",
+    )
+    parser.add_argument(
+        "--base-key-column",
+        default="relative_path",
+        help="母清单的图片主键列。",
+    )
+    parser.add_argument(
         "--base-path-column",
         default="masked",
         help="母清单中正式 Keep 图像路径列，默认为 FOV mapping 的 masked。",
@@ -28,7 +46,12 @@ def parse_args():
 
 
 def validate_args(args):
-    for path in (args.base_mapping, args.notch_mapping):
+    paths = [args.base_mapping, args.notch_mapping]
+    if args.normal_after_notch_list:
+        paths.append(args.normal_after_notch_list)
+    if args.box_qc_review:
+        paths.append(args.box_qc_review)
+    for path in paths:
         if not path.is_file():
             raise FileNotFoundError(f"输入不存在：{path}")
     if args.output.exists() and any(args.output.iterdir()):
@@ -88,6 +111,8 @@ def branch_row(pair, branch):
         "patient_id": pair["patient_id"],
         "geometry_id": pair["geometry_id"],
         "pip_present": pair["pip_present"],
+        "pip_present_original": pair["pip_present_original"],
+        "analysis_group": pair[f"{prefix}_analysis_group"],
         "branch": branch,
         "input_path": pair[f"{prefix}_path"],
         "sha256": pair[f"{prefix}_sha256"],
@@ -108,11 +133,47 @@ def main():
             f"母清单缺少路径列：{args.base_path_column}"
         )
 
-    base_by_path = index_unique(base_rows, "relative_path", "base mapping")
+    if args.base_key_column not in base_rows[0]:
+        raise ValueError(
+            f"母清单缺少主键列：{args.base_key_column}"
+        )
+    base_by_path = index_unique(
+        base_rows, args.base_key_column, "base mapping"
+    )
     notch_by_path = index_unique(notch_rows, "relative_path", "notch mapping")
     unknown = sorted(set(notch_by_path) - set(base_by_path))
     if unknown:
         raise ValueError(f"Notch 包含母清单外图片：{unknown[:3]}")
+
+    normal_after_notch = set()
+    if args.normal_after_notch_list:
+        decision_rows = load_csv(args.normal_after_notch_list)
+        decision_by_path = index_unique(
+            decision_rows, "relative_path", "normal-after-notch list"
+        )
+        normal_after_notch = {
+            path for path, row in decision_by_path.items()
+            if row["notch_analysis_group"]
+            == "normal_after_external_pip_removal"
+        }
+        unknown_decisions = sorted(normal_after_notch - set(notch_by_path))
+        if unknown_decisions:
+            raise ValueError(
+                "Notch后普通图片清单包含非Notch图片："
+                f"{unknown_decisions[:3]}"
+            )
+
+    qc_review_count = 0
+    if args.box_qc_review:
+        qc_rows = load_csv(args.box_qc_review)
+        index_unique(qc_rows, "relative_path", "box QC review")
+        rejected = [
+            row["relative_path"] for row in qc_rows
+            if row.get("human_box_status") != "accepted"
+        ]
+        if rejected:
+            raise ValueError(f"框QC存在未通过项：{rejected[:3]}")
+        qc_review_count = len(qc_rows)
 
     pairs = []
     for relative_path in sorted(base_by_path):
@@ -134,6 +195,12 @@ def main():
 
         keep_sha256 = file_sha256(keep_path)
         notch_sha256 = file_sha256(notch_path)
+        pip_present = "yes" if notch else "no"
+        notch_analysis_group = (
+            "normal_after_external_pip_removal"
+            if relative_path in normal_after_notch
+            else ("pip_notch" if notch else "normal")
+        )
         pairs.append({
             "relative_path": relative_path,
             "patient_id": (
@@ -142,7 +209,10 @@ def main():
             "geometry_id": geometry_id(
                 relative_path, keep_sha256, keep_width, keep_height
             ),
-            "pip_present": "yes" if notch else "no",
+            "pip_present": pip_present,
+            "pip_present_original": pip_present,
+            "keep_analysis_group": "pip_keep" if notch else "normal",
+            "notch_analysis_group": notch_analysis_group,
             "keep_path": str(keep_path),
             "notch_path": str(notch_path),
             "keep_sha256": keep_sha256,
@@ -159,8 +229,9 @@ def main():
     args.output.mkdir(parents=True, exist_ok=False)
     pair_fields = list(pairs[0])
     branch_fields = [
-        "relative_path", "patient_id", "geometry_id", "pip_present", "branch",
-        "input_path", "sha256", "width", "height",
+        "relative_path", "patient_id", "geometry_id", "pip_present",
+        "pip_present_original", "analysis_group", "branch", "input_path",
+        "sha256", "width", "height",
     ]
     paired_path = args.output / "paired_manifest.csv"
     keep_path = args.output / "keep_manifest.csv"
@@ -171,7 +242,11 @@ def main():
 
     report = {
         "created_at": datetime.now().astimezone().isoformat(),
-        "status": "paired_candidate_pending_final_human_acceptance",
+        "status": (
+            "paired_reviewed_ready_for_m0"
+            if args.box_qc_review
+            else "paired_candidate_pending_final_human_acceptance"
+        ),
         "script": str(Path(__file__)),
         "script_sha256": file_sha256(Path(__file__)),
         "base_mapping": str(args.base_mapping),
@@ -179,12 +254,31 @@ def main():
         "notch_mapping": str(args.notch_mapping),
         "notch_mapping_sha256": file_sha256(args.notch_mapping),
         "base_path_column": args.base_path_column,
+        "base_key_column": args.base_key_column,
+        "normal_after_notch_list": (
+            str(args.normal_after_notch_list)
+            if args.normal_after_notch_list else ""
+        ),
+        "normal_after_notch_list_sha256": (
+            file_sha256(args.normal_after_notch_list)
+            if args.normal_after_notch_list else None
+        ),
+        "box_qc_review": (
+            str(args.box_qc_review) if args.box_qc_review else ""
+        ),
+        "box_qc_review_sha256": (
+            file_sha256(args.box_qc_review) if args.box_qc_review else None
+        ),
+        "box_qc_review_count": qc_review_count,
         "image_count_per_branch": len(pairs),
         "pip_image_count": len(notch_by_path),
         "shared_file_count": sum(
             row["same_file_reference"] == "yes" for row in pairs
         ),
         "dimension_mismatch_count": 0,
+        "notch_analysis_group_counts": dict(Counter(
+            row["notch_analysis_group"] for row in pairs
+        )),
         "paired_manifest": str(paired_path),
         "keep_manifest": str(keep_path),
         "notch_manifest": str(notch_path),

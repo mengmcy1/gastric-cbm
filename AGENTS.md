@@ -127,6 +127,7 @@
 - 推理：`程序/模型训练/正式代码/inference.py`
 - 集成与TTA：`程序/模型训练/正式代码/evaluate_ensemble_tta.py`
 - 完整外部评估：`程序/模型训练/正式代码/evaluate_debiased_multicenter.py`
+- M0全量矩阵汇总：`程序/模型训练/正式代码/analyze_m0_full_matrix.py`
 - Grad-CAM：`程序/注意力热图/正式代码/gradcam_batch.py`
 - 严格概念集MOCE：`程序/MOCE/正式代码/moce_curated_concept.py`
 - MOCE K敏感性：`程序/MOCE/正式代码/run_kmeans_sensitivity.py`
@@ -241,6 +242,20 @@
   保持相同标签激活方向；癌相关15/15一致，非癌相关6/15一致。该结果只表示统计稳定性，
   仍需空间响应和临床语义审核。
 - 外部1941张图已完成图像中心Top-5彩色SAE可视化，并整理100位患者的医学生提交版。
+
+### 6.7 0804新数据全量M0诊断
+
+- 冻结开发集为3348张、1732位患者；图片标签近似平衡，但患者标签为1286非癌对
+  446癌，因此本阶段只用于全量诊断，不替代来源内平衡主实验。
+- Keep/Notch、ResNet50/EfficientNet-B0和3个种子的12组正式val矩阵已完成；模型、
+  阈值和预处理选择均未使用internal test或外部test。
+- 全量阶段暂选Keep与EfficientNet-B0。Keep EfficientNet-B0跨种子患者AUC为
+  `0.9091±0.0041`，患者Accuracy为`0.7885`；图片AUC为`0.8485±0.0090`，图片
+  Accuracy为`0.7606`。完整Sensitivity、Specificity和逐种子结果见
+  `实验进度与结果讨论.md`。
+- Notch的平均AUC与Keep接近，但最差种子的患者Specificity下降超过预注册门槛；因此
+  暂不进入下一轮主训练。上述骨干与预处理选择仍须由来源内平衡M0确认，不能据此声明
+  已消除来源或风格shortcut。
 
 ## 7. 文件操作与代码修改规则
 

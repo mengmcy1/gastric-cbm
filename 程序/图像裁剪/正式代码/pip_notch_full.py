@@ -23,6 +23,7 @@ import cv2
 import numpy as np
 
 from config import (
+    PROJECT_ROOT,
     PIP_OVERRIDES,
     PIP_IMAGE_ROOT,
     STAGE3_QUALITY_FLAGS,
@@ -113,6 +114,15 @@ def parse_args():
         default=IMAGE_ROOT,
         help="第一阶段自然裁剪图。",
     )
+    parser.add_argument(
+        "--image-manifest",
+        type=Path,
+        default=None,
+        help=(
+            "可选冻结Keep manifest；按processed_relative_path映射"
+            "final_processed_path，并优先于--image-root。"
+        ),
+    )
     parser.add_argument("--quality-flags", type=Path, default=QUALITY_FLAGS)
     parser.add_argument("--pip-labels", type=Path, default=PIP_LABELS)
     parser.add_argument("--overrides", type=Path, default=OVERRIDES)
@@ -124,11 +134,11 @@ def parse_args():
 
 
 def validate_args(args):
-    for path in [
-        args.image_root,
-        args.quality_flags,
-        args.pip_labels,
-    ]:
+    required_paths = [args.quality_flags, args.pip_labels]
+    required_paths.append(
+        args.image_manifest if args.image_manifest else args.image_root
+    )
+    for path in required_paths:
         if not path.exists():
             raise FileNotFoundError(f"输入不存在：{path}")
     if args.output.exists() and any(args.output.iterdir()):
@@ -172,57 +182,95 @@ def load_inputs(args):
     if len(override_by_path) != len(override_rows):
         raise ValueError("人工修正表存在重复的已确认 relative_path")
 
+    frozen_image_by_path = {}
+    if args.image_manifest:
+        for row in load_csv(args.image_manifest):
+            relative_path = row["processed_relative_path"]
+            image_path = Path(row["final_processed_path"])
+            if not image_path.is_absolute():
+                image_path = PROJECT_ROOT / image_path
+            if relative_path in frozen_image_by_path:
+                raise ValueError(
+                    f"Keep manifest存在重复路径：{relative_path}"
+                )
+            frozen_image_by_path[relative_path] = image_path
+
     items = []
     for label in sorted(label_rows, key=lambda row: row["relative_path"]):
         relative_path = label["relative_path"]
         quality = quality_by_path.get(relative_path)
-        if quality is None:
-            raise ValueError(f"缺少 quality_flags 行：{relative_path}")
-        if not quality["rect_xywh"]:
-            raise ValueError(f"缺少自动框：{relative_path}")
         override = override_by_path.get(relative_path)
+        auto_rect = quality["rect_xywh"] if quality else ""
         if override is not None:
-            if override["original_rect_xywh"] != quality["rect_xywh"]:
+            # 人工框优先（允许自动检测为阴性、只有人工框的情况）
+            if not override.get("corrected_rect_xywh"):
+                raise ValueError(
+                    f"人工修正表缺少 corrected_rect_xywh：{relative_path}"
+                )
+            if (
+                auto_rect
+                and override.get("original_rect_xywh") != auto_rect
+            ):
                 raise ValueError(
                     f"人工修正表原框与自动框不一致：{relative_path}"
                 )
             effective_rect = override["corrected_rect_xywh"]
             rect_source = "manual_override"
-        else:
-            effective_rect = quality["rect_xywh"]
+        elif auto_rect:
+            effective_rect = auto_rect
             rect_source = "auto"
+        else:
+            raise ValueError(
+                f"缺少自动框且无人工框：{relative_path}"
+            )
+        image_path = (
+            frozen_image_by_path.get(relative_path)
+            if args.image_manifest
+            else args.image_root / relative_path
+        )
+        if image_path is None:
+            raise ValueError(
+                f"Keep manifest缺少已确认PIP图片：{relative_path}"
+            )
+        if not image_path.is_file():
+            raise FileNotFoundError(f"处理输入不存在：{image_path}")
         items.append({
             "label": label,
             "quality": quality,
             "override": override,
             "effective_rect": effective_rect,
             "rect_source": rect_source,
+            "image_path": image_path,
         })
     return items
 
 
-def marked_source(image, auto_rect, cut_x, cut_y):
+def marked_source(image, auto_rect, black_rect):
     marked = image.copy()
-    auto_x, auto_y, auto_w, auto_h = auto_rect
+    if auto_rect is not None:
+        auto_x, auto_y, auto_w, auto_h = auto_rect
+        cv2.rectangle(
+            marked,
+            (auto_x, auto_y),
+            (auto_x + auto_w, auto_y + auto_h),
+            (0, 255, 255),
+            3,
+        )
+    bx0, by0, bx1, by1 = black_rect
     cv2.rectangle(
-        marked,
-        (auto_x, auto_y),
-        (auto_x + auto_w, auto_y + auto_h),
-        (0, 255, 255),
-        3,
-    )
-    cv2.rectangle(
-        marked, (0, 0), (cut_x, cut_y), (0, 0, 255), 3
+        marked, (bx0, by0), (bx1, by1), (0, 0, 255), 3
     )
     return marked
 
 
 def process_item(args, item):
     relative_path = item["label"]["relative_path"]
-    image_path = args.image_root / relative_path
+    image_path = item["image_path"]
     image = read_image(image_path)
 
-    auto_rect = parse_rect(item["quality"]["rect_xywh"])
+    quality = item["quality"] or {}
+    auto_rect_text = quality.get("rect_xywh", "")
+    auto_rect = parse_rect(auto_rect_text) if auto_rect_text else None
     effective_rect = parse_rect(item["effective_rect"])
     rect_x, rect_y, rect_w, rect_h = effective_rect
     if rect_x < 0 or rect_y < 0 or rect_w <= 0 or rect_h <= 0:
@@ -231,25 +279,30 @@ def process_item(args, item):
     margin = max(
         4, int(round(min(image.shape[:2]) * args.margin_ratio))
     )
-    cut_x = min(image.shape[1] - 1, rect_x + rect_w + margin)
-    cut_y = min(image.shape[0] - 1, rect_y + rect_h + margin)
+    # 画中画可能位于任意角：按实际框+安全边距置黑，不再假设左上角对齐。
+    black_x0 = max(0, rect_x - margin)
+    black_y0 = max(0, rect_y - margin)
+    black_x1 = min(image.shape[1], rect_x + rect_w + margin)
+    black_y1 = min(image.shape[0], rect_y + rect_h + margin)
     notch = image.copy()
-    notch[:cut_y, :cut_x] = 0
+    notch[black_y0:black_y1, black_x0:black_x1] = 0
     notch_black = black_ratio(notch)
     newly_blacked = float(
-        np.any(image[:cut_y, :cut_x] > 12, axis=2).sum()
+        np.any(image[black_y0:black_y1, black_x0:black_x1] > 12, axis=2).sum()
         / (image.shape[0] * image.shape[1])
     )
+    cut_x = black_x1
+    cut_y = black_y1
 
     path = Path(relative_path)
     notch_path = args.output / "candidates" / "notch" / path
     write_image(notch_path, notch)
 
     source_panel = labelled_panel(
-        marked_source(image, auto_rect, cut_x, cut_y),
+        marked_source(image, auto_rect, (black_x0, black_y0, black_x1, black_y1)),
         f"{item['label']['patient_id']} | {path.name}",
         (
-            f"yellow=auto {item['quality']['rect_xywh']} "
+            f"yellow=auto {auto_rect_text or 'none'} "
             f"red=cut {cut_x}x{cut_y} "
             f"source={item['rect_source']}"
         ),
@@ -273,14 +326,20 @@ def process_item(args, item):
         "relative_path": relative_path,
         "patient_id": item["label"]["patient_id"],
         "auto_tier": item["label"]["auto_tier"],
-        "proposal_type": item["quality"]["proposal_type"],
+        "proposal_type": quality.get("proposal_type", "") or "manual",
+        "pip_corner": (
+            item["label"].get("pip_corner", "")
+            or quality.get("pip_corner", "")
+        ),
         "pip_score": item["label"]["pip_score"],
         "source_width": image.shape[1],
         "source_height": image.shape[0],
-        "auto_rect_xywh": item["quality"]["rect_xywh"],
+        "auto_rect_xywh": auto_rect_text,
         "effective_rect_xywh": item["effective_rect"],
         "rect_source": item["rect_source"],
         "margin_pixels": margin,
+        "black_x0": black_x0,
+        "black_y0": black_y0,
         "cut_x": cut_x,
         "cut_y": cut_y,
         "notch_output_width": image.shape[1],
@@ -294,6 +353,7 @@ def process_item(args, item):
         "box_qc_note": "",
         "notch_output": str(notch_path),
         "preview": str(preview_path),
+        "source_input": str(image_path.resolve()),
         "_contact_panel": source_panel,
     }
 
@@ -377,6 +437,13 @@ def main():
             "overrides": str(args.overrides) if args.overrides.is_file() else "",
             "overrides_sha256": (
                 file_sha256(args.overrides) if args.overrides.is_file() else None
+            ),
+            "image_manifest": (
+                str(args.image_manifest) if args.image_manifest else ""
+            ),
+            "image_manifest_sha256": (
+                file_sha256(args.image_manifest)
+                if args.image_manifest else None
             ),
         },
         "image_count": len(rows),

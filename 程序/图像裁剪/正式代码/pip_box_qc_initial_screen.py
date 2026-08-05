@@ -64,70 +64,135 @@ def file_sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def horizontal_signal(gray, y, width):
+def horizontal_signal(gray, y, width, x0=0):
     y = max(2, min(gray.shape[0] - 3, y))
-    width = max(8, min(gray.shape[1], width))
+    width = max(8, min(gray.shape[1] - x0, width))
     diff = np.abs(
-        gray[y + 2, :width].astype(np.int16)
-        - gray[y - 2, :width].astype(np.int16)
+        gray[y + 2, x0:x0 + width].astype(np.int16)
+        - gray[y - 2, x0:x0 + width].astype(np.int16)
     )
     return float(np.median(diff)), float((diff > 18).mean())
 
 
-def vertical_signal(gray, x, height):
+def vertical_signal(gray, x, height, y0=0):
     x = max(2, min(gray.shape[1] - 3, x))
-    height = max(8, min(gray.shape[0], height))
+    height = max(8, min(gray.shape[0] - y0, height))
     diff = np.abs(
-        gray[:height, x + 2].astype(np.int16)
-        - gray[:height, x - 2].astype(np.int16)
+        gray[y0:y0 + height, x + 2].astype(np.int16)
+        - gray[y0:y0 + height, x - 2].astype(np.int16)
     )
     return float(np.median(diff)), float((diff > 18).mean())
 
 
-def strongest_bottom_extension(gray, cut_y, rect_width, rect_height):
+def strongest_bottom_extension(gray, cut_y, rect):
+    rect_x, rect_y, rect_w, rect_h = rect
     start = min(gray.shape[0] - 3, cut_y + 12)
     stop = min(
         gray.shape[0] - 2,
-        cut_y + min(130, max(80, rect_height)),
+        cut_y + min(130, max(80, rect_h)),
     )
     best = (0.0, cut_y, 0.0, 0.0)
     for y in range(start, stop + 1):
-        median, coherence = horizontal_signal(gray, y, rect_width)
+        median, coherence = horizontal_signal(gray, y, rect_w, x0=rect_x)
         score = median * (0.5 + coherence)
         best = max(best, (score, y, median, coherence))
     return best
 
 
-def strongest_right_extension(gray, cut_x, rect_width, rect_height):
+def strongest_right_extension(gray, cut_x, rect):
+    rect_x, rect_y, rect_w, rect_h = rect
     start = min(gray.shape[1] - 3, cut_x + 12)
     stop = min(
         gray.shape[1] - 2,
-        cut_x + min(130, max(80, rect_width)),
+        cut_x + min(130, max(80, rect_w)),
     )
     best = (0.0, cut_x, 0.0, 0.0)
     for x in range(start, stop + 1):
-        median, coherence = vertical_signal(gray, x, rect_height)
+        median, coherence = vertical_signal(gray, x, rect_h, y0=rect_y)
         score = median * (0.5 + coherence)
         best = max(best, (score, x, median, coherence))
     return best
 
 
-def screen_row(row, masked_root):
-    image = read_image(masked_root / row["relative_path"])
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (3, 3), 0)
-    _, _, rect_width, rect_height = parse_rect(
+def strongest_left_extension(gray, cut_x0, rect):
+    """在置黑区左侧搜索竖边（向左扩展）。"""
+    rect_x, rect_y, rect_w, rect_h = rect
+    start = max(3, cut_x0 - min(130, max(80, rect_w)) - 12)
+    stop = max(3, cut_x0 - 12)
+    best = (0.0, cut_x0, 0.0, 0.0)
+    for x in range(stop, start - 1, -1):
+        median, coherence = vertical_signal(gray, x, rect_h, y0=rect_y)
+        score = median * (0.5 + coherence)
+        best = max(best, (score, x, median, coherence))
+    return best
+
+
+def strongest_top_extension(gray, cut_y0, rect):
+    """在置黑区上侧搜索横边（向上扩展）。"""
+    rect_x, rect_y, rect_w, rect_h = rect
+    start = max(3, cut_y0 - min(130, max(80, rect_h)) - 12)
+    stop = max(3, cut_y0 - 12)
+    best = (0.0, cut_y0, 0.0, 0.0)
+    for y in range(stop, start - 1, -1):
+        median, coherence = horizontal_signal(gray, y, rect_w, x0=rect_x)
+        score = median * (0.5 + coherence)
+        best = max(best, (score, y, median, coherence))
+    return best
+
+
+def resolve_pip_corner(row, image):
+    """优先取 pip_corner 字段，缺失时按框位置推断。"""
+    corner = (row.get("pip_corner") or "").strip()
+    if corner in ("top_left", "top_right", "bottom_left", "bottom_right"):
+        return corner
+    rect_x, rect_y, rect_w, rect_h = parse_rect(
         row["effective_rect_xywh"]
     )
-    cut_x = int(row["cut_x"])
-    cut_y = int(row["cut_y"])
+    height, width = image.shape[:2]
+    if rect_x < width * 0.15 and rect_y < height * 0.15:
+        return "top_left"
+    if rect_x >= width * 0.85 and rect_y < height * 0.15:
+        return "top_right"
+    if rect_x < width * 0.15 and rect_y >= height * 0.85:
+        return "bottom_left"
+    return "bottom_right"
 
-    bottom = strongest_bottom_extension(
-        gray, cut_y, rect_width, rect_height
+
+def screen_row(row, masked_root):
+    source_input = row.get("source_input", "")
+    image_path = (
+        Path(source_input)
+        if source_input
+        else masked_root / row["relative_path"]
     )
-    right = strongest_right_extension(
-        gray, cut_x, rect_width, rect_height
-    )
+    image = read_image(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (3, 3), 0)
+    rect = parse_rect(row["effective_rect_xywh"])
+    rect_x, rect_y, rect_width, rect_height = rect
+    cut_x = int(row["cut_x"])      # 置黑区 far 角（black_x1）
+    cut_y = int(row["cut_y"])      # black_y1
+    black_x0 = int(row.get("black_x0") or 0)
+    black_y0 = int(row.get("black_y0") or 0)
+    corner = resolve_pip_corner(row, image)
+
+    # 按角决定检查的两条“对侧”边（画中画锚定角之外仍可能延伸的边）
+    if corner in ("top_left", "bottom_left"):
+        edge2 = ("right", strongest_right_extension(
+            gray, cut_x, rect
+        ), cut_x)
+    else:
+        edge2 = ("left", strongest_left_extension(
+            gray, black_x0, rect
+        ), black_x0)
+    if corner in ("top_left", "top_right"):
+        edge1 = ("bottom", strongest_bottom_extension(
+            gray, cut_y, rect
+        ), cut_y)
+    else:
+        edge1 = ("top", strongest_top_extension(
+            gray, black_y0, rect
+        ), black_y0)
 
     reasons = []
     if row["rect_source"] == "manual_override":
@@ -136,23 +201,33 @@ def screen_row(row, masked_root):
         reasons.append("uncommon_height")
     if rect_width < 180 or 220 <= rect_width < 280:
         reasons.append("uncommon_width")
-    if bottom[2] >= 12 and bottom[3] >= 0.35:
-        reasons.append("bottom_edge_beyond_cut")
-    if right[2] >= 20 and right[3] >= 0.50:
-        reasons.append("right_edge_beyond_cut")
+
+    def flag_edge(side_name, data, origin):
+        median, coherence = data[2], data[3]
+        median_threshold = 20 if side_name in ("right", "left") else 12
+        coherence_threshold = 0.50 if side_name in ("right", "left") else 0.35
+        if median >= median_threshold and coherence >= coherence_threshold:
+            reasons.append(f"{side_name}_edge_beyond_cut")
+        return round(median, 3), round(coherence, 6), data[1] - origin
+
+    e1_median, e1_coh, e1_dist = flag_edge(edge1[0], edge1[1], edge1[2])
+    e2_median, e2_coh, e2_dist = flag_edge(edge2[0], edge2[1], edge2[2])
 
     result = dict(row)
     result.update({
+        "corner": corner,
+        "edge1_side": edge1[0],
+        "edge1_candidate_pos": edge1[1][1],
+        "edge1_distance_beyond_cut": e1_dist,
+        "edge1_median": e1_median,
+        "edge1_coherence": e1_coh,
+        "edge2_side": edge2[0],
+        "edge2_candidate_pos": edge2[1][1],
+        "edge2_distance_beyond_cut": e2_dist,
+        "edge2_median": e2_median,
+        "edge2_coherence": e2_coh,
         "screen_candidate": "yes" if reasons else "no",
         "screen_reasons": "|".join(reasons),
-        "bottom_candidate_y": bottom[1],
-        "bottom_distance_beyond_cut": bottom[1] - cut_y,
-        "bottom_edge_median": round(bottom[2], 3),
-        "bottom_edge_coherence": round(bottom[3], 6),
-        "right_candidate_x": right[1],
-        "right_distance_beyond_cut": right[1] - cut_x,
-        "right_edge_median": round(right[2], 3),
-        "right_edge_coherence": round(right[3], 6),
         "human_box_status": "",
         "human_corrected_rect_xywh": "",
         "human_note": "",
@@ -163,19 +238,20 @@ def screen_row(row, masked_root):
 
 def make_tile(row, index, total):
     image = row["_image"].copy()
-    auto_x, auto_y, auto_w, auto_h = parse_rect(
-        row["auto_rect_xywh"]
-    )
+    if row["auto_rect_xywh"]:
+        auto_x, auto_y, auto_w, auto_h = parse_rect(
+            row["auto_rect_xywh"]
+        )
+        cv2.rectangle(
+            image,
+            (auto_x, auto_y),
+            (auto_x + auto_w, auto_y + auto_h),
+            (0, 255, 255),
+            3,
+        )
     cv2.rectangle(
         image,
-        (auto_x, auto_y),
-        (auto_x + auto_w, auto_y + auto_h),
-        (0, 255, 255),
-        3,
-    )
-    cv2.rectangle(
-        image,
-        (0, 0),
+        (int(row.get("black_x0") or 0), int(row.get("black_y0") or 0)),
         (int(row["cut_x"]), int(row["cut_y"])),
         (0, 0, 255),
         3,
