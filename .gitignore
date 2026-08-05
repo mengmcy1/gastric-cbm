@@ -7,6 +7,9 @@
 # Git merge/rebase artifacts
 *.orig
 
+# PPT 结构检查中间日志
+*.inspect.ndjson
+
 # Temp Word files
 ~$*
 
