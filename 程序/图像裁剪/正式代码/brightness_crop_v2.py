@@ -183,6 +183,26 @@ def relative_path(image_path, input_path):
     return Path(image_path.name) if input_path.is_file() else image_path.relative_to(input_path)
 
 
+def build_output_relative_paths(images, input_path):
+    """为统一JPEG输出生成无冲突的确定性相对路径。"""
+    relatives = [relative_path(path, input_path) for path in images]
+    normalized = [relative.with_suffix(".jpg") for relative in relatives]
+    counts = Counter(path.as_posix() for path in normalized)
+    outputs = []
+    for relative, candidate in zip(relatives, normalized):
+        if counts[candidate.as_posix()] == 1:
+            outputs.append(candidate)
+            continue
+        suffix = relative.suffix.lower().lstrip(".") or "none"
+        outputs.append(
+            relative.parent / f"{relative.stem}__src_{suffix}.jpg"
+        )
+    output_keys = [path.as_posix() for path in outputs]
+    if len(output_keys) != len(set(output_keys)):
+        raise ValueError("统一JPEG输出仍存在相对路径冲突，请检查同名源文件")
+    return dict(zip(images, zip(relatives, outputs)))
+
+
 def read_image(path):
     image = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_COLOR)
     if image is None:
@@ -664,7 +684,7 @@ def make_preview(original, cropped, bbox, review_reasons):
     return combined
 
 
-def process_one(image_path, relative, args, save_preview):
+def process_one(image_path, relative, output_relative, args, save_preview):
     image = read_image(image_path)
     original_height, original_width = image.shape[:2]
     initial = detect_initial_roi(image)
@@ -685,11 +705,11 @@ def process_one(image_path, relative, args, save_preview):
         overlay_component_area_ratio,
     )
 
-    crop_path = args.output / "crops" / relative.with_suffix(".jpg")
+    crop_path = args.output / "crops" / output_relative
     write_jpeg(crop_path, cropped)
     preview_path = ""
     if save_preview:
-        preview_file = args.output / "previews" / relative.with_suffix(".jpg")
+        preview_file = args.output / "previews" / output_relative
         write_jpeg(
             preview_file,
             make_preview(image, cropped, bbox, review_reasons),
@@ -747,14 +767,16 @@ def main():
     )
     print(f"选择：{selected_patients} 位患者，{len(images)} 张图像")
     args.output.mkdir(parents=True, exist_ok=True)
+    output_paths = build_output_relative_paths(images, args.input)
 
     rows = []
     for index, image_path in enumerate(images, start=1):
-        relative = relative_path(image_path, args.input)
+        relative, output_relative = output_paths[image_path]
         try:
             row = process_one(
                 image_path,
                 relative,
+                output_relative,
                 args,
                 save_preview=index <= args.preview_limit,
             )

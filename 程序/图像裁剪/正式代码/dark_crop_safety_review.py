@@ -386,7 +386,13 @@ def process_row(session, input_name, source_row, mapping_path, args, save_previe
         comparison_side_threshold,
         lock_bottom=as_bool(source_row.get("progress_bar_detected", False)),
     )
-    relative = Path(source_row["relative_path"]).with_suffix(".jpg")
+    crop_root = (mapping_path.parent / "crops").resolve()
+    try:
+        relative = current_crop.resolve().relative_to(crop_root)
+    except ValueError as error:
+        raise ValueError(
+            f"第一阶段输出不在预期crops目录内: {current_crop}"
+        ) from error
     candidate_path = ""
     masked_candidate_path = ""
     preview_path = ""
