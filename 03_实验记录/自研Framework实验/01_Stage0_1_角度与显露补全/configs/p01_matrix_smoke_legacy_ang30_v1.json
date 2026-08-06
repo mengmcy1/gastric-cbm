@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0-stage01-matrix-config",
+  "status": "smoke_only",
+  "trajectory_mode": "legacy_lateral",
+  "protocol_warning": "仅复现现有横移协议做3帧双端点工具链冒烟，不作为真圆弧或质量结论。",
+  "angles": [
+    {"angle_total_deg": 30.0, "num_steps": 3, "effective_step_deg": 15.0}
+  ],
+  "sharp_checkpoint": "99_过程文件_可删除或归档/临时文件/SHARP环境验证/torch_cache/hub/checkpoints/sharp_2572gikvuh.pt",
+  "lama_model": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/lama/big-lama.pt",
+  "hashes": {
+    "sharp_checkpoint_sha256": "94211A75198C47F61FCA7D739BA08A215418D8D398D48FDDF023BACCC24F073D",
+    "lama_sha256": "344C77BBCB158F17DD143070D1E789F38A66C04202311AE3A258EF66667A9EA9"
+  },
+  "samples": [
+    {
+      "sample_id": "P01",
+      "base_ply": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+      "base_ply_sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B",
+      "focal_px_render": 1597.53662109375
+    }
+  ],
+  "mask": {"alpha_threshold": 0.95, "hard_hole_threshold": 0.5, "dilate_px": 5},
+  "lama": {"device": "cuda", "max_side": 1024},
+  "depth": {"layer": 0, "ring_px": 48, "allow_poor_alignment": true},
+  "gaussians": {"stride": 4}
+}

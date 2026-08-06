@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0-stage01-smoke-config",
+  "sample_id": "P01",
+  "input_image": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+  "base_ply": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+  "angle_source_dir": "03_实验记录/SHARP浅3D实验/outputs/08_角度协议/P01/ang30",
+  "sharp_checkpoint": "99_过程文件_可删除或归档/临时文件/SHARP环境验证/torch_cache/hub/checkpoints/sharp_2572gikvuh.pt",
+  "lama_model": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/lama/big-lama.pt",
+  "hashes": {
+    "input_image_sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+    "base_ply_sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B",
+    "sharp_checkpoint_sha256": "94211A75198C47F61FCA7D739BA08A215418D8D398D48FDDF023BACCC24F073D"
+  },
+  "angle_total_deg": 30.0,
+  "trajectory_mode": "legacy_lateral",
+  "trajectory_note": "复现已存在的 sharp_angle_protocol_render.py v1 横移结果；不冒充真圆弧。",
+  "smoke_side": "left",
+  "smoke_render_frames": 3,
+  "focal_px_render": 1597.53662109375,
+  "mask": {
+    "alpha_threshold": 0.95,
+    "hard_hole_threshold": 0.5,
+    "dilate_px": 5
+  },
+  "lama": {
+    "device": "cuda",
+    "max_side": 1024,
+    "model_format": "TorchScript",
+    "expected_md5": "E3AA4AAA15225A33EC84F9F4BC47E500"
+  },
+  "depth": {
+    "backend": "frozen_sharp_monodepth",
+    "layer": 0,
+    "ring_px": 48
+  },
+  "gaussians": {
+    "stride": 4,
+    "merge_method": "append_only_no_deduplication"
+  }
+}

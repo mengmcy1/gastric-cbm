@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0-stage01-input-manifest",
+  "sample_id": "P01",
+  "frozen_input": {
+    "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+    "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+    "resolution_wh": [4096, 3072]
+  },
+  "frozen_base_ply": {
+    "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+    "sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B",
+    "gaussian_count": 1179648,
+    "metadata_resolution_wh": [4096, 3072],
+    "metadata_focal_px": 3195.0732421875
+  },
+  "existing_angle_baselines": {
+    "root": "03_实验记录/SHARP浅3D实验/outputs/08_角度协议/P01",
+    "angles_total_deg": [5, 15, 30],
+    "frames_per_angle": 61,
+    "trajectory_actual": "legacy_lateral",
+    "warning": "现有输出由当时标称圆弧、实际为 z=0 横移的脚本生成；radius_ratio 未参与轨迹计算。后续脚本已改用 legacy_lateral 明示。"
+  },
+  "copy_policy": "清单只引用冻结输入，不复制或修改原图和原始 PLY。"
+}
