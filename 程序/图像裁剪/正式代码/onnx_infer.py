@@ -25,34 +25,41 @@ DEFAULT_MODEL = MODEL_PATH
 
 
 class _TensorMetadata:
+    """最小onnxruntime张量元数据（名称/形状）。"""
     def __init__(self, name, shape):
+        """记录张量名与形状。"""
         self.name = name
         self.shape = shape
 
 
 class OpenCVDnnSession:
-    """提供本流程所需的最小ONNX Runtime兼容接口。"""
+    """OpenCV DNN后端：提供本流程所需的最小ORT兼容接口。"""
 
     backend_name = "opencv_dnn_cpu"
 
     def __init__(self, model_path):
+        """加载ONNX模型到OpenCV DNN网络。"""
         self.net = cv2.dnn.readNetFromONNX(str(model_path))
         self._inputs = [_TensorMetadata("input", [1, 3, INPUT_SIZE, INPUT_SIZE])]
         self._outputs = [_TensorMetadata("output", None)]
 
     def get_inputs(self):
+        """返回输入元数据（ORT兼容）。"""
         return self._inputs
 
     def get_outputs(self):
+        """返回输出元数据（ORT兼容）。"""
         return self._outputs
 
     def run(self, _, feeds):
+        """单输入推理，返回输出列表（ORT兼容）。"""
         model_input = next(iter(feeds.values()))
         self.net.setInput(model_input)
         return [self.net.forward()]
 
 
 def create_inference_session(model_path):
+    """建推理会话：优先onnxruntime，缺失时回退OpenCV DNN。"""
     if ort is not None:
         return ort.InferenceSession(
             str(model_path),
@@ -62,10 +69,12 @@ def create_inference_session(model_path):
 
 
 def inference_backend_name(session):
+    """返回实际推理后端名（onnxruntime_cpu/opencv_dnn_cpu）。"""
     return getattr(session, "backend_name", "onnxruntime_cpu")
 
 
 def parse_args():
+    """命令行参数：onnx/输入/输出/阈值/裁剪策略。"""
     parser = argparse.ArgumentParser(
         description="递归分割内镜有效视野，并输出掩膜、裁剪图和原图映射表。"
     )
@@ -100,6 +109,7 @@ def parse_args():
 
 
 def validate_args(args):
+    """校验输入存在、输出非空拒绝覆盖、参数合法。"""
     if not args.onnx.is_file():
         raise FileNotFoundError(f"ONNX 模型不存在：{args.onnx}")
     if not args.input.exists():
@@ -124,6 +134,7 @@ def validate_args(args):
 
 
 def list_images(input_path):
+    """递归收集目录下所有支持的图像文件。"""
     if input_path.is_file():
         if input_path.suffix.lower() not in IMAGE_SUFFIXES:
             raise ValueError(f"不支持的图像格式：{input_path}")
@@ -136,12 +147,14 @@ def list_images(input_path):
 
 
 def relative_image_path(image_path, input_path):
+    """源图相对输入根或文件名（保留结构）。"""
     if input_path.is_file():
         return Path(image_path.name)
     return image_path.relative_to(input_path)
 
 
 def read_image(image_path):
+    """读取图像（BGR）。"""
     data = np.fromfile(str(image_path), dtype=np.uint8)
     image = cv2.imdecode(data, cv2.IMREAD_COLOR)
     if image is None:
@@ -150,6 +163,7 @@ def read_image(image_path):
 
 
 def preprocess(image_bgr):
+    """模型输入预处理：BGR+双次÷255归一化（工程确认的固定输入）。"""
     """模型已通过工程 A/B 确认为 BGR + 双次除255。"""
     resized = cv2.resize(
         image_bgr, (INPUT_SIZE, INPUT_SIZE), interpolation=cv2.INTER_LINEAR
@@ -160,11 +174,13 @@ def preprocess(image_bgr):
 
 
 def sigmoid(values):
+    """数值稳定的sigmoid激活。"""
     values = np.clip(values, -50.0, 50.0)
     return 1.0 / (1.0 + np.exp(-values))
 
 
 def extract_probability(model_output):
+    """模型logits→概率图：squeeze成二维+sigmoid。"""
     logits = np.squeeze(np.asarray(model_output))
     if logits.ndim != 2:
         raise ValueError(f"预期二维单通道 logits，实际 shape={model_output.shape}")
@@ -172,6 +188,7 @@ def extract_probability(model_output):
 
 
 def largest_component(mask):
+    """取最大连通域（主视野）。"""
     count, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
     if count <= 1:
         raise ValueError("模型未检出有效视野")
@@ -181,6 +198,7 @@ def largest_component(mask):
 
 
 def remove_border_connected_black(mask, image_bgr, black_threshold):
+    """移除与图像边界相连的黑色区域（如黑边）。"""
     if black_threshold == 0:
         return mask
     resized = cv2.resize(
@@ -202,6 +220,7 @@ def remove_border_connected_black(mask, image_bgr, black_threshold):
 
 
 def clean_component(mask, image_bgr, erode_pixels, black_threshold):
+    """清洗掩膜：去边界黑+去小噪声+可选内缩。"""
     kernel = np.ones((3, 3), dtype=np.uint8)
     cleaned = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     cleaned = remove_border_connected_black(cleaned, image_bgr, black_threshold)
@@ -214,6 +233,7 @@ def clean_component(mask, image_bgr, erode_pixels, black_threshold):
 
 
 def largest_inner_rectangle(mask):
+    """掩膜内最大内切矩形（safe_rectangle候选）。"""
     """返回二值掩膜内面积最大的轴对齐矩形 (x, y, width, height)。"""
     heights = np.zeros(mask.shape[1], dtype=np.int32)
     best_area = 0
@@ -246,6 +266,7 @@ def largest_inner_rectangle(mask):
 
 
 def component_bbox(mask):
+    """连通域外接框。"""
     points = cv2.findNonZero(mask)
     if points is None:
         raise ValueError("有效视野掩膜为空")
@@ -253,6 +274,7 @@ def component_bbox(mask):
 
 
 def scale_box(box, source_width, source_height, target_width, target_height):
+    """框坐标按源/目标尺寸等比缩放。"""
     x, y, width, height = box
     left = max(0, math.floor(x * target_width / source_width))
     top = max(0, math.floor(y * target_height / source_height))
@@ -264,6 +286,7 @@ def scale_box(box, source_width, source_height, target_width, target_height):
 
 
 def encode_and_save(path, image):
+    """cv2编码后写盘（避免中文路径imwrite失败）。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise FileExistsError(f"拒绝覆盖已有文件：{path}")
@@ -276,6 +299,7 @@ def encode_and_save(path, image):
 
 
 def verify_session(session):
+    """校验session可推理，返回输入张量名。"""
     inputs = session.get_inputs()
     outputs = session.get_outputs()
     if len(inputs) != 1 or inputs[0].shape != [1, 3, INPUT_SIZE, INPUT_SIZE]:
@@ -286,6 +310,7 @@ def verify_session(session):
 
 
 def process_one(session, input_name, image_path, relative_path, args):
+    """单张：推理→掩膜→按策略生成裁剪候选→落盘。"""
     image = read_image(image_path)
     model_input = preprocess(image)
     probability = extract_probability(session.run(None, {input_name: model_input})[0])
@@ -348,6 +373,7 @@ def process_one(session, input_name, image_path, relative_path, args):
 
 
 def main():
+    """入口：解析→建session→逐张生成FOV候选→写mapping/manifest。"""
     args = parse_args()
     validate_args(args)
     image_paths = list_images(args.input)

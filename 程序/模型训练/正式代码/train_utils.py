@@ -563,6 +563,14 @@ def create_training_parser(model_name):
         action='store_true',
         help='只用验证集选模型和阈值，暂不读取内部测试集预测',
     )
+    parser.add_argument(
+        '--crop-scale-min', type=float, default=0.85,
+        help='RandomResizedCrop scale 下界（A0=0.85, A1=0.7, A2=0.5）',
+    )
+    parser.add_argument(
+        '--crop-scale-max', type=float, default=1.0,
+        help='RandomResizedCrop scale 上界',
+    )
     parser.add_argument('--overwrite', action='store_true')
     return parser
 
@@ -627,6 +635,12 @@ def run_training(
         args.stage2_epochs = min(args.stage2_epochs, 1)
         args.num_workers = 0
     seed_everything(args.seed)
+    # 单变量 scale 消融：覆盖 RandomResizedCrop scale（A0=0.85/A1=0.7/A2=0.5）
+    if not 0 < args.crop_scale_min <= args.crop_scale_max <= 1.0:
+        raise ValueError('crop-scale 必须满足 0 < min <= max <= 1')
+    AUGMENTATION_CONFIG['random_resized_crop_scale'] = [
+        args.crop_scale_min, args.crop_scale_max
+    ]
     run_dir = prepare_run_directory(args, model_slug)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     frame, validation_fold = load_frozen_manifest(

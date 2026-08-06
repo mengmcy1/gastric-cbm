@@ -93,6 +93,7 @@ def corner_transform(image, corner):
 
 
 def _map_point_back(x, y, corner, width, height):
+    """单个点从虚拟角坐标映射回原图坐标。"""
     if corner == "top_right":
         return width - 1 - x, y
     if corner == "bottom_left":
@@ -103,6 +104,7 @@ def _map_point_back(x, y, corner, width, height):
 
 
 def map_rect_back(rect, corner, width, height):
+    """矩形(x,y,w,h)从虚拟角坐标映射回原图坐标。"""
     x, y, w, h = rect
     if corner == "top_right":
         return width - x - w, y, w, h
@@ -114,6 +116,7 @@ def map_rect_back(rect, corner, width, height):
 
 
 def map_line_back(line, corner, width, height):
+    """线段两端点从虚拟角坐标映射回原图坐标。"""
     x1, y1, x2, y2 = line
     x1b, y1b = _map_point_back(x1, y1, corner, width, height)
     x2b, y2b = _map_point_back(x2, y2, corner, width, height)
@@ -121,6 +124,7 @@ def map_line_back(line, corner, width, height):
 
 
 def parse_args():
+    """解析命令行参数。"""
     parser = argparse.ArgumentParser(description="画中画自动筛查 v2")
     parser.add_argument("--crops", type=Path, default=STAGE1_CROPS)
     parser.add_argument("--masks", type=Path, default=STAGE2_MASKS)
@@ -145,12 +149,14 @@ def parse_args():
 
 
 def resolve_output(args):
+    """未显式指定输出时，按验证/全量模式选默认目录。"""
     if args.output is not None:
         return args.output
     return VALIDATION_OUTPUT if args.validate_only else FULL_OUTPUT
 
 
 def validate_args(args, output):
+    """校验输入存在、输出目录为空、阈值顺序合法。"""
     required = [args.crops, args.stage2_mapping]
     if args.validate_only:
         required.extend([args.validation_list, args.validation_labels])
@@ -166,6 +172,7 @@ def validate_args(args, output):
 
 
 def read_image(path, flags=cv2.IMREAD_COLOR):
+    """读取图像为BGR数组，失败抛错。"""
     image = cv2.imread(str(path), flags)
     if image is None:
         raise ValueError(f"图像读取失败：{path}")
@@ -248,6 +255,7 @@ def line_features(image):
 
 
 def rect_is_valid(rect, scan_w, scan_h):
+    """按面积占比和宽高比过滤过小/过大矩形。"""
     _, _, rect_w, rect_h = rect
     if rect_w <= 0 or rect_h <= 0:
         return False
@@ -271,6 +279,7 @@ def line_count_quality(clustered_count):
 
 
 def pair_proposals(features):
+    """横竖线相交生成左上锚定矩形候选（几何分）。"""
     proposals = []
     tolerance = max(
         10, int(features["short_side"] * INTERSECTION_TOLERANCE_RATIO)
@@ -342,6 +351,7 @@ def vertical_projection(gray_float, bottom_y, start_x, end_x, strip):
 
 
 def bottom_boundary_coherence(gray_float, rect, strip):
+    """矩形下边界两侧的横向亮度突变一致性。"""
     _, _, rect_w, rect_h = rect
     x1 = max(strip, 5)
     x2 = min(gray_float.shape[1] - strip, rect_w - 5)
@@ -425,6 +435,7 @@ def fallback_proposals(image, features):
 
 
 def deduplicate_proposals(proposals, short_side):
+    """合并近似重复候选，按几何分保留前5个。"""
     tolerance = max(8, int(short_side * 0.015))
     selected = []
     for proposal in sorted(
@@ -442,6 +453,7 @@ def deduplicate_proposals(proposals, short_side):
 
 
 def propose_rectangles(image):
+    """汇总直线提议+回退提议+去重，返回候选矩形列表。"""
     features = line_features(image)
     proposals = pair_proposals(features)
     proposals.extend(fallback_proposals(image, features))
@@ -450,6 +462,7 @@ def propose_rectangles(image):
 
 
 def boundary_metrics(gray_float, lab_float, rect, side, strip):
+    """计算矩形单侧边界（右/下）的亮度、颜色、梯度分。"""
     _, _, rect_w, rect_h = rect
     trim = max(4, strip)
     if side == "right":
@@ -506,6 +519,7 @@ def boundary_metrics(gray_float, lab_float, rect, side, strip):
 
 
 def verify_rectangle_content(image, rect):
+    """验证矩形右+下两条内边界有内容突变证据。"""
     height, width = image.shape[:2]
     _, _, rect_w, rect_h = rect
     short_side = min(height, width)
@@ -536,6 +550,7 @@ def verify_rectangle_content(image, rect):
 
 
 def fuse_proposal(proposal, content_score):
+    """几何分与内容分融合成最终候选分。"""
     score = min(
         1.0,
         proposal["geometry_score"] * GEOMETRY_WEIGHT
@@ -594,6 +609,7 @@ def detect_best_corner(
 
 
 def load_paths(path):
+    """读取输入清单并校验 relative_path 唯一。"""
     with path.open(encoding="utf-8-sig") as handle:
         rows = list(csv.DictReader(handle))
     if not rows or "relative_path" not in rows[0]:
@@ -605,6 +621,7 @@ def load_paths(path):
 
 
 def load_labels(path):
+    """读取验证标签（pip/non_pip/uncertain/unreviewed）。"""
     labels = {}
     if not path.exists():
         return labels
@@ -626,6 +643,7 @@ def load_labels(path):
 def tier_for_score(
     score, content_score, candidate_threshold, review_threshold
 ):
+    """按分数与内容分层：高置信 / 灰区 / 阴性。"""
     if (
         score >= candidate_threshold
         and content_score >= HIGH_CONFIDENCE_MIN_CONTENT
@@ -637,15 +655,18 @@ def tier_for_score(
 
 
 def serialise_rect(rect):
+    """矩形转逗号分隔字符串（x,y,w,h）。"""
     return ",".join(str(int(value)) for value in rect) if rect else ""
 
 
 def patient_key(relative_path):
+    """用图片父目录作为患者单元。"""
     parent = Path(relative_path).parent
     return parent.as_posix() if str(parent) != "." else "."
 
 
 def make_preview(image, mask, row, proposal):
+    """生成带FOV轮廓、检测框、线条和标题的预览图。"""
     height, width = image.shape[:2]
     scale = min(1.0, PREVIEW_PANEL / max(height, width))
     preview = cv2.resize(
@@ -713,6 +734,7 @@ def make_preview(image, mask, row, proposal):
 
 
 def write_preview(path, preview):
+    """预览图写入磁盘（JPEG 92）。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     ok = cv2.imwrite(
         str(path), preview, [cv2.IMWRITE_JPEG_QUALITY, 92]
@@ -722,6 +744,7 @@ def write_preview(path, preview):
 
 
 def evaluate(rows):
+    """用参考标签计算检测的TP/FP/FN/TN、召回率与精确率。"""
     labelled = [
         row for row in rows if row["reference_label"] in {"pip", "non_pip"}
     ]
@@ -759,10 +782,12 @@ def evaluate(rows):
 
 
 def script_sha256():
+    """返回本脚本SHA256，用于运行可复现性。"""
     return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 def main():
+    """编排逐图检测，输出quality_flags、预览与run_manifest。"""
     # HoughLinesP may otherwise change borderline proposals across runs when
     # OpenCV schedules work differently. Candidate generation must be reproducible
     # before thresholds and manual review lists are frozen.

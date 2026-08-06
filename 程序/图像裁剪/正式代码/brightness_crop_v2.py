@@ -69,6 +69,7 @@ PREVIEW_PANEL_HEIGHT = 420
 
 
 def parse_args():
+    """命令行参数：输入/输出目录、抽样、预览上限。"""
     parser = argparse.ArgumentParser(
         description="基于亮度轮廓和真正四边扫描的内镜图像安全裁剪。"
     )
@@ -106,6 +107,7 @@ def parse_args():
 
 
 def validate_args(args):
+    """校验输入存在、输出目录非空拒绝覆盖、参数合法。"""
     if not args.input.exists():
         raise FileNotFoundError(f"输入不存在：{args.input}")
     if args.limit is not None and args.limit <= 0:
@@ -131,6 +133,7 @@ def validate_args(args):
 
 
 def list_images(input_path):
+    """递归收集目录下所有支持的图像文件。"""
     if input_path.is_file():
         if input_path.suffix.lower() not in IMAGE_SUFFIXES:
             raise ValueError(f"不支持的图像格式：{input_path}")
@@ -143,6 +146,7 @@ def list_images(input_path):
 
 
 def patient_key(image_path, input_path):
+    """患者单元：图片直接父目录的完整相对路径。"""
     relative = image_path.relative_to(input_path)
     # gastric-cbm常见层级是“类别/中心/患者/图片”，不能把第一层类别
     # 误当成患者。以图片直接父目录的完整相对路径作为稳定抽样单元。
@@ -150,6 +154,7 @@ def patient_key(image_path, input_path):
 
 
 def evenly_spaced_keys(keys, limit):
+    """从键列表中均匀抽取最多limit个（抽样用）。"""
     if limit is None or limit >= len(keys):
         return keys
     if limit == 1:
@@ -162,6 +167,7 @@ def evenly_spaced_keys(keys, limit):
 
 
 def select_images(images, args):
+    """按患者分层抽样（调试/小样本用）。"""
     if args.input.is_file():
         return images[: args.limit] if args.limit is not None else images
     groups = {}
@@ -180,10 +186,12 @@ def select_images(images, args):
 
 
 def relative_path(image_path, input_path):
+    """源图相对输入根的路径（保留结构）。"""
     return Path(image_path.name) if input_path.is_file() else image_path.relative_to(input_path)
 
 
 def build_output_relative_paths(images, input_path):
+    """为每张源图构造输出相对路径（保留目录结构）。"""
     """为统一JPEG输出生成无冲突的确定性相对路径。"""
     relatives = [relative_path(path, input_path) for path in images]
     normalized = [relative.with_suffix(".jpg") for relative in relatives]
@@ -204,6 +212,7 @@ def build_output_relative_paths(images, input_path):
 
 
 def read_image(path):
+    """读取图像（BGR）。"""
     image = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_COLOR)
     if image is None:
         raise ValueError(f"OpenCV 无法解码：{path}")
@@ -211,6 +220,7 @@ def read_image(path):
 
 
 def write_jpeg(path, image):
+    """高质量JPEG保存，父目录自动创建。"""
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise FileExistsError(f"拒绝覆盖已有文件：{path}")
@@ -223,16 +233,19 @@ def write_jpeg(path, image):
 
 
 def file_sha256(path):
+    """文件SHA256（溯源/去重）。"""
     with path.open("rb") as file:
         return hashlib.file_digest(file, "sha256").hexdigest()
 
 
 def odd_kernel_size(short_side):
+    """返回奇数形态学核尺寸。"""
     size = max(5, int(round(short_side * CLOSE_KERNEL_RATIO)))
     return size if size % 2 else size + 1
 
 
 def resize_for_detection(image):
+    """缩到DETECT_MAX_SIDE内做检测，返回缩放比例。"""
     height, width = image.shape[:2]
     scale = min(1.0, DETECT_MAX_SIDE / max(width, height))
     detect_width = max(1, round(width * scale))
@@ -247,6 +260,7 @@ def resize_for_detection(image):
 
 
 def foreground_mask(detect_image):
+    """亮度前景掩膜：区分内容与黑边，闭运算填洞。"""
     gray = cv2.cvtColor(detect_image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (BLUR_KERNEL, BLUR_KERNEL), 0)
     raw = (gray > FOREGROUND_THRESHOLD).astype(np.uint8) * 255
@@ -257,6 +271,7 @@ def foreground_mask(detect_image):
 
 
 def contour_intersects_center(contour, width, height):
+    """轮廓是否经过画面中心（排除边缘噪声）。"""
     window_width = width * CENTER_WINDOW_RATIO
     window_height = height * CENTER_WINDOW_RATIO
     x1 = (width - window_width) / 2
@@ -273,6 +288,7 @@ def contour_intersects_center(contour, width, height):
 
 
 def full_frame_result(width, height, reason):
+    """判定不裁剪的full_frame结果（含原因）。"""
     return {
         "bbox": (0, 0, width, height),
         "crop_status": "fallback_full_frame",
@@ -285,6 +301,7 @@ def full_frame_result(width, height, reason):
 
 
 def secondary_edge_component_ratio(raw_mask, main_bbox):
+    """主轮廓外的次连通域占比（设备界面残留信号）。"""
     count, _, stats, _ = cv2.connectedComponentsWithStats(
         (raw_mask > 0).astype(np.uint8), connectivity=8
     )
@@ -318,6 +335,7 @@ def secondary_edge_component_ratio(raw_mask, main_bbox):
 
 
 def detect_initial_roi(image):
+    """粗检测：亮度轮廓找FOV外接框，不合格回退full_frame。"""
     original_height, original_width = image.shape[:2]
     detect_image, scale = resize_for_detection(image)
     detect_height, detect_width = detect_image.shape[:2]
@@ -405,6 +423,7 @@ def detect_initial_roi(image):
 
 
 def first_content_offset(scores):
+    """单边扫描：找第一个连续有内容的起点。"""
     run = max(3, round(len(scores) * EDGE_CONTENT_RUN_RATIO))
     limit = min(len(scores), round(len(scores) * EDGE_SCAN_MAX_RATIO))
     for offset in range(max(0, limit - run + 1)):
@@ -414,6 +433,7 @@ def first_content_offset(scores):
 
 
 def four_edge_offsets(gray):
+    """四边黑边扫描，返回四边裁剪量。"""
     height, width = gray.shape
     band_y1 = round(height * EDGE_BAND_START)
     band_y2 = round(height * EDGE_BAND_END)
@@ -434,6 +454,7 @@ def four_edge_offsets(gray):
 
 
 def detect_progress_bar(gray, left, right):
+    """底部视频进度条检测，返回栏顶位置。"""
     height = gray.shape[0]
     content_width = max(1, right - left)
     x1 = left + round(content_width * EDGE_BAND_START)
@@ -474,6 +495,7 @@ def detect_progress_bar(gray, left, right):
 
 
 def refine_by_four_edges(image, bbox):
+    """精修：粗框内按四边+进度条再裁黑边，返回精修框与trim记录。"""
     original_height, original_width = image.shape[:2]
     x1, y1, x2, y2 = bbox
     roi = image[y1:y2, x1:x2]
@@ -568,11 +590,13 @@ def refine_by_four_edges(image, bbox):
 
 
 def black_pixel_ratio(image):
+    """图像黑像素占比（残留黑边指标）。"""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return float((gray <= BLACK_THRESHOLD).mean())
 
 
 def edge_overlay_metrics(image):
+    """检测设备界面/overlay残留块。"""
     """统计靠近边缘的白色低饱和小组件，作为文字/刻度残留的复核提示。"""
     height, width = image.shape[:2]
     image_area = height * width
@@ -615,6 +639,7 @@ def build_review_reasons(
     overlay_component_count,
     overlay_component_area_ratio,
 ):
+    """汇总复核原因：决定review_status为待复核或自动通过。"""
     reasons = []
     if initial["crop_status"] == "fallback_full_frame":
         reasons.append("fallback_full_frame")
@@ -636,6 +661,7 @@ def build_review_reasons(
 
 
 def fit_panel(image):
+    """按面板尺寸等比缩放入画布（预览用）。"""
     scale = min(
         PREVIEW_PANEL_WIDTH / image.shape[1],
         PREVIEW_PANEL_HEIGHT / image.shape[0],
@@ -653,6 +679,7 @@ def fit_panel(image):
 
 
 def make_preview(original, cropped, bbox, review_reasons):
+    """原图+裁剪框+结果三联预览。"""
     left, scale, offset_x, offset_y = fit_panel(original)
     x1, y1, x2, y2 = bbox
     cv2.rectangle(
@@ -685,6 +712,7 @@ def make_preview(original, cropped, bbox, review_reasons):
 
 
 def process_one(image_path, relative, output_relative, args, save_preview):
+    """单张主流程：粗检→精修→裁切→质检→落盘，返回mapping行。"""
     image = read_image(image_path)
     original_height, original_width = image.shape[:2]
     initial = detect_initial_roi(image)
@@ -755,6 +783,7 @@ def process_one(image_path, relative, output_relative, args, save_preview):
 
 
 def main():
+    """入口：解析参数→收集图片→逐张处理→写mapping。"""
     args = parse_args()
     validate_args(args)
     images = select_images(list_images(args.input), args)

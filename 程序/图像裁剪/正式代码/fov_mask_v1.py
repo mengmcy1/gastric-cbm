@@ -43,6 +43,7 @@ PREVIEW_PANEL_HEIGHT = 400
 
 
 def parse_args():
+    """命令行参数：onnx模型/输入/输出/阈值/内缩像素。"""
     parser = argparse.ArgumentParser(
         description="使用 shiye_V1 分割已裁剪图像的有效视野，并统一遮黑 FOV 外区域。"
     )
@@ -73,6 +74,7 @@ def parse_args():
 
 
 def validate_args(args):
+    """校验输入存在、输出目录非空拒绝覆盖。"""
     if not args.onnx.is_file():
         raise FileNotFoundError(f"ONNX 模型不存在：{args.onnx}")
     if not args.input.exists():
@@ -99,6 +101,7 @@ def validate_args(args):
 
 
 def fill_external_contour(mask):
+    """填充掩膜最大外轮廓内部（圆内区域全保留）。"""
     """填充最大外轮廓内部孔洞，避免暗腔等医学区域被误遮黑。"""
     contours, _ = cv2.findContours(
         mask.astype(np.uint8),
@@ -114,6 +117,7 @@ def fill_external_contour(mask):
 
 
 def component_metrics(raw_mask):
+    """掩膜连通域统计：主/次连通域覆盖率。"""
     count, _, stats, _ = cv2.connectedComponentsWithStats(
         raw_mask.astype(np.uint8),
         connectivity=8,
@@ -133,6 +137,7 @@ def component_metrics(raw_mask):
 
 
 def fit_panel(image):
+    """按面板尺寸等比缩放入画布（预览用）。"""
     scale = min(
         PREVIEW_PANEL_WIDTH / image.shape[1],
         PREVIEW_PANEL_HEIGHT / image.shape[0],
@@ -151,6 +156,7 @@ def fit_panel(image):
 
 
 def make_preview(image, display_mask, masked, review_reasons):
+    """原图/掩膜/遮黑结果三联预览。"""
     mask_visual = cv2.cvtColor(display_mask * 255, cv2.COLOR_GRAY2BGR)
     panels = [fit_panel(item) for item in (image, mask_visual, masked)]
     preview = cv2.hconcat(panels)
@@ -185,6 +191,7 @@ def make_preview(image, display_mask, masked, review_reasons):
 
 
 def build_review_reasons(mask_coverage, secondary_component_ratio):
+    """按覆盖率/次连通域生成复核原因。"""
     reasons = []
     if mask_coverage < LOW_COVERAGE:
         reasons.append("low_mask_coverage")
@@ -196,6 +203,7 @@ def build_review_reasons(mask_coverage, secondary_component_ratio):
 
 
 def process_one(session, input_name, image_path, relative, args, save_preview):
+    """单张：推理→掩膜清洗→视野外遮黑→落盘，返回mapping行。"""
     image = read_image(image_path)
     probability = extract_probability(
         session.run(None, {input_name: preprocess(image)})[0]
@@ -265,6 +273,7 @@ def process_one(session, input_name, image_path, relative, args, save_preview):
 
 
 def error_row(image_path, relative, error):
+    """单张失败时的空错误行（批量不中断）。"""
     return {
         "source": str(image_path),
         "relative_path": str(relative),
@@ -287,6 +296,7 @@ def error_row(image_path, relative, error):
 
 
 def main():
+    """入口：解析→建session→逐张遮罩→写mapping/manifest。"""
     args = parse_args()
     validate_args(args)
     image_paths = list_images(args.input)

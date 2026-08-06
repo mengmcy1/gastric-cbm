@@ -41,6 +41,7 @@ COMPARISON_PROFILES = (
 
 
 def parse_args():
+    """命令行参数：stage1映射/onnx/输出/阈值档位。"""
     parser = argparse.ArgumentParser(
         description="用原图 FOV 掩膜筛查暗部有效视野被第一阶段裁掉的风险。"
     )
@@ -80,6 +81,7 @@ def parse_args():
 
 
 def validate_args(args):
+    """校验输入存在、输出非空拒绝覆盖。"""
     if not args.stage1_mapping.is_file():
         raise FileNotFoundError(f"第一阶段映射表不存在：{args.stage1_mapping}")
     if not args.onnx.is_file():
@@ -99,6 +101,7 @@ def validate_args(args):
 
 
 def resolve_existing_path(value, mapping_path):
+    """把映射表里的相对路径解析成可读路径。"""
     path = Path(value)
     candidates = [path]
     if not path.is_absolute():
@@ -110,6 +113,7 @@ def resolve_existing_path(value, mapping_path):
 
 
 def predict_fov_mask(session, input_name, image, threshold):
+    """FOV模型推理→清洗→二值掩膜（原图尺寸）。"""
     probability = extract_probability(
         session.run(None, {input_name: preprocess(image)})[0]
     )
@@ -123,6 +127,7 @@ def predict_fov_mask(session, input_name, image, threshold):
 
 
 def mask_bbox(mask):
+    """掩膜外接框（空掩膜报错）。"""
     points = cv2.findNonZero(mask)
     if points is None:
         raise ValueError("FOV 掩膜为空")
@@ -131,6 +136,7 @@ def mask_bbox(mask):
 
 
 def clamp_bbox(bbox, width, height):
+    """把框钳制到图像边界内。"""
     x1, y1, x2, y2 = bbox
     x1 = min(max(0, int(x1)), width - 1)
     y1 = min(max(0, int(y1)), height - 1)
@@ -149,6 +155,7 @@ def directional_bbox(
     extension_threshold,
     lock_bottom,
 ):
+    """按FOV越界方向定向扩边生成保守候选（锁底边时底部不扩）。"""
     margin = round(min(width, height) * margin_ratio)
     candidate = list(current)
     expanded_sides = []
@@ -176,10 +183,12 @@ def directional_bbox(
 
 
 def as_bool(value):
+    """字符串转布尔（进度条标志读取用）。"""
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
 def fit_panel(image):
+    """按面板尺寸等比缩放入画布（预览用）。"""
     scale = min(PANEL_WIDTH / image.shape[1], PANEL_HEIGHT / image.shape[0])
     width = max(1, round(image.shape[1] * scale))
     height = max(1, round(image.shape[0] * scale))
@@ -192,6 +201,7 @@ def fit_panel(image):
 
 
 def draw_box(panel, bbox, scale, offset_x, offset_y, color, thickness=2):
+    """在面板上按缩放/偏移画框。"""
     x1, y1, x2, y2 = bbox
     cv2.rectangle(
         panel,
@@ -203,6 +213,7 @@ def draw_box(panel, bbox, scale, offset_x, offset_y, color, thickness=2):
 
 
 def make_preview(image, mask, current, conservative, outside_ratio, reasons):
+    """原图+FOV轮廓+当前框+保守框 对照预览。"""
     overlay, scale, offset_x, offset_y = fit_panel(image)
     mask_contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if mask_contours:
@@ -254,6 +265,7 @@ def make_preview(image, mask, current, conservative, outside_ratio, reasons):
 
 
 def write_contact_sheets(preview_paths, output):
+    """人工复核分页联系表。"""
     if not preview_paths:
         return []
     pages = []
@@ -283,6 +295,7 @@ def write_contact_sheets(preview_paths, output):
 
 
 def profile_hit(row, outside_threshold, side_threshold):
+    """判断某张图是否命中指定档位的复核阈值。"""
     if row.get("review_status") == "error":
         return False
     outside = float(row["fov_outside_crop_ratio"])
@@ -299,6 +312,7 @@ def profile_hit(row, outside_threshold, side_threshold):
 
 
 def write_threshold_comparison(rows, output):
+    """多档阈值（敏感/中等/保守/强风险）候选数量汇总。"""
     comparison_root = output / "多阈值联图"
     summaries = []
     pages_by_profile = {}
@@ -338,6 +352,7 @@ def write_threshold_comparison(rows, output):
 
 
 def process_row(session, input_name, source_row, mapping_path, args, save_preview):
+    """单张安全复核：FOV反查→风险判定→保守候选生成。"""
     source = resolve_existing_path(source_row["source"], mapping_path)
     current_crop = resolve_existing_path(source_row["crop"], mapping_path)
     image = read_image(source)
@@ -451,6 +466,7 @@ def process_row(session, input_name, source_row, mapping_path, args, save_previe
 
 
 def main():
+    """入口：读阶段1映射→逐张安全复核→候选/预览/manifest。"""
     args = parse_args()
     validate_args(args)
     args.output.mkdir(parents=True, exist_ok=True)
