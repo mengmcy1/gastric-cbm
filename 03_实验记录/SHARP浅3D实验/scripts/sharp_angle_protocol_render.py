@@ -78,8 +78,6 @@ def parse_args() -> argparse.Namespace:
                         help="兼容旧命令保留；legacy_lateral 轨迹不使用该参数")
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--device", default="cuda")
-    parser.add_argument("--allow-overwrite", action="store_true",
-                        help="允许写入非空输出目录（默认拒绝覆盖已有结果）")
     return parser.parse_args()
 
 
@@ -186,9 +184,9 @@ def main() -> None:
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     existing = list(output_dir.iterdir())
-    if existing and not args.allow_overwrite:
+    if existing:
         raise FileExistsError(
-            f"输出目录非空且未指定 --allow-overwrite：{output_dir}\n"
+            f"输出目录非空，按正式实验规则停止以防覆盖：{output_dir}\n"
             f"已有 {len(existing)} 个文件/子目录。"
         )
 
