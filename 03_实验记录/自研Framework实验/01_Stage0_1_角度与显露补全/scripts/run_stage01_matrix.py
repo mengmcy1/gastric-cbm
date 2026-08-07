@@ -87,6 +87,8 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                                 "--alpha-threshold", str(config["mask"]["alpha_threshold"]),
                                 "--hard-hole-threshold", str(config["mask"]["hard_hole_threshold"]),
                                 "--dilate-px", str(config["mask"]["dilate_px"]),
+                                "--min-component-px", str(config["mask"]["min_component_px"]),
+                                "--boundary-band-px", str(config["mask"]["boundary_band_px"]),
                             ],
                         ),
                         (
@@ -94,7 +96,7 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                             [
                                 py, str(SCRIPT_DIR / "stage1_lama_inpaint.py"),
                                 "--image", str(render_a / f"frame_{side}.png"),
-                                "--mask", str(mask_dir / "mask_final.png"),
+                                "--mask", str(mask_dir / "mask_accepted.png"),
                                 "--model", str(lama_model), "--output-dir", str(lama_dir),
                                 "--device", config["lama"]["device"],
                                 "--max-side", str(config["lama"]["max_side"]),
@@ -105,12 +107,14 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                             [
                                 py, str(SCRIPT_DIR / "stage1_estimate_align_depth.py"),
                                 "--image", str(lama_dir / "inpaint_composited.png"),
-                                "--mask", str(mask_dir / "mask_final.png"),
+                                "--mask", str(mask_dir / "mask_accepted.png"),
                                 "--reference-depth", str(render_a / f"depth_{side}_float32.npy"),
                                 "--checkpoint", str(checkpoint), "--focal-px", str(focal_px_render),
                                 "--output-dir", str(depth_dir),
                                 "--depth-layer", str(config["depth"]["layer"]),
                                 "--ring-px", str(config["depth"]["ring_px"]),
+                                "--alignment-model", config["depth"].get("alignment_model", "depth_affine"),
+                                "--max-normalized-rmse", str(config["depth"]["max_normalized_rmse"]),
                             ] + (["--allow-poor-alignment"] if config["depth"].get("allow_poor_alignment", False) else []),
                         ),
                         (
@@ -120,7 +124,7 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                                 "--base-ply", str(base_ply),
                                 "--rgb", str(lama_dir / "inpaint_composited.png"),
                                 "--depth", str(depth_dir / "depth_filled_float32.npy"),
-                                "--mask", str(mask_dir / "mask_final.png"),
+                                "--mask", str(depth_dir / "mask_depth_accepted.png"),
                                 "--angle-total", str(angle_total), "--side", side,
                                 "--trajectory-mode", config["trajectory_mode"],
                                 "--output-dir", str(supplement_dir),
@@ -144,7 +148,10 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                     f"{sample_id}_{angle_tag}_07_render_b",
                     [
                         py, str(SCRIPT_DIR / "stage01_angle_render.py"),
-                        "--ply", str(merge_dir / "scene_base_plus_supplement.ply"),
+                        "--ply", str(base_ply),
+                        "--supplement-left-ply", str(supplement_paths[0]),
+                        "--supplement-right-ply", str(supplement_paths[1]),
+                        "--visibility-mode", config["visibility"]["mode"],
                         "--output-dir", str(render_b), "--angle-total", str(angle_total),
                         "--num-steps", str(angle["num_steps"]),
                         "--trajectory-mode", config["trajectory_mode"],
@@ -157,8 +164,8 @@ def build_commands(config: dict, output_root: Path) -> list[tuple[str, list[str]
                     [
                         py, str(SCRIPT_DIR / "stage1_summarize_ab.py"),
                         "--baseline-dir", str(render_a), "--completed-dir", str(render_b),
-                        "--evaluation-mask-left", str(run_dir / "left_mask" / "mask_final.png"),
-                        "--evaluation-mask-right", str(run_dir / "right_mask" / "mask_final.png"),
+                        "--evaluation-mask-left", str(run_dir / "left_depth" / "mask_depth_accepted.png"),
+                        "--evaluation-mask-right", str(run_dir / "right_depth" / "mask_depth_accepted.png"),
                         "--output-dir", str(run_dir / "summary"),
                     ],
                 )

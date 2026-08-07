@@ -27,6 +27,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--depth-edge-alpha-ceiling", type=float, default=0.985)
     parser.add_argument("--dilate-px", type=int, default=5)
     parser.add_argument("--min-component-px", type=int, default=64)
+    parser.add_argument(
+        "--boundary-band-px", type=int, default=32,
+        help="第一轮只接受触及该宽度画面边界带的连通区域",
+    )
     return parser.parse_args()
 
 
@@ -79,12 +83,46 @@ def main() -> None:
     raw_mask = newly_low_alpha | hard_hole | invalid_depth | depth_conflict
     # 低 Alpha 并不总是“新显露”：树叶、栏杆等半透明边缘也会低于阈值。
     # 仅保留与硬空洞/无效深度种子连通的候选域，避免在原本可见内容上过度补全。
-    raw_labels, _ = ndi.label(raw_mask)
+    raw_labels, raw_component_count = ndi.label(raw_mask)
     seed_mask = hard_hole | invalid_depth
     seeded_labels = np.unique(raw_labels[seed_mask])
     seeded_labels = seeded_labels[seeded_labels != 0]
     seeded_mask = np.isin(raw_labels, seeded_labels)
-    clean_mask = ndi.binary_closing(seeded_mask, iterations=2)
+    height, width = raw_mask.shape
+    band = max(1, min(args.boundary_band_px, height // 2, width // 2))
+    boundary_band = np.zeros_like(raw_mask, dtype=bool)
+    boundary_band[:band] = True
+    boundary_band[-band:] = True
+    boundary_band[:, :band] = True
+    boundary_band[:, -band:] = True
+    accepted_raw = np.zeros_like(raw_mask, dtype=bool)
+    rejected_internal = np.zeros_like(raw_mask, dtype=bool)
+    rejected_small = np.zeros_like(raw_mask, dtype=bool)
+    component_records = []
+    for component_id in range(1, raw_component_count + 1):
+        component = raw_labels == component_id
+        size_px = int(component.sum())
+        touches_boundary = bool(np.any(component & boundary_band))
+        contains_seed = bool(np.any(component & seed_mask))
+        accepted = size_px >= args.min_component_px and touches_boundary and contains_seed
+        if accepted:
+            accepted_raw |= component
+            reason = "accepted_boundary_connected_seeded"
+        elif size_px < args.min_component_px:
+            rejected_small |= component
+            reason = "rejected_too_small"
+        else:
+            rejected_internal |= component
+            reason = "rejected_internal_or_unseeded"
+        component_records.append({
+            "component_id": component_id,
+            "size_px": size_px,
+            "touches_boundary_band": touches_boundary,
+            "contains_hard_hole_or_invalid_depth_seed": contains_seed,
+            "accepted": accepted,
+            "reason": reason,
+        })
+    clean_mask = ndi.binary_closing(accepted_raw, iterations=2)
     # scikit-image 0.26 起 min_size 已弃用；max_size=N 会移除大小 <=N 的连通域。
     clean_mask = remove_small_objects(clean_mask, max_size=max(args.min_component_px - 1, 0))
     if args.dilate_px > 0:
@@ -95,6 +133,13 @@ def main() -> None:
     component_sizes = np.bincount(labels.ravel())[1:]
     mask_u8 = clean_mask.astype(np.uint8) * 255
     iio.imwrite(output_dir / "mask_final.png", mask_u8)
+    iio.imwrite(output_dir / "mask_accepted.png", mask_u8)
+    rejected_mask = raw_mask & ~clean_mask
+    iio.imwrite(output_dir / "mask_rejected.png", rejected_mask.astype(np.uint8) * 255)
+    iio.imwrite(output_dir / "mask_rejected_internal.png", rejected_internal.astype(np.uint8) * 255)
+    iio.imwrite(output_dir / "mask_rejected_small.png", rejected_small.astype(np.uint8) * 255)
+    iio.imwrite(output_dir / "mask_raw.png", raw_mask.astype(np.uint8) * 255)
+    iio.imwrite(output_dir / "mask_boundary_band.png", boundary_band.astype(np.uint8) * 255)
     iio.imwrite(output_dir / "mask_alpha_new.png", newly_low_alpha.astype(np.uint8) * 255)
     iio.imwrite(output_dir / "mask_depth_conflict.png", depth_conflict.astype(np.uint8) * 255)
     iio.imwrite(output_dir / "mask_unseeded_rejected.png", (raw_mask & ~seeded_mask).astype(np.uint8) * 255)
@@ -126,6 +171,8 @@ def main() -> None:
                 "depth_edge_alpha_ceiling": args.depth_edge_alpha_ceiling,
                 "dilate_px": args.dilate_px,
                 "min_component_px": args.min_component_px,
+                "boundary_band_px": band,
+                "policy": "boundary_connected_large_seeded_components_only",
             },
             "fractions": {
                 "newly_low_alpha": float(newly_low_alpha.mean()),
@@ -135,11 +182,16 @@ def main() -> None:
                 "seeded_before_cleanup": float(seeded_mask.mean()),
                 "unseeded_rejected": float((raw_mask & ~seeded_mask).mean()),
                 "final_mask": float(clean_mask.mean()),
+                "rejected_total": float(rejected_mask.mean()),
+                "rejected_internal": float(rejected_internal.mean()),
+                "rejected_small": float(rejected_small.mean()),
             },
             "components": {
                 "count": int(component_count),
                 "largest_px": int(component_sizes.max()) if component_sizes.size else 0,
                 "median_px": float(np.median(component_sizes)) if component_sizes.size else 0.0,
+                "raw_count": int(raw_component_count),
+                "details": component_records,
             },
             "interpretation": (
                 "该掩码是 Alpha/深度代理显露检测，不是真值遮挡掩码；"

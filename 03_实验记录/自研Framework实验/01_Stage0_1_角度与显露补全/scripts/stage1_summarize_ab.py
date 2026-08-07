@@ -27,6 +27,10 @@ def alpha(path: Path) -> np.ndarray:
     return array.astype(np.float32) / float(np.iinfo(array.dtype).max)
 
 
+def rgb(path: Path) -> np.ndarray:
+    return np.asarray(Image.open(path).convert("RGB"), dtype=np.int16)
+
+
 def main() -> None:
     args = parse_args()
     output_dir = prepare_output_dir(args.output_dir)
@@ -84,10 +88,15 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    center_difference = np.abs(
+        rgb(args.baseline_dir / "frame_center.png")
+        - rgb(args.completed_dir / "frame_center.png")
+    )
+    visibility = config_b.get("supplement_visibility", {})
     write_json(
         output_dir / "ab_summary.json",
         {
-            "schema_version": "1.0-stage01-ab",
+            "schema_version": "2.0-stage01-ab",
             "baseline_dir": str(args.baseline_dir.resolve()),
             "completed_dir": str(args.completed_dir.resolve()),
             "protocol": {key: config_a.get(key) for key in protocol_keys},
@@ -101,6 +110,12 @@ def main() -> None:
                 for side, path in mask_paths.items()
             },
             "rows": rows,
+            "center_frame_rgb_difference_0_255": {
+                "mean_abs": float(center_difference.mean()),
+                "max_abs": int(center_difference.max()),
+                "nonzero_value_fraction": float((center_difference > 0).mean()),
+            },
+            "supplement_visibility": visibility,
             "decision_boundary": (
                 "自动 Alpha 仅说明几何覆盖代理变化；不能证明补全颜色、深度、遮挡关系或时序质量正确。"
             ),

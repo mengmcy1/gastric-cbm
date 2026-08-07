@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0-stage0-protocol-b",
+  "status": "frozen",
+  "frozen_date": "2026-08-07",
+  "sample_id": "P01",
+  "trajectory_mode": "true_arc",
+  "angle_definition": "horizontal_total_sweep",
+  "fixed_angle_step_deg": 0.5,
+  "angles": [
+    {"angle_total_deg": 5.0, "angle_min_deg": -2.5, "angle_max_deg": 2.5, "num_steps": 11},
+    {"angle_total_deg": 15.0, "angle_min_deg": -7.5, "angle_max_deg": 7.5, "num_steps": 31},
+    {"angle_total_deg": 30.0, "angle_min_deg": -15.0, "angle_max_deg": 15.0, "num_steps": 61}
+  ],
+  "geometry": {
+    "arc_radius": "reference_depth",
+    "arc_center": "[0, 0, reference_depth]",
+    "center_eye": [0.0, 0.0, 0.0],
+    "look_at": "[0, 0, reference_depth]",
+    "intrinsics": "fixed_from_ply_metadata_scaled_to_render_resolution",
+    "principal_point": "fixed_image_center",
+    "render_resolution": "fixed_from_camera_model",
+    "crop_single_side_percent": 0
+  },
+  "base_ply": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+  "base_ply_sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B",
+  "fps": 30,
+  "alpha_hole_threshold": 0.95,
+  "scope": "P01 A baseline only; no inpainting, supplemental Gaussians, crop, Gate, pruning or material branch."
+}

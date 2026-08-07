@@ -39,8 +39,12 @@ def main() -> None:
     args = parse_args()
     required = [
         "left_mask/mask_final.png",
+        "left_mask/mask_accepted.png",
+        "left_mask/mask_rejected.png",
         "left_lama/inpaint_composited.png",
         "left_depth/depth_filled_float32.npy",
+        "left_depth/mask_depth_accepted.png",
+        "left_depth/mask_depth_rejected.png",
         "left_supplement/supplement.ply",
         "merged/scene_base_plus_supplement.ply",
         "render_a/color.mp4",
@@ -51,8 +55,12 @@ def main() -> None:
         required.extend(
             [
                 "right_mask/mask_final.png",
+                "right_mask/mask_accepted.png",
+                "right_mask/mask_rejected.png",
                 "right_lama/inpaint_composited.png",
                 "right_depth/depth_filled_float32.npy",
+                "right_depth/mask_depth_accepted.png",
+                "right_depth/mask_depth_rejected.png",
                 "right_supplement/supplement.ply",
             ]
         )
@@ -75,6 +83,14 @@ def main() -> None:
             image_sizes[label] = list(Image.open(path).size)
     if len(image_sizes) == 2 and image_sizes["render_a"] != image_sizes["render_b"]:
         failures.append({"reason": "ab_resolution_mismatch", "sizes": image_sizes})
+    render_b_config = args.run_root / "render_b" / "config.json"
+    if render_b_config.is_file():
+        config_b = json.loads(render_b_config.read_text(encoding="utf-8"))
+        visibility = config_b.get("supplement_visibility", {})
+        if visibility.get("mode") != "endpoint_linear":
+            failures.append({"reason": "visibility_mode_not_endpoint_linear"})
+        if visibility.get("center_weights") != {"left": 0.0, "right": 0.0}:
+            failures.append({"reason": "center_visibility_not_zero", "observed": visibility.get("center_weights")})
     report = {
         "schema_version": "1.0-stage01-integrity",
         "run_root": str(args.run_root.resolve()),

@@ -36,6 +36,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ring-px", type=int, default=48)
     parser.add_argument("--max-alignment-samples", type=int, default=200000)
     parser.add_argument(
+        "--alignment-model",
+        choices=["depth_affine", "inverse_depth_affine", "depth_affine_with_inverse_fallback"],
+        default="depth_affine",
+    )
+    parser.add_argument(
         "--max-normalized-rmse",
         type=float,
         default=0.25,
@@ -84,6 +89,18 @@ def depth_preview(depth: np.ndarray) -> np.ndarray:
     preview[..., 2] = (normalized * 255).astype(np.uint8)
     preview[~valid] = 0
     return preview
+
+
+def robust_depth_rmse(prediction: np.ndarray, target: np.ndarray) -> tuple[float, int]:
+    finite = np.isfinite(prediction) & (prediction > 0) & np.isfinite(target) & (target > 0)
+    prediction, target = prediction[finite], target[finite]
+    if prediction.size < 128:
+        raise ValueError(f"深度误差评估样本不足：{prediction.size}")
+    residual = target - prediction
+    median = np.median(residual)
+    mad = np.median(np.abs(residual - median)) + 1e-8
+    keep = np.abs(residual - median) <= 3.5 * 1.4826 * mad
+    return float(np.sqrt(np.mean(residual[keep] ** 2))), int(keep.sum())
 
 
 def main() -> None:
@@ -140,37 +157,135 @@ def main() -> None:
     peak_cuda = int(torch.cuda.max_memory_allocated(device))
     predicted_np = predicted.float().cpu().numpy()
 
-    ring = ndi.binary_dilation(mask, iterations=max(args.ring_px, 1)) & ~mask
     valid_reference = np.isfinite(reference) & (reference > 0)
-    alignment_region = ring & valid_reference & np.isfinite(predicted_np) & (predicted_np > 0)
-    ys, xs = np.where(alignment_region)
-    if ys.size > args.max_alignment_samples:
-        rng = np.random.default_rng(0)
-        chosen = rng.choice(ys.size, args.max_alignment_samples, replace=False)
-        ys, xs = ys[chosen], xs[chosen]
-    scale, offset, rmse, inlier_count = robust_affine_fit(
-        predicted_np[ys, xs], reference[ys, xs]
+    labels, component_count = ndi.label(mask)
+    accepted_mask = np.zeros_like(mask, dtype=bool)
+    rejected_mask = np.zeros_like(mask, dtype=bool)
+    aligned = np.full_like(predicted_np, np.nan, dtype=np.float32)
+    component_records = []
+    rng = np.random.default_rng(0)
+    for component_id in range(1, component_count + 1):
+        component = labels == component_id
+        ring = ndi.binary_dilation(component, iterations=max(args.ring_px, 1)) & ~mask
+        alignment_region = (
+            ring & valid_reference & np.isfinite(predicted_np) & (predicted_np > 0)
+        )
+        ys, xs = np.where(alignment_region)
+        raw_sample_count = int(ys.size)
+        record = {
+            "component_id": component_id,
+            "component_pixels": int(component.sum()),
+            "ring_sample_count": raw_sample_count,
+        }
+        try:
+            if ys.size > args.max_alignment_samples:
+                chosen = rng.choice(ys.size, args.max_alignment_samples, replace=False)
+                ys, xs = ys[chosen], xs[chosen]
+            x_samples, y_samples = predicted_np[ys, xs], reference[ys, xs]
+            reference_median = float(np.median(reference[alignment_region]))
+            candidates = {}
+            depth_scale, depth_offset, depth_rmse, depth_inliers = robust_affine_fit(
+                x_samples, y_samples
+            )
+            depth_nrmse = depth_rmse / max(reference_median, 1e-6)
+            depth_valid = bool(0.1 <= depth_scale <= 10.0 and depth_nrmse <= args.max_normalized_rmse)
+            candidates["depth_affine"] = {
+                "scale": depth_scale, "offset": depth_offset, "rmse_m": depth_rmse,
+                "normalized_rmse": depth_nrmse, "inlier_count": depth_inliers,
+                "scale_in_range_0p1_to_10": 0.1 <= depth_scale <= 10.0,
+                "quality_gate_status": "passed" if depth_valid else "failed",
+            }
+            if args.alignment_model == "depth_affine":
+                selected_model = "depth_affine"
+                scale, offset, rmse, inlier_count = depth_scale, depth_offset, depth_rmse, depth_inliers
+                component_aligned = scale * predicted_np + offset
+            elif args.alignment_model == "inverse_depth_affine" or not depth_valid:
+                scale, offset, _, _ = robust_affine_fit(1.0 / x_samples, 1.0 / y_samples)
+                denominator = scale / predicted_np + offset
+                inverse_aligned = np.where(denominator > 1e-8, 1.0 / denominator, np.nan)
+                inverse_rmse, inverse_inliers = robust_depth_rmse(
+                    inverse_aligned[ys, xs], y_samples
+                )
+                inverse_nrmse = inverse_rmse / max(reference_median, 1e-6)
+                inverse_valid = bool(0.1 <= scale <= 10.0 and inverse_nrmse <= args.max_normalized_rmse)
+                candidates["inverse_depth_affine"] = {
+                    "scale": scale, "offset": offset, "rmse_m": inverse_rmse,
+                    "normalized_rmse": inverse_nrmse, "inlier_count": inverse_inliers,
+                    "scale_in_range_0p1_to_10": 0.1 <= scale <= 10.0,
+                    "quality_gate_status": "passed" if inverse_valid else "failed",
+                }
+                selected_model = "inverse_depth_affine"
+                rmse, inlier_count = inverse_rmse, inverse_inliers
+                component_aligned = inverse_aligned
+            else:
+                selected_model = "depth_affine"
+                scale, offset, rmse, inlier_count = depth_scale, depth_offset, depth_rmse, depth_inliers
+                component_aligned = scale * predicted_np + offset
+            normalized_rmse = rmse / max(reference_median, 1e-6)
+            scale_in_range = 0.1 <= scale <= 10.0
+            accepted = bool(scale_in_range and normalized_rmse <= args.max_normalized_rmse)
+            ring_values = reference[alignment_region]
+            clamp_lo, clamp_hi = np.percentile(ring_values, [1, 99])
+            component_aligned = np.clip(
+                component_aligned,
+                max(float(clamp_lo) * 0.5, 1e-4),
+                float(clamp_hi) * 2.0,
+            )
+            aligned[component] = component_aligned[component]
+            record.update({
+                "scale": scale,
+                "offset": offset,
+                "rmse_m": rmse,
+                "reference_median_m": reference_median,
+                "normalized_rmse": normalized_rmse,
+                "inlier_count": inlier_count,
+                "scale_in_range_0p1_to_10": scale_in_range,
+                "clamp_reference_p01_p99_m": [float(clamp_lo), float(clamp_hi)],
+                "quality_gate_status": "passed" if accepted else "failed",
+                "reason": "accepted" if accepted else "scale_or_normalized_rmse_failed",
+                "selected_model": selected_model,
+                "candidate_models": candidates,
+            })
+        except ValueError as error:
+            accepted = False
+            record.update({
+                "scale": None,
+                "offset": None,
+                "rmse_m": None,
+                "reference_median_m": None,
+                "normalized_rmse": None,
+                "inlier_count": 0,
+                "scale_in_range_0p1_to_10": False,
+                "clamp_reference_p01_p99_m": None,
+                "quality_gate_status": "failed",
+                "reason": str(error),
+            })
+        if accepted:
+            accepted_mask |= component
+        else:
+            rejected_mask |= component
+        component_records.append(record)
+
+    no_op = component_count == 0
+    alignment_acceptable = bool(no_op or accepted_mask.any())
+    gate_status = (
+        "not_applicable_no_mask" if no_op
+        else "passed" if alignment_acceptable and not rejected_mask.any()
+        else "partial_pass" if alignment_acceptable
+        else "failed"
     )
-    reference_median = float(np.median(reference[alignment_region]))
-    normalized_rmse = rmse / max(reference_median, 1e-6)
-    scale_in_range = 0.1 <= scale <= 10.0
-    alignment_acceptable = bool(
-        scale_in_range and normalized_rmse <= args.max_normalized_rmse
-    )
-    aligned = scale * predicted_np + offset
-    ring_values = reference[alignment_region]
-    clamp_lo, clamp_hi = np.percentile(ring_values, [1, 99])
-    aligned = np.clip(aligned, max(float(clamp_lo) * 0.5, 1e-4), float(clamp_hi) * 2.0)
     filled = reference.copy()
-    filled[mask] = aligned[mask]
+    filled[accepted_mask] = aligned[accepted_mask]
 
     np.save(output_dir / "depth_predicted_raw_float32.npy", predicted_np.astype(np.float32))
     np.save(output_dir / "depth_aligned_float32.npy", aligned.astype(np.float32))
     np.save(output_dir / "depth_filled_float32.npy", filled.astype(np.float32))
+    iio.imwrite(output_dir / "mask_depth_accepted.png", accepted_mask.astype(np.uint8) * 255)
+    iio.imwrite(output_dir / "mask_depth_rejected.png", rejected_mask.astype(np.uint8) * 255)
     iio.imwrite(output_dir / "depth_predicted_preview.png", depth_preview(predicted_np))
     iio.imwrite(output_dir / "depth_filled_preview.png", depth_preview(filled))
     run_record = {
-            "schema_version": "1.1-sharp-monodepth-align",
+            "schema_version": "2.0-sharp-monodepth-component-align",
             "backend": "frozen_sharp_monodepth",
             "sharp_source": str(SHARP_SRC),
             "checkpoint": str(args.checkpoint.resolve()),
@@ -184,21 +299,21 @@ def main() -> None:
             "focal_px_render": args.focal_px,
             "depth_layer": args.depth_layer,
             "alignment": {
-                "model": "reference_depth = scale * predicted_depth + offset",
+                "model": args.alignment_model,
                 "ring_px": args.ring_px,
-                "scale": scale,
-                "offset": offset,
-                "rmse_m": rmse,
-                "reference_median_m": reference_median,
-                "normalized_rmse": normalized_rmse,
-                "inlier_count": inlier_count,
-                "clamp_reference_p01_p99_m": [float(clamp_lo), float(clamp_hi)],
+                "component_count": int(component_count),
+                "accepted_component_count": int(sum(r["quality_gate_status"] == "passed" for r in component_records)),
+                "rejected_component_count": int(sum(r["quality_gate_status"] != "passed" for r in component_records)),
+                "accepted_pixels": int(accepted_mask.sum()),
+                "rejected_pixels": int(rejected_mask.sum()),
+                "components": component_records,
             },
             "quality_gate": {
-                "status": "passed" if alignment_acceptable else "failed",
-                "scale_in_range_0p1_to_10": scale_in_range,
+                "status": gate_status,
                 "max_normalized_rmse": args.max_normalized_rmse,
                 "allow_poor_alignment": args.allow_poor_alignment,
+                "policy": "failed components are excluded; an empty accepted mask is a valid baseline-unchanged no-op",
+                "no_op_means_baseline_unchanged": no_op,
             },
             "timing_seconds": {"model_load": model_load_seconds, "inference": inference_seconds},
             "peak_cuda_allocated_bytes": peak_cuda,
@@ -214,7 +329,7 @@ def main() -> None:
     if not alignment_acceptable and not args.allow_poor_alignment:
         raise RuntimeError(
             "深度对齐质量门未通过："
-            f"scale={scale:.6g}, normalized_rmse={normalized_rmse:.4f}；"
+            f"accepted={int(accepted_mask.sum())}px, rejected={int(rejected_mask.sum())}px；"
             f"诊断结果已保存在 {output_dir}。"
         )
 

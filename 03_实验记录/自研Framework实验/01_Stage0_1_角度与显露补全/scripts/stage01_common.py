@@ -123,8 +123,16 @@ def eye_position(focus_depth: float, angle_deg: float, trajectory_mode: str) -> 
 
 
 def camera_info_for_angle(camera_model, angle_deg: float, trajectory_mode: str):
-    eye = eye_position(float(camera_model.depth_quantiles.focus), angle_deg, trajectory_mode)
+    reference_depth = max(
+        float(camera_model.min_depth_focus), float(camera_model.depth_quantiles.focus)
+    )
+    eye = eye_position(reference_depth, angle_deg, trajectory_mode)
     return eye, camera_model.compute(eye)
+
+
+def camera_reference_depth(camera_model) -> float:
+    """返回 PinholeCameraModel 实际采用的固定注视深度。"""
+    return max(float(camera_model.min_depth_focus), float(camera_model.depth_quantiles.focus))
 
 
 def angle_sequence(angle_total_deg: float, num_steps: int) -> np.ndarray:
