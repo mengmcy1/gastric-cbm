@@ -37,6 +37,9 @@ papers/
 03_实验记录/自研Framework实验/**/outputs/
 03_实验记录/自研Framework实验/**/logs/
 
+# Cross-machine incremental migration packages are local transfer artifacts.
+Stage0_1_20260807_增量迁移包/
+
 # SHARP 输出结果（ply/mp4 等大文件，仅本地保留）
 SHARP真实图片测试/输出结果/
 
