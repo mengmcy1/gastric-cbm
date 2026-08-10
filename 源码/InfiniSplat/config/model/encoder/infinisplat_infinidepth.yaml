@@ -1,0 +1,28 @@
+name: infinisplat_infinidepth
+
+sample_point_num: 1500000
+
+image_basic_dim: 128
+
+image_backbone_type: vitl16
+
+implicit_gs_query_batch_size: 80000
+implicit_gs_hidden_list: [1024, 256, 64]
+
+gaussian_decoder:
+  delta_factor_xy: 0.001
+  delta_factor_z: 0.001
+  delta_factor_scale: 1.0
+  delta_factor_rotation: 1.0
+  delta_factor_color: 0.1
+  delta_factor_opacity: 1.0
+  scale_min: 0.0
+  scale_max: 4.0
+  init_opacity: 0.5
+  opacity_min: 0.01
+  opacity_max: 0.99
+  rgb_min: 0.01
+  rgb_max: 0.99
+  depth_normalization_min: 1.0
+  depth_normalization_max: 100.0
+  base_scale_multiplier: 1.0

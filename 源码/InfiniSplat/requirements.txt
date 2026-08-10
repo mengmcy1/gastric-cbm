@@ -1,0 +1,36 @@
+# Install a CUDA-matched PyTorch build separately before installing this file.
+# Example for CUDA 12.8:
+#   pip install torch torchvision xformers --index-url https://download.pytorch.org/whl/cu128
+
+# Inference configuration and CLI
+hydra-core
+omegaconf
+dacite
+termcolor
+rich
+tqdm
+
+# Tensor, vision, and geometry
+numpy<2.0
+scipy
+pandas
+h5py
+einops>=0.4.1
+jaxtyping
+opencv-python-headless
+scikit-learn
+Pillow
+imageio[ffmpeg]
+matplotlib
+plyfile
+torchmetrics
+
+# Model backbones and checkpoint download
+huggingface-hub
+timm
+regex
+xformers
+
+# Local Gradio demo and standalone HTML viewer export
+gradio==6.20.0
+nodejs-wheel==22.20.0

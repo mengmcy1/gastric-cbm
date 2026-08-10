@@ -40,6 +40,11 @@ papers/
 # Cross-machine incremental migration packages are local transfer artifacts.
 Stage0_1_20260807_增量迁移包/
 
+# InfiniSplat 官方复现：提交脚本、配置与小型清单；权重、日志和大型输出仅本地保留。
+03_实验记录/InfiniSplat复现实验/**/models/
+03_实验记录/InfiniSplat复现实验/**/outputs/
+03_实验记录/InfiniSplat复现实验/**/logs/
+
 # SHARP 输出结果（ply/mp4 等大文件，仅本地保留）
 SHARP真实图片测试/输出结果/
 

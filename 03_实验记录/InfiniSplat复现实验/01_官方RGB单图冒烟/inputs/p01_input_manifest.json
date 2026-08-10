@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "P01",
+  "description": "与SHARP先导实验相同的校园建筑输入图",
+  "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+  "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+  "bytes": 4597688,
+  "width": 4096,
+  "height": 3072,
+  "role": "InfiniSplat官方RGB-only最小冒烟输入；不作为统一轨迹Benchmark结论"
+}

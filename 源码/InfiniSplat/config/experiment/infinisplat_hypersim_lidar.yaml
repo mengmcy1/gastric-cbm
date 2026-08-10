@@ -1,0 +1,5 @@
+# @package _global_
+defaults:
+  - override /model/encoder: infinisplat_infinidepth
+  - override /model/decoder: gsplat
+  - _self_

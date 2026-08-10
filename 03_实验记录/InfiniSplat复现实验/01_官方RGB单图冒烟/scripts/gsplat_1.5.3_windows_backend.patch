@@ -1,0 +1,47 @@
+--- gsplat/cuda/_backend.py
++++ gsplat/cuda/_backend.py
+@@
+-        extra_cflags = [opt_level, "-Wno-attributes"]
++        cxx_opt_level = "/Od" if FAST_COMPILE else "/O2"
++        extra_cflags = [cxx_opt_level] if os.name == "nt" else [opt_level, "-Wno-attributes"]
+         extra_cuda_cflags = [opt_level]
++        extra_ldflags = (
++            [f"/LIBPATH:{os.path.join(_find_cuda_home(), 'lib')}"] if os.name == "nt" else []
++        )
+@@
+-        if os.path.exists(os.path.join(build_dir, f"{name}.so")) or os.path.exists(
+-            os.path.join(build_dir, f"{name}.lib")
++        if (
++            os.path.exists(os.path.join(build_dir, f"{name}.so"))
++            or os.path.exists(os.path.join(build_dir, f"{name}.lib"))
++            or os.path.exists(os.path.join(build_dir, f"{name}.pyd"))
+         ):
+@@
+-            _C = load_extension(
+-                name=name,
+-                sources=sources,
+-                extra_cflags=extra_cflags,
+-                extra_cuda_cflags=extra_cuda_cflags,
+-                extra_include_paths=extra_include_paths,
+-                build_directory=build_dir,
+-                verbose=VERBOSE,
+-            )
++            if os.name == "nt" and os.path.exists(os.path.join(build_dir, f"{name}.pyd")):
++                _C = _import_module_from_library(name, build_dir, True)
++            else:
++                _C = load_extension(
++                    name=name,
++                    sources=sources,
++                    extra_cflags=extra_cflags,
++                    extra_cuda_cflags=extra_cuda_cflags,
++                    extra_ldflags=extra_ldflags,
++                    extra_include_paths=extra_include_paths,
++                    build_directory=build_dir,
++                    verbose=VERBOSE,
++                )
+@@
+                     sources=sources,
+                     extra_cflags=extra_cflags,
+                     extra_cuda_cflags=extra_cuda_cflags,
++                    extra_ldflags=extra_ldflags,
+                     extra_include_paths=extra_include_paths,

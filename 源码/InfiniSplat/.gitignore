@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+*.egg-info/
+
+# Local environments and editors
+.venv/
+.env
+.vscode/
+.idea/
+.DS_Store
+
+# Runtime outputs
+/outputs/
+/logs/
+/cache/
+/trash/
+/.trash/
+
+# Large model/data artifacts
+checkpoints/*.ckpt
+checkpoints/*.pth
+checkpoints/*.pt
+checkpoints/**/*.ckpt
+checkpoints/**/*.pth
+checkpoints/**/*.pt
+/data/
+/archives/
+
+# Demo outputs, but keep demo inputs under examples/data tracked when added.
+examples/data/**/outputs/
+*.ply
+*.mp4
+*.avi
+*.mov
+*.webm
+*.mkv
+*.compressed.ply
+*.sog

@@ -154,12 +154,19 @@
 
 ### 3.1 当前目标与优先级
 
-当前研究采用两条并行主线：
+当前研究基础工作包含两条长期主线：
 
 1. 以 Apple SHARP（Single-image High-Accuracy Real-time Parallax）为核心，完成可复现的质量、运动、裁剪、压缩和性能 Benchmark，建立失败案例并分析质量与工程瓶颈。
 2. 系统梳理单图 3D 照片从 LDI、MPI、TMPI 到前馈 3DGS/SHARP 的技术演变，并分析轻量表示和移动端部署路线。
 
 当前核心任务已从“继续完成 SHARP Benchmark”转为**自研可补全轻量 3DGS Framework**，方案以 `02_方案设计/总体Framework讨论总结_自适应3DGS.md` 第 14 章“30° 显露补全优先版”为准。SHARP Benchmark v1 已冻结，仅作为对照基线；不再把 SHARP 性能优化作为当前主线。
+
+当前实验执行进一步拆分为两个并行分支，但评价口径必须独立记录：
+
+1. **自研 Framework 主分支**：继续只在 P01 上推进 Stage 1。已验证 v4 深度级联回退可以显著降低 30° 左右端空洞，且来源视角可见性消除了中心与对侧污染；但 LaMa 在 15°和30°产生严重度2的明显模糊/涂抹，用户完整播放判定 Stage 1 未通过。下一单变量只替换二维补全网络，先做固定端点掩码的 LaMa 与候选模型静态对比。MAT 是优先候选，但其官方环境为 Python 3.7、PyTorch 1.7.1、CUDA 11.0，不能直接用于当前 RTX 5060；必须先通过现代环境兼容性审计，或明确改用可在现代 PyTorch/CUDA 上复现的补全模型。P01 通过前不扩展 P02/P05、不进入 Stage 2。
+2. **InfiniSplat 对照复现分支**：复现 `文献/09_前馈生成与显露区域补全/35_InfiniSplat_Implicit_Gaussian_Decoding_for_Large-Baseline_Monocular_View_Synthesis.pdf` 的官方实现，并使用与 SHARP/自研 Framework 相同的自有图片建立对照。官方源码位于 `源码/InfiniSplat/`，当前固定版本为 commit `4146c8683b9bfb7756ddf45bf293093a31848074`，采用 Apache-2.0 许可证。P01 官方 RGB 单图 PLY 和官方演示轨迹视频工具链已在本地 RTX 5060 Laptop 8 GB 上跑通，但尚未接入冻结的 true_arc 统一协议，不得用官方演示轨迹直接宣称优于 SHARP 或自研 Framework。论文作者报告的 SOTA 仍属作者公开结论，不是本地统一评价结论。
+
+InfiniSplat 必须使用独立 `infinisplat` 环境，不得安装到或污染 `sharp` 的 Python 包。当前已验证环境为 Python 3.10.20、PyTorch 2.9.0+cu128、torchvision 0.24.0+cu128、xformers 0.0.33.post1 和 gsplat 1.5.3；Windows 下 gsplat 1.5.3 需要已记录的 MSVC 兼容补丁，并且当前编译时只共用 `sharp` 环境中已有的 CUDA Toolkit 12.8 工具链，不共用 `sharp` 的 Python、PyTorch、gsplat 包或编译二进制。RGB 权重为 3,142,241,921 bytes，文件 SHA256 为 `D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D`；`2A1B61FC...` 是 Hugging Face Xet 存储对象哈希，不是下载文件 SHA256。源码、权重、运行日志和大型输出按外部模型复现方式管理，权重和大型输出只保留本地。
 
 下一篇重点精读论文为：
 
@@ -230,11 +237,11 @@ Framework 中的材质感知模块暂不作为当前主链路或近期实验变�
 
 下一步：
 
-1. 按“角度协议 → 显露补全 → 补充高斯 → 双端点一致性 → 细结构 → 自研基础表示 → Gate 与压缩 → 移动端”顺序推进自研 Framework；第一轮为 Stage 0+1 单变量 A/B（固定同一基础高斯，仅加显露补全与补充高斯，比较 5°/15°/30°）。
-2. 第一轮不修改 SHARP 官方源码，通过适配器调用冻结 SHARP 基线。
-3. 可复用的自研模型与核心库放 `源码/Adaptive3DGS/`；按用户要求，Stage 0+1 的正式实验脚本、配置和清单保存在 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/`，大型输出、模型权重和运行日志仅本地保留，不上传 GitHub。
-4. 5°/15°/30° 均指总扫视角；保留小于 5 秒、小于 3 GB 为长期目标，不阻塞第一阶段质量验证。
-5. 在基础结果完整后，再比较移动端路线（压缩 3DGS 的 Metal/Vulkan/OpenGL ES/WebGPU 渲染，或蒸馏为 Mesh/LDI 等轻量表示）。
+1. 自研主分支保持 v4 深度回退、显露掩码、补充高斯、可见性和冻结相机协议不变，先完成 P01 30°固定端点的 LaMa/候选补全模型静态单变量对比；MAT须先通过现代环境兼容性门，静态结果通过后再接回高斯并重跑 5°/15°/30° A/B。
+2. InfiniSplat 对照分支已完成 P01 官方 RGB PLY 和 60 帧官方演示轨迹视频冒烟；下一步先由用户完整播放该视频并记录显露黑边、拉伸、漂浮和稳定性，然后设计将冻结 PLY 接入 5°/15°/30° true_arc 统一相机协议的独立适配器。不得直接用不同轨迹、分辨率和计时边界宣称优于 SHARP 或自研方法。
+3. 自研 Framework 继续按“角度协议 → 显露补全 → 补充高斯 → 双端点一致性 → 细结构 → 自研基础表示 → Gate 与压缩 → 移动端”推进；第一轮不修改 SHARP 官方源码，通过适配器调用冻结 SHARP 基线。
+4. 可复用的自研模型与核心库放 `源码/Adaptive3DGS/`；Stage 0+1 的正式实验脚本、配置和清单保存在 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/`，大型输出、模型权重和运行日志仅本地保留，不上传 GitHub。
+5. 5°/15°/30° 均指总扫视角；保留小于 5 秒、小于 3 GB 为长期目标，不阻塞第一阶段质量验证。在基础结果完整后，再比较移动端路线（压缩 3DGS 的 Metal/Vulkan/OpenGL ES/WebGPU 渲染，或蒸馏为 Mesh/LDI 等轻量表示）。
 
 ### 3.5 SHARP 浅 3D 实验当前进度
 

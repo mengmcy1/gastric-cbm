@@ -1,0 +1,10 @@
+# ============================================================================
+# GSplat Decoder Configuration
+# ============================================================================
+# This is the SINGLE SOURCE OF TRUTH for all default configuration values.
+# The corresponding Python dataclass (DecoderGsplatCfg) only provides
+# type annotations without default values.
+# ============================================================================
+
+name: gsplat
+background_color: [0.0, 0.0, 0.0]

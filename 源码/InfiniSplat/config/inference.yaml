@@ -1,0 +1,4 @@
+defaults:
+  - model/encoder: infinisplat
+  - model/decoder: gsplat
+  - _self_
