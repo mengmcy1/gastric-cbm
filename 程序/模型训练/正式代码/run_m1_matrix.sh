@@ -13,7 +13,11 @@ BALANCED_M0_ROOT="$PROJECT_ROOT/结果/M0平衡_0804/正式验证集筛选"
 FULL_M0_ROOT="$PROJECT_ROOT/结果/M0全量诊断_0804/正式验证集筛选"
 OUTPUT_ROOT="$PROJECT_ROOT/结果/M1辅助定位_0804/正式验证集筛选"
 LOG_ROOT="$OUTPUT_ROOT/logs"
-CUDA_DEVICE="${CUDA_DEVICE:-1}"
+CUDA_DEVICE="${CUDA_DEVICE:-}"
+RUN_SUFFIX="${RUN_SUFFIX:-}"
+EARLY_STOP_PATIENCE="${EARLY_STOP_PATIENCE:-12}"
+JOINT_LR="${JOINT_LR:-1e-4}"
+WARMUP_ONLY="${WARMUP_ONLY:-0}"
 
 
 usage() {
@@ -23,15 +27,30 @@ usage() {
   run_m1_matrix.sh <balanced|full|all> <42|202|503|逗号分隔列表>
 
 示例:
+  # 每次启动前先看GPU状态，再把<空闲GPU>替换为当时确认的物理编号
+  nvidia-smi
+
   # 首先只跑平衡主实验seed42并验收
-  CUDA_DEVICE=1 run_m1_matrix.sh balanced 42
+  CUDA_DEVICE=<空闲GPU> run_m1_matrix.sh balanced 42
 
   # 若尚未运行任何正式组，可一次运行完整六组
-  CUDA_DEVICE=1 run_m1_matrix.sh all 42,202,503
+  CUDA_DEVICE=<空闲GPU> run_m1_matrix.sh all 42,202,503
 
   # 若平衡seed42已完成并验收，继续剩余五组
-  CUDA_DEVICE=1 run_m1_matrix.sh balanced 202,503
-  CUDA_DEVICE=1 run_m1_matrix.sh full 42,202,503
+  CUDA_DEVICE=<空闲GPU> run_m1_matrix.sh balanced 202,503
+  CUDA_DEVICE=<空闲GPU> run_m1_matrix.sh full 42,202,503
+
+  # 早停修正版独立复跑，后缀保证不覆盖第一版
+  CUDA_DEVICE=<空闲GPU> RUN_SUFFIX=_pat12 EARLY_STOP_PATIENCE=12 \
+    run_m1_matrix.sh balanced 42,202,503
+
+  # M1b单变量：仅将joint LR降为3e-5
+  CUDA_DEVICE=<空闲GPU> RUN_SUFFIX=_lr3e5 JOINT_LR=3e-5 \
+    EARLY_STOP_PATIENCE=12 run_m1_matrix.sh balanced 42,202,503
+
+  # 统一提取六组warmup-only定位产品，不运行joint
+  CUDA_DEVICE=<空闲GPU> RUN_SUFFIX=_warmup_product WARMUP_ONLY=1 \
+    run_m1_matrix.sh all 42,202,503
 
 实时监测（另开终端）:
   tail -F /home/mcy/gastric-cbm/结果/M1辅助定位_0804/正式验证集筛选/logs/m1_balanced_keep_efficientnet_b0_seed42.log
@@ -40,6 +59,9 @@ usage() {
 说明:
   - 默认不评估internal test；本脚本不会传--evaluate-test。
   - 每组使用同数据角色、同种子的M0最佳权重初始化。
+  - RUN_SUFFIX会同时追加到结果目录和日志名；用于受控复跑时禁止留空。
+  - JOINT_LR默认为1e-4；M1b必须显式设为3e-5并使用_lr3e5独立后缀。
+  - WARMUP_ONLY=1时只跑5轮warm-up，必须使用_warmup_product独立后缀。
   - Ctrl+C退出tail/watch只停止监视；前台运行矩阵的终端中Ctrl+C会终止训练。
 EOF
 }
@@ -64,15 +86,20 @@ run_one() {
     local manifest
     local m0_root
     local run_name
+    local mode_args=()
+
+    if [[ "$WARMUP_ONLY" == "1" ]]; then
+        mode_args+=(--warmup-only)
+    fi
 
     if [[ "$dataset_role" == "balanced" ]]; then
         manifest="$BALANCED_MANIFEST"
         m0_root="$BALANCED_M0_ROOT"
-        run_name="m1_balanced_keep_efficientnet_b0_seed${seed}"
+        run_name="m1_balanced_keep_efficientnet_b0_seed${seed}${RUN_SUFFIX}"
     else
         manifest="$FULL_MANIFEST"
         m0_root="$FULL_M0_ROOT"
-        run_name="m1_full_keep_efficientnet_b0_seed${seed}"
+        run_name="m1_full_keep_efficientnet_b0_seed${seed}${RUN_SUFFIX}"
     fi
 
     local m0_checkpoint="$m0_root/m0_${dataset_role}_keep_efficientnet_b0_seed${seed}/efficientnet_b0_debiased_best.pth"
@@ -89,7 +116,7 @@ run_one() {
         exit 1
     fi
 
-    echo "[$(date '+%F %T')] START $run_name"
+    echo "[$(date '+%F %T')] START $run_name joint_lr=$JOINT_LR patience=$EARLY_STOP_PATIENCE warmup_only=$WARMUP_ONLY"
     CUDA_VISIBLE_DEVICES="$CUDA_DEVICE" PYTHONUNBUFFERED=1 \
         "$PYTHON" -u "$ENTRY" \
         --manifest "$manifest" \
@@ -103,14 +130,15 @@ run_one() {
         --warmup-epochs 5 \
         --joint-epochs 20 \
         --warmup-lr 1e-3 \
-        --joint-lr 1e-4 \
+        --joint-lr "$JOINT_LR" \
         --weight-decay 1e-4 \
         --lambda-loc 1.0 \
         --lambda-size 0.1 \
         --lambda-offset 1.0 \
         --classification-noninferiority 0.005 \
         --crop-min-bbox-retention 0.80 \
-        --early-stop-patience 8 2>&1 | tee "$log_file"
+        --early-stop-patience "$EARLY_STOP_PATIENCE" \
+        "${mode_args[@]}" 2>&1 | tee "$log_file"
     echo "[$(date '+%F %T')] DONE $run_name"
 }
 
@@ -144,6 +172,24 @@ main() {
         echo "未找到nvidia-smi，拒绝启动正式GPU矩阵。" >&2
         exit 1
     }
+    if [[ -z "$CUDA_DEVICE" ]]; then
+        echo "必须先用nvidia-smi确认空闲GPU，再显式设置CUDA_DEVICE。" >&2
+        exit 2
+    fi
+    if [[ ! "$JOINT_LR" =~ ^[0-9]+([.][0-9]+)?([eE][-+]?[0-9]+)?$ ]] \
+        || ! awk -v value="$JOINT_LR" 'BEGIN { exit !(value > 0) }'; then
+        echo "JOINT_LR必须是正数: $JOINT_LR" >&2
+        exit 2
+    fi
+    if [[ "$WARMUP_ONLY" != "0" && "$WARMUP_ONLY" != "1" ]]; then
+        echo "WARMUP_ONLY只允许0或1: $WARMUP_ONLY" >&2
+        exit 2
+    fi
+    if ! nvidia-smi --query-gpu=index --format=csv,noheader,nounits \
+        | awk -v target="$CUDA_DEVICE" '$1 == target { found=1 } END { exit !found }'; then
+        echo "CUDA_DEVICE不是当前主机上的有效物理GPU编号: $CUDA_DEVICE" >&2
+        exit 2
+    fi
     nvidia-smi --query-gpu=index,name,memory.used,memory.total,utilization.gpu \
         --format=csv,noheader
     mkdir -p "$LOG_ROOT"

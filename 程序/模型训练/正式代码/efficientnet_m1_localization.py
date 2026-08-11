@@ -88,13 +88,23 @@ def parse_args():
     parser.add_argument("--joint-epochs", type=int, default=20)
     parser.add_argument("--warmup-lr", type=float, default=1e-3)
     parser.add_argument("--joint-lr", type=float, default=1e-4)
+    parser.add_argument(
+        "--warmup-only",
+        action="store_true",
+        help="只训练冻结M0 Encoder/分类头的定位头，不进入joint阶段。",
+    )
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--lambda-loc", type=float, default=1.0)
     parser.add_argument("--lambda-size", type=float, default=0.1)
     parser.add_argument("--lambda-offset", type=float, default=1.0)
     parser.add_argument("--classification-noninferiority", type=float, default=0.005)
     parser.add_argument("--crop-min-bbox-retention", type=float, default=0.80)
-    parser.add_argument("--early-stop-patience", type=int, default=8)
+    parser.add_argument(
+        "--early-stop-patience",
+        type=int,
+        default=12,
+        help="joint阶段val患者AUC连续未创新高的容忍epoch数。",
+    )
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--debug-units", type=int, default=3)
     parser.add_argument(
@@ -1195,13 +1205,24 @@ def main():
     best_class = {"score": -np.inf, "state": None, "record": None}
     best_loc = {"score": (-np.inf, -np.inf), "state": None, "record": None}
     best_joint = {"score": (-np.inf, -np.inf), "state": None, "record": None}
+    best_joint_stage_class = {"score": -np.inf, "state": None, "record": None}
+    best_joint_stage_eligible = {
+        "score": (-np.inf, -np.inf), "state": None, "record": None
+    }
+    best_warmup_product = {
+        "score": (-np.inf, -np.inf, -np.inf),
+        "state": None,
+        "record": None,
+    }
     global_epoch = 0
-    no_improve = 0
+    best_joint_stage_auc = -np.inf
+    joint_auc_no_improve = 0
+    joint_eligible_epoch_count = 0
+    warmup_eligible_epoch_count = 0
 
-    stages = [
-        ("warmup", args.warmup_epochs, args.warmup_lr, set_warmup_trainable),
-        ("joint", args.joint_epochs, args.joint_lr, set_joint_trainable),
-    ]
+    stages = [("warmup", args.warmup_epochs, args.warmup_lr, set_warmup_trainable)]
+    if not args.warmup_only:
+        stages.append(("joint", args.joint_epochs, args.joint_lr, set_joint_trainable))
     for stage, epochs, learning_rate, trainable_function in stages:
         trainable_function(model)
         optimizer = optim.AdamW(
@@ -1242,9 +1263,45 @@ def main():
             joint_eligible = patient_auc >= m0_auc - args.classification_noninferiority
             if joint_eligible and loc_score > best_joint["score"]:
                 best_joint = {"score": loc_score, "state": deepcopy(model.state_dict()), "record": record}
-                no_improve = 0
-            elif stage == "joint":
-                no_improve += 1
+            if stage == "warmup":
+                center_hit = loc.get("center_hit_rate", -np.inf)
+                fixed_center_hit = loc.get("fixed_center_hit_rate", -np.inf)
+                mean_iou = loc.get("mean_iou", -np.inf)
+                mean_center_distance = loc.get("mean_center_distance", np.inf)
+                warmup_eligible = (
+                    center_hit >= fixed_center_hit + 0.10 and mean_iou >= 0.40
+                )
+                if warmup_eligible:
+                    warmup_eligible_epoch_count += 1
+                    # ROI产品优先框重合质量；平手时再比中心距离和命中率。
+                    warmup_score = (mean_iou, -mean_center_distance, center_hit)
+                    if warmup_score > best_warmup_product["score"]:
+                        best_warmup_product = {
+                            "score": warmup_score,
+                            "state": deepcopy(model.state_dict()),
+                            "record": record,
+                        }
+            if stage == "joint":
+                if patient_auc > best_joint_stage_class["score"]:
+                    best_joint_stage_class = {
+                        "score": patient_auc,
+                        "state": deepcopy(model.state_dict()),
+                        "record": record,
+                    }
+                if joint_eligible:
+                    joint_eligible_epoch_count += 1
+                    if loc_score > best_joint_stage_eligible["score"]:
+                        best_joint_stage_eligible = {
+                            "score": loc_score,
+                            "state": deepcopy(model.state_dict()),
+                            "record": record,
+                        }
+                # 非劣门槛只决定checkpoint资格；早停独立监测分类AUC是否仍在恢复。
+                if patient_auc > best_joint_stage_auc + 1e-12:
+                    best_joint_stage_auc = patient_auc
+                    joint_auc_no_improve = 0
+                else:
+                    joint_auc_no_improve += 1
             print(
                 f"{stage} {stage_epoch:02d}/{epochs} | "
                 f"Train={train_losses['total']:.4f} "
@@ -1257,27 +1314,85 @@ def main():
                 scheduler.step()
             if (
                 stage == "joint" and args.early_stop_patience
-                and no_improve >= args.early_stop_patience
+                and joint_auc_no_improve >= args.early_stop_patience
             ):
-                print(f"joint early stop: {args.early_stop_patience} epoch无联合改善")
+                print(
+                    f"joint early stop: val患者AUC连续 "
+                    f"{args.early_stop_patience} epoch未创新高；"
+                    f"joint最佳AUC={best_joint_stage_auc:.4f}"
+                )
                 break
 
-    if best_joint["state"] is None:
-        print("警告: 无epoch通过M0分类非劣门槛，joint回退到分类最佳")
-        best_joint = deepcopy(best_class)
+    if best_warmup_product["state"] is None:
+        raise RuntimeError(
+            "warmup无epoch通过产品门槛: "
+            "center-hit >= fixed-center-hit + 0.10 且 mean IoU >= 0.40"
+        )
+    model.load_state_dict(best_warmup_product["state"])
+    save_checkpoint(
+        output / "m1_best_warmup_localization.pth",
+        model,
+        args,
+        best_warmup_product["record"],
+        m0_checkpoint,
+    )
+    print(
+        "Warmup-product summary: "
+        f"epoch={best_warmup_product['record']['stage_epoch']} | "
+        f"center-hit={best_warmup_product['record']['val_loc_center_hit_rate']:.4f} | "
+        f"IoU={best_warmup_product['record']['val_loc_mean_iou']:.4f} | "
+        f"eligible epochs={warmup_eligible_epoch_count}"
+    )
 
-    checkpoint_records = {
-        "classification": best_class,
-        "localization": best_loc,
-        "joint": best_joint,
-    }
-    for name, item in checkpoint_records.items():
-        model.load_state_dict(item["state"])
+    if args.warmup_only:
+        checkpoint_records = {"warmup_localization": best_warmup_product}
+        selected_checkpoint = best_warmup_product
+        delivered_stage = "warmup"
+    else:
+        if best_joint["state"] is None:
+            print("警告: 无epoch通过M0分类非劣门槛，joint回退到分类最佳")
+            best_joint = deepcopy(best_class)
+        checkpoint_records = {
+            "classification": best_class,
+            "localization": best_loc,
+            "joint": best_joint,
+        }
+        for name, item in checkpoint_records.items():
+            model.load_state_dict(item["state"])
+            save_checkpoint(
+                output / f"m1_best_{name}.pth", model, args, item["record"], m0_checkpoint
+            )
+        # 独立保留真正joint阶段的证据，避免全局选择回选warm-up后掩盖结果。
+        model.load_state_dict(best_joint_stage_class["state"])
         save_checkpoint(
-            output / f"m1_best_{name}.pth", model, args, item["record"], m0_checkpoint
+            output / "m1_best_joint_stage_auc.pth",
+            model,
+            args,
+            best_joint_stage_class["record"],
+            m0_checkpoint,
+        )
+        if best_joint_stage_eligible["state"] is not None:
+            model.load_state_dict(best_joint_stage_eligible["state"])
+            save_checkpoint(
+                output / "m1_best_joint_stage_eligible.pth",
+                model,
+                args,
+                best_joint_stage_eligible["record"],
+                m0_checkpoint,
+            )
+        else:
+            print("注意: joint阶段无epoch通过分类非劣门槛。")
+        delivered_stage = best_joint["record"]["stage"]
+        selected_checkpoint = best_joint
+        print(
+            "Joint-stage summary: "
+            f"best AUC={best_joint_stage_class['score']:.4f} | "
+            f"floor={m0_auc-args.classification_noninferiority:.4f} | "
+            f"eligible epochs={joint_eligible_epoch_count} | "
+            f"delivered stage={delivered_stage}"
         )
 
-    model.load_state_dict(best_joint["state"])
+    model.load_state_dict(selected_checkpoint["state"])
     validation = evaluate(model, loaders["val"], criterion, device, args)
     val_patients = validation["patient_predictions"]
     threshold, threshold_scan = select_screening_threshold(
@@ -1291,9 +1406,10 @@ def main():
     val_patient_metrics = compute_metrics(
         val_patients.label, val_patients.cancer_probability, threshold
     )
-    print(f"Joint val image: {format_metrics(val_image_metrics)}")
-    print(f"Joint val patient: {format_metrics(val_patient_metrics)}")
-    print(f"Joint val localization: {validation['localization_metrics']}")
+    selection_label = "Warmup product" if args.warmup_only else "Joint"
+    print(f"{selection_label} val image: {format_metrics(val_image_metrics)}")
+    print(f"{selection_label} val patient: {format_metrics(val_patient_metrics)}")
+    print(f"{selection_label} val localization: {validation['localization_metrics']}")
 
     pd.DataFrame(history).to_csv(
         output / "training_history.csv", index=False, encoding="utf-8-sig"
@@ -1325,6 +1441,13 @@ def main():
         key: str(value) if isinstance(value, Path) else value
         for key, value in vars(args).items()
     }
+    warmup_product_selection = {
+        "record": best_warmup_product["record"],
+        "eligible_epoch_count": warmup_eligible_epoch_count,
+        "center_hit_margin_over_fixed": 0.10,
+        "minimum_mean_iou": 0.40,
+        "ranking": ["mean_iou desc", "mean_center_distance asc", "center_hit_rate desc"],
+    }
     config = {
         **serialized_args,
         "manifest": str(args.manifest.resolve()),
@@ -1344,13 +1467,36 @@ def main():
         "selection": {
             key: value["record"] for key, value in checkpoint_records.items()
         },
-        "joint_val_image_metrics": val_image_metrics,
-        "joint_val_patient_metrics": val_patient_metrics,
-        "joint_val_localization_metrics": validation["localization_metrics"],
+        "warmup_product_selection": warmup_product_selection,
+        "selected_val_image_metrics": val_image_metrics,
+        "selected_val_patient_metrics": val_patient_metrics,
+        "selected_val_localization_metrics": validation["localization_metrics"],
         "val_threshold": threshold,
         "test_evaluated": args.evaluate_test,
         **git_snapshot(),
     }
+    if not args.warmup_only:
+        config.update({
+            "joint_stage_selection": {
+                "highest_auc": best_joint_stage_class["record"],
+                "eligible_localization": best_joint_stage_eligible["record"],
+                "eligible_epoch_count": joint_eligible_epoch_count,
+                "passed_noninferiority": joint_eligible_epoch_count > 0,
+                "delivered_checkpoint_stage": delivered_stage,
+                "delivered_checkpoint_is_joint_stage": delivered_stage == "joint",
+            },
+            "early_stopping": {
+                "stage": "joint",
+                "metric": "val_patient_auc",
+                "mode": "max",
+                "patience": args.early_stop_patience,
+                "best_joint_stage_auc": best_joint_stage_auc,
+                "note": "noninferiority gates joint checkpoint eligibility only",
+            },
+            "joint_val_image_metrics": val_image_metrics,
+            "joint_val_patient_metrics": val_patient_metrics,
+            "joint_val_localization_metrics": validation["localization_metrics"],
+        })
     (output / "config.json").write_text(
         json.dumps(json_ready(config), ensure_ascii=False, indent=2), encoding="utf-8"
     )
