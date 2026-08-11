@@ -1,6 +1,6 @@
 # InfiniSplat P01 官方 RGB 冒烟可同步记录
 
-状态：**待产出机器补齐（2026-08-11）**。
+状态：**`win5060` 自动记录已补齐（2026-08-11）；用户完整播放仍待完成。**
 
 本目录只保存小型、可审计、可提交 Git 的复现证据，不保存 checkpoint、PLY、MP4、逐帧图像或日志。
 
@@ -9,14 +9,13 @@
 - `outputs/P01_official_rgb_ply_smoke_v1/`
 - `outputs/P01_official_rgb_video_smoke_v1/`
 
-它们目前只存在于完成 Windows/RTX 5060 Laptop 复现的另一台电脑。当前电脑不得根据进度文档中的省略哈希补写正式清单。
+它们由 `win5060` 生成，当前大型产物也位于 `win5060`。`linux5080` 是否持有副本以服务器本地核验为准。
 
-## 产出机器需要补齐
+## 已同步的小型证据
 
-- `artifact_manifest.json`：两次运行的运行 ID、产出机器简称、项目 Git commit、InfiniSplat 上游 commit、配置和输入相对路径、checkpoint/PLY/MP4 的字节数与完整 SHA256；
-- `run_summary.json`：状态、起止时间或可核实耗时、峰值显存口径、高斯数量、警告和非确定性说明；
-- `environment_lock.json`：OS、GPU、驱动、Python、PyTorch、CUDA、torchvision、xformers、gsplat 版本，以及补丁和编译后端哈希；
-- `video_integrity.json`：编码、像素格式、宽高、FPS、时长、帧数、完整解码结果和完整 SHA256；
-- `manual_review.json`：用户完整播放后再创建；未播放时不要用助手抽帧观察代填。
+- `artifact_manifest.json`：两次运行、配置、输入、checkpoint、PLY 和 MP4 的完整字节数与 SHA256；
+- `run_summary.json`：运行状态、近似耗时、显存抽样高点、高斯数量、警告和非确定性边界；
+- `environment_lock.json`：`win5060` 的系统、GPU、驱动和独立 `infinisplat` 环境；
+- `video_integrity.json`：编码、分辨率、帧率、帧数、时长、完整解码和完整 SHA256。
 
-清单中的 SHA256 必须从原文件重新计算并完整写入。补齐后把本状态改为“已同步”，写明日期和对应 Git commit；大型产物仍由 `.gitignore` 排除。
+`manual_review.json` 尚未创建，因为用户还没有完整播放官方 60 帧视频；不得用助手抽帧观察代填。大型产物仍由 `.gitignore` 排除，`linux5080` 只在开始 true_arc 适配时按 manifest 传输冻结候选 PLY。

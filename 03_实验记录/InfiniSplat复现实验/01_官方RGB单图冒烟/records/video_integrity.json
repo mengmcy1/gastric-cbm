@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0-video-integrity",
+  "captured_date": "2026-08-11",
+  "producer_machine_id": "win5060",
+  "run_id": "P01_official_rgb_video_smoke_v1",
+  "path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1/input/input.mp4",
+  "bytes": 4715768,
+  "sha256": "185E3CB5BED0F9C97A660A64E507BD302585D549EC7A35EAF1293042A1048320",
+  "codec": "h264",
+  "profile": "High",
+  "pixel_format": "yuv420p",
+  "width": 3324,
+  "height": 2494,
+  "fps": 10,
+  "duration_seconds": 6.0,
+  "decoded_frames": 60,
+  "expected_frames": 60,
+  "full_decode_passed": true,
+  "manual_review_status": "pending_user_full_playback"
+}

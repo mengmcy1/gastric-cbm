@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0-stage1-manual-review",
+  "review_status": "completed",
+  "evaluator": "user",
+  "review_machine_id": "win5060",
+  "scale": "severity: 0 none, 1 mild, 2 obvious, 3 severe; overall_pass: true/false",
+  "videos": [
+    {"angle_total_deg": 5, "comparison": "B versus A, full playback", "disoc_severity": 0, "cover_severity": 0, "depth_severity": 0, "stretch_smear_severity": 0, "floating_patch_severity": 0, "flicker_jump_severity": 0, "center_contamination_severity": 0, "opposite_view_contamination_severity": 0, "first_artifact_frame": null, "overall_pass": true, "notes": "A与B几乎没有区别，未见明显空洞；未记录准确首次伪影帧。"},
+    {"angle_total_deg": 15, "comparison": "B versus A, full playback", "disoc_severity": 1, "cover_severity": 0, "depth_severity": 0, "stretch_smear_severity": 2, "floating_patch_severity": 0, "flicker_jump_severity": 0, "center_contamination_severity": 0, "opposite_view_contamination_severity": 0, "first_artifact_frame": null, "overall_pass": false, "notes": "A第一帧右侧有少量空洞、最后一帧左侧空洞较明显；B明显补全右侧，左侧仍有少量残余。B整体优于A，但存在明显模糊/涂抹，未记录准确首次伪影帧。"},
+    {"angle_total_deg": 30, "comparison": "B versus A, full playback", "disoc_severity": 0, "cover_severity": 0, "depth_severity": 1, "stretch_smear_severity": 2, "floating_patch_severity": 1, "flicker_jump_severity": 0, "center_contamination_severity": 0, "opposite_view_contamination_severity": 0, "first_artifact_frame": null, "overall_pass": false, "notes": "A左右端空洞均明显增大且右侧大于左侧；B补全后未见空洞。B整体优于A，但存在明显模糊/涂抹及轻微深度/漂浮问题，未记录准确首次伪影帧。"}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.1-stage1-synchronized-summary",
+  "run_id": "P01_stage01_true_arc_formal_v4_fallback_20260807",
+  "producer_machine_id": "win5060",
+  "canonical_output_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807",
+  "config_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/p01_stage01_true_arc_v4_depth_fallback.json",
+  "angles_total_deg": [5, 15, 30],
+  "frames": {"5": 11, "15": 31, "30": 61},
+  "automatic_candidate_gate": {
+    "criterion": "30-degree full-frame endpoint Alpha<0.95 hole rate reduction >=30% on both endpoints",
+    "passed": true,
+    "left_relative_reduction": 0.7625331421202588,
+    "right_relative_reduction": 0.8851399936145699,
+    "note": "Alpha gate alone cannot approve visual quality."
+  },
+  "center_and_opposite_visibility": {
+    "mode": "endpoint_linear",
+    "center_weights": {"left": 0.0, "right": 0.0},
+    "opposite_view_weight": 0.0,
+    "center_frame_rgb_difference_mean_abs": 0.0
+  },
+  "manual_review": {
+    "status": "completed_by_user_full_playback",
+    "angle_5_pass": true,
+    "angle_15_pass": false,
+    "angle_30_pass": false,
+    "stage1_frozen": false,
+    "blocking_reason": "15° and 30° stretching/smear severity=2"
+  },
+  "source_summary_sha256": "9324535D86C1A468EF572749D57122E1F706BE0B794918C6749396D58EDE0561",
+  "normalization_note": "This synchronized record removes obsolete absolute paths from the source summary and adds the completed human-review status; source output remains unchanged."
+}

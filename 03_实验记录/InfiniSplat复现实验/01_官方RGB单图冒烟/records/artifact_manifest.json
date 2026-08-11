@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0-cross-machine-artifact-manifest",
+  "producer_machine_id": "win5060",
+  "project_git_commit_at_run": null,
+  "project_git_commit_note": "The exact outer-project commit was not recorded at runtime; later commits are not substituted.",
+  "upstream_source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "hash_algorithm": "SHA256",
+  "input": {"path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg", "bytes": 4597688, "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4"},
+  "checkpoint": {"path": "源码/InfiniSplat/checkpoints/infinisplat_rgb.ckpt", "bytes": 3142241921, "sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D", "transfer_tier": "redownload_preferred"},
+  "runs": [
+    {
+      "run_id": "P01_official_rgb_ply_smoke_v1",
+      "config": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/configs/p01_official_rgb_ply_smoke_v1.json", "bytes": 1404, "sha256": "C365D944E6BD43436D1E85804EE85F39EC0EB3DABA1BA56770D05E0EC20C1ED8"},
+      "ply": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_ply_smoke_v1/input/input.ply", "bytes": 82655790, "sha256": "565D0B17E1F50D8EF682E1AF388ABBBD61DB50A69E458B3F83A0C9F482509AA6", "gaussian_count": 1475982, "transfer_tier": "local_only_unfrozen"}
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1",
+      "config": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/configs/p01_official_rgb_video_smoke_v1.json", "bytes": 1416, "sha256": "3F7AE2EB214496ECCFA54BFFCD5F4A71621B31BB43553C97E15F467D8A003A60"},
+      "ply": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1/input/input.ply", "bytes": 82657694, "sha256": "2AF5F60BC8C2711A3FE515C42990DDF2C297E0050399503E092BBE971E7EE9E2", "gaussian_count": 1476016, "transfer_tier": "frozen_candidate_for_true_arc"},
+      "video": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1/input/input.mp4", "bytes": 4715768, "sha256": "185E3CB5BED0F9C97A660A64E507BD302585D549EC7A35EAF1293042A1048320", "transfer_tier": "human_review_on_demand"}
+    }
+  ]
+}

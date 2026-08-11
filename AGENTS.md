@@ -95,6 +95,9 @@
 
 两台电脑共用同一 Git 仓库，不再按机器拆成两个仓库。Git 负责同步脚本、配置、清单、文档和小型机器可读证据；大型 `outputs/`、模型、日志和过程缓存按 `.gitignore` 仅在产出机器保留。
 
+- 固定机器 ID：Windows RTX 5060 Laptop 为 `win5060`，Linux RTX 5080 服务器为 `linux5080`；记录中不得只写含义会变化的“本机”或“另一台电脑”；
+- `win5060` 的 PowerShell 命令必须显式使用 PowerShell 7；`linux5080` 使用 Linux shell，不照搬 Windows 盘符、PowerShell 命令、Conda 绝对路径或 Windows gsplat 编译缓存；
+
 - 每条实验线必须拥有独立的实时进度文档和 `records/`，不得把两条线的新结果继续混写在同一进度文档；
 - `records/` 保存自动汇总、CSV、人工评分、环境锁定和产物清单，不保存 PLY、MP4、checkpoint 或逐帧图像；
 - 正式大型产物以运行 ID、仓库相对路径、字节数和完整 SHA256 唯一标识，不依赖盘符、用户名或“最新文件”；

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0-environment-lock",
+  "captured_date": "2026-08-11",
+  "producer_machine_id": "win5060",
+  "os": "Windows 11",
+  "gpu": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "gpu_memory_total_mib": 8151,
+  "nvidia_driver": "591.91",
+  "conda_environment": "infinisplat",
+  "python": "3.10.20",
+  "pytorch": "2.9.0+cu128",
+  "torchvision": "0.24.0+cu128",
+  "xformers": "0.0.33.post1",
+  "gsplat": "1.5.3",
+  "torch_cuda_runtime": "12.8",
+  "cuda_available": true,
+  "cuda_toolkit_compile_source": "CUDA Toolkit 12.8 available from the separate sharp environment; Python packages and compiled extensions are not shared",
+  "gsplat_patch": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/scripts/gsplat_1.5.3_windows_backend.patch", "bytes": 2085, "sha256": "F25E984779328E2913183BEB1096F93C0045CBF04FDF953D37C06A1008BA3A5B"},
+  "patched_backend_sha256": "3767D8616EEA321BE228C553F6107D36008B30D9D795C7765DED1F8206EF75D2",
+  "gsplat_cuda_pyd": {"bytes": 18475520, "sha256": "DB7CD03B1EA88C2F7C7E6FBB39E04CBE28404FBEBB1CB5CF0AAA6755FD90473C"},
+  "portability_note": "Do not copy this Windows compiled cache to linux5080; build a Linux-compatible gsplat backend in the independent server environment."
+}

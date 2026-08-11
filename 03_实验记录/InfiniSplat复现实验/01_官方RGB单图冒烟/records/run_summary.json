@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0-infinisplat-run-summary",
+  "producer_machine_id": "win5060",
+  "runs": [
+    {
+      "run_id": "P01_official_rgb_ply_smoke_v1",
+      "model_status": "success",
+      "wrapper_status": "post_result_unicode_error",
+      "duration_approx_seconds": 760,
+      "duration_scope": "model loading, RGB inference, floater filtering and PLY export",
+      "sampled_vram_high_gib": 7.8,
+      "sampled_vram_note": "Periodic observation, not an exact peak measurement",
+      "gaussian_count": 1475982,
+      "warning": "Conda output capture hit a GBK UnicodeEncodeError after the PLY had been generated; the model result itself is complete."
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1",
+      "status": "success",
+      "duration_approx_seconds": 900,
+      "duration_scope": "model loading, RGB inference, floater filtering, PLY export and official 60-frame video rendering",
+      "sampled_vram_high_gib": 7.83,
+      "sampled_vram_note": "Periodic observation, not an exact peak measurement",
+      "gaussian_count": 1476016,
+      "video_frames": 60,
+      "non_determinism_note": "The two runs differ by 34 post-filter Gaussians; freeze artifacts by complete SHA256 rather than filename."
+    }
+  ],
+  "comparison_boundary": "Official demo trajectory is not the frozen true_arc protocol and cannot establish superiority over SHARP or the self-developed framework."
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0-cross-machine-artifact-manifest",
+  "run_id": "P01_stage01_true_arc_formal_v4_fallback_20260807",
+  "producer_machine_id": "win5060",
+  "project_git_commit_at_run": null,
+  "project_git_commit_note": "The exact project commit was not recorded at runtime; later commits are not substituted.",
+  "hash_algorithm": "SHA256",
+  "canonical_output_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807",
+  "inputs": [
+    {"role": "config", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/p01_stage01_true_arc_v4_depth_fallback.json", "bytes": 1843, "sha256": "79F79F4044A7CD313E574CFA17DA2CF5C24F0AEA46E36ACB5A66245F8AB2C3E2"},
+    {"role": "P01 RGB", "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg", "bytes": 4597688, "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4"},
+    {"role": "base SHARP PLY", "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply", "bytes": 66061086, "sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B"},
+    {"role": "LaMa checkpoint", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/lama/big-lama.pt", "bytes": 205669692, "sha256": "344C77BBCB158F17DD143070D1E789F38A66C04202311AE3A258EF66667A9EA9"}
+  ],
+  "artifacts": [
+    {"role": "5deg A video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang5/render_a/color.mp4", "bytes": 703556, "sha256": "41BB315BE47622E6B224D09EEAF2B76B0D0006796E345F3FB53F185C33E9894C", "transfer_tier": "milestone_on_demand"},
+    {"role": "5deg B video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang5/render_b/color.mp4", "bytes": 703556, "sha256": "41BB315BE47622E6B224D09EEAF2B76B0D0006796E345F3FB53F185C33E9894C", "transfer_tier": "milestone_on_demand"},
+    {"role": "15deg A video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang15/render_a/color.mp4", "bytes": 1598633, "sha256": "2810914A0E5C5EDA18B467AA4BBD1AB16E4F4656495C7C47A8AB629134691FD4", "transfer_tier": "milestone_on_demand"},
+    {"role": "15deg B video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang15/render_b/color.mp4", "bytes": 1596623, "sha256": "74291D7BF76A4A90502AACC2B1C4D0D4B6004726585F56D741F3CAF1D7BF0891", "transfer_tier": "milestone_on_demand"},
+    {"role": "30deg A video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/color.mp4", "bytes": 2814570, "sha256": "8E186CBE05438BAF20A6C77C219E6B12C057529BECD542D93181C3734A08FFC7", "transfer_tier": "milestone_on_demand"},
+    {"role": "30deg B video", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_b/color.mp4", "bytes": 2832339, "sha256": "31BCD895D891AC2089E2ED5C01FFE423D86EF767E1E261A2C1BDB8B4EDA3F344", "transfer_tier": "milestone_on_demand"},
+    {"role": "30deg merged PLY", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/merged/scene_base_plus_supplement.ply", "bytes": 68046902, "sha256": "1B0707CCBC41A58F148DE7C470915C618C2AD82D6E810A7E1E6435BB1805115E", "transfer_tier": "milestone_on_demand"},
+    {"role": "source automatic summary", "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/formal_summary/stage1_matrix_summary.json", "bytes": 25710, "sha256": "9324535D86C1A468EF572749D57122E1F706BE0B794918C6749396D58EDE0561", "transfer_tier": "represented_in_git_records"}
+  ]
+}
