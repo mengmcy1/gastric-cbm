@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0-vendored-source-manifest",
+  "source_path": "源码/InfiniSplat",
+  "upstream_repository": "https://github.com/zju3dv/InfiniSplat",
+  "upstream_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "license": "Apache-2.0",
+  "tracking_mode": "vendored_snapshot_in_outer_repository",
+  "note": "The nested .git directory is intentionally not required after the source snapshot is committed to the outer 2Dto3D repository."
+}

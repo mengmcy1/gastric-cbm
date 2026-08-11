@@ -18,4 +18,17 @@
 - `environment_lock.json`：`win5060` 的系统、GPU、驱动和独立 `infinisplat` 环境；
 - `video_integrity.json`：编码、分辨率、帧率、帧数、时长、完整解码和完整 SHA256。
 
-`manual_review.json` 尚未创建，因为用户还没有完整播放官方 60 帧视频；不得用助手抽帧观察代填。大型产物仍由 `.gitignore` 排除，`linux5080` 只在开始 true_arc 适配时按 manifest 传输冻结候选 PLY。
+`manual_review.json` 尚未创建，因为用户还没有完整播放官方 60 帧视频；不得用助手抽帧观察代填。大型产物仍由 `.gitignore` 排除；`linux5080` 默认重跑，只有必须复用 Windows 同一 SHA256 时才按 manifest 传输冻结候选 PLY。
+
+## Linux 服务器复现规则
+
+`linux5080` 默认不迁移 Windows checkpoint、PLY、MP4 或环境。通过 Git 获取源码、`configs/`、`inputs/`、`scripts/` 和本 records；在独立 Linux `infinisplat` 环境重新下载并校验 checkpoint，然后运行：
+
+```bash
+python "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/scripts/run_official_rgb_smoke.py" \
+  --config "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/configs/p01_official_rgb_video_smoke_v1.json" \
+  --machine-id linux5080 \
+  --run-suffix linux5080_YYYYMMDD
+```
+
+运行仍按 `configs/`、`inputs/`、`scripts/`、`records/`、`outputs/<运行ID>/` 和 `logs/` 分层；脚本默认拒绝覆盖，并在本地输出目录生成 `run_receipt.json`。服务器重跑的 PLY 是新的复现产物，必须用自己的 SHA256 登记；不能冒充 `win5060` 的 PLY。

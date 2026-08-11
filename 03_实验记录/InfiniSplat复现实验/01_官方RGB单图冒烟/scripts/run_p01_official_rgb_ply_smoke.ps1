@@ -35,9 +35,19 @@ $inputPath = Resolve-RepoPath $manifest.path
 if (-not (Test-Path -LiteralPath $sourcePath -PathType Container)) {
     throw "InfiniSplat source directory is missing: $sourcePath"
 }
-$actualCommit = (& git -C $sourcePath rev-parse HEAD).Trim()
-if ($LASTEXITCODE -ne 0 -or $actualCommit -ne $config.source_commit) {
-    throw "Source commit mismatch: expected $($config.source_commit), actual $actualCommit"
+$nestedGit = Join-Path $sourcePath ".git"
+if (Test-Path -LiteralPath $nestedGit) {
+    $actualCommit = (& git -C $sourcePath rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0 -or $actualCommit -ne $config.source_commit) {
+        throw "Source commit mismatch: expected $($config.source_commit), actual $actualCommit"
+    }
+}
+else {
+    $sourceManifestPath = Join-Path $experimentRoot "inputs/infinisplat_source_manifest.json"
+    $sourceManifest = Get-Content -LiteralPath $sourceManifestPath -Raw -Encoding utf8 | ConvertFrom-Json
+    if ($sourceManifest.source_path -ne $config.source_path -or $sourceManifest.upstream_commit -ne $config.source_commit) {
+        throw "Vendored source manifest does not match the frozen config."
+    }
 }
 
 if (-not (Test-Path -LiteralPath $inputPath -PathType Leaf)) {

@@ -18,3 +18,15 @@
 - `artifact_manifest.json`：登记配置、输入、六个视频、30°融合 PLY和源汇总的字节数与完整 SHA256。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
+
+## 两台机器的 outputs 统一结构
+
+```text
+outputs/
+├─ 00_Stage0_角度协议/{01_dryrun,02_校准冒烟,03_正式A基线}/
+├─ 01_Stage1_legacy开发基线/{01_组件冒烟,02_完整链路冒烟}/
+├─ 02_Stage1_true_arc/{01_dryrun,02_功能冒烟,03_正式矩阵}/
+└─ 90_失败与诊断归档/{01_早期脚本失败,02_深度质量门预期失败}/
+```
+
+`linux5080` 不需要复制 `win5060` 的全部 outputs。默认从 Git 获取脚本、配置、输入和本 records 后重新运行；新运行使用新的运行 ID和 `producer_machine_id=linux5080`。只有需要查看同一视频或继续使用同一 SHA256 的 PLY时才传输大型文件。
