@@ -1,5 +1,5 @@
 # producer_machine_id: linux5080
-# captured_at: 2026-08-12T16:14:24+08:00
+# captured_at: 2026-08-12T16:57:09+08:00
 # scan_roots: ["03_实验记录/SHARP浅3D实验", "03_实验记录/自研Framework实验", "03_实验记录/InfiniSplat复现实验"]
 # D=directory F=file L=symlink O=other; paths are repository-relative
   [D] InfiniSplat复现实验/
@@ -95,7 +95,7 @@
       [D] scripts/
         [F] render_frozen_ply_official_demo_lowmem.py (6942 bytes)
         [F] render_frozen_ply_true_arc.py (11470 bytes)
-    [F] 实验进度与结果讨论.md (13899 bytes)
+    [F] 实验进度与结果讨论.md (16281 bytes)
   [D] SHARP浅3D实验/
     [D] 00_方案与表格/
       [F] checkpoint_hash.txt (391 bytes)
@@ -1452,6 +1452,7 @@
         [F] p01_stage01_true_arc_v4_depth_fallback.json (1813 bytes)
         [F] p01_stage0_protocol_b_frozen_v1.json (1259 bytes)
       [D] inputs/
+        [F] p01_ang30_static_inpaint_ab_v1.json (3307 bytes)
         [F] p01_input_manifest.json (1108 bytes)
       [D] logs/
         [F] p01_matrix_both.stderr.txt (0 bytes)
@@ -1467,6 +1468,8 @@
       [D] models/
         [D] lama/
           [F] big-lama.pt (205669692 bytes)
+        [D] mat/
+          [F] Places_512_FullData.pkl (661420475 bytes)
       [D] outputs/
         [D] 00_Stage0_角度协议/
           [D] 01_dryrun/
@@ -2814,6 +2817,19 @@
                 [F] P01_ang5_right_05_supplement.stderr.txt (0 bytes)
                 [F] P01_ang5_right_05_supplement.stdout.txt (0 bytes)
               [F] run_manifest.json (58001 bytes)
+          [D] 04_二维补全候选/
+            [D] P01_ang30_mat_places512_native_v1/
+              [D] left/
+                [F] inpaint_composited.png (4415203 bytes)
+                [F] inpaint_raw.png (4415203 bytes)
+                [F] mat_run.json (2232 bytes)
+              [D] review/
+                [F] P01_ang30_LaMa_vs_MAT_static_review.png (1757044 bytes)
+                [F] static_review.json (1764 bytes)
+              [D] right/
+                [F] inpaint_composited.png (4648179 bytes)
+                [F] inpaint_raw.png (4648179 bytes)
+                [F] mat_run.json (2235 bytes)
         [D] 90_失败与诊断归档/
           [D] 01_早期脚本失败/
             [D] P01_smoke_legacy_ang30_v1_failed_gaussian_shape/
@@ -3082,12 +3098,14 @@
                 [F] P01_ang5_right_05_supplement.stdout.txt (0 bytes)
               [F] run_manifest.json (25053 bytes)
       [D] records/
-        [F] README.md (1922 bytes)
+        [F] README.md (2205 bytes)
         [F] artifact_manifest.json (4508 bytes)
         [F] manual_review.json (1812 bytes)
+        [F] p01_ang30_mat_static_review.json (3914 bytes)
         [F] stage1_matrix_metrics.csv (1066 bytes)
         [F] stage1_matrix_summary.json (1639 bytes)
       [D] scripts/
+        [F] mat_pytorch29_custom_ops_loader.patch (1056 bytes)
         [F] run_stage01_matrix.py (11532 bytes)
         [F] run_stage01_smoke.py (7517 bytes)
         [F] run_stage0_a_baseline.py (10335 bytes)
@@ -3099,6 +3117,8 @@
         [F] stage1_diagnose_depth_models.py (5691 bytes)
         [F] stage1_estimate_align_depth.py (15746 bytes)
         [F] stage1_lama_inpaint.py (5797 bytes)
+        [F] stage1_make_static_inpaint_review.py (4108 bytes)
+        [F] stage1_mat_inpaint.py (7883 bytes)
         [F] stage1_summarize_ab.py (5119 bytes)
         [F] stage1_summarize_matrix.py (5422 bytes)
-      [F] 实验进度与结果讨论.md (41885 bytes)
+      [F] 实验进度与结果讨论.md (48906 bytes)
