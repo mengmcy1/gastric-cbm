@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# M4冻结ROI清单矩阵：用冻结M1+M3c-B为三种子train/val确定性推理。
+# M5冻结ROI清单矩阵：用冻结M1+M3c-B为三种子train/val确定性推理（两类都用预测框ROI）。
 # 安全边界：只为train/val生成；internal test/external不读图、不生成框、不算q_region。
 
 set -euo pipefail
@@ -7,8 +7,8 @@ set -euo pipefail
 PROJECT_ROOT="/home/mcy/gastric-cbm"
 PYTHON="/home/mcy/miniconda3/envs/gastric-cbm/bin/python"
 INFERENCE_BATCH_SIZE=32
-ENTRY="数据整理脚本/build_m4_roi_manifest.py"
-OUTPUT_ROOT="$PROJECT_ROOT/结果/M4真值ROI融合_0804/冻结ROI清单"
+ENTRY="数据整理脚本/build_m5_roi_manifest.py"
+OUTPUT_ROOT="$PROJECT_ROOT/结果/M5预测ROI融合_0804/冻结ROI清单"
 LOG_ROOT="$OUTPUT_ROOT/logs"
 CUDA_DEVICE="${CUDA_DEVICE:-}"
 
@@ -16,17 +16,17 @@ CUDA_DEVICE="${CUDA_DEVICE:-}"
 usage() {
     cat <<'EOF'
 用法:
-  run_m4_roi_manifest_matrix.sh <42|202|503|逗号分隔列表>
+  run_m5_roi_manifest_matrix.sh <42|202|503|逗号分隔列表>
 
 示例:
   nvidia-smi
-  CUDA_DEVICE=<空闲GPU> bash 程序/模型训练/正式代码/run_m4_roi_manifest_matrix.sh 42,202,503
+  CUDA_DEVICE=<空闲GPU> bash 程序/模型训练/正式代码/run_m5_roi_manifest_matrix.sh 42,202,503
 
 说明:
   - 每个seed自动定位对应的M1 warmup-only产品与M3c-B门控；门控阈值同源读取。
   - 幂等跳过只接受debug=false的正式config且manifest文件存在。
   - 任何seed失败，矩阵最终返回非零；不静默吞错。
-  - M4训练前的必做步骤；三个seed的正式ROI清单都生成后才可启动M4训练。
+  - M5训练前的必做步骤；三个seed的正式ROI清单都生成后才可启动M5训练。
 EOF
 }
 
@@ -41,9 +41,9 @@ validate_seed() {
 
 run_one() {
     local seed="$1"
-    local config_file="$OUTPUT_ROOT/m4_roi_config_seed${seed}.json"
-    local manifest_file="$OUTPUT_ROOT/m4_roi_manifest_seed${seed}.csv"
-    local log_file="$LOG_ROOT/m4_roi_manifest_seed${seed}.log"
+    local config_file="$OUTPUT_ROOT/m5_roi_config_seed${seed}.json"
+    local manifest_file="$OUTPUT_ROOT/m5_roi_manifest_seed${seed}.csv"
+    local log_file="$LOG_ROOT/m5_roi_manifest_seed${seed}.log"
 
     if [[ -f "$config_file" ]]; then
         # 幂等验证：config必须为正式（debug=false）且manifest存在。
@@ -116,10 +116,10 @@ main() {
         run_one "$seed" || failed=1
     done
     if [[ "$failed" -ne 0 ]]; then
-        echo "存在失败seed，M4 ROI清单矩阵返回非零。" >&2
+        echo "存在失败seed，M5 ROI清单矩阵返回非零。" >&2
         exit 1
     fi
-    echo "M4 ROI清单矩阵运行完成。日志目录: $LOG_ROOT"
+    echo "M5 ROI清单矩阵运行完成。日志目录: $LOG_ROOT"
 }
 
 
