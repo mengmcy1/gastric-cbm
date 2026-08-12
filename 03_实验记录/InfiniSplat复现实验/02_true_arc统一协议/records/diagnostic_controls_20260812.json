@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0-infinisplat-diagnostic-controls",
+  "producer_machine_id": "linux5080",
+  "date": "2026-08-12",
+  "results": [
+    {
+      "run_id": "P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812",
+      "status": "success",
+      "scope": "冻结 P01 PLY；1536x1152 推理分辨率；中心原相机；true_arc 总范围 5°（±2.5°），11 帧",
+      "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+      "gaussian_count": 1476073,
+      "center_w2c_max_abs_diff_from_identity": 0.0,
+      "center_hard_hole_lt_050": 0.0019096091941550927,
+      "center_top_10pct_hard_hole_lt_050": 0.0,
+      "left_top_10pct_hard_hole_lt_050": 0.002377717391304348,
+      "right_top_10pct_hard_hole_lt_050": 0.017515851449275362,
+      "video_bytes": 505549,
+      "video_sha256": "8F90F6959136EAE416FC42F93567690A764013DFA5DC2CB4757EC18B20A57DFB",
+      "automatic_interpretation": "原相机中心帧不再出现顶部硬空洞；5°右端仍有少量真实显露空洞。模糊仍需用户完整播放复核。"
+    },
+    {
+      "run_id": "OFFICIAL_pexels_masi_demo_lowmem_v1_linux5080_20260812",
+      "status": "success_after_two_shared_gpu_oom_runs",
+      "scope": "官方自带 pexels-masi.jpg 生成的官方 PLY；官方轨迹公式、分辨率、内参和 gsplat 参数；仅将渲染 chunk 从 8 帧改为 1 帧降低峰值显存",
+      "input_sha256": "AFB47EE1D909E7CD12DECEF181150A18352028481E12BCF5B7332B2DC02E5702",
+      "ply_sha256": "E9644302002AFCDD3BCA5570EBD8CD5F3D6782A91EEA67094646FE9699972707",
+      "gaussian_count": 1470648,
+      "render_resolution_wh": [2338, 3546],
+      "start_hard_hole_lt_050": 0.13713954734958414,
+      "start_top_10pct_hard_hole_lt_050": 1.0,
+      "middle_hard_hole_lt_050": 0.038543893600278295,
+      "middle_top_10pct_hard_hole_lt_050": 0.3575814472749416,
+      "video_bytes": 4042609,
+      "video_sha256": "F2889DD840BFFDEF60BFB10426D9799E9FE4D1E325D5781429969F955832E7F5",
+      "automatic_interpretation": "即使官方自带示例图，公开 CLI 的通用演示轨迹也会在顶部显露大量黑色背景；这与 P01 的顶部黑带现象同类，不是 P01 独有的工具链错误。"
+    }
+  ],
+  "failed_runs": [
+    {
+      "run_id": "OFFICIAL_pexels_masi_video_control_v1_linux5080_20260812",
+      "result": "PLY 生成成功，官方 8 帧 chunk 视频阶段因 GPU 2 共享任务显存增长而 OOM"
+    },
+    {
+      "run_id": "OFFICIAL_pexels_masi_video_control_v1_linux5080_20260812_retry1",
+      "result": "PLY 生成成功，官方 8 帧 chunk 视频阶段因 GPU 3 共享任务显存增长而 OOM；该 PLY 后续用于低显存等价渲染"
+    }
+  ],
+  "conclusion_boundary": "官方轨迹诊断不是论文 Benchmark 复刻；P01 5° 为适配器诊断。两个诊断视频均已完成用户播放，P01 5° overall_pass=false。因最小档已未通过，默认不执行 15°/30°；因此本轮结论是‘原版 InfiniSplat 不可直接满足项目质量门’，而不是完整 5°/15°/30° 失败曲线。"
+}

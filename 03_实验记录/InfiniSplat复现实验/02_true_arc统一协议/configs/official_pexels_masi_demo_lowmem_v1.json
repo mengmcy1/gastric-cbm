@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0-infinisplat-official-demo-lowmem-config",
+  "status": "diagnostic_control_after_shared_gpu_oom",
+  "trajectory_mode": "official_demo",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/OFFICIAL_pexels_masi_video_control_v1_linux5080_20260812_retry1/pexels-masi/pexels-masi.ply",
+  "ply_sha256": "E9644302002AFCDD3BCA5570EBD8CD5F3D6782A91EEA67094646FE9699972707",
+  "device": "cuda:2",
+  "render_image_shape_hw": [3546, 2338],
+  "render_intrinsics_px": [
+    [2945.366943359375, 0.0, 1168.683349609375],
+    [0.0, 2944.895263671875, 1772.6834716796875],
+    [0.0, 0.0, 1.0]
+  ],
+  "output_dir": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/OFFICIAL_pexels_masi_demo_lowmem_v1_linux5080_20260812",
+  "scope": "官方示例 PLY、官方演示轨迹公式、官方渲染分辨率和内参；仅将渲染 chunk 从 8 帧改为 1 帧以降低共享 GPU 峰值显存"
+}

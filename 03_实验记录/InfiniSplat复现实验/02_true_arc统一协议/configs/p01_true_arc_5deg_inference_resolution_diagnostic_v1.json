@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0-infinisplat-true-arc-diagnostic-config",
+  "status": "diagnostic",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+  "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+  "device": "cuda:2",
+  "trajectory_mode": "true_arc",
+  "angle_total_deg": 5.0,
+  "num_steps": 11,
+  "focus_depth_quantile": 0.1,
+  "minimum_focus_depth": 2.0,
+  "render_resolution_wh": [1536, 1152],
+  "fps": 10,
+  "background": "black",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812",
+  "scope": "保持冻结 P01 InfiniSplat PLY，仅用推理分辨率、中心原始相机和 5° 总范围 true_arc 替换官方演示轨迹"
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0-infinisplat-official-example-video-control",
+  "status": "diagnostic_control",
+  "source_path": "源码/InfiniSplat",
+  "source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "conda_env": "infinisplat",
+  "mode": "rgb",
+  "input_manifest": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/inputs/official_pexels_masi_manifest.json",
+  "checkpoint_path": "源码/InfiniSplat/checkpoints/infinisplat_rgb.ckpt",
+  "checkpoint_expected_bytes": 3142241921,
+  "checkpoint_expected_sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D",
+  "device": "cuda:2",
+  "video_frames": 60,
+  "video_fps": 10,
+  "html": false,
+  "floater_filter": true,
+  "output_dir": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/OFFICIAL_pexels_masi_video_control_v1",
+  "log_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/logs/OFFICIAL_pexels_masi_video_control_v1.log",
+  "overwrite": false,
+  "scope": "官方自带 pexels-masi.jpg + 官方 RGB 权重 + 官方 60 帧演示轨迹；仅作 P01 异常的工具链/输入对照"
+}

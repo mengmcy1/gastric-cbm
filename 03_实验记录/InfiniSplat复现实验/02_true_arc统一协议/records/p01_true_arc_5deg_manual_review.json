@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0-infinisplat-manual-review",
+  "review_status": "completed",
+  "evaluator": "user（完整播放）",
+  "evaluated_date": "2026-08-12",
+  "run_id": "P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812",
+  "video_sha256": "8F90F6959136EAE416FC42F93567690A764013DFA5DC2CB4757EC18B20A57DFB",
+  "played_in_full": true,
+  "angle_total_deg": 5.0,
+  "angle_half_deg": 2.5,
+  "observations": "整体有些模糊，画面两侧以及远处文字和树木尤其明显；最后一帧的画面最左端出现较为明显的空洞。",
+  "blur_severity": 1,
+  "blur_regions": [
+    "left_and_right_image_sides",
+    "distant_text",
+    "distant_trees"
+  ],
+  "endpoint_hole": {
+    "frame": "last/right_endpoint",
+    "region": "far_left_image_edge",
+    "severity": 2,
+    "present": true
+  },
+  "overall_pass": false,
+  "notes": "用户明确判定整体不可接受。P01 在最小测试档总范围 5° 已未通过质量门，因此默认停止扩展 15°/30°；如后续专门需要失败曲线，再单独启动。"
+}

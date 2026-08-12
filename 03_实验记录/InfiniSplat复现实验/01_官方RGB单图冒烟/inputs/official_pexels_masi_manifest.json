@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0-input-manifest",
+  "sample_id": "OFFICIAL_PEXELS_MASI",
+  "path": "源码/InfiniSplat/examples/data/rgb_demo/pexels-masi.jpg",
+  "bytes": 2104011,
+  "sha256": "AFB47EE1D909E7CD12DECEF181150A18352028481E12BCF5B7332B2DC02E5702",
+  "role": "InfiniSplat 官方自带 RGB 示例，用于区分工具链问题与自有 P01 跨域质量问题"
+}

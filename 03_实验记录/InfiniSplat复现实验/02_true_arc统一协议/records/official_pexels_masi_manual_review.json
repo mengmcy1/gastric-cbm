@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0-infinisplat-manual-review",
+  "review_status": "completed",
+  "evaluator": "user（完整播放）",
+  "evaluated_date": "2026-08-12",
+  "run_id": "OFFICIAL_pexels_masi_demo_lowmem_v1_linux5080_20260812",
+  "video_sha256": "F2889DD840BFFDEF60BFB10426D9799E9FE4D1E325D5781429969F955832E7F5",
+  "played_in_full": true,
+  "observations": "画面仍然模糊较大；顶部黑洞一直存在；运动过程中岩壁后面出现显露空洞。",
+  "blur_severity": 2,
+  "persistent_top_hole": true,
+  "rock_wall_disocclusion_hole": true,
+  "overall_pass": false,
+  "notes": "该结果使用官方自带 pexels-masi.jpg、官方模型产生的 PLY、官方演示轨迹公式/分辨率/内参/gsplat 参数；仅将渲染 chunk 从 8 帧改为 1 帧以适应共享 GPU 显存。人工结论仅评价公开 CLI 通用演示轨迹，不代替论文 Benchmark 轨迹结论。"
+}
