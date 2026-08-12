@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0-infinisplat-manual-review",
+  "review_status": "completed",
+  "evaluator": "user（linux5080 完整播放）",
+  "evaluated_date": "2026-08-12",
+  "run_id": "P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2",
+  "video_sha256": "340C035A2071FC7D9B406B8D20970C1633829E19AAEFCDDEA260A9DEE599C92A",
+  "played_in_full": true,
+  "observations": "整体较模糊；画面最顶部为大面积黑色空洞，首/中/尾帧持续存在",
+  "blur_severity": 2,
+  "top_disocclusion_hole_severity": 3,
+  "overall_pass": false,
+  "notes": "官方演示轨迹（非冻结 true_arc 协议）；归因结论：顶部黑洞主因是官方演示轨迹固定看向高斯中位点导致 -6.10° 俯仰重定向（首帧非原始相机，受控实验证实原始中心相机中心帧顶部硬空洞率 0%）；模糊主因是模型生成的高斯缺少远景/树叶/文字等高频细节，1536→3324 放大放大了柔糊；焦距（嵌套 EXIF 27mm=3195px）与 SHARP 一致、无误差。详见 InfiniSplat 实验进度与结果讨论.md 第 9 节。"
+}

@@ -1,6 +1,6 @@
 # InfiniSplat P01 官方 RGB 冒烟可同步记录
 
-状态：**`win5060` 自动记录已补齐（2026-08-11）；`linux5080` 独立环境、PLY和官方视频冒烟记录已补齐（2026-08-12）；两台机器的用户完整播放均待完成。**
+状态：**`win5060` 自动记录已补齐（2026-08-11）；`linux5080` 独立环境、PLY、官方视频冒烟记录和用户完整播放人工复核已补齐（2026-08-12）；`win5060` 用户完整播放仍待完成。**
 
 本目录只保存小型、可审计、可提交 Git 的复现证据，不保存 checkpoint、PLY、MP4、逐帧图像或日志。
 
@@ -23,9 +23,10 @@
 - `linux5080_artifact_manifest.json`：服务器输入、权重、PLY和MP4的完整身份与冻结候选状态；
 - `linux5080_environment_lock.json`：服务器Python/CUDA/PyTorch/gsplat与JIT扩展记录；
 - `linux5080_run_summary.json`：PLY成功、两次视频诊断失败和最终视频成功的完整边界；
-- `linux5080_video_integrity.json`：服务器官方60帧视频完整性。
+- `linux5080_video_integrity.json`：服务器官方60帧视频完整性；
+- `manual_review.json`：`linux5080` 用户完整播放官方视频的人工评分（整体较模糊、顶部大面积黑色空洞，`overall_pass=false`）。
 
-`manual_review.json` 尚未创建，因为用户还没有完整播放官方 60 帧视频；不得用助手抽帧观察代填。大型产物仍由 `.gitignore` 排除。当前 Windows 和Linux的PLY都只是候选，必须由用户指定机器ID和完整SHA256后才能标记为冻结。
+`win5060` 的用户完整播放仍待完成，其评分不得用助手抽帧观察代填。大型产物仍由 `.gitignore` 排除。当前 Windows 和 Linux 的 PLY 都只是候选，必须由用户指定机器 ID 和完整 SHA256 后才能标记为冻结。
 
 ## Linux 服务器复现规则
 
