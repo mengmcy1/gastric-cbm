@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.1-artifact-tree-snapshot",
+  "producer_machine_id": "win5060",
+  "captured_at": "2026-08-12T21:05:00+08:00",
+  "scan_roots": [
+    "03_实验记录/SHARP浅3D实验",
+    "03_实验记录/自研Framework实验",
+    "03_实验记录/InfiniSplat复现实验"
+  ],
+  "entries": 3149,
+  "counts": {
+    "directory": 427,
+    "file": 2722,
+    "symlink": 0,
+    "other": 0
+  },
+  "file_bytes": 8378730463
+}
