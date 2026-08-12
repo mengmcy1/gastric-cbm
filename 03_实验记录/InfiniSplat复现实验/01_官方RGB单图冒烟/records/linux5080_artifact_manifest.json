@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0-cross-machine-artifact-manifest",
+  "producer_machine_id": "linux5080",
+  "generated_date": "2026-08-12",
+  "project_git_commit_at_run": "3d2216e9fa4c2227b14d7631246eca737e3cbe53",
+  "upstream_source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "hash_algorithm": "SHA256",
+  "input": {"path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg", "bytes": 4597688, "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4"},
+  "checkpoint": {"path": "源码/InfiniSplat/checkpoints/infinisplat_rgb.ckpt", "bytes": 3142241921, "sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D", "transfer_tier": "redownloaded_and_verified"},
+  "runs": [
+    {
+      "run_id": "P01_official_rgb_ply_smoke_v1_linux5080_20260812_ply",
+      "config": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/configs/p01_official_rgb_ply_smoke_v1.json", "bytes": 1378, "sha256": "C95B1A0216363F602EC20C523CD9FAADE5F735960D3669FEC3447E671DF1D006"},
+      "ply": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_ply_smoke_v1_linux5080_20260812_ply/input/input.ply", "bytes": 82655174, "sha256": "F115F0B6EA1F8FA3D3C53E975B12F4F1F9331F915665CE12A922835DD9FCEE51", "gaussian_count": 1475971, "freeze_status": "candidate_not_user_frozen", "transfer_tier": "local_only_unfrozen"}
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2",
+      "config": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/configs/p01_official_rgb_video_smoke_v1.json", "bytes": 1390, "sha256": "ECD1A12902111E109081291409F7F7E2A11738641826D2AF7C1A7E27711A4EC9"},
+      "ply": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply", "bytes": 82660886, "sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735", "gaussian_count": 1476073, "freeze_status": "candidate_not_user_frozen", "transfer_tier": "candidate_for_user_freeze"},
+      "video": {"path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.mp4", "bytes": 4778088, "sha256": "340C035A2071FC7D9B406B8D20970C1633829E19AAEFCDDEA260A9DEE599C92A", "freeze_status": "not_frozen", "transfer_tier": "human_review_on_demand"}
+    }
+  ]
+}

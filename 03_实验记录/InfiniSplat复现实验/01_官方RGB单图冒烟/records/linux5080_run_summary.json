@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0-infinisplat-run-summary",
+  "producer_machine_id": "linux5080",
+  "generated_date": "2026-08-12",
+  "runs": [
+    {
+      "run_id": "P01_official_rgb_ply_smoke_v1_linux5080_20260812_ply",
+      "status": "success",
+      "duration_seconds": 47.56,
+      "gaussian_count": 1475971,
+      "gpu_mapping": "CUDA_VISIBLE_DEVICES=2; process cuda:0 mapped to physical GPU 2"
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1_linux5080_20260812_video",
+      "status": "failed_expected_environment_contention",
+      "failure": "CUDA OOM after another user occupied about 8.8 GiB on physical GPU 2; retained without overwrite"
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry1",
+      "status": "failed_setup_diagnostic",
+      "failure": "gsplat JIT could not find the installed ninja executable because the environment bin directory was absent from PATH; retained without overwrite"
+    },
+    {
+      "run_id": "P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2",
+      "status": "success",
+      "duration_seconds": 204.366,
+      "duration_scope": "model loading, RGB inference, floater filtering, PLY export, first Linux gsplat JIT compile, 60-frame rendering and encoding",
+      "gaussian_count": 1476073,
+      "video_frames": 60,
+      "gpu_mapping": "CUDA_VISIBLE_DEVICES=1; process cuda:0 mapped to physical GPU 1",
+      "first_gsplat_jit_compile_seconds": 129.62,
+      "note": "Shared server GPUs were concurrently used by other jobs; this run establishes toolchain completeness, not isolated performance."
+    }
+  ],
+  "comparison_boundary": "Official demo trajectory is not the frozen true_arc protocol. Windows and Linux outputs are separate same-configuration reproductions and are not expected to be byte-identical."
+}
