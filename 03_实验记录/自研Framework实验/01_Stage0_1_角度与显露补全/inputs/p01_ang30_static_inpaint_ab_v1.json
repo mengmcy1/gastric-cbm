@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0-static-inpaint-ab-manifest",
+  "status": "frozen",
+  "experiment_id": "P01_ang30_static_inpaint_ab_v1",
+  "experiment_question": "固定 P01、true_arc 30° 总范围的两个端点和同一显露掩码，仅替换二维补全器，能否把用户人工判定的涂抹严重度从 2 降到不高于 1？",
+  "source_run": "P01_stage01_true_arc_formal_v4_fallback_20260807",
+  "angle_protocol": {
+    "trajectory_mode": "true_arc",
+    "angle_total_deg": 30.0,
+    "endpoint_single_side_deg": 15.0,
+    "source_resolution_wh": [2048, 1536]
+  },
+  "comparison_policy": {
+    "fixed": ["endpoint RGB", "accepted disocclusion mask", "pixels outside the mask", "output resolution"],
+    "only_variable": "2D inpainting model and its model-required internal resize/padding",
+    "baseline": "Big-LaMa TorchScript at max_side=1024",
+    "manual_pass_gate": "both endpoints have smear severity <= 1; any endpoint at severity 2 fails",
+    "scope": "static 2D A/B only; passing is required before rebuilding supplement Gaussians or videos"
+  },
+  "endpoints": {
+    "left": {
+      "image": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/frame_left.png",
+        "sha256": "27BC4720D5626624A9DBCD4B4A72D3D71C4EF88E443F73CBC1EA9221EF24B24E"
+      },
+      "mask": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/left_mask/mask_accepted.png",
+        "sha256": "A9AE006E2527178878F1664B73CD2846A2F78AF7D9B4B23C47E2F57C0C7C2F5E",
+        "positive_pixels": 225546,
+        "positive_fraction": 0.07169914245605469
+      },
+      "lama_baseline": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/left_lama/inpaint_composited.png",
+        "sha256": "093AE038CE64F27452225147F2B3E5B8B21814C5DC226E24694C2BA072304A56"
+      }
+    },
+    "right": {
+      "image": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/frame_right.png",
+        "sha256": "4FC905C55E25F5AFDCD6F4FE872EDF792B839AAFBA8ABE44C61453EA28B5007B"
+      },
+      "mask": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/right_mask/mask_accepted.png",
+        "sha256": "E0CB2CAA522C80E90ECB2D399898BBA7D35EAA8C2ED17142D0AEC65D028D114D",
+        "positive_pixels": 342795,
+        "positive_fraction": 0.10897159576416016
+      },
+      "lama_baseline": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/right_lama/inpaint_composited.png",
+        "sha256": "AE54A4DFE0C1E938215A1A23C4A5A4D8A58DC71A7432703994344FF33DB10E1E"
+      }
+    }
+  }
+}

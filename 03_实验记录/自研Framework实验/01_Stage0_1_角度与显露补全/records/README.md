@@ -1,6 +1,6 @@
 # 自研 Framework 可同步记录
 
-状态：**已由 `win5060` 补齐（2026-08-11）**。
+状态：**`win5060` canonical v4 证据与 `linux5080` MAT 静态候选证据均已补齐（2026-08-12）**。
 
 本目录用于保存从本地大型 `outputs/` 提升出来、可以提交 Git 的小型正式证据。不要在这里保存 PLY、MP4、逐帧图像、Depth、Alpha、NPY、模型或日志。
 
@@ -16,6 +16,7 @@
 - `stage1_matrix_metrics.csv`：六个端点的正式自动指标；
 - `manual_review.json`：用户完整播放 5°/15°/30° A/B 后的正式评分；
 - `artifact_manifest.json`：登记配置、输入、六个视频、30°融合 PLY和源汇总的字节数与完整 SHA256。
+- `p01_ang30_mat_static_review.json`：登记 `linux5080` 上 MAT Places-512 固定30°左右端点静态运行、环境、权重来源、输出哈希和用户“不通过”结论；大型输出与 checkpoint 不进入 Git。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 

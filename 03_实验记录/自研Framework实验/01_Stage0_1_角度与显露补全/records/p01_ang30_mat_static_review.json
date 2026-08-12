@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0-static-inpaint-record",
+  "run_id": "P01_ang30_mat_places512_native_v1",
+  "producer_machine_id": "linux5080",
+  "generated_date": "2026-08-12",
+  "project_git_commit_at_runtime": null,
+  "project_git_commit_note": "The run was produced before the handoff commit; a later commit is not substituted for the runtime state.",
+  "experiment_id": "P01_ang30_static_inpaint_ab_v1",
+  "input_manifest": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/inputs/p01_ang30_static_inpaint_ab_v1.json",
+  "candidate": {
+    "name": "MAT Places-512 FullData",
+    "source_repository": "https://github.com/fenglinglwb/MAT",
+    "source_commit": "d273d891ecdad2e1df106516423a75bc45b2d800",
+    "compatibility_patch": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/scripts/mat_pytorch29_custom_ops_loader.patch",
+    "checkpoint_name": "Places_512_FullData.pkl",
+    "checkpoint_bytes": 661420475,
+    "checkpoint_sha256": "D960C4E6B3266B6B9FA74EE4458A9482160D54C06D7738696BC9A9E2B34C66DC",
+    "checkpoint_provenance": "Third-party mirror of the released MAT checkpoint; the official README OneDrive link returned HTTP 404. The checkpoint itself is not stored in Git."
+  },
+  "runtime": {
+    "environment": "inpaint-mat",
+    "python": "3.10.20",
+    "torch": "2.9.0+cu128",
+    "cuda_runtime": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5080",
+    "resolution_wh": [2048, 1536],
+    "preprocessing": "native_no_resize_no_pad",
+    "seed": 240,
+    "left_inference_seconds": 1.902047615032643,
+    "right_inference_seconds": 1.3194896519416943,
+    "peak_cuda_allocated_bytes": 10709158912
+  },
+  "artifacts": [
+    {
+      "role": "left_mat_composited",
+      "relative_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/04_二维补全候选/P01_ang30_mat_places512_native_v1/left/inpaint_composited.png",
+      "bytes": 4415203,
+      "sha256": "A7D8E103A333D9DAB4E705EE150AF4B5D1246DB271EEAF70B72344068F3DB756"
+    },
+    {
+      "role": "right_mat_composited",
+      "relative_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/04_二维补全候选/P01_ang30_mat_places512_native_v1/right/inpaint_composited.png",
+      "bytes": 4648179,
+      "sha256": "B824CB6C951E9D6B1B45FA9F67AF6D974AA10E6445FC07EB5335421DABF97E3C"
+    },
+    {
+      "role": "static_review_sheet",
+      "relative_path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/04_二维补全候选/P01_ang30_mat_places512_native_v1/review/P01_ang30_LaMa_vs_MAT_static_review.png",
+      "bytes": 1757044,
+      "sha256": "12106AC872AF1C2EA371E1C6902BB6624AD02F5E021C35818A126AEC3ABCF7F2"
+    }
+  ],
+  "automatic_checks": {
+    "left_known_pixels_exact": true,
+    "right_known_pixels_exact": true,
+    "left_hole_fraction": 0.07169914245605469,
+    "right_hole_fraction": 0.10897159576416016
+  },
+  "manual_review": {
+    "left_smear_severity_0_to_3": null,
+    "right_smear_severity_0_to_3": null,
+    "comparison": "MAT left endpoint is slightly better than Big-LaMa, but the improvement is not obvious; the right endpoint contains false generated structures.",
+    "false_structure_observation": "MAT generated an unsupported gray building, windows, fence, and wall in the disoccluded region; connections to trees, ground, and boundaries are inconsistent.",
+    "static_gate_pass": false,
+    "decision": "Stop MAT at the static gate. Do not rebuild supplement Gaussians or rerun videos.",
+    "severity_note": "The user did not provide numeric 0-3 values in this review, so the fields remain null."
+  },
+  "conclusion": "A stronger unconstrained 2D inpainter can trade blur for unsupported semantic structure. The next candidate must add camera/source, geometry, structure, or cross-view consistency constraints."
+}
