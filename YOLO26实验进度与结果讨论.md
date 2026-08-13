@@ -48,9 +48,10 @@ M0-M5、MOCE和SAE的完整历史保留在`实验进度与结果讨论.md`，该
 | --- | --- | --- |
 | Y0数据转换与审计 | 已完成并放行 | 文件、SHA、尺寸、坐标和精确重复通过；47组跨患者pHash候选逐对确认均非重复；当前数据暂无已知多处分离目标，单框结构可用于本阶段 |
 | Y1 YOLO26n smoke | 已完成并放行 | 环境、数据、空标签、end-to-end检测头、GPU训练/验证和标准产物均通过；5轮指标不作性能结论 |
-| Y2 YOLO26s 640/960 | 参数待冻结 | 先完整展开训练默认值与Top-1评估参数，再做seed42受控预筛 |
-| Y3三种子稳定性 | 未开始 | 使用Y2唯一入选配置 |
-| Y4 internal test | 锁定 | Y3完成并冻结后只评估一次 |
+| Y2-B平衡集YOLO26s 640/960 | 协议与代码已冻结，正式待运行 | 只用来源内平衡train/val和seed42选择唯一分辨率；960 debug全链通过 |
+| Y3-B平衡主实验三种子 | 未开始 | 使用Y2-B唯一入选配置运行42/202/503 |
+| Y0-F/Y3-F完整集诊断 | 待构建 | 单独审计完整集；复用Y2-B配置，不参与选参 |
+| Y4 internal test | 锁定 | Balanced与Full全部冻结后，在同一198张队列上只评估一次 |
 | Y5 external诊断 | 锁定 | 不用外部结果选模型或阈值 |
 | Y6 ROI分类 | 条件候选 | 只有Y4定位成功才启动 |
 
@@ -64,14 +65,27 @@ M0-M5、MOCE和SAE的完整历史保留在`实验进度与结果讨论.md`，该
 ## 冻结路线
 
 ```text
-Y0  数据转换、bbox完整性、患者频次、精确/近重复审计
-Y1  YOLO26n-640 smoke test，只验证代码和格式
-Y2  YOLO26s-640 vs YOLO26s-960，固定seed42受控预筛
-Y3  Y2唯一入选配置运行seed 42/202/503
-Y4  一次性锁定internal test；YOLO与M1在完全相同患者/图像上作患者配对比较
+Y0-B  来源内平衡数据转换、bbox完整性、患者频次、精确/近重复审计
+Y1    YOLO26n-640 smoke test，只验证代码和格式
+Y2-B  平衡集YOLO26s-640 vs YOLO26s-960，固定seed42受控预筛
+Y3-B  Y2-B唯一入选配置在平衡集运行seed 42/202/503（正式主实验）
+Y0-F  完整集单独转换与审计，不读取其test作调参
+Y3-F  完整集复用Y2-B唯一配置运行seed 42/202/503（预注册诊断分支）
+Y4    一次性锁定同一198张internal test；M1、Balanced YOLO、Full YOLO作患者配对比较
 Y5  无bbox external诊断投影，不用外部结果选模型或阈值
 Y6  仅Y4成功后进行预测ROI分类
 ```
+
+Balanced与Full的角色从本阶段起固定。Balanced来源内1:1.3清单为主实验，负责选择输入
+分辨率并形成主要科学结论；Full完整清单只在配置冻结后增加训练监督，不能反向选择分辨率、
+optimizer、epoch、阈值或后处理。完整清单共`3348张/1732人`，癌/非癌图片为
+`1670/1678`，但癌/非癌患者为`446/1286`，患者及来源/风格明显不平衡；其`1670张`癌图
+bbox覆盖100%，因此能检验更多框监督是否改善定位，同时必须报告可能的来源捷径。
+
+Full训练只使用自身train/val（train `2350张`、val `497张`），其原有test `501张`不参与
+模型选择，也不作为另一套正式测试。Y4中M1、Balanced YOLO与Full YOLO统一评价Y0-B已经
+锁定的同一`198张/153人`internal test，保证所有配对差值来自相同患者和图像。Balanced为
+主要结果，Full为预注册次要诊断；不能用Full结果补救Balanced失败。
 
 ## Y0协议与结果
 
@@ -188,6 +202,58 @@ Y1的`args.yaml`中`end2end: null`表示调用端没有覆盖模型设置；实�
 正式项目Top-1几何分析仍按预注册单独使用`confidence=0.001, max_det=100, nms=False`；两种
 口径用途不同，Y2实现时必须分别记录。
 
+## Y2-B冻结参数与实现
+
+Y2-B只比较`YOLO26s-640`和`YOLO26s-960`，固定seed 42。预训练权重为官方
+`yolo26s.pt`，SHA-256为
+`646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b`；模型约
+`9.95M`参数，检测头与加载后的checkpoint必须保持`end2end=True`。两候选除`imgsz`外
+使用完全相同的参数：
+
+| 类别 | 冻结值 |
+| --- | --- |
+| 训练长度 | `epochs=100, patience=20` |
+| batch/worker | 训练`batch=16, workers=4` |
+| optimizer | 显式`AdamW, lr0=0.002, momentum=0.9, weight_decay=0.0005` |
+| 调度 | `lrf=0.01, cos_lr=False, warmup_epochs=3, warmup_momentum=0.8, warmup_bias_lr=0` |
+| loss权重 | `box=7.5, cls=0.5, dfl=1.5` |
+| 色彩增强 | `hsv_h/s/v=0.015/0.7/0.4` |
+| 几何增强 | `translate=0.1, scale=0.5, fliplr=0.5`；旋转、剪切、透视、上下翻转均为0 |
+| 组合增强 | `mosaic=1.0, close_mosaic=10`；mixup/cutmix/copy-paste均为0 |
+| 其他 | `amp=True, deterministic=True, rect=False, multi_scale=0, cache=False` |
+| checkpoint | Ultralytics内置val fitness，即val `mAP50-95`最高的`best.pt` |
+
+不使用`optimizer=auto`：在当前锁定源码中，平衡集100轮约6100 iterations会自动选AdamW，
+完整集约14700 iterations则可能自动切成MuSGD；显式AdamW可避免Balanced与Full因数据量
+不同而静默改变优化器。`lr0=0.002, momentum=0.9, warmup_bias_lr=0`与Y1中单类别数据触发
+的auto实际选择一致。
+
+标准检测验证继续使用Ultralytics val口径（`max_det=300`）计算mAP；项目Top-1几何评估
+单独使用`confidence=0.001, max_det=100, nms=False`。几何推理batch固定为4，并把val目录
+交给`LoadImagesAndVideos`分批读取；不得传`list[str]`，因为锁定版本会把路径列表一次性
+转成内存图像并将全部200张作为一个batch，造成960推理显存溢出。deployment threshold、
+M1配对、5000次患者整簇bootstrap、病灶大小分层和无候选记0均由统一评估入口完成。
+
+Y2-B选择层级固定为：先通过`Sensitivity_YOLO-Sensitivity_M1>=-0.02`点估计安全门槛；
+再按IoU>=0.50比例、mean IoU、非癌触发率、计算成本依次选择。mAP只作标准辅助指标，
+不越过项目主终点直接选择分辨率。
+
+2026-08-13已完成`YOLO26s-960`最坏显存路径debug：完整train `975张`跑1 epoch，确实包含
+`424张`癌图和`551张`非癌图；训练峰值约`11GB`，AdamW冻结参数正确落盘；200张val按
+batch 4完成Top-1推理、路径回配、阈值、M1配对、bootstrap与分层输出。该一轮模型的
+IoU50=`0.0345`、mean IoU=`0.1230`仅证明评估能识别尚未收敛的模型，不作性能结论。
+最初`fraction=0.1`恰按文件顺序抽到98张全非癌图，已归档诊断现场并把debug改为完整train
+一轮；正式路径从未使用fraction抽样。
+
+实现入口：
+
+```text
+程序/模型训练/正式代码/train_y2_yolo26.py
+程序/模型训练/正式代码/evaluate_y2_yolo26.py
+程序/模型训练/正式代码/summarize_y2_yolo26.py
+程序/模型训练/正式代码/run_y2_yolo26_matrix.sh
+```
+
 ## Y5-Y6边界
 
 Y5无bbox，只报告框触发率、框数、置信度、面积和来源/尺寸分层，不把置信度AUC写成定位
@@ -197,7 +263,7 @@ IoU。Y6开始前重新冻结局部分类器数据；第一版优先用GT bbox�
 
 ## 下一步
 
-1. 完整展开并冻结Y2的模型来源、optimizer、学习率、weight decay、epoch、patience、batch、
-   增强、常规val和Top-1几何评估参数；640与960除`imgsz`外保持一致；
-2. 编写Y2统一训练与评估入口，先做短冒烟，再运行YOLO26s-640与960的seed42受控预筛；
-3. 后续若发现多病灶漏标，立即停止正式训练并回到Y0修正标签和冻结清单。
+1. 运行Y2-B正式640/960矩阵并按冻结层级选择唯一分辨率；运行前重新检查GPU，不默认设备；
+2. Y2-B入选后运行Y3-B三种子，同时构建并审计Y0-F完整集YOLO视图；Y3-F只能复用同一配置；
+3. Balanced与Full全部冻结后才一次性进入同一198张internal test；若发现多病灶漏标，立即
+   停止正式训练并回到Y0修正标签和冻结清单。
