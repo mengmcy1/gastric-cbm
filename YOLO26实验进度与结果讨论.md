@@ -271,6 +271,25 @@ IoU50=`0.0345`、mean IoU=`0.1230`仅证明评估能识别尚未收敛的模型�
 评估入口已改为round-trip精度读取，旧几何文件已归档，两分辨率已在相同修正源码下重算。
 该修正只恢复M1历史冻结口径，不改变YOLO权重、预测框或分辨率选择。
 
+### Y2-S无Mosaic追加微调敏感性实验
+
+由960在第100轮仍刷新最佳指标，增加一条不改写Y2-B的独立收敛诊断。该实验不读取
+internal test或external，640与960都从各自Y2-B best.pt出发，避免只给960增加训练量。
+
+| 项目 | 冻结值 |
+| --- | --- |
+| 输入与随机种子 | 640与960，seed 42 |
+| 初始权重 | 各自Y2-B的best.pt，并记录SHA-256 |
+| 训练长度 | 固定20轮，patience=20，不允许早停造成训练量不对称 |
+| 学习率 | AdamW，lr0=1e-4，lrf=0.1，线性降至1e-5；1轮warmup |
+| 增强 | mosaic=0且close_mosaic=0；其余色彩、平移、尺度与翻转保持Y2-B口径 |
+| checkpoint | 20轮中val mAP50-95最高的best.pt |
+| 主评估 | 复用Y2-B Top-1几何口径和M1配对安全门槛 |
+
+每个分辨率同时报告微调前后的IoU50、mean IoU、癌图召回和非癌触发率变化。
+若微调后960按Y2-B原排序层级超过640，只记为训练预算影响证据，并触发新的三种子正式复核；
+否则继续使用已冻结的640进入Y3-B。无论结果如何，本实验都不直接覆盖Y2-B结论。
+
 实现入口：
 
 ```text
@@ -278,6 +297,10 @@ IoU50=`0.0345`、mean IoU=`0.1230`仅证明评估能识别尚未收敛的模型�
 程序/模型训练/正式代码/evaluate_y2_yolo26.py
 程序/模型训练/正式代码/summarize_y2_yolo26.py
 程序/模型训练/正式代码/run_y2_yolo26_matrix.sh
+程序/模型训练/正式代码/train_y2_resolution_sensitivity.py
+程序/模型训练/正式代码/evaluate_y2_resolution_sensitivity.py
+程序/模型训练/正式代码/summarize_y2_resolution_sensitivity.py
+程序/模型训练/正式代码/run_y2_resolution_sensitivity_matrix.sh
 ```
 
 ## Y5-Y6边界
