@@ -152,7 +152,12 @@ def paired_m1_baseline(predictions: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     path = M1_RUN / "val_image_predictions.csv"
     if not path.is_file():
         raise FileNotFoundError(f"缺少M1配对预测: {path}")
-    m1 = pd.read_csv(path, usecols=["image_relpath", "localization_confidence"])
+    # Preserve the checkpoint-era float exactly at the frozen threshold boundary.
+    m1 = pd.read_csv(
+        path,
+        usecols=["image_relpath", "localization_confidence"],
+        float_precision="round_trip",
+    )
     if m1["image_relpath"].duplicated().any():
         raise ValueError("M1 val预测存在重复image_relpath")
     merged = predictions.merge(m1, on="image_relpath", how="left", validate="one_to_one")
