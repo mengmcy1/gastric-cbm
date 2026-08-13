@@ -1,5 +1,6 @@
+# schema_version: 1.1-artifact-tree-snapshot
 # producer_machine_id: linux5080
-# captured_at: 2026-08-12T16:57:09+08:00
+# captured_at: 2026-08-13T09:58:29+08:00
 # scan_roots: ["03_实验记录/SHARP浅3D实验", "03_实验记录/自研Framework实验", "03_实验记录/InfiniSplat复现实验"]
 # D=directory F=file L=symlink O=other; paths are repository-relative
   [D] InfiniSplat复现实验/
@@ -3121,4 +3122,4 @@
         [F] stage1_mat_inpaint.py (7883 bytes)
         [F] stage1_summarize_ab.py (5119 bytes)
         [F] stage1_summarize_matrix.py (5422 bytes)
-      [F] 实验进度与结果讨论.md (48906 bytes)
+      [F] 实验进度与结果讨论.md (53734 bytes)
