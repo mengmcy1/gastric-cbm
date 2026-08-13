@@ -1,0 +1,54 @@
+{
+  "schema_version": "stage1.4-flash3d-environment-v1",
+  "producer_machine_id": "linux5080",
+  "captured_date": "2026-08-13",
+  "environment": {
+    "conda_name": "flash3d",
+    "python": "3.10.20",
+    "torch": "2.9.0+cu128",
+    "torchvision": "0.24.0+cu128",
+    "torch_cuda": "12.8",
+    "cuda_toolkit": "12.8.93",
+    "xformers": "0.0.33.post1",
+    "lightning": "2.6.5",
+    "pip_check": "pass"
+  },
+  "source_commits": {
+    "flash3d": "a71c9b92b07a76cf944f2ed894f384f0891a1960",
+    "unidepth": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+    "diff_gaussian_rasterization_w_pose": "f6ac989b52b619f8522c9853d655e78813377f86"
+  },
+  "artifacts": {
+    "flash3d_checkpoint": {
+      "bytes": 690161102,
+      "sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420"
+    },
+    "unidepth_v1_vitl14_weights": {
+      "bytes": 1388239045,
+      "sha256": "da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60"
+    },
+    "rasterizer_compatibility_patch": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/scripts/flash3d_rasterizer_cuda128_cstdint.patch",
+      "sha256": "254f4026869ecf628fc7e113821dc3ca846e1b6437832a37c3bdf2b945b7a423",
+      "scope": "add the missing cstdint include only; no algorithm change",
+      "build_status": "pass_sm120"
+    }
+  },
+  "gpu_policy": {
+    "rule": "inspect nvidia-smi memory, utilization, and processes before every run; prefer physical GPU 1 only when it has sufficient free resources",
+    "smoke_physical_gpu": 1,
+    "existing_processes_terminated": false
+  },
+  "minimal_layer_smoke": {
+    "status": "blocked",
+    "result_json_emitted": false,
+    "checkpoint_batch_buffer_mismatch": "resolved by matching official load_model backproject_depth replacement",
+    "blocking_stage": "UniDepth v1 encoder attention",
+    "blocking_reason": "xformers 0.0.33.post1 has no FP32 memory_efficient_attention kernel for compute capability 12.0; its legacy NystromAttention component is also unavailable",
+    "not_caused_by": [
+      "GPU out of memory",
+      "Flash3D checkpoint tensor mismatch"
+    ]
+  },
+  "next_action": "Port the official xformers 0.0.25.post1 NystromAttention implementation as an explicit compatibility layer and use PyTorch SDPA for the DINO attention path, then rerun the minimal layer-schema smoke before any RealEstate10K frame download or Flash3D-to-CLB adapter work."
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "stage1.4-hidden-provider-protocol-v1",
+  "date_frozen": "2026-08-13",
+  "angle_semantics": {
+    "total_range_deg": 30.0,
+    "source_deg": 0.0,
+    "endpoint_deg": [-15.0, 15.0],
+    "selection_tolerance_deg": 2.5,
+    "use_measured_camera_pose": true,
+    "temporal_offsets_are_angles": false
+  },
+  "provider_split": {
+    "occlusion_hidden_provider": {
+      "first_candidate": "Flash3D-re10k-v2",
+      "support": "inside_source_frustum",
+      "required_outputs": [
+        "hidden_rgb",
+        "hidden_depth_z",
+        "hidden_alpha",
+        "geometry_confidence",
+        "appearance_confidence",
+        "provenance"
+      ],
+      "native_outputs": [
+        "two_cumulative_depth_layers",
+        "gaussian_means",
+        "gaussian_opacity",
+        "gaussian_scaling",
+        "gaussian_rotation",
+        "gaussian_features"
+      ],
+      "adapter_required": [
+        "separate_layer_2_from_observed_layer",
+        "convert_camera_convention_and_depth_to_clb",
+        "derive_and_calibrate_non_alpha_confidence",
+        "mark_outside_source_fov_as_unsupported"
+      ]
+    },
+    "outside_fov_provider": {
+      "first_candidate": null,
+      "status": "unselected",
+      "must_not_be_filled_by_flash3d": true
+    }
+  },
+  "evaluation_sets": {
+    "HLP_APP_01": {
+      "dataset": "RealEstate10K",
+      "purpose": "measured-angle target RGB appearance and novel-view rendering",
+      "ground_truth": ["target_rgb", "camera_intrinsics", "camera_extrinsics"],
+      "not_ground_truth": ["dense_depth", "occlusion_hidden_mask", "outside_fov_mask"],
+      "initial_source_split": "Flash3D re10k_mine_filtered validation sequences",
+      "candidate_record": "records/stage1_4_re10k_angle_triplets_v1.json"
+    },
+    "HLP_GEO_01": {
+      "dataset": "Hypersim",
+      "purpose": "dense geometry, visibility and support-region evaluation",
+      "ground_truth": [
+        "rgb",
+        "camera_distance_meters",
+        "world_position",
+        "camera_intrinsics",
+        "camera_pose"
+      ],
+      "download_policy": "metadata-first and selected-file subset only; never download the 1.9 TB corpus",
+      "status": "candidate confirmed; exact test triplets not downloaded"
+    }
+  },
+  "evaluation_policy": {
+    "report_separately": ["occlusion_hidden", "outside_source_fov", "whole_target"],
+    "appearance_metrics": ["PSNR", "SSIM", "LPIPS", "DISTS"],
+    "geometry_metrics": [
+      "depth_abs_rel",
+      "depth_delta_1_05",
+      "depth_order_error_rate",
+      "center_leakage_rate",
+      "cross_view_conflict_rate"
+    ],
+    "confidence_metrics": ["risk_coverage_curve", "selective_AURC", "ECE"],
+    "forbidden_shortcuts": [
+      "treat_opacity_as_independent_confidence",
+      "treat_temporal_offset_as_view_angle",
+      "report_rgb_metrics_as_geometry_accuracy",
+      "evaluate_outside_fov_with_inside_frustum_provider",
+      "select_provider_on_P01_subjective_quality"
+    ]
+  }
+}

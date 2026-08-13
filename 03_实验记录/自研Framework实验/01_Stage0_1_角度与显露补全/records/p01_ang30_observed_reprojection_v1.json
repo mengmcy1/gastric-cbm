@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0-observed-reprojection-record",
+  "date": "2026-08-13",
+  "experiment_id": "P01_ang30_observed_reprojection_v1",
+  "producer_machine_id": "linux5080",
+  "status": "complete",
+  "research_question": "How much of the frozen P01 true_arc 30-degree endpoint accepted disocclusion regions has a real source in the center image RGB-D?",
+  "method": {
+    "rgb": "original 4096x3072 input resized to frozen 2048x1536 with Lanczos",
+    "geometry": "frozen center GSplat normalized Z-depth and alpha",
+    "projection": "unproject center RGB-D to world; project to endpoint; 2x2 bilinear forward splat with nearest-depth z-buffer",
+    "occlusion": "target depth is diagnostic and rejects only projected samples lying behind a reliable target surface beyond 3% or 0.1m",
+    "scope": "coverage analysis only; no learned completion and no supplement Gaussians"
+  },
+  "validation": {
+    "identity_reprojection_max_px": 1.6077746776921858e-13,
+    "left_known_reliable_observable_coverage": 0.8483568802242826,
+    "right_known_reliable_observable_coverage": 0.8728918227046062,
+    "left_target_depth_consistency": 0.8950516897162117,
+    "right_target_depth_consistency": 0.901819525185931,
+    "all_geometry_gates_pass": true
+  },
+  "endpoint_results": {
+    "left": {
+      "accepted_pixels": 225546,
+      "accepted_observable_pixels": 229,
+      "accepted_observable_coverage": 0.0010153139492609046,
+      "accepted_high_confidence_coverage": 0.00003103579757566084,
+      "accepted_residual_unobserved": 0.9989846860507391,
+      "largest_residual_component_px": 222556
+    },
+    "right": {
+      "accepted_pixels": 342795,
+      "accepted_observable_pixels": 398,
+      "accepted_observable_coverage": 0.001161043772517102,
+      "accepted_high_confidence_coverage": 0.000055426712758354116,
+      "accepted_residual_unobserved": 0.9988389562274829,
+      "largest_residual_component_px": 339368
+    }
+  },
+  "combined": {
+    "accepted_pixels": 568341,
+    "accepted_observable_pixels": 627,
+    "accepted_observable_coverage": 0.0011032109244274125,
+    "accepted_residual_unobserved": 0.9988967890755726
+  },
+  "artifacts": {
+    "input_manifest": "inputs/p01_ang30_observed_reprojection_v1.json",
+    "left_result_sha256": "C389E4259A5628441E70F5B7D30936133ADD94A95C599972B246F113096D7520",
+    "right_result_sha256": "7B80B664C2565BEAE69DB138AE476258F767533DA68BFD7B5BD218518FAC7E2F",
+    "summary_sha256": "00952697A388B03BC9A09ED5A01C97DC158E556E08B7A5D653CA73E15B9470C9",
+    "review_image_sha256": "5BD12B0483523E97EC4547C51F1ACAD16D5012E9AF9E93F6FC2E55A9B5E54B9A",
+    "local_output": "outputs/02_Stage1_true_arc/06_真实观测重投影/P01_ang30_observed_reprojection_v1/"
+  },
+  "failed_attempt": {
+    "path": "outputs/02_Stage1_true_arc/06_真实观测重投影/P01_ang30_observed_reprojection_v1/left_failed_result_json_typo/",
+    "cause": "Python boolean typo after arrays/images were written; no formal result JSON was produced",
+    "use_for_conclusions": false
+  },
+  "decision": {
+    "single_center_rgbd_reprojection": "insufficient",
+    "reason": "99.8897% of the combined accepted endpoint area has no center-view source",
+    "next_branch": "explicit hidden-layer prediction or external/multi-view prior before residual appearance synthesis",
+    "not_authorized_by_this_result": [
+      "supplement Gaussian reconstruction",
+      "video rerender",
+      "claim that 30 degrees is solved"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0-clb-to-gaussian-synthetic-test",
+  "experiment_id": "CLB-GS-SYN-01",
+  "status": "pass",
+  "scope": "CLB synthetic-oracle to Gaussian conversion only; no learned prediction and no P01 claim.",
+  "source_manifest": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/07_隐藏层表示/CLB-SYN-01_roundtrip/manifest.json",
+  "source_manifest_sha256": "34488F34E32C932A7F4CA19CF563B527C2E6AACE50D0C769791D9874CBFDE809",
+  "output_dir": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/07_隐藏层表示/CLB-GS-SYN-01_v2",
+  "gaussian_count": 121600,
+  "observed_gaussian_count": 93312,
+  "parameters": {
+    "scale_factor": 0.7,
+    "thickness_factor": 0.08,
+    "opacity": 0.995
+  },
+  "metrics": {
+    "center": {
+      "full_alpha_ge_095_rate_reliable_surface_interior": 1.0,
+      "center_full_vs_observed_max_rgb_abs_surface_interior": 0.0007125735282897949,
+      "center_full_vs_observed_max_rgb_abs_all_pixels_diagnostic": 0.09732329845428467,
+      "hidden_target_pixels": 0,
+      "hidden_interior_pixels": 0,
+      "hidden_full_rgb_mae": null,
+      "hidden_observed_only_rgb_mae": null,
+      "hidden_mae_relative_reduction": null,
+      "depth_relative_error_p95_reliable": 0.0003056526184082031
+    },
+    "left": {
+      "full_alpha_ge_095_rate_reliable_surface_interior": 1.0,
+      "center_full_vs_observed_max_rgb_abs_surface_interior": null,
+      "center_full_vs_observed_max_rgb_abs_all_pixels_diagnostic": null,
+      "hidden_target_pixels": 13862,
+      "hidden_interior_pixels": 10392,
+      "hidden_full_rgb_mae": 0.009151216596364975,
+      "hidden_observed_only_rgb_mae": 0.5022234320640564,
+      "hidden_mae_relative_reduction": 0.981778621673584,
+      "depth_relative_error_p95_reliable": 0.010178163691060158
+    },
+    "right": {
+      "full_alpha_ge_095_rate_reliable_surface_interior": 1.0,
+      "center_full_vs_observed_max_rgb_abs_surface_interior": null,
+      "center_full_vs_observed_max_rgb_abs_all_pixels_diagnostic": null,
+      "hidden_target_pixels": 13862,
+      "hidden_interior_pixels": 10392,
+      "hidden_full_rgb_mae": 0.010339603759348392,
+      "hidden_observed_only_rgb_mae": 0.5108454823493958,
+      "hidden_mae_relative_reduction": 0.9797598123550415,
+      "depth_relative_error_p95_reliable": 0.010178309116815025
+    }
+  },
+  "gates": {
+    "center_hidden_leakage_rgb_max_at_most_1_over_255_outside_3px_boundary_band": true,
+    "left_hidden_mae_reduction_at_least_80_percent": true,
+    "right_hidden_mae_reduction_at_least_80_percent": true,
+    "all_views_alpha_ge_095_at_least_99_percent_on_reliable_surface_interiors": true,
+    "all_views_depth_p95_at_most_2_percent": true
+  },
+  "limitations": [
+    "Synthetic oracle validates representation conversion, not hidden-layer prediction.",
+    "Per-layer provenance is stored in the JSON sidecar because SHARP PLY has no provenance field.",
+    "No endpoint angle fade is used; visibility comes from geometry, frustum, and z-buffer."
+  ]
+}

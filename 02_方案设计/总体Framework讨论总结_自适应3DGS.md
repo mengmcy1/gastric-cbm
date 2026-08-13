@@ -668,3 +668,29 @@ Stage 6：材质外观与移动端渲染
 - 真圆弧 30° 三帧校准已跑通；正式 5°/15°/30° 矩阵须先冻结本节的帧数/步长和半径定义。
 
 因此，下一步不是直接全量运行，而是先冻结 Stage 0 协议，再改进端点/连通区域级深度对齐和补充高斯的可见性控制；小样本视觉通过后才扩大到完整矩阵。
+
+### 14.13 Stage 1.1/1.2 失败证据与路线修正（2026-08-13）
+
+- Big-LaMa、MAT 和 3D Photo adapter 的 P01 30° 固定端点静态对照均未通过；用户已确认 3D Photo adapter 左右涂抹严重度均为3，并存在虚假建筑；
+- 中心 RGB-D 到 ±15° 端点的真实观测重投影已通过坐标和深度检查，但 accepted 区域合计只有0.1103%可观测，99.8897%仍无中心视图来源；
+- 因此停止“换一个二维补全器→端点 RGB-D 直接生成高斯”的横向尝试。Stage 1 的主问题从补全模型选型改为“如何表示、验证并拒绝不可观测的隐藏表面”。
+
+### 14.14 Stage 1.3 Canonical Layer Bundle（当前主协议）
+
+隐藏内容统一使用 Canonical Layer Bundle（CLB）进入后续管线。CLB 区分三类表面：中心真实观测表面、中心射线上的遮挡后方表面，以及中心视锥外但会在 ±15° 进入画面的扩展表面。这一区分弥补了仅以中心视角 LDI 表达 P01 外侧大缺口的不足。
+
+每个表面块必须携带 RGB、Z-depth、Alpha、有效掩码、逐像素来源、几何置信度和外观置信度。置信度不等于 Alpha/Opacity；所有预测内容必须先通过深度顺序、中心泄漏、端点重投影和跨视角冲突门，才允许进入 Gaussian Spawn。旧 `stage1_build_supplement_gaussians.py` 只能作为 legacy 实验工具，未适配 CLB 前不得用于新主线。
+
+首个候选不是再接一个预训练补全网络，而是 `CLB-SYN-01` 受控合成表示能力实验：同时构造遮挡后方层与左右视锥外扩展层，先确认它们能在中心不泄漏、在 ±15° 正确显露。表示层硬门通过后才实现 `CLB → supplemental Gaussians`，然后再审计可接入的隐藏层预测模型。详细协议见 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/Stage1_3_隐藏层表示与验证协议.md`。
+
+`CLB-SYN-01` 表示层和 `CLB-GS-SYN-01` v2 高斯转换层已于2026-08-13分别通过受控合成硬门。高斯转换不使用端点角度渐入，证明共享世界坐标与几何可见性足以表达遮挡后方和中心视锥外两类隐藏表面。这是表示能力结论，不是单图预测或 P01 30° 质量结论。当前瓶颈已前移到 `HiddenLayerProvider`：下一阶段先在有多视图真值的小数据上评估隐藏几何、外观和置信度预测，不用无真值 P01 直接选模型。
+
+### 14.15 Stage 1.4 Provider 拆分与双真值评价（当前执行中）
+
+`HiddenLayerProvider` 进一步拆成 `OcclusionHiddenProvider` 与 `OutsideFOVProvider`。这个拆分是能力边界，不是实现细节：Flash3D/MINE 一类源视锥内层式模型只能生成同一中心视锥内的遮挡后表面，不能凭自身覆盖中心原图外的世界；后者必须由独立 Provider 负责，最后再进入同一 CLBValidator 与 SurfaceFusion。
+
+首个 `OcclusionHiddenProvider` 候选为 Flash3D `re10k_v2`。它原生每像素输出两层累计深度与高斯属性，适配 CLB 的路径较短；但官方 opacity 只属于渲染参数，不是独立置信度，适配器必须新增可校准的 geometry/appearance confidence，并把视锥外支持明确标为 unsupported。`OutsideFOVProvider` 暂不选择，禁止用 Flash3D 边缘复制或不受控外推临时代替。
+
+评价采用双数据集：`HLP-APP-01` 从 RealEstate10K 的官方 Flash3D 验证序列中按真实相机姿态筛 `-15°/0°/+15°` 三元组，只评价目标 RGB与新视角外观；`HLP-GEO-01` 从 Hypersim test split 中选极小子集，用 RGB、逐像素距离/世界位置、相机位姿和内参评价隐藏几何、深度顺序与支持区。RealEstate10K 没有稠密深度，不允许用 RGB 指标代替几何真值；Hypersim 全量约1.9TB，只允许元数据优先、选中文件按需下载。
+
+当前 Flash3D checkpoint/源码结构静态预检和 RealEstate10K 真实角度预检已通过，尚未完成 GPU 推理。详细冻结协议见 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/Stage1_4_HiddenLayerProvider候选与双真值协议.md`。

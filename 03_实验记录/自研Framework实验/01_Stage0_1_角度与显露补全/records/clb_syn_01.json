@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0-clb-synthetic-representation-test",
+  "experiment_id": "CLB-SYN-01",
+  "status": "pass",
+  "scope": "Representation and renderer capacity only; no learned prediction and no P01 claim.",
+  "manifest": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/07_隐藏层表示/CLB-SYN-01_roundtrip/manifest.json",
+  "metrics": {
+    "center_hidden_visible_pixels": 0,
+    "endpoint_presence": {
+      "left": {
+        "occlusion_hidden_pixels": 2470,
+        "matching_outside_fov_pixels": 11392
+      },
+      "right": {
+        "occlusion_hidden_pixels": 2470,
+        "matching_outside_fov_pixels": 11392
+      }
+    },
+    "endpoint_depth_relative_error_p95": 0.0,
+    "wrong_occlusion_order_rate": 0.0005208333333333333,
+    "shared_surface_cross_view_median_reprojection_error_px": 4.0194366942304644e-14
+  },
+  "gates": {
+    "center_no_hidden_leakage": true,
+    "both_hidden_types_visible_at_left": true,
+    "both_hidden_types_visible_at_right": true,
+    "depth_p95_at_most_1_percent": true,
+    "wrong_order_rate_at_most_0_1_percent": true,
+    "cross_view_reprojection_at_most_0_25_px": true
+  },
+  "renders": {
+    "center": {
+      "covered_pixels": 76800,
+      "owner_visible_pixels": {
+        "observed_background": 54784,
+        "observed_foreground": 22016,
+        "hidden_behind_foreground": 0,
+        "left_outside_fov": 0,
+        "right_outside_fov": 0
+      }
+    },
+    "left": {
+      "covered_pixels": 76800,
+      "owner_visible_pixels": {
+        "observed_background": 42924,
+        "observed_foreground": 20014,
+        "hidden_behind_foreground": 2470,
+        "left_outside_fov": 11392,
+        "right_outside_fov": 0
+      }
+    },
+    "right": {
+      "covered_pixels": 76800,
+      "owner_visible_pixels": {
+        "observed_background": 42924,
+        "observed_foreground": 20014,
+        "hidden_behind_foreground": 2470,
+        "left_outside_fov": 0,
+        "right_outside_fov": 11392
+      }
+    }
+  }
+}

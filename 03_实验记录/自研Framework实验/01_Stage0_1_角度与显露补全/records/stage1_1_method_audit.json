@@ -1,0 +1,69 @@
+{
+  "audit_id": "stage1_1_method_audit_20260813_v1",
+  "date": "2026-08-13",
+  "status": "candidate_selected_environment_pending",
+  "research_question": "在固定 P01、true_arc 30°总范围左右端点和固定显露掩码下，结构与几何约束能否同时减少 Big-LaMa 的涂抹和 MAT 的虚假结构？",
+  "selected_candidate": {
+    "name": "3D Photography using Context-aware Layered Depth Inpainting",
+    "official_repository": "https://github.com/vt-vl-lab/3d-photo-inpainting",
+    "source_commit": "de0446740a3726f3de76c32e78b43bd985d987f9",
+    "paper": "https://arxiv.org/abs/2004.04727",
+    "project_page": "https://shihmengli.github.io/3D-Photo-Inpainting/"
+  },
+  "official_pipeline": {
+    "representation": "Layered Depth Image (LDI) with explicit pixel connectivity",
+    "order": [
+      "detect and extend depth discontinuity edges in local occlusion regions",
+      "inpaint depth conditioned on completed edges",
+      "inpaint RGB conditioned on completed edges"
+    ],
+    "network_inputs": {
+      "edge": "RGB + normalized disparity + known edge + context + hole mask",
+      "depth": "depth + completed edge + context + hole mask",
+      "color": "RGB + completed edge + context + hole mask"
+    },
+    "important_limit": "The official networks operate on local LDI-derived connected components and background-side context. They are not an official arbitrary full-frame RGB-plus-mask API."
+  },
+  "compatibility": {
+    "official_environment": "Ubuntu 18.04, Python 3.7, PyTorch 1.4.0, torchvision 0.5.0, CUDA toolkit 10.1",
+    "modern_cpu_constructor_smoke": {
+      "environment": "inpaint-mat (read-only smoke; not selected as runtime environment)",
+      "python": "3.10.20",
+      "torch": "2.9.0+cu128",
+      "numpy": "1.26.4",
+      "networkx": "3.4.2",
+      "result": "all three model classes constructed successfully"
+    },
+    "known_source_issues": [
+      "19 uses of removed NumPy aliases such as np.int and np.bool",
+      "unsafe/deprecated yaml.load call without an explicit Loader",
+      "old NetworkX and dependency pins require compatibility testing",
+      "official checkpoint host did not respond within the local 2026-08-13 probe timeout"
+    ],
+    "environment_decision": "Create an independent inpaint-3dphoto environment; do not modify sharp, infinisplat, or inpaint-mat."
+  },
+  "license": {
+    "repository": "MIT",
+    "midas": "MIT",
+    "edgeconnect_component": "CC BY-NC 4.0",
+    "project_implication": "Treat this candidate as research/non-commercial unless all reused component and checkpoint terms are independently cleared."
+  },
+  "other_candidate": {
+    "name": "SLIDE: Single Image 3D Photography with Soft Layering and Depth-aware Inpainting",
+    "project_page": "https://varunjampani.github.io/slide/",
+    "decision": "not selected for the first runnable baseline because no official public code/checkpoint was found during the audit"
+  },
+  "adapter_boundary": {
+    "frozen_inputs": "inputs/p01_ang30_static_inpaint_ab_v1.json",
+    "allowed_additional_signal": "existing endpoint depth outside the frozen accepted mask",
+    "must_preserve": [
+      "P01 source identity",
+      "true_arc 30-degree total range endpoints",
+      "accepted mask pixels",
+      "output resolution",
+      "all pixels outside the accepted mask"
+    ],
+    "result_label": "3D-Photo-network adapter experiment, not an official full-pipeline reproduction"
+  },
+  "next_action": "Create the isolated environment, obtain and hash official checkpoints, run a minimal left-endpoint network-interface smoke, then implement the fixed-mask structure/depth/RGB static adapter."
+}

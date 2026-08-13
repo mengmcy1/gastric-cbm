@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0-clb-to-gaussian-synthetic-test",
+  "experiment_id": "CLB-GS-SYN-01-v1",
+  "status": "fail",
+  "scope": "CLB synthetic-oracle to Gaussian conversion only; no learned prediction and no P01 claim.",
+  "source_manifest_sha256": "34488F34E32C932A7F4CA19CF563B527C2E6AACE50D0C769791D9874CBFDE809",
+  "output_dir": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/07_隐藏层表示/CLB-GS-SYN-01_v1",
+  "gaussian_count": 121600,
+  "parameters": {
+    "scale_factor": 0.42,
+    "thickness_factor": 0.08,
+    "opacity": 0.995
+  },
+  "metrics": {
+    "center_full_vs_observed_max_rgb_abs_all_pixels": 0.02034178376197815,
+    "left_full_alpha_ge_095_rate_all_pixels": 0.36864583333333334,
+    "right_full_alpha_ge_095_rate_all_pixels": 0.36864583333333334,
+    "left_hidden_mae_relative_reduction": 0.9797329902648926,
+    "right_hidden_mae_relative_reduction": 0.9775275588035583,
+    "left_depth_relative_error_p95_unsegmented": 0.25007775729487114,
+    "right_depth_relative_error_p95_unsegmented": 0.2500769100691065
+  },
+  "failure_analysis": [
+    "A scale factor of 0.42 under-covers oblique endpoint pixels.",
+    "The first depth metric mixed foreground/background boundary pixels and was not surface-aware.",
+    "Hidden-region RGB error still fell by about 98 percent, proving that both hidden support types reached their endpoint targets."
+  ],
+  "superseded_by": "records/clb_gs_syn_01.json"
+}

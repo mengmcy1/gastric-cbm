@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0-stage1-3dphoto-adapter-review",
+  "date": "2026-08-13",
+  "experiment_id": "P01_ang30_static_inpaint_ab_v1",
+  "run_id": "P01_ang30_3dphoto_adapter_v1",
+  "producer_machine_id": "linux5080",
+  "result_label": "3D Photo network fixed-endpoint adapter experiment; not an official full-pipeline reproduction",
+  "source": {
+    "repository": "https://github.com/vt-vl-lab/3d-photo-inpainting",
+    "commit": "de0446740a3726f3de76c32e78b43bd985d987f9"
+  },
+  "environment": {
+    "conda": "inpaint-3dphoto",
+    "python": "3.10.20",
+    "torch": "2.9.0+cu128",
+    "cuda_runtime": "12.8",
+    "gpu": "NVIDIA GeForce RTX 5080"
+  },
+  "models": {
+    "edge-model.pth": {
+      "bytes": 45974122,
+      "sha256": "B1D768BD008AD5FE9F540004F870B8C3D355E4939B2009AA4DB493FD313217C9"
+    },
+    "depth-model.pth": {
+      "bytes": 206272258,
+      "sha256": "2D0E63E89A22762DDFA8BC8C9F8C992E5532B140123274FFC6E4171BAA1B76F8"
+    },
+    "color-model.pth": {
+      "bytes": 206331633,
+      "sha256": "383C9B1DB70097907A6F9C8ABB0303E7056F50D5456A36F34AB784592B8B2C20"
+    },
+    "provenance": "The official Virginia Tech Filebox timed out from linux5080. Files were downloaded from ai-minamo/3d-photo-inpainting and cross-checked against camenduru/3d-photo-inpainting; filenames, byte sizes, and LFS SHA256 values match across both independent mirrors."
+  },
+  "frozen_inputs": {
+    "manifest": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/inputs/p01_ang30_static_inpaint_ab_v1.json",
+    "left_depth_sha256": "0AB40B29ABB5C3852AE7F351455EE128255290F54C519F1733B0B485A6AE7289",
+    "right_depth_sha256": "9688F329B758DB4AADB01AA1AEE35B97CD58A2976CED896097B7F66AB8A1039D"
+  },
+  "adapter": {
+    "max_side": 1024,
+    "context_width_original_pixels": 256,
+    "background_quantile": 0.4,
+    "edge_quantile": 0.88,
+    "order": [
+      "background-side depth context selection",
+      "depth-edge completion",
+      "log-depth completion",
+      "RGB completion",
+      "composite only inside the frozen accepted mask"
+    ]
+  },
+  "automatic_checks": {
+    "left_known_pixels_exact": true,
+    "right_known_pixels_exact": true,
+    "left_hole_depth_finite_positive_fraction": 1.0,
+    "right_hole_depth_finite_positive_fraction": 1.0,
+    "left_inpaint_sha256": "1063D9011BB500812A074109346C2515ED10C01AE70AA0897FBE9E19148C92C6",
+    "right_inpaint_sha256": "2BB4577714243CDF931BFD9EDDA25DBCB8B5E31DC90B5BCE6E140BF3F4852D36",
+    "review_sha256": "C7BAF972370EA516EFFB97C3AD05527B2EB47AE1464C710CA07BC56F4883D953"
+  },
+  "assistant_visual_precheck": {
+    "status": "fail_expected_pending_user_confirmation",
+    "observation": "Both endpoints contain large dark green/gray smeared fills at the outer disoccluded regions. The adapter does not visibly improve over Big-LaMa enough to justify geometry generation, although it avoids MAT's specific false building/windows pattern.",
+    "interpretation": "The official networks execute correctly, but their local LDI-derived training protocol does not transfer to the large alpha-derived full-frame holes through this v1 adapter."
+  },
+  "manual_review": {
+    "review_date": "2026-08-13",
+    "left_smear_severity_0_to_3": 3,
+    "right_smear_severity_0_to_3": 3,
+    "false_structure_0_or_1": 1,
+    "d_vs_b_and_c": "接近",
+    "static_gate_pass": false,
+    "notes": "主要问题仍是生成了虚假建筑。"
+  },
+  "decision": "User confirmed static-gate failure. Stop this adapter at v1; do not build supplement Gaussians, rerun videos, expand to P02/P05, or tune parameters to hide the protocol mismatch."
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "stage1.4-flash3d-provider-preflight-v1",
+  "status": "pass",
+  "candidate_scope": "occlusion_hidden_inside_source_frustum_only",
+  "outside_source_fov_supported": false,
+  "independent_confidence_native": false,
+  "opacity_must_not_be_used_as_confidence": true,
+  "inputs": {
+    "repo": "源码/Flash3D",
+    "repo_commit": "a71c9b92b07a76cf944f2ed894f384f0891a1960",
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+    "checkpoint_bytes": 690161102,
+    "checkpoint_sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420",
+    "angle_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_re10k_angle_triplets_v1.json",
+    "angle_record_sha256": "e2bdcadd72eb2a502ea49b5405acb79079ed60c776c71287837355af3a4b236c"
+  },
+  "checkpoint": {
+    "top_level_keys": [
+      "model",
+      "version",
+      "optimiser",
+      "step"
+    ],
+    "model_tensor_count": 390,
+    "depth_decoder_key_count": 22,
+    "gaussian_decoder_0_key_count": 22,
+    "gaussian_decoder_1_key_count": 22
+  },
+  "angle_data": {
+    "requested_sequence_count": 48,
+    "found_sequence_count": 48,
+    "missing_sequence_count": 0,
+    "sequences_with_triplets": 16,
+    "saved_triplet_count": 48
+  },
+  "checks": {
+    "checkpoint_sha256_matches": true,
+    "repo_commit_matches": true,
+    "checkpoint_has_model_state": true,
+    "checkpoint_has_depth_increment_decoder": true,
+    "checkpoint_has_gaussian_decoder_0": true,
+    "checkpoint_has_gaussian_decoder_1": true,
+    "angle_record_has_30deg_triplets": true,
+    "official_temporal_offsets_not_used_as_angles": true
+  },
+  "next_required_before_inference": [
+    "create isolated Blackwell-compatible Flash3D environment",
+    "download selected source/target RGB frames for HLP_APP_01",
+    "implement Flash3D output to CLB adapter",
+    "define confidence calibration independent of opacity"
+  ]
+}

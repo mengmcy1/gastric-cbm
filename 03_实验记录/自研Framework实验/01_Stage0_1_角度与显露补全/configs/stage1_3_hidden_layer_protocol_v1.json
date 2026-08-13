@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0-canonical-layer-bundle-protocol",
+  "status": "frozen_for_representation_validation",
+  "frozen_date": "2026-08-13",
+  "coordinate_convention": {
+    "world_frame": "shared_right_handed_world_frame",
+    "camera_extrinsics": "world_to_camera_4x4",
+    "camera_forward_axis": "+Z",
+    "pixel_origin": "top_left",
+    "depth_type": "positive_camera_z",
+    "depth_unit": "meter"
+  },
+  "trajectory_protocol": {
+    "mode": "true_arc",
+    "angle_definition": "horizontal_total_sweep",
+    "angle_total_deg": 30.0,
+    "validation_angles_deg": [-15.0, 0.0, 15.0]
+  },
+  "support_types": [
+    "observed_surface",
+    "occlusion_hidden",
+    "outside_source_fov"
+  ],
+  "required_arrays": {
+    "rgb_uint8": "H,W,3",
+    "depth_z_float32": "H,W",
+    "alpha_float32": "H,W",
+    "valid_mask_uint8": "H,W",
+    "provenance_uint8": "H,W",
+    "geometry_confidence_float32": "H,W",
+    "appearance_confidence_float32": "H,W"
+  },
+  "provenance_enum": {
+    "0": "invalid",
+    "1": "observed_center",
+    "2": "reprojected_observation",
+    "3": "predicted_hidden_geometry",
+    "4": "predicted_hidden_appearance",
+    "5": "external_multiview",
+    "6": "synthetic_oracle"
+  },
+  "rules": {
+    "confidence_is_not_alpha_or_opacity": true,
+    "valid_depth_must_be_positive_finite": true,
+    "valid_provenance_must_be_nonzero": true,
+    "observed_surface_allowed_provenance": [1, 2],
+    "synthetic_oracle_forbidden_in_deployment": true,
+    "predicted_content_requires_validation_before_gaussian_spawn": true,
+    "visibility_primary_mechanism": "target_camera_z_buffer_and_alpha_compositing",
+    "endpoint_angle_fade_is_not_geometry_visibility": true,
+    "direct_endpoint_rgbd_to_gaussian_spawn": false
+  },
+  "representation_gates": {
+    "center_hidden_visible_pixels_max": 0,
+    "synthetic_endpoint_depth_relative_error_p95_max": 0.01,
+    "synthetic_wrong_occlusion_order_rate_max": 0.001,
+    "shared_surface_cross_view_median_reprojection_error_px_max": 0.25
+  },
+  "first_candidate": {
+    "id": "CLB-SYN-01",
+    "type": "controlled_synthetic_representation_capacity_test",
+    "contains": [
+      "center_observed_foreground",
+      "center_ray_occlusion_hidden_background",
+      "left_outside_source_fov_extension",
+      "right_outside_source_fov_extension"
+    ],
+    "model_training": false,
+    "p01_gaussian_spawn": false,
+    "pass_condition": "all_representation_gates_pass"
+  }
+}

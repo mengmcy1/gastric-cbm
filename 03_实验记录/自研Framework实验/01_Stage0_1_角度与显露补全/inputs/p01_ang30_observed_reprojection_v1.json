@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0-observed-reprojection-input",
+  "experiment_id": "P01_ang30_observed_reprojection_v1",
+  "research_question": "在固定 P01 与 true_arc 30°总范围下，左右端 accepted 显露区域中有多少像素可由中心原图 RGB 和中心渲染深度经真实相机几何重投影获得，多少仍无观测来源？",
+  "protocol": {
+    "trajectory_mode": "true_arc",
+    "angle_total_deg": 30.0,
+    "endpoint_angles_deg": {"left": -15.0, "right": 15.0},
+    "source_alpha_threshold": 0.95,
+    "target_occlusion_alpha_threshold": 0.5,
+    "target_depth_relative_tolerance": 0.03,
+    "target_depth_absolute_tolerance_m": 0.1,
+    "high_confidence_threshold": 0.5
+  },
+  "base_ply": {
+    "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/scene_full.ply",
+    "sha256": "DEAB7295F86174EF25D0B0FC7A394C108F46D9F59E4552F82B2664E56D4B999B"
+  },
+  "source": {
+    "rgb_original": {
+      "path": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+      "sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4"
+    },
+    "depth_center": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/depth_center_float32.npy",
+      "sha256": "4627B4B681B9981A08CBFCF3CCECC47C43A4F5EBD11C5159CEF4D091FA55CE05"
+    },
+    "alpha_center": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/alpha_center_u16.png",
+      "sha256": "83157D5D8B3FBD7AB3F91B70300A4A33A9EC97462A6EE132A988149865FC5497"
+    }
+  },
+  "render_config": {
+    "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/config.json",
+    "sha256": "559F5FC60F67FD01AB658FC8D3A4453B4935C369536249C5BD6FFD6D5A011EB2"
+  },
+  "endpoints": {
+    "left": {
+      "frame": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/frame_left.png", "sha256": "27BC4720D5626624A9DBCD4B4A72D3D71C4EF88E443F73CBC1EA9221EF24B24E"},
+      "depth": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/depth_left_float32.npy", "sha256": "0AB40B29ABB5C3852AE7F351455EE128255290F54C519F1733B0B485A6AE7289"},
+      "alpha": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/alpha_left_u16.png", "sha256": "006FFC926209667C110C3B3AB377F1DD84096CB75CDD6473B8F1ADA9AF7BFD78"},
+      "accepted_mask": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/left_mask/mask_accepted.png", "sha256": "A9AE006E2527178878F1664B73CD2846A2F78AF7D9B4B23C47E2F57C0C7C2F5E"}
+    },
+    "right": {
+      "frame": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/frame_right.png", "sha256": "4FC905C55E25F5AFDCD6F4FE872EDF792B839AAFBA8ABE44C61453EA28B5007B"},
+      "depth": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/depth_right_float32.npy", "sha256": "9688F329B758DB4AADB01AA1AEE35B97CD58A2976CED896097B7F66AB8A1039D"},
+      "alpha": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/alpha_right_u16.png", "sha256": "A4DE35BFEE1C7604C7261F9CDCE992577A8C5610C99199D00286AC4B7D1D8112"},
+      "accepted_mask": {"path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/right_mask/mask_accepted.png", "sha256": "E0CB2CAA522C80E90ECB2D399898BBA7D35EAA8C2ED17142D0AEC65D028D114D"}
+    }
+  },
+  "scope_boundary": "Coverage analysis only. No learned completion, no supplement Gaussians, no change to camera, mask, base PLY, or Stage 1 visibility parameters."
+}
