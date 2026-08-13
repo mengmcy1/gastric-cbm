@@ -49,8 +49,8 @@ M0-M5、MOCE和SAE的完整历史保留在`实验进度与结果讨论.md`，该
 | Y0数据转换与审计 | 已完成并放行 | 文件、SHA、尺寸、坐标和精确重复通过；47组跨患者pHash候选逐对确认均非重复；当前数据暂无已知多处分离目标，单框结构可用于本阶段 |
 | Y1 YOLO26n smoke | 已完成并放行 | 环境、数据、空标签、end-to-end检测头、GPU训练/验证和标准产物均通过；5轮指标不作性能结论 |
 | Y2-B平衡集YOLO26s 640/960 | 已完成并冻结 | 640按预注册层级入选；两组癌图召回均为79/87，640的IoU50和mean IoU更高 |
-| Y3-B平衡主实验三种子 | 待运行 | 固定640及Y2-B其余配置，运行42/202/503，不再选分辨率 |
-| Y0-F/Y3-F完整集诊断 | 待构建 | 单独审计完整集；复用Y2-B配置，不参与选参 |
+| Y3-B平衡主实验三种子 | 代码与双角色冒烟已完成，待正式运行 | 固定640及Y2-B其余配置；seed42复用冻结Y2-B，正式只新增202/503 |
+| Y0-F/Y3-F完整集诊断 | Y0-F已构建审计，Y3-F待正式运行 | 完整集只导出train/val；复用640配置运行42/202/503，不参与选参 |
 | Y4 internal test | 锁定 | Balanced与Full全部冻结后，在同一198张队列上只评估一次 |
 | Y5 external诊断 | 锁定 | 不用外部结果选模型或阈值 |
 | Y6 ROI分类 | 条件候选 | 只有Y4定位成功才启动 |
@@ -310,6 +310,39 @@ internal test或external，640与960都从各自Y2-B best.pt出发，避免只�
 因此“960只是训练轮数不足”不能解释Y2-B差距；Y3-B继续使用原Y2-B 640 best.pt及原冻结配置，
 不使用任何Y2-S微调权重。
 
+## Y0-F审计与Y3实现状态
+
+Y0-F已从冻结的M1完整清单构建。源清单为
+`09_M1全量诊断清单_20260810/m1_full_keep_split_seed42.csv`，SHA-256为
+`a02b0d0f45250d418454d36a267b73b0269710c281b4d6441ac05dd97300d7c2`。总计
+`3348张/1732人`；其中train为`2350张/1212人`，val为`497张/260人`，原full-test为
+`501张/260人`。Y0-F只向YOLO导出train/val，原full-test只写入排除清单，未导出、未评估，
+也不作为Y4队列；Y4仍只使用平衡路线已冻结的`198张/153人`internal test。
+
+全部3348张均通过解码、SHA、尺寸、bbox范围、定位监督和患者不跨split检查，精确重复为0。
+宽松pHash筛出340对跨患者候选，其中142对跨split；真正涉及Y3-F训练泄漏的train-val候选为
+53对。二级审计将两图确定性缩放到224灰度后计算SSIM：均值`0.4970`、中位数`0.5121`、
+最大值`0.6696`，没有一对达到预设复核线`0.85`；最低pHash距离对照也确认是低纹理胃黏膜
+造成的哈希碰撞，不是同帧或相邻帧。因此不修改数据，Y0-F放行。旧full-test相关相似候选不
+参与Y3训练决策。
+
+Y3冻结协议如下：
+
+- 唯一模型为`YOLO26s-640`，每个新增seed均从同一官方`yolo26s.pt`独立训练；
+- optimizer、学习率、增强、100轮上限、patience 20及checkpoint规则全部继承Y2-B；
+- Balanced seed42直接复用已冻结Y2-B 640结果，避免重复训练；Balanced新增seed202/503；
+- Full独立运行seed42/202/503，不从Balanced续训；
+- 每个YOLO seed与同角色、同seed的M1 warmup-only产品配对；
+- val癌图上锁定满足Sensitivity>=0.90的最高YOLO阈值，内部test、external及原full-test均不读；
+- 单seed成功要求：相对M1癌召回差不低于`-0.02`，且IoU>=0.50比例和mean IoU均严格提高；
+- 阶段成功要求3/3 seed均成功；同时报告按患者有放回抽样5000次的配对差值95%CI。
+
+平衡与完整角色均已完成1 epoch隔离冒烟：训练、Ultralytics参数落盘、best/last权重、
+Top-1推理、同seed M1配对、阈值、几何指标和患者bootstrap均通过。完整集首次冒烟发现公共
+推理函数默认固定读取平衡val目录，造成只返回`200/497`张；现已增加向后兼容的可选
+`source_dir`，Y2默认行为不变，Y3显式传角色对应val目录。修复后完整集覆盖`497/497`张。
+debug模型只训练1轮，其低定位指标不作性能结论。
+
 实现入口：
 
 ```text
@@ -321,6 +354,12 @@ internal test或external，640与960都从各自Y2-B best.pt出发，避免只�
 程序/模型训练/正式代码/evaluate_y2_resolution_sensitivity.py
 程序/模型训练/正式代码/summarize_y2_resolution_sensitivity.py
 程序/模型训练/正式代码/run_y2_resolution_sensitivity_matrix.sh
+程序/模型训练/正式代码/build_y0_full_yolo_dataset.py
+程序/模型训练/正式代码/audit_y0f_near_duplicates.py
+程序/模型训练/正式代码/train_y3_yolo26.py
+程序/模型训练/正式代码/evaluate_y3_yolo26.py
+程序/模型训练/正式代码/summarize_y3_yolo26.py
+程序/模型训练/正式代码/run_y3_yolo26_matrix.sh
 ```
 
 ## Y5-Y6边界
@@ -332,7 +371,7 @@ IoU。Y6开始前重新冻结局部分类器数据；第一版优先用GT bbox�
 
 ## 下一步
 
-1. 使用已冻结的YOLO26s-640配置运行Y3-B平衡集seed 42/202/503，运行前重新检查GPU；
-2. 同时构建并审计Y0-F完整集YOLO视图；Y3-F只能复用Y2-B的640及其余冻结配置；
+1. 运行Y3-B正式矩阵：复用seed42，只新增seed202/503并生成三种子汇总；运行前重新检查GPU；
+2. Y3-B完成并冻结后，运行Y3-F seed42/202/503；Full只作预注册诊断，不反向改变分辨率；
 3. Balanced与Full全部冻结后才一次性进入同一198张internal test；若发现多病灶漏标，立即
    停止正式训练并回到Y0修正标签和冻结清单。

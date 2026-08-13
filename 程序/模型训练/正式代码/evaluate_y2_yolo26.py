@@ -75,8 +75,19 @@ def lock_recall_threshold(values: np.ndarray, recall: float) -> float | None:
     return None
 
 
-def predict_val(model: YOLO, frame: pd.DataFrame, imgsz: int, device: str) -> pd.DataFrame:
-    """Run deterministic batch-4 inference and attach one Top-1 box per val image."""
+def predict_val(
+    model: YOLO,
+    frame: pd.DataFrame,
+    imgsz: int,
+    device: str,
+    source_dir: Path | None = None,
+) -> pd.DataFrame:
+    """Run deterministic inference and attach one Top-1 box per val image.
+
+    ``source_dir`` defaults to the frozen Y2 balanced validation directory.
+    Later stages must pass their role-specific directory explicitly so the
+    yielded paths remain in one-to-one correspondence with ``frame``.
+    """
     rows_by_path = {}
     for order, (_, row) in enumerate(frame.iterrows()):
         resolved = (PROJECT_ROOT / str(row["image_relpath"])).resolve()
@@ -86,7 +97,7 @@ def predict_val(model: YOLO, frame: pd.DataFrame, imgsz: int, device: str) -> pd
     results = model.predict(
         # A list[str] is treated as one in-memory batch in this locked version.
         # Passing the directory activates LoadImagesAndVideos and honors batch=4.
-        source=str(Y0_ROOT / "images/val"),
+        source=str(source_dir or (Y0_ROOT / "images/val")),
         imgsz=imgsz,
         conf=GEOMETRY_CONFIDENCE,
         max_det=GEOMETRY_MAX_DET,
