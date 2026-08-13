@@ -1,6 +1,6 @@
 # schema_version: 1.1-artifact-tree-snapshot
 # producer_machine_id: linux5080
-# captured_at: 2026-08-13T09:58:29+08:00
+# captured_at: 2026-08-13T17:02:48+08:00
 # scan_roots: ["03_实验记录/SHARP浅3D实验", "03_实验记录/自研Framework实验", "03_实验记录/InfiniSplat复现实验"]
 # D=directory F=file L=symlink O=other; paths are repository-relative
   [D] InfiniSplat复现实验/
@@ -1443,6 +1443,8 @@
     [F] 运动视频人工评分说明.docx (40371 bytes)
   [D] 自研Framework实验/
     [D] 01_Stage0_1_角度与显露补全/
+      [F] Stage1_3_隐藏层表示与验证协议.md (10611 bytes)
+      [F] Stage1_4_HiddenLayerProvider候选与双真值协议.md (5471 bytes)
       [D] configs/
         [F] p01_matrix_candidate_true_arc_v1.json (1516 bytes)
         [F] p01_matrix_smoke_legacy_ang30_v1.json (1311 bytes)
@@ -1452,7 +1454,10 @@
         [F] p01_stage01_true_arc_v3_inverse_depth.json (1765 bytes)
         [F] p01_stage01_true_arc_v4_depth_fallback.json (1813 bytes)
         [F] p01_stage0_protocol_b_frozen_v1.json (1259 bytes)
+        [F] stage1_3_hidden_layer_protocol_v1.json (2427 bytes)
+        [F] stage1_4_hidden_provider_protocol_v1.json (2951 bytes)
       [D] inputs/
+        [F] p01_ang30_observed_reprojection_v1.json (4812 bytes)
         [F] p01_ang30_static_inpaint_ab_v1.json (3307 bytes)
         [F] p01_input_manifest.json (1108 bytes)
       [D] logs/
@@ -1467,10 +1472,41 @@
         [F] p01_smoke_rerun2.stderr.txt (0 bytes)
         [F] p01_smoke_rerun2.stdout.txt (171 bytes)
       [D] models/
+        [D] 3d-photo-inpainting/
+          [F] color-model.pth (206331633 bytes)
+          [F] depth-model.pth (206272258 bytes)
+          [F] edge-model.pth (45974122 bytes)
+        [D] flash3d/
+          [F] model_re10k_v2.pth (690161102 bytes)
+        [D] huggingface/
+          [D] hub/
+            [D] .locks/
+              [D] models--lpiccinelli--unidepth-v1-vitl14/
+            [F] CACHEDIR.TAG (191 bytes)
+            [D] models--lpiccinelli--unidepth-v1-vitl14/
+              [D] blobs/
+                [F] da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60 (1388239045 bytes)
+              [D] refs/
+                [F] main (40 bytes)
+              [D] snapshots/
+                [D] 1937d33086564a8cbb71adb7aaa546400083f8ea/
+                  [L] pytorch_model.bin (76 bytes)
+          [D] xet/
+            [D] https___cas_serv-tGqkUaZf_CBPHQ6h/
+              [D] staging/
+            [D] logs/
+              [F] xet_20260813T161244917+0800_456426.log (25526 bytes)
         [D] lama/
           [F] big-lama.pt (205669692 bytes)
         [D] mat/
           [F] Places_512_FullData.pkl (661420475 bytes)
+        [D] realestate10k/
+          [F] RealEstate10K.tar.gz (752332631 bytes)
+        [D] torch_hub/
+          [D] hub/
+            [D] checkpoints/
+              [F] resnet50-11ad3fa6.pth (102540417 bytes)
+            [F] trusted_list (25 bytes)
       [D] outputs/
         [D] 00_Stage0_角度协议/
           [D] 01_dryrun/
@@ -2831,6 +2867,158 @@
                 [F] inpaint_composited.png (4648179 bytes)
                 [F] inpaint_raw.png (4648179 bytes)
                 [F] mat_run.json (2235 bytes)
+          [D] 05_结构几何约束候选/
+            [D] P01_ang30_3dphoto_adapter_v1/
+              [D] left/
+                [F] adapter_run.json (6223 bytes)
+                [F] context_background_side.png (5795 bytes)
+                [F] depth_completed_float32.npy (12583040 bytes)
+                [F] depth_completed_preview.png (593006 bytes)
+                [F] inpaint_composited.png (4531678 bytes)
+                [F] inpaint_raw.png (4570733 bytes)
+                [F] structure_completed.png (10385 bytes)
+                [F] structure_known.png (8763 bytes)
+              [D] review/
+                [F] P01_ang30_ABCD_3dphoto_adapter_v1.png (1358106 bytes)
+                [F] abcd_review.json (2054 bytes)
+              [D] right/
+                [F] adapter_run.json (6234 bytes)
+                [F] context_background_side.png (7921 bytes)
+                [F] depth_completed_float32.npy (12583040 bytes)
+                [F] depth_completed_preview.png (600220 bytes)
+                [F] inpaint_composited.png (4646204 bytes)
+                [F] inpaint_raw.png (3122332 bytes)
+                [F] structure_completed.png (9998 bytes)
+                [F] structure_known.png (9847 bytes)
+          [D] 06_真实观测重投影/
+            [D] P01_ang30_observed_reprojection_v1/
+              [D] left/
+                [F] accepted_coverage_classes.png (17403 bytes)
+                [F] accepted_coverage_overlay.png (4323624 bytes)
+                [F] accepted_reprojection_composite.png (4330528 bytes)
+                [F] confidence_float32.npy (12583040 bytes)
+                [F] coverage_high_confidence.png (405532 bytes)
+                [F] coverage_observable.png (102777 bytes)
+                [F] coverage_raw.png (82209 bytes)
+                [F] reprojected_depth_float32.npy (12583040 bytes)
+                [F] reprojected_observed_rgb.png (4178754 bytes)
+                [F] reprojection_result.json (4893 bytes)
+                [F] residual_not_high_confidence_mask.png (10422 bytes)
+                [F] residual_unobserved_mask.png (10419 bytes)
+                [F] source_coordinates_int16.npz (2176937 bytes)
+              [D] left_failed_result_json_typo/
+                [F] accepted_coverage_classes.png (17403 bytes)
+                [F] accepted_coverage_overlay.png (4323624 bytes)
+                [F] accepted_reprojection_composite.png (4330528 bytes)
+                [F] confidence_float32.npy (12583040 bytes)
+                [F] coverage_high_confidence.png (405532 bytes)
+                [F] coverage_observable.png (102777 bytes)
+                [F] coverage_raw.png (82209 bytes)
+                [F] reprojected_depth_float32.npy (12583040 bytes)
+                [F] reprojected_observed_rgb.png (4178754 bytes)
+                [F] residual_not_high_confidence_mask.png (10422 bytes)
+                [F] residual_unobserved_mask.png (10419 bytes)
+                [F] source_coordinates_int16.npz (2176937 bytes)
+              [D] right/
+                [F] accepted_coverage_classes.png (17996 bytes)
+                [F] accepted_coverage_overlay.png (4383328 bytes)
+                [F] accepted_reprojection_composite.png (4397273 bytes)
+                [F] confidence_float32.npy (12583040 bytes)
+                [F] coverage_high_confidence.png (406140 bytes)
+                [F] coverage_observable.png (95513 bytes)
+                [F] coverage_raw.png (75446 bytes)
+                [F] reprojected_depth_float32.npy (12583040 bytes)
+                [F] reprojected_observed_rgb.png (4214364 bytes)
+                [F] reprojection_result.json (4890 bytes)
+                [F] residual_not_high_confidence_mask.png (10785 bytes)
+                [F] residual_unobserved_mask.png (10908 bytes)
+                [F] source_coordinates_int16.npz (2150622 bytes)
+              [D] summary/
+                [F] P01_ang30_observed_reprojection_review.png (2417010 bytes)
+                [F] endpoint_coverage.csv (536 bytes)
+                [F] observed_reprojection_summary.json (2809 bytes)
+          [D] 07_隐藏层表示/
+            [D] CLB-GS-SYN-01_v1/
+              [F] clb_all_gaussians.ply (6810397 bytes)
+              [F] clb_observed_gaussians.ply (5226268 bytes)
+              [F] full_center.png (1583 bytes)
+              [F] full_center_alpha_u16.png (1755 bytes)
+              [F] full_center_depth_float32.npy (307328 bytes)
+              [F] full_left.png (71762 bytes)
+              [F] full_left_alpha_u16.png (113178 bytes)
+              [F] full_left_depth_float32.npy (307328 bytes)
+              [F] full_right.png (71598 bytes)
+              [F] full_right_alpha_u16.png (112963 bytes)
+              [F] full_right_depth_float32.npy (307328 bytes)
+              [F] gaussian_sidecar.json (1040 bytes)
+              [F] observed_center.png (1528 bytes)
+              [F] observed_center_alpha_u16.png (887 bytes)
+              [F] observed_center_depth_float32.npy (307328 bytes)
+              [F] observed_left.png (70075 bytes)
+              [F] observed_left_alpha_u16.png (110455 bytes)
+              [F] observed_left_depth_float32.npy (307328 bytes)
+              [F] observed_right.png (69813 bytes)
+              [F] observed_right_alpha_u16.png (110301 bytes)
+              [F] observed_right_depth_float32.npy (307328 bytes)
+              [F] oracle_center.png (1057 bytes)
+              [F] oracle_left.png (1801 bytes)
+              [F] oracle_right.png (1793 bytes)
+              [F] review.png (178770 bytes)
+            [D] CLB-GS-SYN-01_v2/
+              [F] clb_all_gaussians.ply (6810397 bytes)
+              [F] clb_observed_gaussians.ply (5226268 bytes)
+              [F] full_center.png (2828 bytes)
+              [F] full_center_alpha_u16.png (1662 bytes)
+              [F] full_center_depth_float32.npy (307328 bytes)
+              [F] full_left.png (26442 bytes)
+              [F] full_left_alpha_u16.png (77085 bytes)
+              [F] full_left_depth_float32.npy (307328 bytes)
+              [F] full_right.png (26287 bytes)
+              [F] full_right_alpha_u16.png (76597 bytes)
+              [F] full_right_depth_float32.npy (307328 bytes)
+              [F] gaussian_sidecar.json (1039 bytes)
+              [F] observed_center.png (2286 bytes)
+              [F] observed_center_alpha_u16.png (902 bytes)
+              [F] observed_center_depth_float32.npy (307328 bytes)
+              [F] observed_left.png (25934 bytes)
+              [F] observed_left_alpha_u16.png (77700 bytes)
+              [F] observed_left_depth_float32.npy (307328 bytes)
+              [F] observed_right.png (25718 bytes)
+              [F] observed_right_alpha_u16.png (77196 bytes)
+              [F] observed_right_depth_float32.npy (307328 bytes)
+              [F] oracle_center.png (1057 bytes)
+              [F] oracle_left.png (1801 bytes)
+              [F] oracle_right.png (1793 bytes)
+              [F] result.json (3081 bytes)
+              [F] review.png (80696 bytes)
+            [D] CLB-SYN-01/
+              [F] hidden_behind_foreground.npz (7223 bytes)
+              [F] left_outside_fov.npz (12644 bytes)
+              [F] manifest.json (3839 bytes)
+              [F] observed_background.npz (7165 bytes)
+              [F] observed_foreground.npz (6930 bytes)
+              [F] oracle_center.png (1057 bytes)
+              [F] oracle_left.png (1801 bytes)
+              [F] oracle_right.png (1793 bytes)
+              [F] render_center.png (1057 bytes)
+              [F] render_left.png (1817 bytes)
+              [F] render_right.png (1789 bytes)
+              [F] review.png (9617 bytes)
+              [F] right_outside_fov.npz (12898 bytes)
+            [D] CLB-SYN-01_roundtrip/
+              [F] hidden_behind_foreground.npz (7223 bytes)
+              [F] left_outside_fov.npz (12644 bytes)
+              [F] manifest.json (3839 bytes)
+              [F] observed_background.npz (7165 bytes)
+              [F] observed_foreground.npz (6930 bytes)
+              [F] oracle_center.png (1057 bytes)
+              [F] oracle_left.png (1801 bytes)
+              [F] oracle_right.png (1793 bytes)
+              [F] render_center.png (1057 bytes)
+              [F] render_left.png (1817 bytes)
+              [F] render_right.png (1789 bytes)
+              [F] review.png (9617 bytes)
+              [F] right_outside_fov.npz (12898 bytes)
         [D] 90_失败与诊断归档/
           [D] 01_早期脚本失败/
             [D] P01_smoke_legacy_ang30_v1_failed_gaussian_shape/
@@ -3099,13 +3287,24 @@
                 [F] P01_ang5_right_05_supplement.stdout.txt (0 bytes)
               [F] run_manifest.json (25053 bytes)
       [D] records/
-        [F] README.md (2205 bytes)
+        [F] README.md (4287 bytes)
         [F] artifact_manifest.json (4508 bytes)
+        [F] clb_gs_syn_01.json (3081 bytes)
+        [F] clb_gs_syn_01_v1_failed.json (1476 bytes)
+        [F] clb_syn_01.json (2024 bytes)
         [F] manual_review.json (1812 bytes)
+        [F] p01_ang30_3dphoto_adapter_v1_review.json (3609 bytes)
         [F] p01_ang30_mat_static_review.json (3914 bytes)
+        [F] p01_ang30_observed_reprojection_v1.json (3456 bytes)
+        [F] stage1_1_method_audit.json (3644 bytes)
+        [F] stage1_4_flash3d_environment_v1.json (2416 bytes)
+        [F] stage1_4_flash3d_provider_preflight_v1.json (1997 bytes)
+        [F] stage1_4_re10k_angle_triplets_v1.csv (8488 bytes)
+        [F] stage1_4_re10k_angle_triplets_v1.json (43906 bytes)
         [F] stage1_matrix_metrics.csv (1066 bytes)
         [F] stage1_matrix_summary.json (1639 bytes)
       [D] scripts/
+        [F] flash3d_rasterizer_cuda128_cstdint.patch (223 bytes)
         [F] mat_pytorch29_custom_ops_loader.patch (1056 bytes)
         [F] run_stage01_matrix.py (11532 bytes)
         [F] run_stage01_smoke.py (7517 bytes)
@@ -3113,13 +3312,23 @@
         [F] stage01_angle_render.py (14228 bytes)
         [F] stage01_common.py (4903 bytes)
         [F] stage01_validate_outputs.py (4168 bytes)
+        [F] stage1_3dphoto_adapter.py (17098 bytes)
         [F] stage1_build_supplement_gaussians.py (11227 bytes)
+        [F] stage1_clb_synthetic_smoke.py (14737 bytes)
+        [F] stage1_clb_to_gaussian_smoke.py (14063 bytes)
         [F] stage1_detect_disocclusion.py (9639 bytes)
         [F] stage1_diagnose_depth_models.py (5691 bytes)
         [F] stage1_estimate_align_depth.py (15746 bytes)
+        [F] stage1_flash3d_layer_smoke.py (8464 bytes)
+        [F] stage1_flash3d_provider_preflight.py (4380 bytes)
         [F] stage1_lama_inpaint.py (5797 bytes)
+        [F] stage1_make_abcd_review.py (5546 bytes)
         [F] stage1_make_static_inpaint_review.py (4108 bytes)
         [F] stage1_mat_inpaint.py (7883 bytes)
+        [F] stage1_observed_reprojection.py (19877 bytes)
+        [F] stage1_select_re10k_angle_triplets.py (9897 bytes)
         [F] stage1_summarize_ab.py (5119 bytes)
         [F] stage1_summarize_matrix.py (5422 bytes)
-      [F] 实验进度与结果讨论.md (53734 bytes)
+        [F] stage1_summarize_observed_reprojection.py (5628 bytes)
+        [F] stage1_validate_clb.py (5994 bytes)
+      [F] 实验进度与结果讨论.md (78416 bytes)
