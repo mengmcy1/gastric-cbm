@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-interpolation-record",
+  "date": "2026-08-14",
+  "status": "success",
+  "scope": "真实 source-target 端点之间的覆盖变化可视化；不是作者公开视频或论文精确轨迹",
+  "pair": {
+    "dataset": "ETH3D courtyard",
+    "source": "DSC_0313.JPG",
+    "target": "DSC_0317.JPG",
+    "metric_baseline_m": 2.5871031284332275,
+    "relative_rotation_deg": 17.32784158467468
+  },
+  "trajectory": {
+    "frame_count": 60,
+    "fps": 10,
+    "resolution_wh": [2016, 1344],
+    "camera_center": "linear interpolation in source-camera coordinates",
+    "rotation": "shortest SO(3) geodesic interpolation",
+    "intrinsics": "linear interpolation of scaled real source and target intrinsics",
+    "endpoint_w2c_max_abs_error": 1.1920928955078125e-7
+  },
+  "sampled_hard_hole_alpha_lt_0_01": {
+    "start": 0.0003495104639077853,
+    "quarter": 0.1124958664021164,
+    "middle": 0.2591134761196145,
+    "three_quarter": 0.3761788135393046,
+    "end": 0.46622998157596374,
+    "monotonic_non_decreasing": true
+  },
+  "hard_hole_first_crossings": {
+    "5_percent": {"frame": 10, "baseline_m": 0.43849205566664873, "relative_rotation_deg": 2.9369223024872335},
+    "10_percent": {"frame": 14, "baseline_m": 0.6138888779333083, "relative_rotation_deg": 4.1116912234821275},
+    "25_percent": {"frame": 29, "baseline_m": 1.2716269614332814, "relative_rotation_deg": 8.517074677212978},
+    "40_percent": {"frame": 49, "baseline_m": 2.148611072766579, "relative_rotation_deg": 14.390919282187443}
+  },
+  "runtime": {
+    "physical_gpu": 1,
+    "gpu": "NVIDIA GeForce RTX 5080",
+    "torch_cuda": "12.8",
+    "cuda_toolkit_source_env": "flash3d",
+    "total_seconds_including_first_frame_jit": 90.19601072894875
+  },
+  "attempts": [
+    {
+      "name": "initial",
+      "status": "failed_before_first_render",
+      "reason": "restricted PATH omitted nvcc, so gsplat CUDA backend was unavailable",
+      "output_preserved": "outputs/ETH3D_courtyard_DSC0313_to_DSC0317_pose_interpolation_video_v1_linux5080_20260814"
+    },
+    {
+      "name": "retry1",
+      "status": "success",
+      "output": "outputs/ETH3D_courtyard_DSC0313_to_DSC0317_pose_interpolation_video_v1_linux5080_20260814_retry1"
+    }
+  ],
+  "artifacts": {
+    "white_video": {"file": "real_pose_interpolation_white.mp4", "sha256": "F67DFDA2D55E0B8003F61A098D2408577890E9E301BDF50E2D224F9FE4F31879"},
+    "black_video": {"file": "real_pose_interpolation_black.mp4", "sha256": "70359149AC11E86B54E01756C9C22A1E6F43069C4B3FCB4B256B490D860ECD67"},
+    "white_contact_sheet": {"file": "trajectory_keyframes_white_contact_sheet.jpg", "sha256": "2AAE5D80A478B9EECFEB41B1D5A4BFF12F107BD60BC3028D0A12C5CF521961DA"},
+    "coverage_curve": {"file": "trajectory_coverage_curve.png", "sha256": "BAEB03B249F9BD9DA528BE196906CEA66D5973946E0958C26AC6DBACC32BFE64"},
+    "metrics": "per_frame_metrics.csv",
+    "analysis": "trajectory_analysis.json"
+  },
+  "interpretation_boundary": [
+    "轨迹端点是真实相机，中间帧是数学插值而不是实拍相机",
+    "平移与旋转同步变化，不能用本结果拆分两者因果贡献",
+    "硬空洞率用于覆盖诊断，不能与论文带未公开 frustum-visible mask 的指标直接比较"
+  ]
+}

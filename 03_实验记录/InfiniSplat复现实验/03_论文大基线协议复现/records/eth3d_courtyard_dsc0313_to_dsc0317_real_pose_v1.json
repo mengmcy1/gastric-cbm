@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0-infinisplat-paper-protocol-reproduction-record",
+  "status": "success_protocol_level_not_exact_figure_pair",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "dataset": {
+    "name": "ETH3D high-res multi-view training / courtyard",
+    "official_archive_url": "https://www.eth3d.net/data/courtyard_dslr_undistorted.7z",
+    "archive_bytes": 500990569,
+    "archive_sha256": "9DC3126363BC89B229E2B564C7725F1B858A52B46A5452CCFB9E9EB8E72BA26D",
+    "image_count": 38,
+    "camera_count": 4
+  },
+  "released_material_boundary": {
+    "official_pair_list_available": false,
+    "figure_3_4_exact_frame_ids_available": false,
+    "official_frustum_overlap_implementation_available": false,
+    "claim": "Protocol-level reproduction only; not an exact reproduction of a specific Fig. 3/4 row."
+  },
+  "pair": {
+    "source": "DSC_0313.JPG",
+    "target": "DSC_0317.JPG",
+    "sequence_distance": 4,
+    "metric_baseline_m": 2.5871031210161854,
+    "paper_baseline_bin": "[2,+inf)",
+    "relative_rotation_deg": 17.327843357918844,
+    "shared_sparse_point_covisibility_proxy": 0.6342438374417055,
+    "proxy_warning": "Shared registered COLMAP points over the smaller visible-point count; not the authors' exact metric."
+  },
+  "source_inference": {
+    "status": "success",
+    "duration_seconds": 53.265,
+    "gaussian_count": 1476976,
+    "ply_bytes": 82711454,
+    "ply_sha256": "6FB955BC503D45225BAEFEF043F6AFDA77544BC01B913BD1C50798F76C50C633",
+    "intrinsics_source": "ETH3D camera_id=1 PINHOLE; explicit 3x3 override",
+    "demo_video_disabled": true
+  },
+  "target_render": {
+    "status": "success_after_retry1",
+    "render_resolution_wh": [2016, 1344],
+    "duration_seconds": 77.72005545697175,
+    "coverage": {
+      "alpha_ge_0_5_fraction": 0.5077741165910808,
+      "alpha_ge_0_01_fraction": 0.5337700184240363,
+      "hard_hole_alpha_lt_0_01_fraction": 0.46622997522354126,
+      "mean_alpha": 0.4984358847141266
+    },
+    "diagnostic_only_covered_region": {
+      "psnr_db": 11.329486410664032,
+      "ssim_map_mean": 0.11865885555744171,
+      "warning": "Not paper-comparable: exact mask and author pair list are unavailable."
+    }
+  },
+  "visual_findings": {
+    "camera_transform_sanity": "Pass: render changes from frontal source composition toward the real oblique target composition.",
+    "positive": "Within covered regions, the main wall, windows, brick bands, and large boundaries remain coherent under the 2.587 m / 17.33 degree shift.",
+    "negative": "About 46.62% hard holes remain, concentrated in newly exposed ground, left-side/out-of-frustum regions, and outer boundaries; fine objects soften or fragment.",
+    "interpretation": "Supports surface-coherence claims but does not demonstrate generative completion of unseen content."
+  },
+  "failures_preserved": [
+    {
+      "attempt": "initial_render",
+      "cause": "Non-activated shell PATH omitted the installed Ninja executable before gsplat JIT.",
+      "model_started": false,
+      "preserved_outputs": [
+        "source_input_2016x1344.jpg",
+        "target_ground_truth_2016x1344.jpg"
+      ]
+    }
+  ]
+}

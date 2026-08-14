@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "ETH3D_COURTYARD_DSC0312",
+  "description": "ETH3D courtyard 官方 undistorted DSLR 图像；论文协议级大基线补充 source",
+  "path": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/datasets/eth3d_courtyard/extracted/courtyard/images/dslr_images_undistorted/DSC_0312.JPG",
+  "sha256": "6EA452300BF67145C56D277C803D42AA134E36A476FC7D353BEDF158E001E02E",
+  "bytes": 15285711,
+  "width": 6205,
+  "height": 4135,
+  "role": "真实 source 相机；目标帧 DSC_0317.JPG，真实基线 2.131426 m"
+}

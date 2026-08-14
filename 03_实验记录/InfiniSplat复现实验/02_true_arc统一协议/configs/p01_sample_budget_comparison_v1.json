@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0-infinisplat-sample-budget-comparison-config",
+  "experiment_id": "P01_sample_budget_comparison_v1_linux5080_20260814",
+  "producer_machine_id": "linux5080",
+  "source_rgb": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+  "baseline_ply": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+  "tile_size_px": 32,
+  "runs": [
+    {
+      "label": "0750k",
+      "requested_sample_point_num": 750000,
+      "gaussian_count_after_filter": 737321,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_0750k_center_render_v1_linux5080_20260814/frame_center.png",
+      "render_result": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_0750k_center_render_v1_linux5080_20260814/result.json"
+    },
+    {
+      "label": "1500k_official",
+      "requested_sample_point_num": 1500000,
+      "gaussian_count_after_filter": 1476073,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/frame_center.png",
+      "render_result": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/result.json"
+    },
+    {
+      "label": "2000k",
+      "requested_sample_point_num": 2000000,
+      "gaussian_count_after_filter": 1967701,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_center_render_v1_linux5080_20260814/frame_center.png",
+      "render_result": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_center_render_v1_linux5080_20260814/result.json"
+    }
+  ],
+  "scope": "仅中心0°表示密度因果消融；不代表新视角、显露补全或用户质量门。"
+}

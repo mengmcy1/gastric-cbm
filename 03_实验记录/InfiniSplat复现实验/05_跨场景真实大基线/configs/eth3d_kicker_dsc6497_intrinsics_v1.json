@@ -1,0 +1,9 @@
+{
+  "intrinsics_px": [
+    [3410.34, 0.0, 3121.33],
+    [0.0, 3409.98, 2067.07],
+    [0.0, 0.0, 1.0]
+  ],
+  "source": "ETH3D kicker/dslr_calibration_undistorted/cameras.txt camera_id=0",
+  "image_shape_wh": [6211, 4137]
+}

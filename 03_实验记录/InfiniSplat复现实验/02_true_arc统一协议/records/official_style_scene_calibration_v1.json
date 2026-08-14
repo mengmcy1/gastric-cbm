@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0-infinisplat-official-style-scene-calibration",
+  "status": "completed",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "purpose": "区分官方风格简洁场景的已有表面保持能力与本项目复杂场景的新显露补全需求",
+  "protocol_boundary": {
+    "trajectory_mode": "official_orbit_dolly_look_at",
+    "trajectory_definition": {
+      "eye_x": "max_lateral_offset * sin(2*pi*phase)",
+      "eye_y": "0",
+      "eye_z": "max_medial_offset * (1-cos(2*pi*phase))/2",
+      "orientation": "per-frame look-at toward median valid Gaussian center"
+    },
+    "render_resolution_wh": [1536, 1152],
+    "frames": 60,
+    "fps": 10,
+    "not_equivalent_to": [
+      "项目 true_arc 5°/15°/30° 角度协议",
+      "论文使用真实数据集源-目标相机位姿的 Benchmark"
+    ]
+  },
+  "paper_protocol_observation": {
+    "source_target_pose": "论文正式评价使用 ETH3D、ScanNet++、Tanks-and-Temples 和 DL3DV 的真实源-目标相机位姿",
+    "frustum_overlap_requirement": ">60%",
+    "filtering": "过滤过度旋转和背向视图",
+    "baseline_bins_meters": ["[0,0.5)", "[0.5,1)", "[1,2)", "[2,+inf)"],
+    "paper_primary_claim": "大基线下已有可见表面和物体边界的结构稳定性",
+    "paper_stated_failures": ["large disocclusion", "incorrect depth prior", "extreme extrapolation"]
+  },
+  "runs": [
+    {
+      "scene_id": "P01",
+      "scene_class": "自有复杂室外场景：树木、建筑、文字与多层深度",
+      "input_role": "project_sample",
+      "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+      "gaussian_count": 1476073,
+      "look_at_xyz": [-0.016915179789066315, -0.9024965763092041, 8.451322555541992],
+      "max_lateral_offset": 0.21524047491331105,
+      "max_medial_offset": 0.25184658765792844,
+      "alpha_hard_hole_lt_050": {"min": 0.10360209147135417, "mean": 0.10801850307134934, "max": 0.11088505497685185},
+      "top_10pct_hard_hole_lt_050": {"min": 0.9552083333333333, "mean": 0.9743766983695653, "max": 0.9889379528985507},
+      "visual_observation": "建筑、草地和树群的大体结构仍可辨识，但顶部几乎全程为黑色空洞；树冠、远处字样和建筑细节明显发糊。"
+    },
+    {
+      "scene_id": "OFFICIAL_ETH3D_COURTYARD",
+      "scene_class": "官方仓库真实示例：明确前景物体+大平面砖墙",
+      "input_role": "official_repository_example",
+      "input_sha256": "90C018F87FBB253C200F74EC283A31FBC2F7C7C0A60E873E1868070211B6CF3D",
+      "ply_sha256": "3FE25E3F9DDD6A474EE7DCC3536770EFCE49EFF8A2383BAF0ED598FAED1DBB2E",
+      "gaussian_count": 1478872,
+      "look_at_xyz": [0.14897210896015167, -0.4095195233821869, 6.984437465667725],
+      "max_lateral_offset": 0.29463850021362303,
+      "max_medial_offset": 0.3682981252670288,
+      "alpha_hard_hole_lt_050": {"min": 0.10063906069155093, "mean": 0.11353222882306134, "max": 0.12439699526186343},
+      "top_10pct_hard_hole_lt_050": {"min": 0.9680423460144928, "mean": 0.9900966183574879, "max": 1.0},
+      "visual_observation": "砖墙、拱窗、长椅和沙发在轨迹中保持了较清楚的主体形状，符合论文强调的已有表面连贯性；但顶部几乎全程无覆盖，前景物体接缝和小物体有模糊、涂抹和局部缺口。"
+    },
+    {
+      "scene_id": "OFFICIAL_SCANNETPP_FE94FC30CF",
+      "scene_class": "官方仓库真实示例：室内房间、大平面墙体和明确家具层次",
+      "input_role": "official_repository_example",
+      "input_sha256": "77D8AB2AF4B4B89F048A1C5074ED944F53137F71A8E69F6ABBFE6B33F5BB8EE5",
+      "ply_sha256": "D4CE151B5F8B716083C7FE42784BB7F513C34E073588D17186C36A56D7774EB9",
+      "gaussian_count": 1484344,
+      "look_at_xyz": [-0.5444788932800293, 0.3689286410808563, 4.766684532165527],
+      "max_lateral_offset": 0.3042877578735351,
+      "max_medial_offset": 0.38035969734191893,
+      "alpha_hard_hole_lt_050": {"min": 0.10727776421440972, "mean": 0.1579247745466821, "max": 0.1989203559027778},
+      "top_10pct_hard_hole_lt_050": {"min": 0.019887907608695653, "mean": 0.04318916062801933, "max": 0.06355865036231884},
+      "visual_observation": "床、墙面、地板和衣柜等主体层次在运动中较稳定，比 P01 更接近论文展示的适用域；但左侧近景、底部和边界出现大量黑色无覆盖区，窗边和架子杂物发生涂抹或丢失。"
+    }
+  ],
+  "conclusion": {
+    "supported": "物体边界明确、大平面占主导且目标视图仍有高重叠时，InfiniSplat 对已有可见表面的结构保持更好。",
+    "not_supported": "不证明 InfiniSplat 能补全源图不可见区域，也不能替代本项目总范围 30° 的 true_arc 质量要求。",
+    "project_decision": "InfiniSplat 修正为有明确适用域的已有表面结构基线，保留为表示模块参考；自研 Framework 仍需显式显露检测和生成式补全。"
+  },
+  "execution_notes": {
+    "preferred_physical_gpu": 1,
+    "successful_render_physical_gpu": 1,
+    "scannetpp_first_two_failed_video_attempts": "两次失败都发生在推理完成后的 gsplat JIT 阶段；失败现场保留。",
+    "scannetpp_successful_retry": "linux5080_20260814_retry2",
+    "cuda_include_fix": "本机 JIT 需要将 Conda CUDA targets/x86_64-linux/include 加入 CPATH；该绝对路径不写入跨机配置。"
+  }
+}

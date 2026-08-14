@@ -43,8 +43,13 @@ def main() -> None:
     args = parse_args()
     config_path = args.config.resolve()
     config = load_json(config_path)
-    if config.get("trajectory_mode") != "official_demo":
-        raise ValueError("该入口只允许 trajectory_mode=official_demo。")
+    trajectory_mode = config.get("trajectory_mode")
+    supported_modes = {"official_demo", "official_orbit_dolly_look_at"}
+    if trajectory_mode not in supported_modes:
+        raise ValueError(
+            "该入口只允许 trajectory_mode=official_demo 或 "
+            "official_orbit_dolly_look_at。"
+        )
 
     ply_path = resolve_repo_path(config["ply_path"])
     output_dir = resolve_repo_path(config["output_dir"])
@@ -163,6 +168,16 @@ def main() -> None:
         "ply_path": config["ply_path"],
         "ply_sha256": actual_hash,
         "gaussian_count": int(gaussians.mean_vectors.shape[1]),
+        "trajectory_mode": trajectory_mode,
+        "trajectory_definition": {
+            "coordinate_frame": "source_camera_opencv",
+            "eye_x": "max_lateral_offset * sin(2*pi*phase)",
+            "eye_y": "0",
+            "eye_z": "max_medial_offset * (1-cos(2*pi*phase))/2",
+            "orientation": "per-frame look-at toward median valid Gaussian center",
+            "max_lateral_offset_formula": "0.08 * image_diagonal_in_focal_units * depth_q10",
+            "max_medial_offset_formula": "0.15 * depth_q10"
+        },
         "render_resolution_wh": [width, height],
         "render_intrinsics_px": config["render_intrinsics_px"],
         "look_at_xyz": [float(value) for value in look_at],

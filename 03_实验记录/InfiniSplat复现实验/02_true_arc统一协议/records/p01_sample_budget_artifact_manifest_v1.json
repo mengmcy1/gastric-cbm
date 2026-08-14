@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0-infinisplat-sample-budget-artifact-manifest",
+  "producer_machine_id": "linux5080",
+  "date": "2026-08-14",
+  "project_git_commit_at_generation": "a855ed8e9c1c3265b91c938d27228a19638cedd6",
+  "upstream_source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "common_input_sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+  "common_checkpoint_sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D",
+  "runs": [
+    {
+      "label": "0750k",
+      "physical_gpu": 1,
+      "requested_sample_point_num": 750000,
+      "gaussian_count_after_filter": 737321,
+      "generation_seconds": 40.386,
+      "ply": {
+        "path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_0750k_ply_v1_linux5080_20260814/input/input.ply",
+        "bytes": 41290773,
+        "sha256": "62BCC7C91268A009EAE9311387D564C65E80F27A8067270BAC6DDB7B59C0015B"
+      },
+      "center_frame": {
+        "path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_0750k_center_render_v1_linux5080_20260814/frame_center.png",
+        "bytes": 2094337,
+        "sha256": "2E81DC1A9BAD102DD8A89F14D340EACE8C58491A85EB26E5D4FD7959E2C70F64"
+      }
+    },
+    {
+      "label": "1500k_official",
+      "physical_gpu": null,
+      "physical_gpu_note": "Generated in the earlier official linux5080 run; see its original run receipt.",
+      "requested_sample_point_num": 1500000,
+      "gaussian_count_after_filter": 1476073,
+      "ply": {
+        "path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+        "bytes": 82660886,
+        "sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735"
+      },
+      "center_frame": {
+        "path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/frame_center.png",
+        "bytes": 1967873,
+        "sha256": "5CD0CD294CBB5752B914C4D19E88128DA9891D7295B6ECBDB0FD123ACACC396E"
+      }
+    },
+    {
+      "label": "2000k",
+      "physical_gpu": 2,
+      "requested_sample_point_num": 2000000,
+      "gaussian_count_after_filter": 1967701,
+      "generation_seconds": 61.341,
+      "ply": {
+        "path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_ply_v1_linux5080_20260814/input/input.ply",
+        "bytes": 110192054,
+        "sha256": "5A024A002C70D9FA71C2705E37F87787AC575E21096A40BB6B6DAA5F0C182EF9"
+      },
+      "center_frame": {
+        "path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_center_render_v1_linux5080_20260814/frame_center.png",
+        "bytes": 1936091,
+        "sha256": "713AD03D3E2A89B18477E4BDE15E425780133DDD19389D9C7E6CCDB5B2679153"
+      }
+    }
+  ],
+  "freeze_status": "diagnostic_not_user_frozen",
+  "transfer_tier": "large_artifacts_local_to_linux5080; rerun preferred"
+}

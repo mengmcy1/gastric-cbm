@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0-infinisplat-cross-scene-rgb-batch",
+  "date": "2026-08-14",
+  "status": "completed",
+  "purpose": "为 PPT 提供室内、道路和工业场景多样性素材；不是论文真实 source-target Benchmark",
+  "source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "mode": "rgb",
+  "checkpoint": "源码/InfiniSplat/checkpoints/infinisplat_rgb.ckpt",
+  "checkpoint_sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D",
+  "input_dir": "03_实验记录/InfiniSplat复现实验/04_跨场景官方样例筛选/inputs/selected_rgb_v1",
+  "selected_inputs": [
+    {"file": "my_bedroom.JPG", "class": "real_indoor", "source_dir": "official rgb_demo"},
+    {"file": "old_livingroom.png", "class": "real_indoor", "source_dir": "official rgb_demo"},
+    {"file": "bedroom.jpg", "class": "real_indoor", "source_dir": "official rgb_demo"},
+    {"file": "waymo_9.png", "class": "road", "source_dir": "official lidar_demo", "mode_note": "RGB-only screening; not lidar-mode"},
+    {"file": "waymo_147.png", "class": "road", "source_dir": "official lidar_demo", "mode_note": "RGB-only screening; not lidar-mode"},
+    {"file": "eth3d_kicker.png", "class": "industrial_indoor", "source_dir": "official lidar_demo", "mode_note": "RGB-only screening; not lidar-mode"},
+    {"file": "eth3d_pipes.png", "class": "industrial_indoor", "source_dir": "official lidar_demo", "mode_note": "RGB-only screening; not lidar-mode"}
+  ],
+  "already_available_control": "scannetpp_fe94fc30cf.JPG RGB-only official trajectory result",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/04_跨场景官方样例筛选/outputs/OFFICIAL_cross_scene_rgb_batch_v1_linux5080_20260814",
+  "video": true,
+  "html": false,
+  "intrinsics": "official default resolution order; no shared override because images come from heterogeneous cameras",
+  "scope_warning": "Waymo/ETH3D LiDAR-demo images are deliberately evaluated with the RGB checkpoint for a modality-consistent scouting matrix. Do not label these as lidar-mode results."
+}

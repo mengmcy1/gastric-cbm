@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "OFFICIAL_SCANNETPP_FE94FC30CF",
+  "description": "InfiniSplat 官方仓库自带的 ScanNet++ 室内真实场景示例",
+  "path": "源码/InfiniSplat/examples/data/rgb_demo/scannetpp_fe94fc30cf.JPG",
+  "sha256": "77D8AB2AF4B4B89F048A1C5074ED944F53137F71A8E69F6ABBFE6B33F5BB8EE5",
+  "bytes": 301551,
+  "width": 1752,
+  "height": 1168,
+  "role": "官方风格简洁场景适用域校准；不代替论文真实源-目标位姿 Benchmark"
+}

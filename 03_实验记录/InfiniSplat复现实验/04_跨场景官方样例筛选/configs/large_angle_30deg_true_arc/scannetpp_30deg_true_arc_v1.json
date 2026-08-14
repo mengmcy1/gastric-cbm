@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0-infinisplat-cross-scene-large-angle-config",
+  "status": "diagnostic",
+  "scene_id": "scannetpp_fe94fc30cf",
+  "scene_group": "indoor",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/OFFICIAL_scannetpp_scene_calibration_v1_linux5080_20260814_retry2/scannetpp_fe94fc30cf/scannetpp_fe94fc30cf.ply",
+  "ply_sha256": "D4CE151B5F8B716083C7FE42784BB7F513C34E073588D17186C36A56D7774EB9",
+  "device": "cuda:2",
+  "trajectory_mode": "true_arc",
+  "angle_total_deg": 30.0,
+  "num_steps": 61,
+  "focus_depth_quantile": 0.1,
+  "minimum_focus_depth": 2.0,
+  "render_resolution_wh": [1536, 1152],
+  "fps": 10,
+  "background": "black",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/04_跨场景官方样例筛选/outputs/LARGEANGLE_30deg_true_arc_v1_linux5080_20260814/scannetpp",
+  "scope": "冻结官方 RGB-only PLY；原相机为中心；30° 总范围（±15°）true_arc；仅用于合成大角度压力测试"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-pair-matrix",
+  "date": "2026-08-14",
+  "status": "success",
+  "dataset": "ETH3D courtyard",
+  "selection": "all four unique unordered pairs passing the local >=2m, <=60deg, >=60% sparse-point covisibility proxy filter",
+  "pairs": [
+    {
+      "source": "DSC_0313.JPG", "target": "DSC_0317.JPG",
+      "baseline_m": 2.5871031210161854, "relative_rotation_deg": 17.327843357918844,
+      "covisibility_proxy": 0.6342438374417055,
+      "target_hard_hole_fraction": 0.46622997522354126,
+      "target_soft_hole_fraction": 0.49222588539123535,
+      "alpha_ge_0_5_fraction": 0.5077741165910808
+    },
+    {
+      "source": "DSC_0312.JPG", "target": "DSC_0317.JPG",
+      "baseline_m": 2.131426208993163, "relative_rotation_deg": 17.76690722006198,
+      "covisibility_proxy": 0.6220345075485263,
+      "target_hard_hole_fraction": 0.41109222173690796,
+      "target_soft_hole_fraction": 0.4535250663757324,
+      "alpha_ge_0_5_fraction": 0.5464749267762661
+    },
+    {
+      "source": "DSC_0321.JPG", "target": "DSC_0322.JPG",
+      "baseline_m": 2.371132784750368, "relative_rotation_deg": 5.493872568347482,
+      "covisibility_proxy": 0.7938325991189428,
+      "target_hard_hole_fraction": 0.14668035507202148,
+      "target_soft_hole_fraction": 0.18944427371025085,
+      "alpha_ge_0_5_fraction": 0.8105557327097506
+    },
+    {
+      "source": "DSC_0321.JPG", "target": "DSC_0320.JPG",
+      "baseline_m": 2.5962222837061484, "relative_rotation_deg": 2.4677318742828107,
+      "covisibility_proxy": 0.6048780487804878,
+      "target_hard_hole_fraction": 0.1783761978149414,
+      "target_soft_hole_fraction": 0.23433293402194977,
+      "alpha_ge_0_5_fraction": 0.7656670741213152
+    }
+  ],
+  "runtime": {
+    "physical_gpu": 2,
+    "reason": "physical GPU1 had an existing 6.2 GB python3 process; GPU2 was idle",
+    "cuda_toolkit": "12.8 from flash3d environment",
+    "new_source_inferences": ["DSC_0312.JPG", "DSC_0321.JPG"],
+    "new_target_renders": 3
+  },
+  "interpretation": "Across all four unique passing pairs, large visible planes remain coherent while newly exposed content is absent. Lower-rotation pairs retain more coverage, but 2.4-2.6m translation still produces 14.7-17.8% hard holes.",
+  "limitations": [
+    "local sparse-point covisibility is an auditable proxy, not the authors' unreleased frustum-overlap implementation",
+    "four samples cannot isolate causal effects of translation, rotation and overlap",
+    "diagnostic metrics are not directly comparable with the paper's masked benchmark"
+  ]
+}

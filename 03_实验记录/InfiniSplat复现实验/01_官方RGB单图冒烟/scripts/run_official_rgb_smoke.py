@@ -195,6 +195,27 @@ def main() -> int:
         command.append("--no-export-html")
     if not config.get("floater_filter", True):
         command.append("--disable-floater-filter")
+    if config.get("sample_point_num_override") is not None:
+        command.extend(
+            ["--sample-point-num", str(int(config["sample_point_num_override"]))]
+        )
+    camera_overrides = [
+        config.get("intrinsics_file"),
+        config.get("focal_px"),
+        config.get("focal_mm"),
+    ]
+    if sum(value is not None for value in camera_overrides) > 1:
+        raise ValueError(
+            "Only one of intrinsics_file, focal_px, and focal_mm may be configured"
+        )
+    if config.get("intrinsics_file") is not None:
+        intrinsics_path = resolve_repo_path(repo_root, config["intrinsics_file"])
+        require_file(intrinsics_path, "Camera intrinsics override")
+        command.extend(["--intrinsics-file", str(intrinsics_path)])
+    elif config.get("focal_px") is not None:
+        command.extend(["--focal-px", str(float(config["focal_px"]))])
+    elif config.get("focal_mm") is not None:
+        command.extend(["--focal-mm", str(float(config["focal_mm"]))])
 
     environment = os.environ.copy()
     environment["PYTHONUTF8"] = "1"
@@ -244,6 +265,7 @@ def main() -> int:
         "python": sys.version.split()[0],
         "platform": platform.platform(),
         "duration_seconds": round(time.time() - started_at, 3),
+        "sample_point_num_override": config.get("sample_point_num_override"),
         "artifacts": [
             {
                 "path": str(ply_path.relative_to(repo_root)).replace("\\", "/"),

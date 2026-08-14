@@ -1,0 +1,283 @@
+{
+  "schema_version": "1.0-infinisplat-center-density-diagnostic",
+  "status": "success",
+  "experiment_id": "P01_center_gaussian_density_diagnostic_v1_linux5080_20260814",
+  "producer_machine_id": "linux5080",
+  "scope": "This is a center-view representation diagnostic, not a novel-view quality result and not a causal sample-count ablation.",
+  "inputs": {
+    "ply": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+    "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+    "source_rgb_sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+    "center_render": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/frame_center.png"
+  },
+  "camera": {
+    "image_size_wh": [
+      1536,
+      1152
+    ],
+    "intrinsic": [
+      [
+        1198.1524658203125,
+        0.0,
+        768.0
+      ],
+      [
+        0.0,
+        1198.1524658203125,
+        576.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "extrinsic_identity_max_error": 0.0
+  },
+  "gaussians": {
+    "total": 1476073,
+    "centers_in_frame": 1455052,
+    "centers_per_pixel": 0.8223085756655093,
+    "depth": {
+      "p01": 1.4188602113723754,
+      "p10": 1.692401933670044,
+      "p25": 3.158182203769684,
+      "p50": 8.485423564910889,
+      "p75": 25.68797254562378,
+      "p90": 28.226876640319826,
+      "p99": 29.36640167236328
+    },
+    "projected_major_radius_px": {
+      "p01": 0.3506923380494118,
+      "p10": 0.7495594620704651,
+      "p25": 1.2221977710723877,
+      "p50": 2.095770001411438,
+      "p75": 3.483967125415802,
+      "p90": 4.309453439712525,
+      "p99": 6.5576399993896475
+    },
+    "projected_minor_radius_px": {
+      "p01": 0.14404286697506904,
+      "p10": 0.3727242827415466,
+      "p25": 0.5963581800460815,
+      "p50": 1.0991796255111694,
+      "p75": 2.090508997440338,
+      "p90": 2.9527817964553837,
+      "p99": 4.105617880821228
+    },
+    "opacity": {
+      "p01": 0.30088696818806737,
+      "p10": 0.45294843646605215,
+      "p25": 0.6227893427050593,
+      "p50": 0.7663857937299811,
+      "p75": 0.8570376119355847,
+      "p90": 0.9527202262789206,
+      "p99": 0.9919166554761891
+    }
+  },
+  "depth_quantile_bins": [
+    {
+      "quantile_range": [
+        0.0,
+        0.25
+      ],
+      "depth_range": [
+        1.3775806427001953,
+        3.158182203769684
+      ],
+      "gaussian_centers": 363763,
+      "occupied_tiles": 534,
+      "centers_per_occupied_tile": 681.2041198501872,
+      "projected_major_radius_px": {
+        "p01": 0.7777460157871247,
+        "p10": 1.2254640579223632,
+        "p25": 1.6341846585273743,
+        "p50": 2.2953648567199707,
+        "p75": 3.216257095336914,
+        "p90": 4.033407211303711,
+        "p99": 5.477948369979861
+      },
+      "projected_minor_radius_px": {
+        "p01": 0.38784316658973694,
+        "p10": 0.5438130617141723,
+        "p25": 0.7340601980686188,
+        "p50": 1.117696762084961,
+        "p75": 1.5866198539733887,
+        "p90": 2.0371165275573726,
+        "p99": 3.650195360183716
+      },
+      "opacity": {
+        "p01": 0.2635195399678706,
+        "p10": 0.36828222588239307,
+        "p25": 0.43279945264128633,
+        "p50": 0.5271556337960006,
+        "p75": 0.6624005115299623,
+        "p90": 0.8076212114528063,
+        "p99": 0.9554578877640526
+      }
+    },
+    {
+      "quantile_range": [
+        0.25,
+        0.5
+      ],
+      "depth_range": [
+        3.158182203769684,
+        8.485423564910889
+      ],
+      "gaussian_centers": 363763,
+      "occupied_tiles": 837,
+      "centers_per_occupied_tile": 434.60334528076464,
+      "projected_major_radius_px": {
+        "p01": 0.3782910227775574,
+        "p10": 0.6379534006118774,
+        "p25": 0.833879292011261,
+        "p50": 1.237965703010559,
+        "p75": 2.1958202123641968,
+        "p90": 3.56216721534729,
+        "p99": 7.216977815628055
+      },
+      "projected_minor_radius_px": {
+        "p01": 0.17968061298131943,
+        "p10": 0.3464091777801514,
+        "p25": 0.4672924727201462,
+        "p50": 0.646820604801178,
+        "p75": 0.9884742498397827,
+        "p90": 1.522243905067444,
+        "p99": 3.5672012186050424
+      },
+      "opacity": {
+        "p01": 0.34732474336680336,
+        "p10": 0.5439387623990295,
+        "p25": 0.7259944114656722,
+        "p50": 0.9006696907424906,
+        "p75": 0.9602301091678593,
+        "p90": 0.9831638240999921,
+        "p99": 0.996072001580752
+      }
+    },
+    {
+      "quantile_range": [
+        0.5,
+        0.75
+      ],
+      "depth_range": [
+        8.485423564910889,
+        25.68797254562378
+      ],
+      "gaussian_centers": 363763,
+      "occupied_tiles": 649,
+      "centers_per_occupied_tile": 560.497688751926,
+      "projected_major_radius_px": {
+        "p01": 0.26665483057498934,
+        "p10": 0.5080896854400635,
+        "p25": 0.8459435999393463,
+        "p50": 1.701600432395935,
+        "p75": 3.4476600885391235,
+        "p90": 4.985161876678466,
+        "p99": 7.850734224319465
+      },
+      "projected_minor_radius_px": {
+        "p01": 0.10587823331356049,
+        "p10": 0.2063317835330963,
+        "p25": 0.35533659160137177,
+        "p50": 0.7824338674545288,
+        "p75": 1.6574380993843079,
+        "p90": 3.2316472053527834,
+        "p99": 4.514319963455201
+      },
+      "opacity": {
+        "p01": 0.32307802383820067,
+        "p10": 0.591593095392031,
+        "p25": 0.7396567741488972,
+        "p50": 0.7930192437553107,
+        "p75": 0.8972735736177664,
+        "p90": 0.9512624902651028,
+        "p99": 0.9857701742927288
+      }
+    },
+    {
+      "quantile_range": [
+        0.75,
+        1.0
+      ],
+      "depth_range": [
+        25.68797254562378,
+        31.822986602783203
+      ],
+      "gaussian_centers": 363763,
+      "occupied_tiles": 267,
+      "centers_per_occupied_tile": 1362.4082397003745,
+      "projected_major_radius_px": {
+        "p01": 1.089438078403473,
+        "p10": 1.5686412096023559,
+        "p25": 2.355455756187439,
+        "p50": 3.4031708240509033,
+        "p75": 3.8463830947875977,
+        "p90": 4.279127788543701,
+        "p99": 5.702921972274781
+      },
+      "projected_minor_radius_px": {
+        "p01": 0.7052791213989258,
+        "p10": 1.0710168123245238,
+        "p25": 1.602172613143921,
+        "p50": 2.3977794647216797,
+        "p75": 2.8822529315948486,
+        "p90": 3.254267930984497,
+        "p99": 4.01780933380127
+      },
+      "opacity": {
+        "p01": 0.45082352673346715,
+        "p10": 0.6829551583905238,
+        "p25": 0.727030629006994,
+        "p50": 0.7700619145243154,
+        "p75": 0.7882475215989347,
+        "p90": 0.8017860301177144,
+        "p99": 0.8559928791490448
+      }
+    }
+  ],
+  "tile_comparison": {
+    "near_tiles": {
+      "count": 346,
+      "mean_depth": 1.767699633416639,
+      "center_density_per_tile": 872.5,
+      "projected_major_radius_px": 2.349497024975488,
+      "source_detail": 0.03979639708995819,
+      "render_detail": 0.02180774137377739,
+      "detail_retention": 0.5657868385314941,
+      "rgb_mae": 0.018787657842040062
+    },
+    "far_tiles": {
+      "count": 346,
+      "mean_depth": 11.327344983639964,
+      "center_density_per_tile": 806.5,
+      "projected_major_radius_px": 1.6439070676295908,
+      "source_detail": 0.07302651554346085,
+      "render_detail": 0.04002862423658371,
+      "detail_retention": 0.5375299453735352,
+      "rgb_mae": 0.04823517054319382
+    }
+  },
+  "ratios_far_over_near": {
+    "center_density": 0.9243553008595988,
+    "projected_major_radius": 0.6996846772541632,
+    "detail_retention": 0.9500573515790858
+  },
+  "spearman_correlations": {
+    "detail_retention_vs_mean_depth": -0.08159410398276311,
+    "detail_retention_vs_center_density": 0.25504374929222523,
+    "detail_retention_vs_projected_major_radius": 0.08584961532378338,
+    "rgb_mae_vs_mean_depth": 0.6846905202603387
+  },
+  "automatic_interpretation": "mixed_or_inconclusive",
+  "review_layout": [
+    "top-left source inference RGB",
+    "top-middle center render",
+    "top-right log Gaussian-center density",
+    "bottom-left mean Gaussian depth",
+    "bottom-middle projected major radius",
+    "bottom-right rendered/source detail retention"
+  ],
+  "output_review": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_center_gaussian_density_diagnostic_v1_linux5080_20260814/review_source_render_density_depth_radius_retention.png"
+}

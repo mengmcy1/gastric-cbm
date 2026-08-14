@@ -106,6 +106,12 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--overwrite", action="store_true", help="Recompute outputs that already exist.")
 
     parser.add_argument("--device", type=str, default="auto")
+    parser.add_argument(
+        "--sample-point-num",
+        type=int,
+        default=None,
+        help="Diagnostic override for encoder sample_point_num; omitted keeps the released config.",
+    )
     camera_group = parser.add_mutually_exclusive_group()
     camera_group.add_argument("--intrinsics-file", type=Path, default=None)
     camera_group.add_argument("--focal-px", type=float, default=None)
@@ -466,6 +472,18 @@ def run_batch(args: argparse.Namespace) -> dict[str, Any]:
         if pending_inference:
             progress.update(task, description="Preparing model")
             cfg = load_demo_config(MODE_EXPERIMENTS[args.mode])
+            if args.sample_point_num is not None:
+                if args.sample_point_num <= 0:
+                    raise ValueError("--sample-point-num must be positive")
+                if not hasattr(cfg.model.encoder, "sample_point_num"):
+                    raise ValueError(
+                        f"Encoder {type(cfg.model.encoder).__name__} has no sample_point_num field"
+                    )
+                cfg.model.encoder.sample_point_num = args.sample_point_num
+                print(
+                    "Diagnostic sample_point_num override: "
+                    f"{cfg.model.encoder.sample_point_num}"
+                )
             prompt_enabled = _validate_batch_prompt_configuration(cfg, args)
             checkpoint_path = _resolve_checkpoint_path(
                 args.checkpoint or MODE_CHECKPOINTS[args.mode]

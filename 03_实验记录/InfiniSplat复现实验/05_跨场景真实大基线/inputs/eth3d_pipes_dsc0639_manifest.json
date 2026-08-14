@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "ETH3D_PIPES_DSC0639",
+  "description": "ETH3D pipes 官方 undistorted DSLR 图像；pipes 场景高共视中基线 source",
+  "path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_pipes/extracted/pipes/images/dslr_images_undistorted/DSC_0639.JPG",
+  "sha256": "A333F5F5DC0A60A43C1991C707AD332640B5270E29E100C91B7AE03DC89F5110",
+  "bytes": 10137606,
+  "width": 6220,
+  "height": 4141,
+  "role": "真实 source 相机；target DSC_0640.JPG，基线 1.043970 m"
+}

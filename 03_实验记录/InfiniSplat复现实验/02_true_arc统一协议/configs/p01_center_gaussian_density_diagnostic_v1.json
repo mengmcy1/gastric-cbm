@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0-infinisplat-center-density-diagnostic-config",
+  "experiment_id": "P01_center_gaussian_density_diagnostic_v1_linux5080_20260814",
+  "producer_machine_id": "linux5080",
+  "research_question": "P01 远景模糊是否主要由远景屏幕空间高斯中心密度过低导致，还是高斯投影足迹偏大或表示阶段高频细节已丢失？",
+  "inputs": {
+    "ply": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+    "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+    "source_rgb": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+    "source_rgb_sha256": "68EE4C66CDC910673B536AF507F51C757E5325B02139C84585AFE610B0C80DA4",
+    "center_render": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/frame_center.png"
+  },
+  "analysis": {
+    "tile_size_px": 32,
+    "depth_quantile_bins": [0.0, 0.25, 0.5, 0.75, 1.0],
+    "projected_radius_definition": "1-sigma covariance ellipse computed from PLY rotation and exp(log-scale), projected with the embedded pinhole camera Jacobian",
+    "detail_metric": "mean absolute first-order grayscale gradient per 32x32 tile",
+    "density_metric": "projected Gaussian center count per 32x32 tile"
+  },
+  "interpretation_rules": {
+    "density_supported": "far-depth tiles have materially lower center density and detail retention increases with center density",
+    "footprint_or_bandwidth_supported": "far-depth tiles do not have materially lower density, while projected radii are larger and/or rendered high-frequency retention decreases with depth",
+    "boundary": "This is a center-view representation diagnostic, not a novel-view quality result and not a causal sample-count ablation."
+  }
+}

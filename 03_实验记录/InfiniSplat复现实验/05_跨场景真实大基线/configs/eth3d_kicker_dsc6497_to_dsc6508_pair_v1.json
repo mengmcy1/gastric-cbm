@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-pair",
+  "status": "frozen_protocol_level_reproduction_pair",
+  "dataset": "ETH3D high-res multi-view training / kicker",
+  "source_image_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_kicker/extracted/kicker/images/dslr_images_undistorted/DSC_6497.JPG",
+  "source_image_sha256": "C5B62A6581581F2E290692F57E03BA65C0FB796613CE40A80241EBF68C9EFC71",
+  "target_image_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_kicker/extracted/kicker/images/dslr_images_undistorted/DSC_6508.JPG",
+  "target_image_sha256": "F8394FAA900B8BDCA4143F7AF8358FFD21F1FF4DA061B5A461485BA68FDE385A",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/ETH3D_kicker_DSC6497_source_inference_v1_linux5080_20260814/DSC_6497/DSC_6497.ply",
+  "ply_sha256": "45B6413C3842EE7BCC3FA0DD95A62E98B6D9DB832E1CEC7463564E13FBC52295",
+  "source_original_shape_wh": [6211, 4137],
+  "source_intrinsics_px": [
+    [3410.34, 0.0, 3121.33],
+    [0.0, 3409.98, 2067.07],
+    [0.0, 0.0, 1.0]
+  ],
+  "target_original_shape_wh": [6211, 4137],
+  "target_intrinsics_px": [
+    [3410.34, 0.0, 3121.33],
+    [0.0, 3409.98, 2067.07],
+    [0.0, 0.0, 1.0]
+  ],
+  "source_camera_to_target_camera_w2c": [
+    [0.9984818958747652, -0.00045699801264761344, 0.05507898658426301, 2.2472564613044312],
+    [0.00800651827891249, 0.9905490740548245, -0.13692489749559406, -0.03246427186273382],
+    [-0.054495864754882564, 0.137158022156729, 0.9890489763821967, -0.33086974918815004],
+    [0.0, 0.0, 0.0, 1.0]
+  ],
+  "sequence_distance": 9,
+  "metric_baseline_m": 2.2717152820610953,
+  "paper_baseline_bin": "[2,+inf)",
+  "relative_rotation_deg": 8.490649146773281,
+  "covisibility_proxy": {
+    "definition": "shared registered COLMAP sparse points / smaller visible-point count",
+    "value": 0.6392156862745098,
+    "warning": "Auditable proxy, not the paper authors' unreleased exact frustum-overlap implementation."
+  },
+  "render_resolution_wh": [2016, 1344],
+  "device": "cuda:1",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/ETH3D_kicker_DSC6497_to_DSC6508_real_pose_v1",
+  "scope": "协议级复现：真实 source-target 图像、真实米制外参和论文 ETH3D 输出尺寸；kicker [2,+inf)m 大基线对；不是作者未公开 Fig.3/4 精确帧对"
+}

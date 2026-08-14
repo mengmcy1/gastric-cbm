@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0-infinisplat-official-orbit-dolly-config",
+  "status": "diagnostic_scene_calibration",
+  "trajectory_mode": "official_orbit_dolly_look_at",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/OFFICIAL_eth3d_scene_calibration_v1_linux5080_20260814/eth3d_courtyard/eth3d_courtyard.ply",
+  "ply_sha256": "3FE25E3F9DDD6A474EE7DCC3536770EFCE49EFF8A2383BAF0ED598FAED1DBB2E",
+  "device": "cuda:0",
+  "render_image_shape_hw": [1152, 1536],
+  "render_intrinsics_px": [
+    [1280.0, 0.0, 768.0],
+    [0.0, 1280.0, 576.0],
+    [0.0, 0.0, 1.0]
+  ],
+  "output_dir": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/OFFICIAL_eth3d_orbit_dolly_look_at_v1_linux5080_20260814",
+  "scope": "官方仓库 ETH3D courtyard 输入生成的 PLY，1536x1152，官方水平横移+前后dolly+持续look-at轨迹"
+}

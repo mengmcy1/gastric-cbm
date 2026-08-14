@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-pair",
+  "status": "frozen_protocol_level_reproduction_pair",
+  "dataset": "ETH3D high-res multi-view training / pipes",
+  "source_image_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_pipes/extracted/pipes/images/dslr_images_undistorted/DSC_0639.JPG",
+  "source_image_sha256": "A333F5F5DC0A60A43C1991C707AD332640B5270E29E100C91B7AE03DC89F5110",
+  "target_image_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_pipes/extracted/pipes/images/dslr_images_undistorted/DSC_0640.JPG",
+  "target_image_sha256": "DFC8A97E47C099FA59070342B1E7EC2E0840A6C3F184440FFC29E63AEBA0F542",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/ETH3D_pipes_DSC0639_source_inference_v1_linux5080_20260814/DSC_0639/DSC_0639.ply",
+  "ply_sha256": "717E1FF2E71850C72B3656EC1A472C09076C9E355C5B87AEBD7A6793580C5B1C",
+  "source_original_shape_wh": [6220, 4141],
+  "source_intrinsics_px": [
+    [3430.27, 0.0, 3119.2],
+    [0.0, 3429.23, 2057.75],
+    [0.0, 0.0, 1.0]
+  ],
+  "target_original_shape_wh": [6220, 4141],
+  "target_intrinsics_px": [
+    [3430.27, 0.0, 3119.2],
+    [0.0, 3429.23, 2057.75],
+    [0.0, 0.0, 1.0]
+  ],
+  "source_camera_to_target_camera_w2c": [
+    [0.9840457028307992, 0.0018406443487662973, 0.17790634268799774, -1.030914907191004],
+    [-0.0026747850602358487, 0.9999865262243334, 0.004448920618710253, 0.008044422114156846],
+    [-0.17789575673725194, -0.004853802444620643, 0.9840373673477592, 0.1643845358816991],
+    [0.0, 0.0, 0.0, 1.0]
+  ],
+  "sequence_distance": 1,
+  "metric_baseline_m": 1.0439696040751518,
+  "paper_baseline_bin": "[1,2)",
+  "relative_rotation_deg": 10.25189937943567,
+  "covisibility_proxy": {
+    "definition": "shared registered COLMAP sparse points / smaller visible-point count",
+    "value": 0.799163179916318,
+    "warning": "Auditable proxy, not the paper authors' unreleased exact frustum-overlap implementation."
+  },
+  "render_resolution_wh": [2016, 1344],
+  "device": "cuda:1",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/ETH3D_pipes_DSC0639_to_DSC0640_real_pose_v1",
+  "scope": "协议级复现：真实 source-target 图像、真实米制外参和论文 ETH3D 输出尺寸；pipes [1,2)m 中基线高共视对；不宣称为 [2,+inf)m 大基线"
+}

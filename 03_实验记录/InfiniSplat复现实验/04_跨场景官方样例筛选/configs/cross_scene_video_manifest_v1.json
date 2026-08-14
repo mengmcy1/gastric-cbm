@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0-cross-scene-video-manifest",
+  "scenes": [
+    {"scene_id": "ScanNetPP", "scene_class": "real_indoor", "mode": "rgb", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/室内/01_ScanNetPP/02_official_rgb_demo.mp4"},
+    {"scene_id": "MyBedroom", "scene_class": "real_indoor", "mode": "rgb", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/室内/02_MyBedroom/02_official_rgb_demo.mp4"},
+    {"scene_id": "OldLivingRoom", "scene_class": "real_indoor", "mode": "rgb", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/室内/03_OldLivingRoom/02_official_rgb_demo.mp4"},
+    {"scene_id": "Bedroom", "scene_class": "real_indoor", "mode": "rgb", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/室内/04_Bedroom/02_official_rgb_demo.mp4"},
+    {"scene_id": "Waymo9", "scene_class": "road", "mode": "rgb_on_official_lidar_demo_image", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/道路/05_Waymo9/02_official_rgb_demo.mp4"},
+    {"scene_id": "Waymo147", "scene_class": "road", "mode": "rgb_on_official_lidar_demo_image", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/道路/06_Waymo147/02_official_rgb_demo.mp4"},
+    {"scene_id": "ETH3D_Kicker", "scene_class": "industrial_indoor", "mode": "rgb_on_official_lidar_demo_image", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/工业/07_ETH3D_Kicker/02_official_rgb_demo.mp4"},
+    {"scene_id": "ETH3D_Pipes", "scene_class": "industrial_indoor", "mode": "rgb_on_official_lidar_demo_image", "video": "临时_PPT_InfiniSplat问题总结_20260814/新增_跨场景候选_室内道路工业_20260814/工业/08_ETH3D_Pipes/02_official_rgb_demo.mp4"}
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0-infinisplat-sample-budget-comparison",
+  "status": "success",
+  "experiment_id": "P01_sample_budget_comparison_v1_linux5080_20260814",
+  "producer_machine_id": "linux5080",
+  "scope": "仅中心0°表示密度因果消融；不代表新视角、显露补全或用户质量门。",
+  "far_tile_definition": "upper quartile of baseline projected mean Gaussian depth among tiles with source detail above its 20th percentile",
+  "near_tile_definition": "lower quartile under the same validity rule",
+  "metrics": [
+    {
+      "label": "0750k",
+      "requested_sample_point_num": 750000,
+      "gaussian_count_after_filter": 737321,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_0750k_center_render_v1_linux5080_20260814/frame_center.png",
+      "overall": {
+        "psnr_db": 22.880661785637027,
+        "rgb_mae": 0.039424341171979904,
+        "detail_retention_median": 0.5179154872894287
+      },
+      "near_tiles": {
+        "psnr_db": 26.72680776885267,
+        "rgb_mae": 0.03097514435648918,
+        "detail_retention_median": 0.530449628829956
+      },
+      "far_tiles": {
+        "psnr_db": 19.964646631913766,
+        "rgb_mae": 0.06236199662089348,
+        "detail_retention_median": 0.5859073400497437
+      },
+      "coverage": {
+        "alpha_ge_095": 0.7553631817853009,
+        "hard_hole_lt_050": 0.02369407371238426
+      }
+    },
+    {
+      "label": "1500k_official",
+      "requested_sample_point_num": 1500000,
+      "gaussian_count_after_filter": 1476073,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_true_arc_5deg_inference_resolution_diagnostic_v1_linux5080_20260812/frame_center.png",
+      "overall": {
+        "psnr_db": 24.881335558308947,
+        "rgb_mae": 0.03052203357219696,
+        "detail_retention_median": 0.5320488214492798
+      },
+      "near_tiles": {
+        "psnr_db": 30.662805396711242,
+        "rgb_mae": 0.019512614235281944,
+        "detail_retention_median": 0.5657868385314941
+      },
+      "far_tiles": {
+        "psnr_db": 21.62211269723577,
+        "rgb_mae": 0.05053079500794411,
+        "detail_retention_median": 0.5375299453735352
+      },
+      "coverage": {
+        "alpha_ge_095": 0.9576952898943866,
+        "hard_hole_lt_050": 0.0019096091941550927
+      }
+    },
+    {
+      "label": "2000k",
+      "requested_sample_point_num": 2000000,
+      "gaussian_count_after_filter": 1967701,
+      "frame": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_center_render_v1_linux5080_20260814/frame_center.png",
+      "overall": {
+        "psnr_db": 24.690556015007555,
+        "rgb_mae": 0.0303566362708807,
+        "detail_retention_median": 0.5355634689331055
+      },
+      "near_tiles": {
+        "psnr_db": 30.797650631111154,
+        "rgb_mae": 0.019136231392621994,
+        "detail_retention_median": 0.5698442459106445
+      },
+      "far_tiles": {
+        "psnr_db": 21.457796427346217,
+        "rgb_mae": 0.05060746520757675,
+        "detail_retention_median": 0.5336799621582031
+      },
+      "coverage": {
+        "alpha_ge_095": 0.9832831488715278,
+        "hard_hole_lt_050": 0.00047980414496527775
+      }
+    }
+  ],
+  "high_2000k_vs_official_1500k": {
+    "overall_psnr_delta_db": -0.19077954330139235,
+    "far_psnr_delta_db": -0.16431626988955372,
+    "far_detail_retention_delta": -0.0038499832153320312,
+    "hard_hole_relative_change": -0.748742231429417
+  },
+  "low_0750k_vs_official_1500k": {
+    "overall_psnr_delta_db": -2.00067377267192,
+    "far_psnr_delta_db": -1.657466065322005,
+    "far_detail_retention_delta": 0.048377394676208496,
+    "hard_hole_relative_change": 11.407812962414916
+  },
+  "automatic_interpretation": "sample_budget_improves_coverage_but_not_far_detail",
+  "review_layout": "top: source, 0750k, 1500k, 2000k; bottom: red far-tile mask, then 4x enhanced absolute differences",
+  "review_path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_comparison_v1_linux5080_20260814/review_source_0750k_1500k_2000k_and_differences.png"
+}

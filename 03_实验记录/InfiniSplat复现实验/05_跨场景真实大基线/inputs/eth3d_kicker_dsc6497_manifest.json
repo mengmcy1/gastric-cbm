@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "ETH3D_KICKER_DSC6497",
+  "description": "ETH3D kicker 官方 undistorted DSLR 图像；kicker 场景通过本地论文大基线代理门槛的 source",
+  "path": "03_实验记录/InfiniSplat复现实验/05_跨场景真实大基线/outputs/datasets/eth3d_kicker/extracted/kicker/images/dslr_images_undistorted/DSC_6497.JPG",
+  "sha256": "C5B62A6581581F2E290692F57E03BA65C0FB796613CE40A80241EBF68C9EFC71",
+  "bytes": 14164581,
+  "width": 6211,
+  "height": 4137,
+  "role": "真实 source 相机；target DSC_6508.JPG，基线 2.271715 m"
+}

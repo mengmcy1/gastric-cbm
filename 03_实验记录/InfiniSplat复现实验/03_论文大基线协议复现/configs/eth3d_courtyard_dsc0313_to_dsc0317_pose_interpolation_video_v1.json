@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-interpolation-video",
+  "status": "candidate",
+  "pair_config": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/configs/eth3d_courtyard_dsc0313_to_dsc0317_pair_v1.json",
+  "trajectory": {
+    "frame_count": 60,
+    "fps": 10,
+    "translation": "linear interpolation of camera center in source-camera coordinates",
+    "rotation": "shortest geodesic interpolation on SO(3) from source to target C2W rotation",
+    "intrinsics": "linear interpolation between scaled real source and target intrinsics",
+    "endpoint_contract": "frame 0 is the real source camera; frame 59 is the frozen real target camera"
+  },
+  "device": "cuda:0",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/ETH3D_courtyard_DSC0313_to_DSC0317_pose_interpolation_video_v1_linux5080_20260814",
+  "scope": "可视化真实 source-target 相机变化及高斯覆盖崩塌过程；不是作者公开视频或论文精确轨迹"
+}

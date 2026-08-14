@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0-infinisplat-true-arc-diagnostic-config",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_ply_v1_linux5080_20260814/input/input.ply",
+  "ply_sha256": "5A024A002C70D9FA71C2705E37F87787AC575E21096A40BB6B6DAA5F0C182EF9",
+  "device": "cuda:0",
+  "trajectory_mode": "true_arc",
+  "angle_total_deg": 0.0,
+  "num_steps": 3,
+  "focus_depth_quantile": 0.1,
+  "minimum_focus_depth": 2.0,
+  "render_resolution_wh": [1536, 1152],
+  "fps": 1,
+  "background": "black",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_sample_budget_2000k_center_render_v1_linux5080_20260814",
+  "scope": "200万采样预算的中心单视角等价静态渲染；3帧全为0°，不评价新视角。"
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0-infinisplat-official-orbit-dolly-config",
+  "status": "diagnostic_scene_calibration",
+  "trajectory_mode": "official_orbit_dolly_look_at",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/01_官方RGB单图冒烟/outputs/P01_official_rgb_video_smoke_v1_linux5080_20260812_video_retry2/input/input.ply",
+  "ply_sha256": "D057D1D10FAF4CAB923ADAED739A85FC0E838C28919C965ADF185B0110F94735",
+  "device": "cuda:0",
+  "render_image_shape_hw": [1152, 1536],
+  "render_intrinsics_px": [
+    [1198.1524658203125, 0.0, 768.0],
+    [0.0, 1198.1524658203125, 576.0],
+    [0.0, 0.0, 1.0]
+  ],
+  "output_dir": "03_实验记录/InfiniSplat复现实验/02_true_arc统一协议/outputs/01_诊断对照/P01_official_orbit_dolly_look_at_v1_linux5080_20260814",
+  "scope": "自有 P01 冻结 PLY，1536x1152 推理分辨率，官方水平横移+前后dolly+持续look-at轨迹；与 true_arc 正式角度协议分开"
+}

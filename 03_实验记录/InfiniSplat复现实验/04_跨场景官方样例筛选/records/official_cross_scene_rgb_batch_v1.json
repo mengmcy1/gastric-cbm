@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0-infinisplat-cross-scene-rgb-batch-record",
+  "date": "2026-08-14",
+  "status": "success",
+  "source_commit": "4146c8683b9bfb7756ddf45bf293093a31848074",
+  "checkpoint": "infinisplat_rgb.ckpt",
+  "checkpoint_sha256": "D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D",
+  "physical_gpu": 2,
+  "gpu_selection_note": "GPU1 had an existing ~6.4GB high-utilization process; it was preserved and GPU2 was used.",
+  "new_scenes_succeeded": 7,
+  "reused_scene": "ScanNetPP",
+  "output_dir": "outputs/OFFICIAL_cross_scene_rgb_batch_v1_linux5080_20260814",
+  "scene_groups": {
+    "indoor": ["ScanNetPP", "MyBedroom", "OldLivingRoom", "Bedroom"],
+    "road": ["Waymo9", "Waymo147"],
+    "industrial_indoor": ["ETH3D_Kicker", "ETH3D_Pipes"]
+  },
+  "near_black_fraction_mean_proxy": {
+    "ScanNetPP": 0.1353209036367911,
+    "MyBedroom": 0.0173051746172362,
+    "OldLivingRoom": 0.022025094329317953,
+    "Bedroom": 0.0008338170259812052,
+    "Waymo9": 0.2557097846137153,
+    "Waymo147": 0.11878743489583334,
+    "ETH3D_Kicker": 0.0567514525519477,
+    "ETH3D_Pipes": 0.08472725550333658
+  },
+  "recommendations": {
+    "road_primary": "Waymo147",
+    "road_failure_case": "Waymo9",
+    "indoor_primary": "ScanNetPP",
+    "indoor_cleaner_case": "MyBedroom",
+    "industrial_primary": "ETH3D_Kicker"
+  },
+  "scope_warnings": [
+    "All new runs use the RGB-only checkpoint and public CLI demo trajectory.",
+    "Waymo and ETH3D kicker/pipes images come from the official lidar_demo directory but were intentionally run in RGB mode for a modality-consistent scouting matrix.",
+    "Near-black RGB area is not renderer Alpha and can count genuinely dark content.",
+    "These are scene-diversity scouting results, not real source-target large-baseline benchmark pairs."
+  ]
+}

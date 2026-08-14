@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0-infinisplat-cross-scene-large-angle-config",
+  "status": "diagnostic",
+  "scene_id": "waymo_147",
+  "scene_group": "road",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/04_跨场景官方样例筛选/outputs/OFFICIAL_cross_scene_rgb_batch_v1_linux5080_20260814/waymo_147/waymo_147.ply",
+  "ply_sha256": "72A8D3F93C255D6D78970D7D7CE417325B15CF5EB13EFE6253945AEC047D913B",
+  "device": "cuda:2",
+  "trajectory_mode": "true_arc",
+  "angle_total_deg": 30.0,
+  "num_steps": 61,
+  "focus_depth_quantile": 0.1,
+  "minimum_focus_depth": 2.0,
+  "render_resolution_wh": [1536, 1152],
+  "fps": 10,
+  "background": "black",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/04_跨场景官方样例筛选/outputs/LARGEANGLE_30deg_true_arc_v1_linux5080_20260814/waymo_147",
+  "scope": "冻结官方 RGB-only PLY；原相机为中心；30° 总范围（±15°）true_arc；仅用于合成大角度压力测试"
+}

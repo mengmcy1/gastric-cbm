@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0-infinisplat-input-manifest",
+  "sample_id": "OFFICIAL_ETH3D_COURTYARD",
+  "description": "InfiniSplat 官方仓库自带的 ETH3D courtyard 真实场景示例",
+  "path": "源码/InfiniSplat/examples/data/rgb_demo/eth3d_courtyard.png",
+  "sha256": "90C018F87FBB253C200F74EC283A31FBC2F7C7C0A60E873E1868070211B6CF3D",
+  "bytes": 2193923,
+  "width": 1536,
+  "height": 1024,
+  "role": "官方风格大平面+明确前景物体适用域校准；不代替论文真实源-目标位姿 Benchmark"
+}

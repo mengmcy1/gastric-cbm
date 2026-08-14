@@ -1,0 +1,9 @@
+{
+  "intrinsics_px": [
+    [3430.27, 0.0, 3119.2],
+    [0.0, 3429.23, 2057.75],
+    [0.0, 0.0, 1.0]
+  ],
+  "source": "ETH3D pipes/dslr_calibration_undistorted/cameras.txt camera_id=0",
+  "image_shape_wh": [6220, 4141]
+}

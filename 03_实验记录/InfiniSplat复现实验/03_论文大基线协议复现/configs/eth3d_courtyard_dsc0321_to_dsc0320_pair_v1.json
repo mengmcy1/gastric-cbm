@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0-infinisplat-real-pose-pair",
+  "status": "frozen_protocol_level_reproduction_pair",
+  "dataset": "ETH3D high-res multi-view training / courtyard",
+  "source_image_path": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/datasets/eth3d_courtyard/extracted/courtyard/images/dslr_images_undistorted/DSC_0321.JPG",
+  "source_image_sha256": "363DB10460AE2157EBCC6C11D148BAD2DC95C3DC0A77B3A84DC65719A1A2D219",
+  "target_image_path": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/datasets/eth3d_courtyard/extracted/courtyard/images/dslr_images_undistorted/DSC_0320.JPG",
+  "target_image_sha256": "94AD73B669E5B147CA9F66863C410ABE8E77076C2D386903FBC0E1B377F6E675",
+  "ply_path": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/ETH3D_courtyard_DSC0321_source_inference_v1_linux5080_20260814/DSC_0321/DSC_0321.ply",
+  "ply_sha256": "CC64E4595D9D16FDD9FF8F89214AAD53BE387F97AE38205AD5A71A18A481B1DE",
+  "source_original_shape_wh": [6205, 4135],
+  "source_intrinsics_px": [[3409.58, 0.0, 3115.16], [0.0, 3409.44, 2064.73], [0.0, 0.0, 1.0]],
+  "target_original_shape_wh": [6205, 4135],
+  "target_intrinsics_px": [[3409.58, 0.0, 3115.16], [0.0, 3409.44, 2064.73], [0.0, 0.0, 1.0]],
+  "source_camera_to_target_camera_w2c": [
+    [0.9991062284059774, 0.033230832235611726, 0.026123861684505714, 2.5945802680979373],
+    [-0.03344391153668461, 0.9994104525559622, 0.00776222281395878, -0.06889930402342337],
+    [-0.025850515304515057, -0.00862896927887423, 0.9996285768962769, -0.06145131987409336],
+    [0.0, 0.0, 0.0, 1.0]
+  ],
+  "sequence_distance": 1,
+  "metric_baseline_m": 2.5962222837061484,
+  "paper_baseline_bin": "[2,+inf)",
+  "relative_rotation_deg": 2.4677318742828107,
+  "covisibility_proxy": {"definition": "shared registered COLMAP sparse points / smaller visible-point count", "value": 0.6048780487804878, "warning": "Auditable proxy, not the paper authors' unreleased exact frustum-overlap implementation."},
+  "render_resolution_wh": [2016, 1344],
+  "device": "cuda:0",
+  "output_dir": "03_实验记录/InfiniSplat复现实验/03_论文大基线协议复现/outputs/ETH3D_courtyard_DSC0321_to_DSC0320_real_pose_v1_linux5080_20260814",
+  "scope": "协议级复现补充相机对；不是作者未公开 Fig.3/4 精确帧对"
+}

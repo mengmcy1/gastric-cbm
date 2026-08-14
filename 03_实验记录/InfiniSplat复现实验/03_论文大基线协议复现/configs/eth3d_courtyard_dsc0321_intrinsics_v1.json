@@ -1,0 +1,5 @@
+{
+  "intrinsics_px": [[3409.58, 0.0, 3115.16], [0.0, 3409.44, 2064.73], [0.0, 0.0, 1.0]],
+  "source": "ETH3D courtyard/dslr_calibration_undistorted/cameras.txt camera_id=1",
+  "image_shape_wh": [6205, 4135]
+}
