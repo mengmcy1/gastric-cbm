@@ -46,13 +46,18 @@ IMAGE_SIZE = 640
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse role, seed, inspected CUDA device and isolated debug flag."""
+    """Parse role, seed, inspected CUDA device, debug and resume mode."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--role", choices=("balanced", "full"), required=True)
     parser.add_argument("--seed", type=int, choices=ALLOWED_SEEDS, required=True)
     parser.add_argument("--device", required=True)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume an interrupted formal run from its optimizer-bearing last.pt.",
+    )
     return parser.parse_args()
 
 
@@ -170,6 +175,8 @@ def verify_products(run_dir: Path, debug: bool) -> dict:
 def main() -> None:
     """Train one independent replicate without reading test or external data."""
     args = parse_args()
+    if args.debug and args.resume:
+        raise ValueError("Debug runs cannot use formal resume mode")
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is unavailable; refusing to start Y3")
     if args.role == "balanced" and args.seed == 42 and not args.debug:
@@ -182,26 +189,47 @@ def main() -> None:
     output_root = args.output_root.resolve()
     run_name = expected_run_name(args.role, args.seed, args.debug)
     run_dir = output_root / run_name
-    if run_dir.exists():
-        raise FileExistsError(f"Y3 output already exists: {run_dir}")
-
-    model = YOLO(str(PRETRAINED_PATH))
-    environment = assert_locked_library_behavior(model)
-    model.train(
-        data=str(data_root / "data.yaml"),
-        model=str(PRETRAINED_PATH),
-        epochs=1 if args.debug else FORMAL_EPOCHS,
-        patience=FORMAL_PATIENCE,
-        imgsz=IMAGE_SIZE,
-        device=args.device,
-        seed=args.seed,
-        fraction=1.0,
-        project=str(output_root),
-        name=run_name,
-        exist_ok=False,
-        verbose=True,
-        **FROZEN_TRAIN_ARGS,
-    )
+    resume_metadata = None
+    if args.resume:
+        last_checkpoint = run_dir / "weights/last.pt"
+        history_path = run_dir / "results.csv"
+        if not last_checkpoint.is_file() or not history_path.is_file():
+            raise FileNotFoundError(f"Y3 resume products are incomplete: {run_dir}")
+        if (run_dir / "y3_train_config.json").exists():
+            raise FileExistsError("Y3 training config already exists; refusing completed-run resume")
+        verify_args_yaml(run_dir / "args.yaml", args.role, args.seed, False, data_root)
+        history_before = pd.read_csv(history_path)
+        history_before.columns = history_before.columns.str.strip()
+        if not 1 <= len(history_before) < FORMAL_EPOCHS:
+            raise ValueError(f"Invalid Y3 resume history length: {len(history_before)}")
+        resume_metadata = {
+            "checkpoint": str(last_checkpoint),
+            "checkpoint_sha256": file_sha256(last_checkpoint),
+            "completed_epochs_before_resume": int(len(history_before)),
+        }
+        model = YOLO(str(last_checkpoint))
+        environment = assert_locked_library_behavior(model)
+        model.train(resume=True, device=args.device)
+    else:
+        if run_dir.exists():
+            raise FileExistsError(f"Y3 output already exists: {run_dir}")
+        model = YOLO(str(PRETRAINED_PATH))
+        environment = assert_locked_library_behavior(model)
+        model.train(
+            data=str(data_root / "data.yaml"),
+            model=str(PRETRAINED_PATH),
+            epochs=1 if args.debug else FORMAL_EPOCHS,
+            patience=FORMAL_PATIENCE,
+            imgsz=IMAGE_SIZE,
+            device=args.device,
+            seed=args.seed,
+            fraction=1.0,
+            project=str(output_root),
+            name=run_name,
+            exist_ok=False,
+            verbose=True,
+            **FROZEN_TRAIN_ARGS,
+        )
 
     persisted_args = verify_args_yaml(
         run_dir / "args.yaml", args.role, args.seed, args.debug, data_root
@@ -233,6 +261,7 @@ def main() -> None:
             "patience": FORMAL_PATIENCE,
             **FROZEN_TRAIN_ARGS,
         },
+        "resume": resume_metadata,
         "persisted_args": persisted_args,
         "products": products,
         "geometry_evaluated": False,

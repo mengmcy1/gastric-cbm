@@ -30,14 +30,22 @@ run_replicate() {
     echo "SKIP $run_name: 完整训练与几何结果已存在"
     return 0
   fi
+  local resume_args=()
   if [[ -e "$run_dir" ]]; then
-    echo "ERROR $run_name: 存在残缺产物，请人工检查并归档；脚本不覆盖" >&2
-    return 1
+    if [[ -f "$run_dir/weights/last.pt" && -f "$run_dir/results.csv" \
+          && ! -e "$run_dir/y3_train_config.json" ]]; then
+      resume_args=(--resume)
+      echo "RESUME $run_name: 从现有last.pt继续正式训练"
+    else
+      echo "ERROR $run_name: 存在不可安全续训的残缺产物，请人工检查并归档" >&2
+      return 1
+    fi
   fi
 
   echo "[$(date '+%F %T')] START $run_name" | tee "$log_path"
   "$PYTHON" "$CODE_DIR/train_y3_yolo26.py" \
-    --role "$role" --seed "$seed" --device "$CUDA_DEVICE" 2>&1 | tee -a "$log_path"
+    --role "$role" --seed "$seed" --device "$CUDA_DEVICE" "${resume_args[@]}" \
+    2>&1 | tee -a "$log_path"
   local train_status=${PIPESTATUS[0]}
   if [[ $train_status -ne 0 ]]; then
     echo "[$(date '+%F %T')] FAILED train $run_name" | tee -a "$log_path"
