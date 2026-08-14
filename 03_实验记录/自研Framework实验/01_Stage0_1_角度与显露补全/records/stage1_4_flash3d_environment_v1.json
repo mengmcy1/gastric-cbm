@@ -1,7 +1,7 @@
 {
   "schema_version": "stage1.4-flash3d-environment-v1",
   "producer_machine_id": "linux5080",
-  "captured_date": "2026-08-13",
+  "captured_date": "2026-08-14",
   "environment": {
     "conda_name": "flash3d",
     "python": "3.10.20",
@@ -15,7 +15,8 @@
   },
   "source_commits": {
     "flash3d": "a71c9b92b07a76cf944f2ed894f384f0891a1960",
-    "unidepth": "8d8cfe4c7ee15297099983607febf0d4f32eb3d6",
+    "unidepth": "bebc4b2fdda5c223693c390739db76897aee42e5",
+    "xformers_nystrom_formula": "7fffd3d65c0a30053d26d23871b985ac7665c36d",
     "diff_gaussian_rasterization_w_pose": "f6ac989b52b619f8522c9853d655e78813377f86"
   },
   "artifacts": {
@@ -40,15 +41,21 @@
     "existing_processes_terminated": false
   },
   "minimal_layer_smoke": {
-    "status": "blocked",
-    "result_json_emitted": false,
+    "status": "pass",
+    "result_json_emitted": true,
+    "record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_flash3d_layer_smoke_v1.json",
     "checkpoint_batch_buffer_mismatch": "resolved by matching official load_model backproject_depth replacement",
-    "blocking_stage": "UniDepth v1 encoder attention",
-    "blocking_reason": "xformers 0.0.33.post1 has no FP32 memory_efficient_attention kernel for compute capability 12.0; its legacy NystromAttention component is also unavailable",
-    "not_caused_by": [
-      "GPU out of memory",
-      "Flash3D checkpoint tensor mismatch"
-    ]
+    "compatibility": "historical UniDepth PyTorch reference attention plus explicit xformers 0.0.25.post1 Nystrom formula with standard head folding",
+    "runtime_seconds": 0.8950698509579524,
+    "peak_memory_bytes": 2489876480,
+    "all_outputs_finite": true,
+    "positive_second_layer_increment_fraction": 1.0,
+    "known_upstream_unidepth_weight_missing_keys": [
+      "pixel_encoder.register_tokens",
+      "pixel_encoder.norm.weight",
+      "pixel_encoder.norm.bias"
+    ],
+    "fidelity_boundary": "not claimed bitwise-identical to the original unpinned xformers/UniDepth environment"
   },
-  "next_action": "Port the official xformers 0.0.25.post1 NystromAttention implementation as an explicit compatibility layer and use PyTorch SDPA for the DINO attention path, then rerun the minimal layer-schema smoke before any RealEstate10K frame download or Flash3D-to-CLB adapter work."
+  "next_action": "Download only the source/left/right frames for five distinct selected RealEstate10K sequences, then implement and validate the Flash3D-to-CLB occlusion-hidden adapter."
 }

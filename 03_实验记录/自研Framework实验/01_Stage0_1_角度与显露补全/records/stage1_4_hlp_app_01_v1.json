@@ -1,0 +1,186 @@
+{
+  "schema_version": "stage1.4-hlp-app-01-v1",
+  "status": "partial_failure",
+  "producer_machine_id": "linux5080",
+  "scope": "five distinct RealEstate10K source/left/right RGB triplets; no depth truth",
+  "selection": {
+    "rule": "lowest angle_error_sum_deg, at most one triplet per sequence",
+    "requested_sequence_count": 5,
+    "selected_sequences": [
+      "c767b97c0d3caca4",
+      "ba26189581b38b93",
+      "1b87f55dec310243",
+      "168c85ce00de0c6b",
+      "fc966f25afa3659f"
+    ],
+    "successful_sequence_count": 2,
+    "failed_sequence_count": 3
+  },
+  "inputs": {
+    "triplets": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_re10k_angle_triplets_v1.json",
+      "bytes": 43906,
+      "sha256": "e2bdcadd72eb2a502ea49b5405acb79079ed60c776c71287837355af3a4b236c"
+    },
+    "metadata_tar": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/RealEstate10K.tar.gz",
+      "bytes": 752332631,
+      "sha256": "af18e4d560ee9f73120128e53a56da215e118f3fb52018c14a66aa0f8ed691db"
+    }
+  },
+  "source_protocol": {
+    "downloader_basis": "Flash3D official download_realestate10k.py",
+    "stream": "360p progressive MP4",
+    "timestamp_unit": "microseconds",
+    "full_dataset_downloaded": false,
+    "files_deleted": false
+  },
+  "sequences": [
+    {
+      "sequence": "1b87f55dec310243",
+      "video_url": "https://www.youtube.com/watch?v=Zbn3cM4_s2Q",
+      "stream": {
+        "itag": 18,
+        "resolution": "360p",
+        "fps": 30,
+        "mime_type": "video/mp4"
+      },
+      "video": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/source_video.mp4",
+        "bytes": 13846613,
+        "sha256": "e951e6fa605101477a887b1341117be307d60e94f6dca06aa86330abf7cf664d"
+      },
+      "metadata": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/metadata.txt",
+        "bytes": 64208,
+        "sha256": "7f34ec2c3c8ffcdbcc947af13d161e84e6f41e540c0eb2df3acba9e8144dc382"
+      },
+      "triplet": {
+        "sequence": "1b87f55dec310243",
+        "video_url": "https://www.youtube.com/watch?v=Zbn3cM4_s2Q",
+        "source_index": 185,
+        "source_timestamp": "175208367",
+        "left_index": 147,
+        "left_timestamp": "173940433",
+        "left_angle_deg": -14.995666084763226,
+        "left_translation": 1.0414274586819436,
+        "left_intrinsics_relative_change": 0.0,
+        "right_index": 224,
+        "right_timestamp": "176509667",
+        "right_angle_deg": 14.990207838987926,
+        "right_translation": 1.1960152123741816,
+        "right_intrinsics_relative_change": 0.0,
+        "total_angle_deg": 29.98587392375115,
+        "angle_error_sum_deg": 0.014126076248848207
+      },
+      "frames": {
+        "source": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/source.jpg",
+          "bytes": 19154,
+          "sha256": "e1f8b3db9857dd46894624eb21288c3423b77b0901970dca1650f1f5ca2e7a67",
+          "timestamp_microseconds": "175208367",
+          "frame_index": 185,
+          "angle_deg": 0.0
+        },
+        "left": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/left.jpg",
+          "bytes": 17718,
+          "sha256": "09ca6c5a7bf2943c99fafcfc318b7cca584a0113cad73447025ae899191a8b81",
+          "timestamp_microseconds": "173940433",
+          "frame_index": 147,
+          "angle_deg": -14.995666084763226
+        },
+        "right": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/right.jpg",
+          "bytes": 18162,
+          "sha256": "c16f42175d33fa59c09fae564982755dccb6f7838efb81b7db4eede768e58e9f",
+          "timestamp_microseconds": "176509667",
+          "frame_index": 224,
+          "angle_deg": 14.990207838987926
+        }
+      }
+    },
+    {
+      "sequence": "168c85ce00de0c6b",
+      "video_url": "https://www.youtube.com/watch?v=9y7z98Qf7rk",
+      "stream": {
+        "itag": 18,
+        "resolution": "360p",
+        "fps": 30,
+        "mime_type": "video/mp4"
+      },
+      "video": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/source_video.mp4",
+        "bytes": 16428724,
+        "sha256": "db39055dd2458f67a9043de8225c8b0dd53a0473057a1960f1bdbd4506d097cd"
+      },
+      "metadata": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/metadata.txt",
+        "bytes": 64277,
+        "sha256": "68c66824d2abfbe2cc9303a47743eb960748f16bd0b5ac088034f44ccf2d693b"
+      },
+      "triplet": {
+        "sequence": "168c85ce00de0c6b",
+        "video_url": "https://www.youtube.com/watch?v=9y7z98Qf7rk",
+        "source_index": 73,
+        "source_timestamp": "97096000",
+        "left_index": 51,
+        "left_timestamp": "96362000",
+        "left_angle_deg": -15.005301454203558,
+        "left_translation": 0.5481118282141866,
+        "left_intrinsics_relative_change": 0.0,
+        "right_index": 97,
+        "right_timestamp": "97897000",
+        "right_angle_deg": 15.009276816575435,
+        "right_translation": 0.5661735428357855,
+        "right_intrinsics_relative_change": 0.0,
+        "total_angle_deg": 30.01457827077899,
+        "angle_error_sum_deg": 0.01457827077899232
+      },
+      "frames": {
+        "source": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/source.jpg",
+          "bytes": 17692,
+          "sha256": "c3cb246179d44a578d25c199cc73a0613983a23593da9416428027ce1be870b3",
+          "timestamp_microseconds": "97096000",
+          "frame_index": 73,
+          "angle_deg": 0.0
+        },
+        "left": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/left.jpg",
+          "bytes": 18144,
+          "sha256": "06c0a8d14afd7d2dda49cba7ac6da32a6485938748ab71d86fc7fa976e474ba8",
+          "timestamp_microseconds": "96362000",
+          "frame_index": 51,
+          "angle_deg": -15.005301454203558
+        },
+        "right": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/right.jpg",
+          "bytes": 14478,
+          "sha256": "cd629c5cfea84873bf0bea40ba205e13afe13c607d107ecf257627b57e6fff90",
+          "timestamp_microseconds": "97897000",
+          "frame_index": 97,
+          "angle_deg": 15.009276816575435
+        }
+      }
+    }
+  ],
+  "failures": [
+    {
+      "sequence": "c767b97c0d3caca4",
+      "error_type": "BotDetection",
+      "error": "xS9TMfdI-0I This request was detected as a bot. DO NOT OPEN AN ISSUE! See more details at https://pytubefix.readthedocs.io/en/latest/user/po_token.html"
+    },
+    {
+      "sequence": "ba26189581b38b93",
+      "error_type": "BotDetection",
+      "error": "rfZc1OSQkIo This request was detected as a bot. DO NOT OPEN AN ISSUE! See more details at https://pytubefix.readthedocs.io/en/latest/user/po_token.html"
+    },
+    {
+      "sequence": "fc966f25afa3659f",
+      "error_type": "BotDetection",
+      "error": "8bhwpEyHrUM This request was detected as a bot. DO NOT OPEN AN ISSUE! See more details at https://pytubefix.readthedocs.io/en/latest/user/po_token.html"
+    }
+  ],
+  "quality_boundary": "RGB/pose appearance set only; no dense depth and no provider-quality conclusion"
+}

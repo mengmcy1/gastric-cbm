@@ -1,0 +1,81 @@
+{
+  "schema_version": "stage1.7-official-ldi-true-arc-v4",
+  "status": "awaiting_manual_review",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "python_environment": "inpaint-3dphoto",
+  "physical_gpu_index": 1,
+  "official_source": {
+    "repository": "https://github.com/vt-vl-lab/3d-photo-inpainting",
+    "commit": "de0446740a3726f3de76c32e78b43bd985d987f9",
+    "source_modified": false
+  },
+  "method_boundary": "official full LDI construction and iterative local edge/depth/color inpainting; project wrapper supplies frozen P01 depth, calibrated intrinsics, and true_arc camera poses",
+  "inputs": {
+    "image": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+    "image_sha256": "68ee4c66cdc910673b536af507f51c757e5325b02139c84585afe610b0c80da4",
+    "center_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/03_正式矩阵/P01_stage01_true_arc_formal_v4_fallback_20260807/P01/ang30/render_a/depth_center_float32.npy",
+    "center_depth_sha256": "4627b4b681b9981a08cbfcf3ccecc47c43a4f5ebd11c5159cef4d091fa55ce05",
+    "focal_px_original": 3195.073
+  },
+  "protocol": {
+    "trajectory": "true_arc",
+    "angle_total_deg": 30.0,
+    "endpoint_angles_deg": [-15.0, 15.0],
+    "arc_radius": 5.203962802886963,
+    "num_frames": 61,
+    "fps": 30,
+    "resolution_wh": [768, 576],
+    "crop_border": [0.0, 0.0, 0.0, 0.0],
+    "video_codec": "h264",
+    "pixel_format": "yuv420p"
+  },
+  "models": {
+    "edge-model.pth": {"bytes": 45974122, "sha256": "b1d768bd008ad5fe9f540004f870b8c3d355e4939b2009aa4db493fd313217c9"},
+    "depth-model.pth": {"bytes": 206272258, "sha256": "2d0e63e89a22762ddfa8bc8c9f8c992e5532b140123274ffc6e4171baa1b76f8"},
+    "color-model.pth": {"bytes": 206331633, "sha256": "383c9b1db70097907a6f9c8abb0303e7056f50d5456a36f34ab784592b8b2c20"}
+  },
+  "wrapper": {
+    "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/scripts/stage1_7_run_official_ldi_true_arc.py",
+    "sha256": "5727dbd17f9cc2409e337e51d900f8d168a984e3f3dd4c201b8c86b1cadc0568"
+  },
+  "run_history": [
+    {"run_id": "P01_official_ldi_true_arc30_v1_linux5080", "status": "failed_environment_before_model_load", "reason": "MoviePy dependency pkg_resources missing"},
+    {"run_id": "P01_official_ldi_true_arc30_v2_linux5080", "status": "failed_compatibility", "reason": "official integer gpu_ids contract was supplied a string, routing helper tensors to CPU"},
+    {"run_id": "P01_official_ldi_true_arc30_v3_linux5080", "status": "diagnostic_noncanonical", "reason": "full LDI succeeded, but arc radius incorrectly used center-pixel depth and MoviePy encoded 62 frames"},
+    {"run_id": "P01_official_ldi_true_arc30_v4_linux5080", "status": "canonical_awaiting_manual_review", "mesh_reused_from_v3_same_sha256": true}
+  ],
+  "canonical_artifacts": {
+    "mesh": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/11_OfficialLDI/P01_official_ldi_true_arc30_v4_linux5080/mesh/p01_official_ldi.ply",
+      "bytes": 99121190,
+      "sha256": "79081b911a1fe0a51852acd7f54236095a33fe0a02082e5d3bb4a1737dc7f05e"
+    },
+    "video": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/11_OfficialLDI/P01_official_ldi_true_arc30_v4_linux5080/video/p01_true-arc-30_61f.mp4",
+      "bytes": 262409,
+      "sha256": "d28ca395ab21918847e5b376005168d3b9ebb30771e987b2352090e2d1d64391",
+      "decoded_frames": 61
+    },
+    "review_strip": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/11_OfficialLDI/P01_official_ldi_true_arc30_v4_linux5080/review/P01_official_LDI_true_arc30_endpoints.png",
+      "bytes": 1252307,
+      "sha256": "7e6aec332820e34769287730ed1734ceb617a71b554267ab6e625393e5e6d5b7"
+    }
+  },
+  "automatic_diagnostics": {
+    "gray_background_fraction_tolerance_3": {
+      "left_minus15": 0.2780806929976852,
+      "center_zero": 0.005138255931712963,
+      "right_plus15": 0.26805058232060186
+    },
+    "interpretation": "large uncovered endpoint wedges; automatic diagnostic only, not a substitute for manual quality review"
+  },
+  "runtime_boundary": {
+    "canonical_v4_reused_identical_v3_mesh": true,
+    "v3_full_ldi_mesh_seconds": 60.12406707101036,
+    "v3_peak_cuda_memory_bytes": 1006529536,
+    "v4_render_and_encode_seconds": 7.84530610695947
+  },
+  "quality_boundary": "manual visual review pending; no claim of Stage 1 or 30-degree quality pass"
+}

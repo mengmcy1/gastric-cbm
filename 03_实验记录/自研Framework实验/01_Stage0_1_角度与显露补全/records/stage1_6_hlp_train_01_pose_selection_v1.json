@@ -1,0 +1,243 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-pose-selection-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "output_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_01_triplets_v1.json",
+  "selection_policy": {
+    "minimum_endpoint_translation_m": 0.1,
+    "maximum_endpoint_error_deg": 3.0
+  },
+  "summary": {
+    "candidate_scenes": 10,
+    "selected_triplets": 10,
+    "train_triplets": 8,
+    "validation_triplets": 2,
+    "held_out_overlap_count": 0,
+    "all_endpoint_errors_within_limit": true,
+    "all_endpoint_translations_above_minimum": true
+  },
+  "scenes": [
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 98,
+      "qualifying_source_count": 68,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_001_001",
+        "camera": "cam_00",
+        "scene_type": "Bathroom",
+        "source_frame": 99,
+        "left_frame": 38,
+        "right_frame": 79,
+        "left_yaw_deg": -15.080769060550484,
+        "right_yaw_deg": 15.020159475944379,
+        "left_translation_m": 1.2007166226960777,
+        "right_translation_m": 1.457857496876618,
+        "angle_error_sum_deg": 0.10092853649486244
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 89,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_001_006",
+        "camera": "cam_00",
+        "scene_type": "Bedroom",
+        "source_frame": 64,
+        "left_frame": 47,
+        "right_frame": 77,
+        "left_yaw_deg": -14.919080325084174,
+        "right_yaw_deg": 14.929341560748647,
+        "left_translation_m": 2.4612882867547197,
+        "right_translation_m": 1.498873869566825,
+        "angle_error_sum_deg": 0.15157811416717948
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 90,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_001_005",
+        "camera": "cam_00",
+        "scene_type": "Kitchen",
+        "source_frame": 45,
+        "left_frame": 52,
+        "right_frame": 44,
+        "left_yaw_deg": -15.08520455906994,
+        "right_yaw_deg": 14.977407622898854,
+        "left_translation_m": 1.2882117135457862,
+        "right_translation_m": 0.5180403225117662,
+        "angle_error_sum_deg": 0.10779693617108599
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_001_004",
+        "camera": "cam_00",
+        "scene_type": "Living room",
+        "source_frame": 8,
+        "left_frame": 30,
+        "right_frame": 34,
+        "left_yaw_deg": -14.94906961336401,
+        "right_yaw_deg": 14.857956229196475,
+        "left_translation_m": 2.6473778301994204,
+        "right_translation_m": 0.4389317657701974,
+        "angle_error_sum_deg": 0.19297415743951518
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 79,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_006_002",
+        "camera": "cam_00",
+        "scene_type": "Restaurant",
+        "source_frame": 4,
+        "left_frame": 15,
+        "right_frame": 50,
+        "left_yaw_deg": -14.999419813958234,
+        "right_yaw_deg": 15.051805334620072,
+        "left_translation_m": 2.86024269331651,
+        "right_translation_m": 1.0079699281576275,
+        "angle_error_sum_deg": 0.052385520661838214
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_009_001",
+        "camera": "cam_00",
+        "scene_type": "Courtyard",
+        "source_frame": 42,
+        "left_frame": 50,
+        "right_frame": 74,
+        "left_yaw_deg": -14.988100130113283,
+        "right_yaw_deg": 14.9912180623705,
+        "left_translation_m": 0.5259315807610321,
+        "right_translation_m": 3.704200891778249,
+        "angle_error_sum_deg": 0.020681807516217177
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_016_009",
+        "camera": "cam_00",
+        "scene_type": "Library",
+        "source_frame": 48,
+        "left_frame": 15,
+        "right_frame": 61,
+        "left_yaw_deg": -14.997577393232689,
+        "right_yaw_deg": 14.884310833838411,
+        "left_translation_m": 0.19862122783269837,
+        "right_translation_m": 1.2640519851757586,
+        "angle_error_sum_deg": 0.1181117729289003
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "triplet": {
+        "split": "train",
+        "scene": "ai_009_006",
+        "camera": "cam_00",
+        "scene_type": "Staircase",
+        "source_frame": 77,
+        "left_frame": 84,
+        "right_frame": 45,
+        "left_yaw_deg": -14.989094528931156,
+        "right_yaw_deg": 14.912156699473128,
+        "left_translation_m": 1.486586037100424,
+        "right_translation_m": 0.41610916208103355,
+        "angle_error_sum_deg": 0.09874877159571582
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 93,
+      "triplet": {
+        "split": "val",
+        "scene": "ai_004_003",
+        "camera": "cam_00",
+        "scene_type": "Bathroom",
+        "source_frame": 66,
+        "left_frame": 26,
+        "right_frame": 99,
+        "left_yaw_deg": -15.024046297170162,
+        "right_yaw_deg": 15.032014770897486,
+        "left_translation_m": 3.383462953056483,
+        "right_translation_m": 0.7862758194990523,
+        "angle_error_sum_deg": 0.05606106806764899
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "triplet": {
+        "split": "val",
+        "scene": "ai_031_010",
+        "camera": "cam_00",
+        "scene_type": "Restaurant",
+        "source_frame": 9,
+        "left_frame": 59,
+        "right_frame": 3,
+        "left_yaw_deg": -14.995303208379102,
+        "right_yaw_deg": 15.039019736254811,
+        "left_translation_m": 4.522451105924992,
+        "right_translation_m": 2.030258759327828,
+        "angle_error_sum_deg": 0.04371652787570923
+      }
+    }
+  ],
+  "quality_boundary": "real-pose selection only; RGB-D files and hidden evidence are not fetched or generated yet",
+  "output_config_sha256": "8ccb60c9020dcb9b2ead261a1fae63bc5ba6ade3121464fdab116a11e6b06dc5"
+}

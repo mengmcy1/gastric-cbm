@@ -1,0 +1,60 @@
+{
+  "schema_version": "stage1.6-hlp-train-03-candidate-build-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "summary": {
+    "train_candidates": 60,
+    "validation_candidates": 20,
+    "train_scene_types": {
+      "Art gallery": 2,
+      "Bathroom": 3,
+      "Bedroom": 3,
+      "Courtyard": 3,
+      "Dining room": 3,
+      "Hall": 3,
+      "Hallway": 3,
+      "Hotel lobby": 3,
+      "Kitchen": 3,
+      "Lecture theater": 3,
+      "Library": 2,
+      "Living room": 3,
+      "Office": 3,
+      "Office (building foyer)": 3,
+      "Office (conference room)": 3,
+      "Office (home)": 3,
+      "Office (waiting area)": 1,
+      "Other": 3,
+      "Restaurant": 3,
+      "Retail space": 3,
+      "Staircase": 2,
+      "Transit station": 2
+    },
+    "validation_scene_types": {
+      "Art gallery": 1,
+      "Bathroom": 2,
+      "Bedroom": 2,
+      "Hall": 1,
+      "Hallway": 1,
+      "Hotel lobby": 2,
+      "Kitchen": 2,
+      "Lecture theater": 1,
+      "Living room": 1,
+      "Office (building foyer)": 1,
+      "Office (conference room)": 1,
+      "Office (home)": 1,
+      "Other": 1,
+      "Restaurant": 1,
+      "Retail space": 1,
+      "Staircase": 1
+    },
+    "gates": {
+      "requested_counts_met": true,
+      "all_scenes_unique": true,
+      "held_out_overlap_zero": true,
+      "minimum_public_frames_met": true
+    }
+  },
+  "quality_boundary": "metadata-only candidate freeze; real camera pose angle qualification remains pending",
+  "output_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_candidates_v1.json",
+  "output_config_sha256": "ab72015b3a0ef165f054a9dbbfbf05d86229403947a934f92403cc962d264863"
+}

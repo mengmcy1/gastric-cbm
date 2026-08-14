@@ -1,0 +1,5233 @@
+{
+  "schema_version": "stage1.6-hlp-train-03-pose-fetch-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_candidates_v1.json",
+  "config_sha256": "ab72015b3a0ef165f054a9dbbfbf05d86229403947a934f92403cc962d264863",
+  "held_out_test_scenes": [
+    "ai_001_010",
+    "ai_005_001",
+    "ai_008_005"
+  ],
+  "archives": [
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_024_010.zip",
+      "content_length": 2199725572,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_007.zip",
+      "content_length": 2551215647,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_006.zip",
+      "content_length": 6082053751,
+      "range_request_count": 16,
+      "range_bytes_received": 1636489
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_001.zip",
+      "content_length": 2710867934,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_007_002.zip",
+      "content_length": 2103195129,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_023_004.zip",
+      "content_length": 2488234650,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_013_002.zip",
+      "content_length": 2502197480,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_027_005.zip",
+      "content_length": 16353650430,
+      "range_request_count": 16,
+      "range_bytes_received": 2809722
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_005.zip",
+      "content_length": 7728063956,
+      "range_request_count": 16,
+      "range_bytes_received": 2202843
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_053_001.zip",
+      "content_length": 3111253087,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_016_009.zip",
+      "content_length": 9711433397,
+      "range_request_count": 16,
+      "range_bytes_received": 3322757
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_004.zip",
+      "content_length": 2105691469,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_002.zip",
+      "content_length": 7339526342,
+      "range_request_count": 16,
+      "range_bytes_received": 2163536
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_005_009.zip",
+      "content_length": 2869053024,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_047_002.zip",
+      "content_length": 2386676199,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_008_001.zip",
+      "content_length": 8900610709,
+      "range_request_count": 16,
+      "range_bytes_received": 2073615
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_041_008.zip",
+      "content_length": 2467977442,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_002_007.zip",
+      "content_length": 2715501382,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_006_002.zip",
+      "content_length": 5872297078,
+      "range_request_count": 16,
+      "range_bytes_received": 1636105
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_002.zip",
+      "content_length": 2285021263,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_006.zip",
+      "content_length": 1890797221,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_023_010.zip",
+      "content_length": 9612612069,
+      "range_request_count": 16,
+      "range_bytes_received": 1675550
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_026_001.zip",
+      "content_length": 1703173574,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_003_001.zip",
+      "content_length": 2472436035,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_002_009.zip",
+      "content_length": 1235092356,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_018_006.zip",
+      "content_length": 4170334601,
+      "range_request_count": 15,
+      "range_bytes_received": 1070801
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_008_004.zip",
+      "content_length": 3596162638,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_023_008.zip",
+      "content_length": 5767610416,
+      "range_request_count": 16,
+      "range_bytes_received": 1107060
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_016_005.zip",
+      "content_length": 3375206319,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_031_001.zip",
+      "content_length": 2864605291,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_002_004.zip",
+      "content_length": 1628137754,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_053_002.zip",
+      "content_length": 3151363803,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_023_001.zip",
+      "content_length": 6605887951,
+      "range_request_count": 16,
+      "range_bytes_received": 1109124
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_008.zip",
+      "content_length": 1869665514,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_003.zip",
+      "content_length": 2182211307,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_013_003.zip",
+      "content_length": 2481306965,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_047_004.zip",
+      "content_length": 2880615295,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_015_005.zip",
+      "content_length": 2205686031,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_002_010.zip",
+      "content_length": 1945796446,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_012_010.zip",
+      "content_length": 2817161677,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_005.zip",
+      "content_length": 3946637061,
+      "range_request_count": 15,
+      "range_bytes_received": 1070799
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_019_006.zip",
+      "content_length": 4273976701,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_024_018.zip",
+      "content_length": 3114820071,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_004_001.zip",
+      "content_length": 6091149867,
+      "range_request_count": 16,
+      "range_bytes_received": 1107407
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_003_004.zip",
+      "content_length": 3540080729,
+      "range_request_count": 15,
+      "range_bytes_received": 1039257
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_019_007.zip",
+      "content_length": 2774004461,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_011_005.zip",
+      "content_length": 2744722955,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_023_009.zip",
+      "content_length": 4674043090,
+      "range_request_count": 16,
+      "range_bytes_received": 1086804
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_026_009.zip",
+      "content_length": 2299359557,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_032_003.zip",
+      "content_length": 2305031330,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_002_005.zip",
+      "content_length": 2217453155,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_053_006.zip",
+      "content_length": 2885563788,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_001_009.zip",
+      "content_length": 2156465956,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_003_009.zip",
+      "content_length": 3198446406,
+      "range_request_count": 15,
+      "range_bytes_received": 1070800
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_026_005.zip",
+      "content_length": 1965179435,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_047_005.zip",
+      "content_length": 3198573330,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_034_001.zip",
+      "content_length": 7674190238,
+      "range_request_count": 16,
+      "range_bytes_received": 1662866
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_003_005.zip",
+      "content_length": 5109540493,
+      "range_request_count": 16,
+      "range_bytes_received": 1064370
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_013_009.zip",
+      "content_length": 1900102312,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_017_008.zip",
+      "content_length": 9976929220,
+      "range_request_count": 16,
+      "range_bytes_received": 2220112
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_024_013.zip",
+      "content_length": 1568544391,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_004_003.zip",
+      "content_length": 4678798915,
+      "range_request_count": 16,
+      "range_bytes_received": 1084991
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_007_001.zip",
+      "content_length": 4612374491,
+      "range_request_count": 16,
+      "range_bytes_received": 1084224
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_024_012.zip",
+      "content_length": 1766459025,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_016_004.zip",
+      "content_length": 4018807935,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_031_004.zip",
+      "content_length": 2720907437,
+      "range_request_count": 15,
+      "range_bytes_received": 544407
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_015_001.zip",
+      "content_length": 2368051628,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_053_003.zip",
+      "content_length": 3036535483,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_003_010.zip",
+      "content_length": 4171195675,
+      "range_request_count": 15,
+      "range_bytes_received": 1060286
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_009.zip",
+      "content_length": 2854951109,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_047_009.zip",
+      "content_length": 2474771528,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_016_001.zip",
+      "content_length": 1450436917,
+      "range_request_count": 15,
+      "range_bytes_received": 544407
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_019_008.zip",
+      "content_length": 2215668647,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_031_010.zip",
+      "content_length": 3367117610,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_005_005.zip",
+      "content_length": 1672677055,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_009_007.zip",
+      "content_length": 2001056244,
+      "range_request_count": 15,
+      "range_bytes_received": 544405
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_039_003.zip",
+      "content_length": 4380520794,
+      "range_request_count": 16,
+      "range_bytes_received": 1075812
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_035_003.zip",
+      "content_length": 2460733008,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_038_009.zip",
+      "content_length": 5528147219,
+      "range_request_count": 16,
+      "range_bytes_received": 1093752
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "url": "https://docs-assets.developer.apple.com/ml-research/datasets/hypersim/v1/scenes/ai_015_004.zip",
+      "content_length": 2126110106,
+      "range_request_count": 15,
+      "range_bytes_received": 544406
+    }
+  ],
+  "completed_files": [
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "entry": "ai_024_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "20dd8790f097ae59f02911a628e76c695884298e523b00c6ec2baac557d3b8bf",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "entry": "ai_024_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "89a57a2a3b22eb9717b8d7751344654a63ec053fe57bb1a8f7d3a13fb907c3c0",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "entry": "ai_024_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "ca80bc0c63e3e05e4b8bdfc807af1a5d27148daae7234f754a1699453f9e2fab",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "entry": "ai_024_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_010/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "entry": "ai_001_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "5fd2864a76098bdac9c60ddcf2370d36245bce293e2358f91b2eacd543f9a153",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "entry": "ai_001_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "03cc9883de84a5aa267bbd015cbf59cc7aac43adb8c2204dc8ff56bbe77b46b2",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "entry": "ai_001_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "18d7dd5e5b47d3a4c51f7464925380083be93c037d1382123301ef7148e4a4a4",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "entry": "ai_001_007/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_007/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "entry": "ai_001_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "b4f77e0dc06f48e22b0ee2b55f83f4f0f3660ea195a351501ff80b4acc7aa5e1",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "entry": "ai_001_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5a325f2957cd547cb02ef162dbc4b10b0f58779ca0fae9298b16ddc79deda4db",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "entry": "ai_001_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "29dc3331886f9f43664dd71bee6ddf86f0a8f26386bd58032aa9599b799ea546",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "entry": "ai_001_006/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_006/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "entry": "ai_009_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "906446593cf72875da0c63a2fbb6171b656ca3eb19dc99afc341c6c6ec670c46",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "entry": "ai_009_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "e5830c63b19e4d8659a2661f730ec8814b88276570f39be04e5aa576d3499457",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "entry": "ai_009_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "91f9fc7cd891c284d9c556aa6d7599fda8b998615e0bc3bd18153ca2e524161a",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "entry": "ai_009_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_001/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "entry": "ai_007_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "02cb0fbe77f1e51a5433ebd874f60dd56e270bf34e38cc3bbc8eac53603af910",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "entry": "ai_007_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "add99854a83c30c041b6f7d41e0b64263afe999c7cc6364d3ebe95b0c5d431bd",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "entry": "ai_007_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "a742020e9c236f8251b5cde4c882a084a173aa8d72de0ac30f3a1717276afd06",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "entry": "ai_007_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_002/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "entry": "ai_023_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "9321d67590b24f6289f5545cefbe59432e9474d3dfe0fbd71ab6e4b9de448809",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "entry": "ai_023_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "70665f1451c87c8d4895a38a24f727c03144b6dd637ba42d23035f0e5ec88a24",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "entry": "ai_023_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "95b453dba04679b5195ad1ae46aa66a3945d946c158a6075bb6169d0b2ce57f7",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "entry": "ai_023_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_004/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "entry": "ai_013_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "2756fb73815644e18c4221ae9de6edc236c39064f506da359cccc67f82de368a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "entry": "ai_013_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7c7eb59f180524f08aabea11e3e1fa7a1c34c751566eda7057bbdd3b27002f4b",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "entry": "ai_013_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "5f7f8423cd918f3761127a7474a1c50a741d0adb7f1fee864a34da46f6bcaf4b",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "entry": "ai_013_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_002/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "entry": "ai_027_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_027_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "16de7a9fcd4c0f7d138d962440a35a23035feb0dfb75c3733e6881e5c262d96f",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "entry": "ai_027_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_027_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "2844c09e521c4470bf0ecd046f8b9cb1a84b20cc280cef28d86bf48e0db4be64",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "entry": "ai_027_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_027_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "05c9e6ebb324ed1117d76f9a2578e7dc41c16dad25bbbce1b124683e150fbc98",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "entry": "ai_027_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_027_005/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "entry": "ai_001_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "0f8743d1aa4aad547c0403d93352ff1ce58a2faaaf15bf61e68fc92373a53222",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "entry": "ai_001_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4251adfb8f112962a9b503ee715080da43e7c6c3dd7046fcefcbd3cb2cecbc00",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "entry": "ai_001_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "4467f7f55a972a257e44af05ed1da12d993beae9cb98c5c577ccea5335caf703",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "entry": "ai_001_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "entry": "ai_053_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "1c51c3628f972a3564cb6369e62c0e876902fea3acf070ae8442a8d013b11c75",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "entry": "ai_053_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "f2103175540e704ba305bab65c2fd51be007e0b427feb74570caa5042e017cb1",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "entry": "ai_053_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "f073e32f1fa138a9c52a52cab65803fd3780faaded5dd83023eff829946c3edc",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "entry": "ai_053_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "entry": "ai_016_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "3f2c8d665721700898488c6cb629fd7185863e409661518d93e5f1e543cdcc4f",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "entry": "ai_016_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "c2ae6029378da749618ecf60f8c9ae7e5c44753b2f87d95e00d5cf3dbcf01284",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "entry": "ai_016_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "e5e854aed15a8e15e49f4394755598147441ac8abb262ce15ba385ceb9dd46ab",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "entry": "ai_016_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_009/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "entry": "ai_001_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "c2a5907b2d4090e0581efda7e0074b5d81ec0749ea60c8f5b37c3e68e6d4909a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "entry": "ai_001_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "162b8de2ae87503745cada89627e8dd6c533988bf3ae26bb2220844e770657b9",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "entry": "ai_001_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "48e0da6a09463ac34038f6244e3d718eff6651281fa6bb785a7318d191b85a93",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "entry": "ai_001_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_004/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "entry": "ai_001_002/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_002/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "5b0c355e2c308f3ef9ab84e39fc83425e8490d7340133265aa9bf40383fb7e0e",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "entry": "ai_001_002/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_002/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "58f990e283d7581b9d6942a7377abd180777bf70cadb8f11a1aab591e65e4458",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "entry": "ai_001_002/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_002/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "1213f6ab2cb3c63bf68745d63834099f8f06886b2774c2745e36d0f06a36d7a2",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "entry": "ai_001_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_002/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "entry": "ai_005_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "7de63a169a76daea09a3300715edfe604f7e0e445af68afbd8bc8d37f8b776db",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "entry": "ai_005_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "8b4675510925e4187fc8d23a2bd778fac04d48b9dc0bda58ccfdf77041dd9ed1",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "entry": "ai_005_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "70c123fb9e2835f3c0d998d381c5ee483bdf12ee229c7d7b5ecef7153cb0046c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "entry": "ai_005_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_009/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "entry": "ai_047_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "5ae48897f25fee4bd60691969025dd9f11621e5b5df8cd6727cddeda6cf518fd",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "entry": "ai_047_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7b1a287bcbdd96b6ddb3b0582b3f4544e11575c77c21710ed314e9b30defab38",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "entry": "ai_047_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "1d69ddd8c02e6dbf185ca24a13e68ae7857fc1cade3f4a99576cca21d98abad5",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "entry": "ai_047_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_002/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "entry": "ai_008_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "7d65ca884268dda4158804d2a59c912e680bf192cf5dd4fda62c1db551f3aef1",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "entry": "ai_008_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "cc314a5c827c4026e9506451ae37f4189f8294edabc257cefdf9bcf05b865ec0",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "entry": "ai_008_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "621d89e950f376bf0ca9e88724f601dd36acbb0bdc0ccd212482d8740e15dde2",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "entry": "ai_008_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "entry": "ai_041_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_041_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "cebda439abe7df408d4ee0c5efbf9edb3202e5fd4ffae88f8a95afa203c7f662",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "entry": "ai_041_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_041_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "50a57e971e69b49a271666e27839285a6219904633088c390f2bc2deb781bfec",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "entry": "ai_041_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_041_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "d57fb34c4c7e01ae788d3a14a51934b05d1ada882df993f6e032e894057f3965",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "entry": "ai_041_008/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_041_008/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "entry": "ai_002_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "841172d8a83ba527fdbba11236d6878ceb34e73d896ff0b484f8728aeb7cdd75",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "entry": "ai_002_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "6c0269b364ed5125df9a80afa9f0253fbf75d49eadb375c18dd2966c02561752",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "entry": "ai_002_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "aa5b8c163d76e3e76050f949702a4bbefec22e4af5d4961074c47f8ae33eb696",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "entry": "ai_002_007/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_007/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "entry": "ai_006_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_006_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "6f1d12097e8352a0013148c787370d7149a5f9f34ee529968f8c67a58be796bd",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "entry": "ai_006_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_006_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "24312bb6897b5c36b963ca0ab5e9dfb906b7ce73f9b7eb241af7d861a16dda5d",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "entry": "ai_006_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_006_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "3cb611fe2cd6f4b11a4940694add3c6f08243e5d9da0865c79c3f2dacef2c59a",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "entry": "ai_006_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_006_002/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "entry": "ai_009_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "d38a1ff9cf8f3c17e75804e38f2bf3549d1aec1b947356518e217fec5e6bbe86",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "entry": "ai_009_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "e5b27872e7d929982ec25b0d8d93e1e8cdb58a83093bff8147da65b356b23fd4",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "entry": "ai_009_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "24e248786c7eac48c10c07b003cb70b7cc7cc32f5d5ede8f467c2a0c7237661c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "entry": "ai_009_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_002/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "entry": "ai_009_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "3697669c780166e182bc031997de1791b65c123534ca95ef36194fee1c0a87b6",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "entry": "ai_009_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7f80a60441c72e6892beb9e44d2052a2666f31f1bab5f05a908f1bc9f9a61abf",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "entry": "ai_009_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "160ce9888a2cd2c875e6385da213e38b4256dcbbf74ea2b7316d9925c4109610",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "entry": "ai_009_006/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_006/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "entry": "ai_023_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "0e7338d666731a54e28477ec7645ca0257ba02d2f5cce953833a584850ea6594",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "entry": "ai_023_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "8dc72abb2864422bacbfc08a51f6c3a20b7d121b97e773c1b78dd7e93924fea7",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "entry": "ai_023_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "799df195ea1a03cbd017d9ac70ff93cb95e4b6f5c60336dbb7733fca7ed9cb71",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "entry": "ai_023_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_010/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "entry": "ai_026_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "d4779aee0b18b50252a3ea5d019e5cbae9cdb79be710336acba9424a0a1d028c",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "entry": "ai_026_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "da3be01e5b6475f43bcc0f6a550dc57a133afca2de3f211cbb31f5b993746ac6",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "entry": "ai_026_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8216c2d62a58e2100f27822accc54650f814544dfc94dbe4e596ecd459e4db4d",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "entry": "ai_026_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_001/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "entry": "ai_003_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "e4bc74f938e35ef1d1abc13e97fa2623f71a7e2c07c0487b955d592e721f8770",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "entry": "ai_003_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "c16fbc733f94602049ffe774fee57e8d42d8d8e7806942c1b85b06a2bce1a7fa",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "entry": "ai_003_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8843210ca5f9fd347a2cfd0bab156ecfaa72850edeac0466e893e777004f2082",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "entry": "ai_003_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "entry": "ai_002_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "898acc59244895b795d4a1f0b850a13943a6fc2ca87cdec385062d8b1b3bde4a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "entry": "ai_002_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "d4ee9a90b8f8d6c56e2bef1e8dd79f04f9b292888b1a0bd3cb64575674848d46",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "entry": "ai_002_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "a27a102ddc0b8ffae1b4c39bc219402dbf0c2fddca51feef19f3e9d738dfdbb7",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "entry": "ai_002_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_009/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "entry": "ai_018_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_018_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "66d757444ac02057a63978b91bd8a2ab555bf54ed54640bb3ba1e75090e65da7",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "entry": "ai_018_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_018_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "6f712feaa31102755b1b4c3beb31b3073f8696c2a82895cbec255db13d0de761",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "entry": "ai_018_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_018_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "65fbb65f21e16782a8df8c060ef935c7e5b49a93cc1dd87ebdd76270e7b0e2c3",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "entry": "ai_018_006/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_018_006/_detail/metadata_scene.csv",
+      "bytes": 75,
+      "sha256": "1f963aad9016226343424071173c984c4c491df4525c8d93764d32a2e0012f73"
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "entry": "ai_008_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "004d397670811e07b38690cbb74c4b5616e2ad600b0d9ab14b3c4f1185c77f84",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "entry": "ai_008_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5c0a33277378a3f690ec380d5d5d4250d18cbed8a9cfc34f29d8958184792b13",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "entry": "ai_008_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "fd463f12dec881b4857d8b7b1dea90df49aa222b9a0176686c94900a1ba87ad1",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "entry": "ai_008_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_008_004/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "entry": "ai_023_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "018679b39dfd61e860b0ca3e75799f3f2c5fdbc397528273c3240e1de4ef6ffa",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "entry": "ai_023_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "dd24375c20897a1288d96c3513d752c88706ce61c929e747405a568b7a8b9b1d",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "entry": "ai_023_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "a851fdb73660aa967837128b61453fef10294816bd9446bc3d6c73fb0184236c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "entry": "ai_023_008/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_008/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "entry": "ai_016_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "5b876a54bd01194af13e8931bf17bc43cd2fe4ff7d69f8c6cff7c39eb838e6d2",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "entry": "ai_016_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "478b01f415e631e5e1e20849a3381f2feb48680c4464339c6e0a0ec11a7265ba",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "entry": "ai_016_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "69d12b5c76c6fa77e42b3c9e3a2b07ceb7989523e4001d1db513d49352d61bd7",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "entry": "ai_016_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_005/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "entry": "ai_031_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "ff527331ae66d97da2e378bfa55b82fd3109439c819e9be63d0ec5833fecd662",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "entry": "ai_031_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4bcaaa4565b4e1a815a721c0a5b866492b8a23f8eb629a6169ecbca77fc4b837",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "entry": "ai_031_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "fa86b3518d926df98b98ff1814cf08816fa4e46c64f2bea68481bcf5f75e7381",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "entry": "ai_031_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "entry": "ai_002_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "59bf7935732621b2f343dd9b4f046f2502af31fb53a1fa66accb7ba73c0c657e",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "entry": "ai_002_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "3c525aec9c316f28d26045813c71c2ea8a758ead3df16ead9dc6eeab78425b7b",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "entry": "ai_002_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "07b0e667775461098aceb8752e355b4efd5975d434733bf8e92a1ab9e350658a",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "entry": "ai_002_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_004/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "entry": "ai_053_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_002/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "fcde451ac6d0921097d6680f624c48da178e8796294c672c935b0e25adc447ce",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "entry": "ai_053_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_002/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "c0afeeacb1ee4f7ce4dddf4157daeaf65152842378363552f2ff584830013835",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "entry": "ai_053_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_002/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "9e8cc930ce88724b1fdb735db5c571a472f49650d033d5404348c13a3edbbb09",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "entry": "ai_053_002/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_002/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "entry": "ai_023_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "74db7fdef4be423269820cbbec6b461d36cb9b1b836623b978af9365316f7c48",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "entry": "ai_023_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "1e538f04f3aa8a6df2a0cdacf70795c7e149e31b39b6ae648330ff6c5c088570",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "entry": "ai_023_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "9450918e533a23a7ba3db594c8848b0c6a3dc0a6c248798a2b002673e1c8c347",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "entry": "ai_023_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "entry": "ai_001_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "9c98136a9ffefc14f2acd31af11c9e4bc4da478602deda202ffd250899b6386a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "entry": "ai_001_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "1855f46edf492f475184a594ff2eacfceca75140fef825ed8cb78bf3a9c6e51f",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "entry": "ai_001_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "5cc3e5c77ae86cca9fa32a9c0bd2cb818b65466dc9d3e324b57ed716db3dd4fb",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "entry": "ai_001_008/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_008/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "entry": "ai_001_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "6bf0d7f67b86766bada9d3c107ed088afd9d601b7020371f5ce9b63521789e2c",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "entry": "ai_001_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "837501185d54223f3c9decf7048f6420796c42c46ab4ced4982c0a018939b39e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "entry": "ai_001_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "866c3e959d635aa7cd969cac12218df9e557c4c2c02eca88933b7f9443566636",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "entry": "ai_001_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_003/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "entry": "ai_013_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "93ebfebe25fa2d70cafc028c3b0e16ee9f94eb2d61051fea9f56c7f35c5d8162",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "entry": "ai_013_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4bf27f8446fe5113e0bf35cfbcbe0866a17a6e3aea78df7b0fd4f28126f72cd6",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "entry": "ai_013_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "2890a8abd68ffbd2379f3b154b75f75196f89f30ee6fb5d426560daa3c391791",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "entry": "ai_013_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_003/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "entry": "ai_047_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "a1082c656bcb5e7c82f87040d2b4cbc0a7574090a39dedd5d7f4634c4ad0d9f1",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "entry": "ai_047_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "83e73cb61670cd177a814536f11a461406d3b5032309f657ef2e28e31bc6aca5",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "entry": "ai_047_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "4d1e3848c5b46a7f3e4573c3ee1dde3bb92a57182af456e285ef7fb7c5243a15",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "entry": "ai_047_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_004/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "entry": "ai_015_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "0c789d1ffc0b576f764ed1421fd0bab5f755756b8e610fda3d75da43c1abacaa",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "entry": "ai_015_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "a629376a51dd59063d33ad272427824a966d8d4d2e61d0e4a9a2cf4d14e5c1a7",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "entry": "ai_015_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "aba1c6719958fb85d7b3722e04c18ce9bbc87363652423eb120aa310586bfb46",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "entry": "ai_015_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_005/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "entry": "ai_002_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "a6bf77651f8b48904d4fa9290b0362165452c4da5a66433cd562fb76284ae97a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "entry": "ai_002_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7d155a5871bcdf4233229137fc7d3c16f5b4151ff8d9f0bf3fd87eda25e90fd9",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "entry": "ai_002_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "523fad6a6f5ee1400ae40e90b5b3be66cf97741d3fbb5da54d6c1b7311dbd13c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "entry": "ai_002_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_010/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "entry": "ai_012_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_012_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "3b5bb7321504b39f16e290a7ab5c5c92446357fb49e3f6365e4e32ec03911591",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "entry": "ai_012_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_012_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "505f787ce7b1e184861f4a17b65d1b6b49a7dde6612cdd6cd019aa522f85f95d",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "entry": "ai_012_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_012_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "196549d27a6a10d023a83400f2156c1dd1de00fe477f00fc4053f8c47892d441",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "entry": "ai_012_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_012_010/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "entry": "ai_009_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "acf26597c4f4a1571fee08e71ab6912ba7fd971486565bc08bf79f953dcc6e9a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "entry": "ai_009_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "9fd7db9b0043c1ce303b883b529f0c5a3637930ee72483f375d2f03c7ded6fed",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "entry": "ai_009_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "d19ba91d94f8d986f6a384fb8608831faef80f3dd0d6dca3421a37d45ec389fd",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "entry": "ai_009_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "entry": "ai_019_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "f7fa08f89b8b52c08966dc220ab4bc800c001fffd64c88b6ceec05d2da88faa5",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "entry": "ai_019_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "bc0aef4b118cbbfc44a806bc6b19d806c9bbe73e0a7ebbdf6b4b78173492f8ab",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "entry": "ai_019_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "f07cddec6277751504d9a1cc651401c0caf417b749bd6002cfaa1c37eff118a9",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "entry": "ai_019_006/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_006/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "entry": "ai_024_018/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_018/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "67a039ab9c629419a15b768f797d0d9f1daf12a32d6dff6bd82ae452d59760a8",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "entry": "ai_024_018/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_018/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "975c1b4a6b189a397f1ef7d700fea8628184a0ec114a7e2173c40ea3bc07a147",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "entry": "ai_024_018/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_018/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8560391843cbcdf1541b1f4b885c5e1019fa5fcf336e3e69adff5eedb2492245",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "entry": "ai_024_018/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_018/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "entry": "ai_004_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "c54cdd0e26314d1b4f1a4996732325f387ff2f58c187477dc808448bb82d68a5",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "entry": "ai_004_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7ccc23055690f10b54e575b6b78ee0d9fd37af9ebba0589426dbc02b3d119ddd",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "entry": "ai_004_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "a3c482b2c68e9c4ebbc9364fd227afe612c6001ef7fc627823ca7bdd1e6a9f72",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "entry": "ai_004_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_001/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "entry": "ai_003_004/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_004/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "9bfa0535ae51844d050411071e549871ceebac8ed9fc588c165021d304384f55",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "entry": "ai_003_004/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_004/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "82eaca86592bc293ea706d19091496a507b550ce7b12900d0e4003d20e1b3178",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "entry": "ai_003_004/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_004/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "4bad12c82df4986a0f3cd55646c217073a2188948a579d64d5297f30d1c96046",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "entry": "ai_003_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_004/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "entry": "ai_019_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "28a5ad295e1c24e413ab4c3388896c07420f6f5f4c9c70bc12bcec14940c6179",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "entry": "ai_019_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "eb7b28229614a03b0a517b359166690abb1785d3dcdf7da41e36402afe940d4e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "entry": "ai_019_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "776c935a22289d3952bdcb76ff32117f04383748aa598ff2be4c803f33f651d2",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "entry": "ai_019_007/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_007/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "entry": "ai_011_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_011_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "f9d8db5ae725f91a1662e49a0c22ff4d565e733509a35ccadbe337aed0c6eb3d",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "entry": "ai_011_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_011_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "b91a563feed4dd014c198adf65e318ad0524b71879b8a3172fcd1ca04c1d900c",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "entry": "ai_011_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_011_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "df0ebe1d21279f715abd8e2fe77cfc0fc39de905f29d693365c41e2e7e477451",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "entry": "ai_011_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_011_005/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "entry": "ai_023_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "47ae7f463318165042ba1d525833b7b104bd2f7b8750ea2d7feec727c534f0bb",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "entry": "ai_023_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "78f4b6385d9a778630eeb10eb3cde16c09fc5a31c4d44af224f19b8c31c0d4d5",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "entry": "ai_023_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8ac5e404fc8d797a2afc1a8bb355648f162fda04108de54187bcd01cc8f3f7c8",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "entry": "ai_023_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_023_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "entry": "ai_026_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "e688b9a341c3913314084646b508c9f46e19f7e2b5ee55c390cb464974f27cf5",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "entry": "ai_026_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "9f69cd8691c4d00aa53173d30db848f2f7493847c5d9fae98ea9210b99177d18",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "entry": "ai_026_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "10a2eec01f6195b19a44e9cc9a2517bddf6b63b34da18c471b76839b590b6582",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "entry": "ai_026_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "entry": "ai_032_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_032_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "1da6f855d05ce4be291b9aa45b90a8df54f30073c1b92d55bb954046c65876da",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "entry": "ai_032_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_032_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "90ac2d11cef3a827497f72a5c6433c72b2e45766245c066f3d19160d1e6e8c84",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "entry": "ai_032_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_032_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "2b994f00a5e70dcf4aa589e3fa63ab4c54627bcdd7b03e9d7c5673051441524a",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "entry": "ai_032_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_032_003/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "entry": "ai_002_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "b41843e58a3758af1bfe1f1cae9dead7dba8d75c849cc6cfcbea6172e3b5c7f2",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "entry": "ai_002_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "142b16c3f33ced9dd3d0c877e3f2b82cf9704804048ab233005d14d9ab201f41",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "entry": "ai_002_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "5c93d681a2313de6af598ea770e1e3edf00eb240f07aeb8ea0952247cc19068f",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "entry": "ai_002_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_002_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "entry": "ai_053_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_006/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "faddc56cf586e9e86cdab0b7fea36412be3b2790e35c0e03420d681989471a7d",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "entry": "ai_053_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_006/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4a821be0aa355123ca57c3ee2f7ccecc9cd7431d8ffaf3be1f5c72fe6ebffe10",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "entry": "ai_053_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_006/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "71e3fe2bac203ed5be0d694fe66a38d6fdd173c9e50680b7b38a78c1f2d427b8",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "entry": "ai_053_006/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_006/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "entry": "ai_001_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "8993776aad450e89a67fd4a54035d2aad508a6571c9ad00455cf417c6502abcf",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "entry": "ai_001_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "061d03535a8beefdfe8b987ff3a1c2c045ad993199cdc14ddca92a5b8fb2833b",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "entry": "ai_001_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "910392e3b790f9721a95f59f1fe8f3a6e35bdfabadfdd85e92e56339b38a2340",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "entry": "ai_001_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_001_009/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "entry": "ai_003_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "e026caf9c5443d3201e4f04d1f37f806010fd38a3b938e8d2d417b6dbf217fc3",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "entry": "ai_003_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "544e1a203b6d88d29d511c5968b96e1b51963fc91f1c82062c0c9f8e383187d3",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "entry": "ai_003_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "85b1182fb45d18564a4b55f97f58d5ce09646c56238965d3268c1761c60c231c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "entry": "ai_003_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "entry": "ai_026_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "4248069d5912d5280b37809e1cdb0d667fe321ea172b0e9f958ab84a45722c39",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "entry": "ai_026_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "36891a8be1a5128cebab6857021c683fec18279ae5bc93497fcb7ec98ace54ea",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "entry": "ai_026_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "82d64152be8f726e8669901a209617bad6713ff43f1aa96f0fcc8b594be82626",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "entry": "ai_026_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_026_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "entry": "ai_047_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "cca6835dfc81c0ed7333d836120fcc6ce5bd0864c7f473a4bb8767fc66c491f9",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "entry": "ai_047_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "fbfdc19cdec24e61b1cd8192913cd6dc764ecd168a597ac9298022c4b16dc75d",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "entry": "ai_047_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "916bbc65aa1ef250a6df7e6d2a736df67e56cdbf63f55e41d5fabe719e33c255",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "entry": "ai_047_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_005/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "entry": "ai_034_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_034_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "543712f484948ac36214aa354a3b190b0569d2e598047813beaa652909e85256",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "entry": "ai_034_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_034_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5a18ba19cbfbfa67b0124b3a93e40cecac368a1df931a3072eb50e82c677d3fc",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "entry": "ai_034_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_034_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "69b4d39d32d35f9222b7b3e35a5d60171a3f80aa325a6b6b19c28d3aeb9f57d2",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "entry": "ai_034_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_034_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "entry": "ai_003_005/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_005/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "c3b402f1e1f265da7cb29adaae42c3ae1a54dfb24d4abebd2fe1f268e992f83d",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "entry": "ai_003_005/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_005/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5a46f6f3e6ab9785fb7cb7b81c91c2b8e8bfbb22d936a9681b66f08b16f42a49",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "entry": "ai_003_005/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_005/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "3dcaebe8163bf17a5090fc810bf518019257c368d364e78f31317a46389cde53",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "entry": "ai_003_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "entry": "ai_013_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "755555a49fbb7c84c3422d032060560e935a3d9498a5b073064138d03b57ff37",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "entry": "ai_013_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5c63ff8e0a6d9223e27fae81d43370bfa4c0ecffd61be393f8cee89e90aab09c",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "entry": "ai_013_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "b163ea71ab0c686814a87d6f03f3216b79b6cded1ffc33cffaf22654dca524c5",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "entry": "ai_013_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_013_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "entry": "ai_017_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_017_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "0f130967070b1633788e345356f38eb119c099c2e6d194a139d73d39be1e9980",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "entry": "ai_017_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_017_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5b610f3fa5e057100e37b4efdc97c345f16ac5eff61a23c5e8a3b8ad7ae71ce9",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "entry": "ai_017_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_017_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "448c0637c2d63e0cde35dde4b711556f8d4fadccd3f368a15db912dfa504f714",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "entry": "ai_017_008/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_017_008/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "entry": "ai_024_013/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_013/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "1aca0142291e9ae3a4fe623debcb48dc772506430bd353e8530f89aae679f209",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "entry": "ai_024_013/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_013/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "412583c7af4c61e92f19a2358b688b5e15767f179fd427bfae38dcbaca30f4cb",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "entry": "ai_024_013/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_013/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8c8afe963373b57a5e443ea33695628d0b3623a468fbab82ea4031390ec70f25",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "entry": "ai_024_013/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_013/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "entry": "ai_004_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "1cb1f834432108fddd82f25bba89357683ab86d64ec30e0f4f79a0f929b01f32",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "entry": "ai_004_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "13e8763c17d362708c45b6cf20e2248fcee7fc1cab7535261de50c10c8c32a92",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "entry": "ai_004_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "7c3845aafcfe2b4ce65270d38f3b8217456380081c2a269772a9abac7a178531",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "entry": "ai_004_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_004_003/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "entry": "ai_007_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "1b8b6e964e558d919783866ddf4952975c8dada2f4cb923c20df395faabcb6d4",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "entry": "ai_007_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4f3ea7e8bfb93163c71a98a301204e0e479ebe9b1d78012569e511447f4c9ec9",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "entry": "ai_007_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "6963fa84ce87b2bfa00a4b8b26d4f9ae9091dea9cdd5356801a739b5c605808c",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "entry": "ai_007_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_007_001/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "entry": "ai_024_012/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_012/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "693f30c2cab9895eea3903db6c31a08c7421546639796c951b2365267ad7c042",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "entry": "ai_024_012/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_012/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7f12c59e6bbc4476765c7de4b5caa93a4d5bf0a7d8a06db6be3971840fb0fb79",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "entry": "ai_024_012/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_012/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "668eeae55c3a12254f44d978a4192cd9bebdd0a5e1965988f6f066b4139cbd19",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "entry": "ai_024_012/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_024_012/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "entry": "ai_016_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "e23fe23901ac82cd0df1679f507a7a45fa1239fdd59bcfe43fbf0cc415821dea",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "entry": "ai_016_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "4cfdb1e11e0ec128c744055511418a9fc2e122ee1d72748fda0d4dbfab3ddd35",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "entry": "ai_016_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "847ed37e53900d7077f7b96560db0e10bb805cf5509ea0bcea01b6b1e023c744",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "entry": "ai_016_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_004/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "entry": "ai_031_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "6ae7fe9a7bdd1e6da0a6f30bbea78055bde5caa08388c02a6e7eb0d294bdfc5d",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "entry": "ai_031_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "5c974f0a13792495ecd64c63d756a7b29673df080f59bfae4850098ef5675519",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "entry": "ai_031_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "35d382d448da72f962410cc36e5dfdb2f4b37ec42cced28c0531b5440d48f3a2",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "entry": "ai_031_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_004/_detail/metadata_scene.csv",
+      "bytes": 75,
+      "sha256": "1f963aad9016226343424071173c984c4c491df4525c8d93764d32a2e0012f73"
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "entry": "ai_015_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_001/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "f41b5bbe1aebc603731d78086b871860ec241d7d153ae210674f46697e3501e4",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "entry": "ai_015_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_001/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "7fdbfcca84ae4ffb71fffc5d2dab99e87ec7d3d6366565ab3f97c203f0f74e5c",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "entry": "ai_015_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_001/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "01ac2b76cf7d35ce55f4d345e6a51c2d066b096165c21e50cb17fe97d163cc6d",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "entry": "ai_015_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_001/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "entry": "ai_053_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "b2be99cd52d02802c540f08487139a457b88116f12173409972ee770fb993513",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "entry": "ai_053_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "fd96fc6c37e988c384b8e2cfc96786f76f2fc54ff3059e3ecaf0546689b9358e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "entry": "ai_053_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "35d9c238c1cc99aeec8621020df3d7b84aee0c6ea4f1f0069fac6d38f91f197f",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "entry": "ai_053_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_053_003/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "entry": "ai_003_010/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_010/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "014680bfecf44c90af2ce2a40c9e984e0b6da035e66313e5ac08feb6f6d72b5d",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "entry": "ai_003_010/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_010/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "adac7a70a3baba55803adab27affc1f66d96f2cfdaf35dfc30c9ff842f9acd44",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "entry": "ai_003_010/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_010/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "6704957ed9096ae79d18084f8df542ec37320acf66f02e4045bdd25bab5e5cfa",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "entry": "ai_003_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_003_010/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "entry": "ai_009_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "dc6b0d2a6e58a40831168442b4f477a7af492bb1aa344b979148976d02b2fb4f",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "entry": "ai_009_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "a9adca6dd41662b95726a53b5d390b235973b320b4a74005f17517f3edccdcaa",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "entry": "ai_009_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "1dd88d25724cbe67c34f853d216092279238db54fc4998691904f62c5fdf430e",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "entry": "ai_009_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_009/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "entry": "ai_047_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "f40d0afdbab890e1bb2f63f6130178f21e6364692161ceb73930d5a14752b32a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "entry": "ai_047_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "abfdf40066d6ae3815ad60d782135257ef0dd7608f1426f34f47bcc30f87a46e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "entry": "ai_047_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "024eb913bf92e5eb1fc2be4f8222ce0378249b33a23d2cd9a9ddbe153fae6653",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "entry": "ai_047_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_047_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "entry": "ai_016_001/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_001/_detail/cam_01/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "92c2a11d4dc860501ebdaaa33e168ba50f51b10b9e72adf712018a5b33ba1d01",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "entry": "ai_016_001/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_001/_detail/cam_01/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "c1b7eeb98f4dcb83726ccb158ef5aec046853d5d7e21f781da8a0cfdfe7a66b2",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "entry": "ai_016_001/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_001/_detail/cam_01/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "88986babe666b62441e93c13fccd0a3e473ff3a72694bc4db0838f68aa276b41",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "entry": "ai_016_001/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_016_001/_detail/metadata_scene.csv",
+      "bytes": 75,
+      "sha256": "1f963aad9016226343424071173c984c4c491df4525c8d93764d32a2e0012f73"
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "entry": "ai_019_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_008/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "ee11e11b275fc7f53e3de1bba6bee2856a7ce0b233ef0b192f118e972ebe80db",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "entry": "ai_019_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_008/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "3cc04e8115fc68c733d5c0cb9d2f6d727d401e866c46a94e9b9e442b1b0fa3b0",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "entry": "ai_019_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_008/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "b7feb758d9caed4c95dc9914f6eaaa6d3a04f66087937a2274e82145f94f1968",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "entry": "ai_019_008/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_019_008/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "entry": "ai_031_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_010/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "044e5c0e7c2ff25c0443a1fd07c67ee063a200f6953b167059a93fa1f938be48",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "entry": "ai_031_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_010/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "277904f5ab79ac2dc6d11fc6ab3945e6b8854b7cb6124478e01f85394bb59b7e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "entry": "ai_031_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_010/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "a857ec5607a4d5e05b5330f38cb662acd264649b192dfa8bc84d1164c83769cd",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "entry": "ai_031_010/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_031_010/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "entry": "ai_005_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_005/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "56ea87da9c4da7d7161111c2068829daaf716ffaf62746091e9f76da8c8d455a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "entry": "ai_005_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_005/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "21ea4453c6efed1aabcfef30fa2a9d7a2f3c38fa04c9810d52f8483a6cf68370",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "entry": "ai_005_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_005/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "c2382576094d9d7a385af662615b2d4495fb1be7664ab16e6cedbde953298032",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "entry": "ai_005_005/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_005_005/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "entry": "ai_009_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_007/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "b72176e59bc6f698df11c772149318e6129d814efa35a98ea8b3e9e6f09f6ec3",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "entry": "ai_009_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_007/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "c8e35927c7afa5f416daa7da4f393688668df072e99f9bce05c1702166691d07",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "entry": "ai_009_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_007/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "0ebbd7669799b58a672e6f5a4c510d807be8efaa52e37c4cad8601cb9689b4cc",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "entry": "ai_009_007/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_009_007/_detail/metadata_scene.csv",
+      "bytes": 73,
+      "sha256": "60171c3d50c98cfc6ee22f140daf1e2c56ed05604e105bf25368cbecf4cf843a"
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "entry": "ai_039_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_039_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "8321673eb9c8b975ec9f89d6e2bcae03fa62ea96e87f9134d4ca7062c5f17024",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "entry": "ai_039_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_039_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "6e55a98d8275456e1c91b2638c72b41d242283c8883271259817618bbd3321dc",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "entry": "ai_039_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_039_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "e38cb64a3648aac85792ec4f5e8a9946ecdf2d443f5e9d71944b9501ee9eee6b",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "entry": "ai_039_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_039_003/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "entry": "ai_035_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_035_003/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "e525e2cf3b0d5920615517c60bff8160b361838af5b4871752d26e68e4efce0a",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "entry": "ai_035_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_035_003/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "9ee3038f721063f47e1d778d356e51a77e3532bb5da99615c35312e336ddfe68",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "entry": "ai_035_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_035_003/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "8449b0803eb0d58044ae1128140abec8c88ea7d9b2ac596ca62dd91dbac10afc",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "entry": "ai_035_003/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_035_003/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "entry": "ai_038_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_038_009/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "bde798c13fdbec7c631e0d5377f7ac7f14d59ff84ff2d26053ee528d324c6848",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "entry": "ai_038_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_038_009/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "054dd8d296444326ab3c96a01f8b95dae5402104910a2ddc4644c2932d48f95e",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "entry": "ai_038_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_038_009/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "66921186ceaee50d742743ca3befe77b0aa46c00a5ba96ede28321b8bae6131f",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "entry": "ai_038_009/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_038_009/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "entry": "ai_015_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_004/_detail/cam_00/camera_keyframe_frame_indices.hdf5",
+      "bytes": 2848,
+      "sha256": "d48a36b13551c11fbac0d30498dcc097ea530dbafcc777bde81c14a516b9cd2f",
+      "hdf5": {
+        "shape": [
+          100
+        ],
+        "dtype": "int64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "entry": "ai_015_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_004/_detail/cam_00/camera_keyframe_orientations.hdf5",
+      "bytes": 9248,
+      "sha256": "e842dbddc73cb8b313036da0e40e20f14a48a8dd3e2965c895c8608f89104dd3",
+      "hdf5": {
+        "shape": [
+          100,
+          3,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "entry": "ai_015_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_004/_detail/cam_00/camera_keyframe_positions.hdf5",
+      "bytes": 4448,
+      "sha256": "7a78b926cd6d6341d0417f0efb7ef876d828471faaeecb78cc592f9456e5bd5b",
+      "hdf5": {
+        "shape": [
+          100,
+          3
+        ],
+        "dtype": "float64"
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "entry": "ai_015_004/_detail/metadata_scene.csv",
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_pose_preflight_v1_linux5080/ai_015_004/_detail/metadata_scene.csv",
+      "bytes": 74,
+      "sha256": "418355de2870ee06f85cf1b56542036233d67805e702ee448ef12d8d92e0848e"
+    }
+  ],
+  "summary": {
+    "candidate_scenes": 80,
+    "train_scenes": 60,
+    "validation_scenes": 20,
+    "files_expected": 320,
+    "files_completed": 320,
+    "bytes_completed": 1329409,
+    "all_hdf5_readable": true,
+    "held_out_overlap_count": 0
+  },
+  "error": null,
+  "safety": {
+    "full_scene_zips_downloaded": false,
+    "overwrites_refused": true,
+    "files_deleted": false
+  },
+  "quality_boundary": "pose/file integrity only; 30-degree triplets and hidden evidence are not selected yet"
+}

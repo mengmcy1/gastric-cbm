@@ -1,0 +1,34 @@
+{
+  "schema_version": "stage1.6-core-trainable-model-smoke-v7",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "source_root": "源码/Adaptive3DGS",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONWARNINGS=error PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 24,
+  "tests_passed": 24,
+  "tests_failed": 0,
+  "capabilities": {
+    "stage1_6_positive_supervision_chain": true,
+    "three_independent_heads": [
+      "strictly_positive_hidden_depth_ratio",
+      "support_probability",
+      "geometry_uncertainty_and_confidence"
+    ],
+    "deployed_hidden_depth": "base_depth_z * (1 + positive_delta_ratio)",
+    "training_ratio_label": "hidden_truth_z / source_truth_z - 1",
+    "unknown_support_semantics": "non_negative_positive_unlabeled_risk_not_pixelwise_negative",
+    "unknown_geometry_targets_ignored": true,
+    "source_truth_depth_model_input": false
+  },
+  "files_sha256": {
+    "源码/Adaptive3DGS/pyproject.toml": "1ebc5a8f0cd83166684b46d2b96fe77843ac170cdb89236ace356d364873eff5",
+    "源码/Adaptive3DGS/src/adaptive3dgs/models/__init__.py": "4910e8c56010f93d51318864a188cd5317325c4cefa7978451b8d78768a86084",
+    "源码/Adaptive3DGS/src/adaptive3dgs/models/occlusion_hidden.py": "73c78765864e441114394c39c8ff47bf8931d632f2714054af75a1801b27a7a6",
+    "源码/Adaptive3DGS/tests/test_occlusion_hidden_model.py": "24d7106116f8ce95cacc983e5bb798b6aa539c3a04b5ca7951fc925ce41a5306",
+    "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_core_supervision_smoke_v6.json": "e175edc00b666b246add8e0d491cc3527f510b62c9216d24698fd70fe1910306"
+  },
+  "supersedes": "stage1_6_core_supervision_smoke_v6.json",
+  "quality_boundary": "model and loss contract only; no optimization convergence or held-out quality result"
+}

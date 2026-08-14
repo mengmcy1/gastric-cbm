@@ -1,0 +1,17 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-hidden-evidence-smoke-v1-failed",
+  "status": "failed_pre_record",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "output_directory_created": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_hidden_evidence_v1_linux5080",
+  "output_arrays_written": 0,
+  "error": "adaptive3dgs.validation.ValidationError: HLP-GEO adapter requires a finite diagonal M_cam_from_uv",
+  "cause": "ai_031_010 uses a tilted image plane encoded by a non-diagonal M_cam_from_uv; the first loader only supported the diagonal projection used by the three HLP-GEO test scenes",
+  "resolution": "general projective calibration is factored by RQ into an upper-triangular K and a camera rotation adjustment; general-K unprojection/projection tests pass before v2",
+  "safety": {
+    "failed_output_deleted": false,
+    "failed_output_overwritten": false,
+    "candidate_scene_replaced_to_avoid_failure": false
+  },
+  "quality_boundary": "no hidden evidence or training result was produced"
+}

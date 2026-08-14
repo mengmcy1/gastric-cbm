@@ -1,0 +1,11 @@
+{
+  "schema_version": "stage1.4-flash3d-hypersim-geometry-failure-v1",
+  "status": "failed_postprocess",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "failed_stage": "first scene alpha image reduction after successful model inference and rendering",
+  "error": "TypeError: NumPy ndarray.mean received the PyTorch-only keyword dim=0",
+  "partial_output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v1_linux5080",
+  "recovery": "changed ndarray.mean(dim=0) to ndarray.mean(axis=0); v1 partial output retained and v2 uses a fresh directory",
+  "quality_boundary": "no geometry metric was completed; this record is failure provenance only"
+}

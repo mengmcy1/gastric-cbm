@@ -1,0 +1,11 @@
+{
+  "schema_version": "stage1.4-flash3d-hypersim-geometry-failure-v1",
+  "status": "failed_postprocess",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "failed_stage": "first scene oracle pose scaling after successful model inference",
+  "error": "RuntimeError: in-place update to inference tensor outside InferenceMode is not allowed",
+  "partial_output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v4_oracle_scale_linux5080",
+  "recovery": "clone the inferred transform before scaling and use a fresh v5 output directory",
+  "quality_boundary": "no oracle-scale target metric was completed; failure provenance only"
+}

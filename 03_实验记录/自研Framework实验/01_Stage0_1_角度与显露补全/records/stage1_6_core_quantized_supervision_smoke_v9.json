@@ -1,0 +1,24 @@
+{
+  "schema_version": "stage1.6-core-quantized-supervision-smoke-v9",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONWARNINGS=error PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 26,
+  "tests_passed": 26,
+  "tests_failed": 0,
+  "capabilities": {
+    "stage1_6_trainable_model_contract": true,
+    "float32_serialized_margin_recheck": true,
+    "rounding_onto_relative_boundary_becomes_unknown": true,
+    "unknown_observation_count_reset": true
+  },
+  "files_sha256": {
+    "源码/Adaptive3DGS/src/adaptive3dgs/supervision.py": "1549a05207f771cc4ccd98dd1237ee43037d11494f96bb38c14cf0de7cba5c5d",
+    "源码/Adaptive3DGS/tests/test_supervision.py": "bbd969947260e074728e8f4b3383af45ecf2d8eed9e65f650d79006eb7224d7a",
+    "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_core_trainable_model_smoke_v8.json": "c9d5fd68283e6aa261919ff919b48b42e5a0ef9e698897bb768206bd6a8255d3"
+  },
+  "supersedes": "stage1_6_core_trainable_model_smoke_v8.json",
+  "quality_boundary": "serialized supervision and model/loss contract; training quality recorded separately"
+}

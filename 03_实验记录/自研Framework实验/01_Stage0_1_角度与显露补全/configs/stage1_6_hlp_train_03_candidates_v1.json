@@ -1,0 +1,520 @@
+{
+  "schema_version": "stage1.6-hlp-train-03-candidates-v1",
+  "status": "frozen_pose_preflight_pending",
+  "date": "2026-08-14",
+  "official_split_source": {
+    "path": "源码/ml-hypersim/evermotion_dataset/analysis/metadata_images_split_scene_v1.csv",
+    "sha256": "47b7cce12f4659ffa31cf05e8fbf2aee3d69e1929d07b5ea25506603b69d5ce6"
+  },
+  "camera_trajectory_metadata": {
+    "path": "源码/ml-hypersim/evermotion_dataset/analysis/metadata_camera_trajectories.csv",
+    "sha256": "cba47312efd3d63e9f8f8164fb634cf57faa5fa7a905368174d1e6c7bc625e4f"
+  },
+  "camera_parameters": {
+    "path": "源码/ml-hypersim/contrib/mikeroberts3000/metadata_camera_parameters.csv",
+    "sha256": "0b40e0884ba2458e7bdcdbb27de46a4ec6eacbfbbb4ef0d70188d78098cebdc9"
+  },
+  "held_out_test_scenes": [
+    "ai_001_010",
+    "ai_005_001",
+    "ai_008_005"
+  ],
+  "selection_scope": "scene-diverse pose preflight after HLP-TRAIN-02 same-scene multi-source generalization failure",
+  "target_motion": {
+    "total_yaw_deg": 30.0,
+    "left_endpoint_deg": -15.0,
+    "right_endpoint_deg": 15.0,
+    "maximum_endpoint_error_deg": 3.0,
+    "maximum_triplets_per_scene": 1
+  },
+  "train_candidates": [
+    {
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "scene_type": "Bathroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "scene_type": "Bedroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "scene_type": "Courtyard",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "scene_type": "Dining room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "scene_type": "Hall",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "scene_type": "Hallway",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "scene_type": "Hotel lobby",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "scene_type": "Kitchen",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "scene_type": "Lecture theater",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "scene_type": "Library",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "scene_type": "Living room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "scene_type": "Office",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "scene_type": "Office (building foyer)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "scene_type": "Office (conference room)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "scene_type": "Office (home)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "scene_type": "Office (waiting area)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "scene_type": "Other",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "scene_type": "Restaurant",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "scene_type": "Retail space",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "scene_type": "Staircase",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "scene_type": "Transit station",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "scene_type": "Bathroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "scene_type": "Bedroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "scene_type": "Courtyard",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "scene_type": "Dining room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "scene_type": "Hall",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "scene_type": "Hallway",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "scene_type": "Hotel lobby",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "scene_type": "Kitchen",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "scene_type": "Lecture theater",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "scene_type": "Library",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "scene_type": "Living room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "scene_type": "Office",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "scene_type": "Office (building foyer)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "scene_type": "Office (conference room)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "scene_type": "Office (home)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "scene_type": "Other",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "scene_type": "Restaurant",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "scene_type": "Retail space",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "scene_type": "Staircase",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "scene_type": "Transit station",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "scene_type": "Bathroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "scene_type": "Bedroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "scene_type": "Courtyard",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "scene_type": "Dining room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "scene_type": "Hall",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "scene_type": "Hallway",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "scene_type": "Hotel lobby",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "scene_type": "Kitchen",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "scene_type": "Lecture theater",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "scene_type": "Living room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "scene_type": "Office",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "scene_type": "Office (building foyer)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "scene_type": "Office (conference room)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "scene_type": "Office (home)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "scene_type": "Other",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "scene_type": "Restaurant",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "scene_type": "Retail space",
+      "public_frames": 100
+    }
+  ],
+  "validation_candidates": [
+    {
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "scene_type": "Bathroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "scene_type": "Bedroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "scene_type": "Hall",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "scene_type": "Hallway",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "scene_type": "Hotel lobby",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "scene_type": "Kitchen",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "scene_type": "Lecture theater",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "scene_type": "Living room",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "scene_type": "Office (building foyer)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "scene_type": "Office (conference room)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "scene_type": "Office (home)",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "scene_type": "Other",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "scene_type": "Restaurant",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "scene_type": "Retail space",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "scene_type": "Staircase",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "scene_type": "Bathroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "scene_type": "Bedroom",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "scene_type": "Hotel lobby",
+      "public_frames": 100
+    },
+    {
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "scene_type": "Kitchen",
+      "public_frames": 100
+    }
+  ],
+  "leakage_rules": {
+    "official_test_split_used_for_training_or_selection": false,
+    "hlp_geo_01_test_scenes_used_for_training_or_selection": false,
+    "p01_used_for_training_or_selection": false,
+    "scene_level_train_validation_separation_preserved": true
+  }
+}

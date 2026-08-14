@@ -1,0 +1,2447 @@
+{
+  "schema_version": "stage1.6-hlp-train-02-frozen-base-depth-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": "1",
+  "inputs": {
+    "evidence_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_02_hidden_evidence_v3.json",
+    "evidence_record_sha256": "cbc036c6572eb00c1762319fb51cf2da4cb5e5f64358ce42055c210f4de546e9",
+    "allowed_array_keys": [
+      "source_rgb_uint8"
+    ],
+    "source_truth_depth_model_input": false,
+    "source_truth_intrinsics_model_input": false
+  },
+  "model": {
+    "provider_id": "unidepth-v1-vitl14-rgb-only-frozen-v1",
+    "repo": "源码/UniDepth",
+    "repo_commit": "bebc4b2fdda5c223693c390739db76897aee42e5",
+    "config": "源码/UniDepth/configs/config_v1_vitl14.json",
+    "config_sha256": "077066c9214ecdca6996dfe8b78704900fed87e5c07b08158ded483cc4029ff4",
+    "weights": "huggingface:lpiccinelli/unidepth-v1-vitl14@da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60",
+    "weights_sha256": "da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60",
+    "weights_bytes": 1388239045,
+    "missing_weight_keys": [
+      "pixel_encoder.register_tokens",
+      "pixel_encoder.norm.weight",
+      "pixel_encoder.norm.bias"
+    ],
+    "unexpected_weight_keys": [],
+    "eval_mode": true,
+    "gradient_enabled": false
+  },
+  "results": [
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 99,
+      "source_rgb_sha256": "710c80886b1aaf3e32d6f59ac3d18aa4ba9b38a968d3cdb8e70737b9fab90dc1",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1905572414398193,
+        "median": 5.386473655700684,
+        "p99": 6.708614277839659,
+        "maximum": 17.419052124023438
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0099-unidepth-v1-base.npz",
+      "arrays_sha256": "cb966e4b10c5b5e77503d1474710cab63a1a2e59429f9a56475b91eefbb4ab1c",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0099-unidepth-v1-depth.png",
+      "preview_sha256": "b6488b74f0047ce10f068a41c33cbe99f0b23af3d102f233792503ee6c91c00c",
+      "runtime_seconds": 1.0900976388948038
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 94,
+      "source_rgb_sha256": "28bc88ccfc3da28d216e2b855fa0eded4a8cf1912d1569da5ba5a0cdc306c1d2",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.8334073424339294,
+        "median": 1.6329026222229004,
+        "p99": 2.143611168861389,
+        "maximum": 3.347851276397705
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0094-unidepth-v1-base.npz",
+      "arrays_sha256": "d51040a96f51318094fdff065d8f44c345cf519c3666ed3746c57586a9ed5fd6",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0094-unidepth-v1-depth.png",
+      "preview_sha256": "151f48b47cbbbd98910a118dc0665a7a1b9d4accec46afe744c983a23844ec2c",
+      "runtime_seconds": 0.5198778440244496
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 82,
+      "source_rgb_sha256": "daa55f4dadf9dcb0560de03e3a296719410b2e036a663ab5ae05725262be7dd7",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.326873540878296,
+        "median": 4.319276332855225,
+        "p99": 6.032134165763853,
+        "maximum": 20.905166625976562
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0082-unidepth-v1-base.npz",
+      "arrays_sha256": "2f236accf05cad6d5deb600be575fd03dac76fe9cd318ecdb9b12f8a0c535a50",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0082-unidepth-v1-depth.png",
+      "preview_sha256": "113eb1a401a813ab5bea6c0f7af78f220757ecbed8dce6f4a44dcc31e1f6ca27",
+      "runtime_seconds": 0.3605002260301262
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 56,
+      "source_rgb_sha256": "0b881ae47b43a341f11f29c1349461f1853bd5dc859ccf332e556114d404917b",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.224956750869751,
+        "median": 2.7662453651428223,
+        "p99": 3.6134623026847823,
+        "maximum": 10.285028457641602
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0056-unidepth-v1-base.npz",
+      "arrays_sha256": "0e3bd3bb7a203abe1fe647e36560065262987bf92caa098dccb39151e01e0d13",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0056-unidepth-v1-depth.png",
+      "preview_sha256": "ff6da85634a18383d4b9689249bc3862efbf774ca38b295c471bb5c2eef44d25",
+      "runtime_seconds": 0.37962108303327113
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "source_rgb_sha256": "9f25e795c5f6eb9e6de9706acc1299d5cc0aa6253d190d14d00a5f07cdbab9c4",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.344118356704712,
+        "median": 5.208498954772949,
+        "p99": 6.918578424453733,
+        "maximum": 16.676921844482422
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0009-unidepth-v1-base.npz",
+      "arrays_sha256": "cd0bf63f34bee974fa4de4bcd3e3d3aba94cf2cacfe20a348f442caefae61c0b",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0009-unidepth-v1-depth.png",
+      "preview_sha256": "72797a7a12f809e6e7059c4dccd343f40157f8e65329409b9b04f0a55ce82756",
+      "runtime_seconds": 0.3749024149728939
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 18,
+      "source_rgb_sha256": "9686ddc52558a318ac7ec14eac3c63b825044c1e52027495a85e835ba43aee04",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9575579166412354,
+        "median": 2.9264752864837646,
+        "p99": 3.848795557022093,
+        "maximum": 9.319841384887695
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0018-unidepth-v1-base.npz",
+      "arrays_sha256": "4f6e153e974da302d9a06cc5754ff33ab412146b4b3465f1e8618d7c3660312f",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0018-unidepth-v1-depth.png",
+      "preview_sha256": "177d4a05b2ef0dad31fde92e35927648f75cdd24a96d5bbb38edfa2b810b2a0b",
+      "runtime_seconds": 0.3561804019846022
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 33,
+      "source_rgb_sha256": "c945c5c192db13a42b3dc010be4306ee6c059ba8a4769c9a53d8e33088b9a1f5",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.6475064754486084,
+        "median": 4.515744209289551,
+        "p99": 6.022755465507506,
+        "maximum": 13.171607971191406
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0033-unidepth-v1-base.npz",
+      "arrays_sha256": "bec10b7b09f0599104be05e7093bd96e57c209fe899eff585df138075d68c66e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0033-unidepth-v1-depth.png",
+      "preview_sha256": "e9529755f44f1b5e15a4a323f6b50908c671980444cb636090eb866827c2eea2",
+      "runtime_seconds": 0.34751757502090186
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 23,
+      "source_rgb_sha256": "4e2e92a8bb8cec4e6b681421e662d697736e28de777f77a6f0c976766de5f484",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.096543312072754,
+        "median": 3.092477798461914,
+        "p99": 5.086757321357726,
+        "maximum": 16.990554809570312
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0023-unidepth-v1-base.npz",
+      "arrays_sha256": "6daddeb620f1c2661b7de8ed6e2175d078a9041b3ba6595fe9de3f8f4253a5ea",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0023-unidepth-v1-depth.png",
+      "preview_sha256": "d19d86da822dbb5f45deec7bfbf1d88a56ccfeb7af07eec27948487a7b8eb073",
+      "runtime_seconds": 0.36278782109729946
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 35,
+      "source_rgb_sha256": "74481fa3f5ebea08a52c70714daf60550977aa4581bbdac85f046d6e16f584db",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.6452202796936035,
+        "median": 2.426328182220459,
+        "p99": 3.3472158336639404,
+        "maximum": 4.3407769203186035
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0035-unidepth-v1-base.npz",
+      "arrays_sha256": "43fdebab81242b626e50b37e4da958a822a3127cfbc9a0b441a16b09caf72b0b",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0035-unidepth-v1-depth.png",
+      "preview_sha256": "879f725bad58ecc930916e2302906206d307c214a344d3ad924e104c6b9cf049",
+      "runtime_seconds": 0.35091280296910554
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 14,
+      "source_rgb_sha256": "f99f666992b3350f9fc64646b81292172d338bc3f4f46d3b5603a3df176e1446",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1278976202011108,
+        "median": 4.642841339111328,
+        "p99": 6.662456512451172,
+        "maximum": 22.232637405395508
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0014-unidepth-v1-base.npz",
+      "arrays_sha256": "1e1878a104663356d220eb1c1e4b7250d5065a4c9a94bd19e62858b8c5b727f3",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_001-cam_00-0014-unidepth-v1-depth.png",
+      "preview_sha256": "04eeb549449f2cda5a812f09830bb665db39f7fa795bfc23f1891205cd2dc1d2",
+      "runtime_seconds": 0.3625738039845601
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 64,
+      "source_rgb_sha256": "7a7256719c87c244f8cce20ef3d8226bb8ecce29f2a49a32d26ff488bc2f38d4",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.040712594985962,
+        "median": 5.511074066162109,
+        "p99": 7.643791923522949,
+        "maximum": 23.8544921875
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0064-unidepth-v1-base.npz",
+      "arrays_sha256": "8c09b2e4c9060e59ddd8463ef1ee75936692c0d0d3db8fbbf0f95cbc0e2b4daa",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0064-unidepth-v1-depth.png",
+      "preview_sha256": "2e91b1e2a0454ef53ff08f61ea9ed8eec65cda137ae0f903c7b1a11cd7a26a9d",
+      "runtime_seconds": 0.34810643806122243
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 47,
+      "source_rgb_sha256": "8372258af6e6080f20dcd429b4766c8d8a739a64d161e8c81061bc03af0d8eff",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.471259355545044,
+        "median": 6.4728875160217285,
+        "p99": 9.721258516311641,
+        "maximum": 22.61357307434082
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0047-unidepth-v1-base.npz",
+      "arrays_sha256": "4a5fc052360819096a4e6eb58cef4f573adbd26f31336543f2562887ed046af3",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0047-unidepth-v1-depth.png",
+      "preview_sha256": "d15fb541796748ecd820f564e800318ed035b71f576c3349d1b8a35026a322d6",
+      "runtime_seconds": 0.3606884740293026
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 55,
+      "source_rgb_sha256": "722470dc8553cd767325fd5ba53ca906437ac13f1d1738039cdd8aa16027d200",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3636064529418945,
+        "median": 4.200141906738281,
+        "p99": 6.8547933483123735,
+        "maximum": 21.437732696533203
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0055-unidepth-v1-base.npz",
+      "arrays_sha256": "f67ac156451f1f0d5ada6c411ba68dc43fa4f6ebab69cc2bc9e4a2b5c6bafde1",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0055-unidepth-v1-depth.png",
+      "preview_sha256": "ddb05d8b33515706d381a4980619926e5db9b5ffb7e44f69dfba484a5ce52dc5",
+      "runtime_seconds": 0.36619771900586784
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 50,
+      "source_rgb_sha256": "5526fcb57ab0e843a531495092089dfb5f44a31d9f6e4de9f4e210475ef7cf6d",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3979194164276123,
+        "median": 6.97117805480957,
+        "p99": 9.290995349884032,
+        "maximum": 26.814393997192383
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0050-unidepth-v1-base.npz",
+      "arrays_sha256": "c4c0face446738c4fb6b13c263ffd3c45320bfd8f86f494aebbe780261ebbb55",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0050-unidepth-v1-depth.png",
+      "preview_sha256": "f3e6b4b08baad8f256ef8526df0692d7dd3b7eed7e6e93c7caa63f757d3dfbd3",
+      "runtime_seconds": 0.3391445620218292
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 3,
+      "source_rgb_sha256": "52cf1ce9079b400f12622aca818e38fd1dd8d4a7d87add7c377fcfaa8be8a151",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2884429693222046,
+        "median": 6.118095397949219,
+        "p99": 7.844589467048642,
+        "maximum": 32.63801193237305
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0003-unidepth-v1-base.npz",
+      "arrays_sha256": "7c4c639b38e27d21e40f3dfbe775fb5fce8ab7dbc5cfb948ccca6b262b3e0cd4",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0003-unidepth-v1-depth.png",
+      "preview_sha256": "0427afddf987cd4c7707c0af6a8d0061c8c7a7ab8db3149d306646a1a0519659",
+      "runtime_seconds": 0.3547996620181948
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 70,
+      "source_rgb_sha256": "2b76486a3395cec2a0ae91e0f7c84a44f194f5a00d8fe27eb81cae39a6247b4f",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2641552686691284,
+        "median": 6.073455333709717,
+        "p99": 9.08845106124878,
+        "maximum": 29.434019088745117
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0070-unidepth-v1-base.npz",
+      "arrays_sha256": "c69705cbc7cb638e50fb03b7675381a802e8706049e466ced876ff98fe44e37e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0070-unidepth-v1-depth.png",
+      "preview_sha256": "0e5b746ee7bdd76aee97bddc10b7eaa5def1f88141c79d80de138f80e334324f",
+      "runtime_seconds": 0.3647705970797688
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "source_rgb_sha256": "bff175cc98dac2248530603bb4e70ecc0dd3e16560d9ac49019868ca92108aa4",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2548489570617676,
+        "median": 3.8542141914367676,
+        "p99": 6.195076689720152,
+        "maximum": 16.407072067260742
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0036-unidepth-v1-base.npz",
+      "arrays_sha256": "ea4ef45e4c17794cbd30f6f58ac49f0f668bf1f1511629afc7495dde46e67060",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0036-unidepth-v1-depth.png",
+      "preview_sha256": "cf20dc44100e1fe4e25593ad0eb628573acdfdf7d719fd2641b3f7358cc12dc0",
+      "runtime_seconds": 0.3850088829640299
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 67,
+      "source_rgb_sha256": "d609cd28763ecb5d329da2037b995649399fdfaf5b19ce0ac67319b10082463f",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3737809658050537,
+        "median": 6.8496809005737305,
+        "p99": 10.083532400131226,
+        "maximum": 26.506072998046875
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0067-unidepth-v1-base.npz",
+      "arrays_sha256": "7d4f4bf05789f61c31ee8271b78b25df7489bd94ac5a22d2d808511098144e15",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0067-unidepth-v1-depth.png",
+      "preview_sha256": "e01fd6b20a081e098639321736072433e73bc57658633c8c2622afca8bc16220",
+      "runtime_seconds": 0.35936359700281173
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 38,
+      "source_rgb_sha256": "efdf1f3626ded52f08c526ae9a1c82b8b14f83a8d01e2ecf4a3706a95735b604",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3733205795288086,
+        "median": 5.7818498611450195,
+        "p99": 8.105673208236688,
+        "maximum": 21.549558639526367
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0038-unidepth-v1-base.npz",
+      "arrays_sha256": "a81c622bb9ade9b5f7aebf8b185f03dcfbef863305168316b23467b8a5660649",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0038-unidepth-v1-depth.png",
+      "preview_sha256": "0e4bfda2b4825c640137746761a06b3d9a2dfce21e351e7c7021068a39b4b56e",
+      "runtime_seconds": 0.3717773499665782
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 14,
+      "source_rgb_sha256": "893e0b3351bf988e3ad3e28a4594e30a7d32d9b4e524f839931ce45a453d95fa",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.350322961807251,
+        "median": 6.733217239379883,
+        "p99": 10.195391359329223,
+        "maximum": 25.766427993774414
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0014-unidepth-v1-base.npz",
+      "arrays_sha256": "ecc571326ce6399d9aa103c4e12afa6fc8a0833aa259d129e3da94e742503b62",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_006-cam_00-0014-unidepth-v1-depth.png",
+      "preview_sha256": "7f013298c35bf388d093a0a4892e12925c4872d9a4071cb3e1019b49645bffbe",
+      "runtime_seconds": 0.36319105606526136
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 45,
+      "source_rgb_sha256": "b21ba7013ec3c06330d27a6632b62ab60011c4764329ca085fe77a42f2be6627",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0421292781829834,
+        "median": 6.181487083435059,
+        "p99": 9.154572191238403,
+        "maximum": 17.341537475585938
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0045-unidepth-v1-base.npz",
+      "arrays_sha256": "dce611ad1774aa4c94335998998b78cea394fa2b8a4323608a8c1ac7304a93f9",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0045-unidepth-v1-depth.png",
+      "preview_sha256": "477dead87079f7be439c8abf71a0b38bb500b827df98041dad7121840f6790fe",
+      "runtime_seconds": 0.3872612619306892
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "source_rgb_sha256": "78f0c8fd735579bde5c22af12a783eb7858cd16e785e4902e7f330f641cf843d",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3897438049316406,
+        "median": 4.59542989730835,
+        "p99": 7.608068208694457,
+        "maximum": 22.247663497924805
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0069-unidepth-v1-base.npz",
+      "arrays_sha256": "daa9d1bc7736b1db6ab921d06b8a136ac78a96313d94566fb12fd181d541f87a",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0069-unidepth-v1-depth.png",
+      "preview_sha256": "79c4ba94879ecb328b8183429f63cec34f1b0ecfa013f33f1831bfe2f13e6d02",
+      "runtime_seconds": 0.4120941760484129
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 72,
+      "source_rgb_sha256": "b15b5c6e3f5859c2d90c157fafcbf7a832e5f24762fbe7a2ba61f58c0e7d6e29",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4178546667099,
+        "median": 6.188056945800781,
+        "p99": 8.380121135711669,
+        "maximum": 23.012561798095703
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0072-unidepth-v1-base.npz",
+      "arrays_sha256": "6cc382589807c966622552bcf74d5ab74b953699b27c831c4773d480987eafe9",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0072-unidepth-v1-depth.png",
+      "preview_sha256": "91625b02fc6ec7a0662c02d618e2e8d51db3b13f10f4c7de91df7ae2f75d654b",
+      "runtime_seconds": 0.42166793101932853
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 29,
+      "source_rgb_sha256": "267bfd4fc5e475e399e1028355905a498a3d56bce88874d3829e06c9c8273f6f",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.145627737045288,
+        "median": 5.834202766418457,
+        "p99": 8.914731378555294,
+        "maximum": 22.43517303466797
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0029-unidepth-v1-base.npz",
+      "arrays_sha256": "aea2e00be4430552c850247f92617fda2f8a91c96a762f1a505fd2eae123a491",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0029-unidepth-v1-depth.png",
+      "preview_sha256": "fa6e0d1c059e5e26e473bb8b3b2131de489c213e3ef410aecd8499dac4e4047c",
+      "runtime_seconds": 0.380652716034092
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 35,
+      "source_rgb_sha256": "0e14533d280d2334097ce70f3351c0747144701141d29f06573c159b49190038",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.386282205581665,
+        "median": 6.3145551681518555,
+        "p99": 7.458048028945921,
+        "maximum": 25.968996047973633
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0035-unidepth-v1-base.npz",
+      "arrays_sha256": "ad77d79879110ea9b428f0828ed1073757105fd894ff2c1c5877b1cbe918f762",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0035-unidepth-v1-depth.png",
+      "preview_sha256": "db969dca58973790fdfaf5795e49b8a35ef261dfe10a3491dda97d9a3601d747",
+      "runtime_seconds": 0.3682067940244451
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 16,
+      "source_rgb_sha256": "fd4b3f7daa46e141bbea76ffaf5f42442817ff47c65ab60e26926f5c9de2f584",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9217044115066528,
+        "median": 4.444785118103027,
+        "p99": 10.124286003112791,
+        "maximum": 12.56419563293457
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0016-unidepth-v1-base.npz",
+      "arrays_sha256": "695bddc21d25d5221619055ec57cb0e0f367cf9de1587cd46fba53c378c60dea",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0016-unidepth-v1-depth.png",
+      "preview_sha256": "5f62cd7fbe909ae5e88e74447389435b64d8a0b1c5433dbd52c99f3c708ba4f8",
+      "runtime_seconds": 0.3461233399575576
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 43,
+      "source_rgb_sha256": "a9fe9a49cd043adff1d316f2807e392e918b3ece77e8db2a41b7f4a249003929",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4006918668746948,
+        "median": 5.615187644958496,
+        "p99": 7.511994352340697,
+        "maximum": 23.106548309326172
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0043-unidepth-v1-base.npz",
+      "arrays_sha256": "5a5399e1bda26dc14b6b22ff6288dfeb92204bf5d593fdc5c3428c5405252c38",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0043-unidepth-v1-depth.png",
+      "preview_sha256": "525c9e0e8825f4f45172145d34719d3fc4c4bdfd9d5ba0870e82c3ec77a712b2",
+      "runtime_seconds": 0.36703473096713424
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 75,
+      "source_rgb_sha256": "4ff4206d367ee60651702b89844d3f085e6ff05314cd1b8536eea2f8d3e06565",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3712186813354492,
+        "median": 5.280704975128174,
+        "p99": 7.776990351676938,
+        "maximum": 21.895038604736328
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0075-unidepth-v1-base.npz",
+      "arrays_sha256": "95118ee527b61da15aee288ad4b466d16472552729f794f9fe88d57a77dae2f9",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0075-unidepth-v1-depth.png",
+      "preview_sha256": "ee2415a7f1e7a8100261367b14cf59bc4a872454595a9ed09f6b12b65c32dce3",
+      "runtime_seconds": 0.3756365239387378
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 13,
+      "source_rgb_sha256": "e0ae524f069b0a34c3097b6a4721641273ab07ffb49e9ab1145afc25befa2c3c",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4074723720550537,
+        "median": 6.401139259338379,
+        "p99": 8.539744443893433,
+        "maximum": 20.895484924316406
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0013-unidepth-v1-base.npz",
+      "arrays_sha256": "a4b37f8872768d4552c07998e6a397e2ff89ac23bc753742248324a22dfac128",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0013-unidepth-v1-depth.png",
+      "preview_sha256": "9342af267026568378522337d14132522276b0d5807aa9a09c9cb39b3eea763c",
+      "runtime_seconds": 0.35748626105487347
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 89,
+      "source_rgb_sha256": "b26a3fa2afd389e05fb7be35f945775f514380503c1ce01a09e6b00258b05020",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0783437490463257,
+        "median": 4.180052757263184,
+        "p99": 6.25019555568695,
+        "maximum": 14.01133918762207
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0089-unidepth-v1-base.npz",
+      "arrays_sha256": "e3d388bd6f1c358152cd9ab0b7ac9ac6b890f5409ef8573e1636f645cfd9f29e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_005-cam_00-0089-unidepth-v1-depth.png",
+      "preview_sha256": "67278bc10d2f98cb31d8ac38cb9cba21dfbaa82fe4cbaea0b560cb99333105da",
+      "runtime_seconds": 0.36129355302546173
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 8,
+      "source_rgb_sha256": "ee41544539716388198ceb857f4ab1ca95f5d19fe52ed67d1652e63337467415",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3329631090164185,
+        "median": 2.801888942718506,
+        "p99": 4.125201020240779,
+        "maximum": 14.466565132141113
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0008-unidepth-v1-base.npz",
+      "arrays_sha256": "88958f4f811dcf7736dca74f3d283f03411743eb44e23b27dfc9ac4a23a7002f",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0008-unidepth-v1-depth.png",
+      "preview_sha256": "1ca66f87d70dcef786ec8310362640876b7bdeb342fcfc3886e23f25ed9bd0ae",
+      "runtime_seconds": 0.3553017480298877
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 97,
+      "source_rgb_sha256": "1127039531ee4a6c34d9b5648ddbe10a5e843f7b0d5c7e76f71fb6b0f3652687",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.299415111541748,
+        "median": 4.81229305267334,
+        "p99": 5.509594388008078,
+        "maximum": 14.393460273742676
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0097-unidepth-v1-base.npz",
+      "arrays_sha256": "3fe83a9dd5a3e6c5a6602b588767ad61f1c9460e2e071bf09f8b6ea9f837cca2",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0097-unidepth-v1-depth.png",
+      "preview_sha256": "e4d6ad803826a32d4fc8e7f7e4f3ee1b924eff233bac4c0da2585af94671770f",
+      "runtime_seconds": 0.38926110800821334
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 41,
+      "source_rgb_sha256": "1384791137d1195c46b42e5c7c2ede9daf747754d1fe617cdf15853cc35fa99b",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3996500968933105,
+        "median": 4.524858474731445,
+        "p99": 5.954666566848754,
+        "maximum": 17.48936653137207
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0041-unidepth-v1-base.npz",
+      "arrays_sha256": "1ffcff96db82309808d1c299aaec1fa533e125f68ee2f31f6e35b1432d76afb9",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0041-unidepth-v1-depth.png",
+      "preview_sha256": "fc9b2b0fc7710b176f611b4f922241e353c67545b4482eadbb21766711f5fc88",
+      "runtime_seconds": 0.37733986403327435
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 66,
+      "source_rgb_sha256": "e6143480e1e2e0caf2f807739b749fbaad38f9c9f8c6a2b0cc656a733669bb20",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.8713516592979431,
+        "median": 2.0366010665893555,
+        "p99": 3.0375638914108274,
+        "maximum": 5.360199928283691
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0066-unidepth-v1-base.npz",
+      "arrays_sha256": "d8776f42543a3cc39f888ca6a8aea43eedac604e7aaae3a4556dd08190356728",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0066-unidepth-v1-depth.png",
+      "preview_sha256": "3db0bc19b527d2ef44a174ca1e0e87ce6eb3766a073dc02ec2bdbfa1fbedeef6",
+      "runtime_seconds": 0.35406012600287795
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 68,
+      "source_rgb_sha256": "a2f995a30c0d274c845e6a5dca10255400313cde2903273f1fc6fc04e96eb0e0",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.7622601389884949,
+        "median": 1.508664846420288,
+        "p99": 1.8413105118274684,
+        "maximum": 2.4476871490478516
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0068-unidepth-v1-base.npz",
+      "arrays_sha256": "56a6908985f927c0c47ff52e4669a33d663f0901a51d85b92d2bcf50e4de7856",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0068-unidepth-v1-depth.png",
+      "preview_sha256": "84fcbc4e2cdc5b867dbe5eea0dac5403c17d5760c8b1c7f39fa5c3194d1d1101",
+      "runtime_seconds": 0.3735767339821905
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "source_rgb_sha256": "aafde0325a843042f448710b497c55ab0a74ad3b6eff50321f0f71a38209484c",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3215075731277466,
+        "median": 4.836331367492676,
+        "p99": 6.048071365356403,
+        "maximum": 24.89211082458496
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0036-unidepth-v1-base.npz",
+      "arrays_sha256": "a865606f0509797cba22a54fb3014e236a35c78c480a98c4c7a05dba6544bb6f",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0036-unidepth-v1-depth.png",
+      "preview_sha256": "8b0ce04fdc8cf74f9d7a28ddcd244cd2d10615626ae16c9e91d002be1c82247e",
+      "runtime_seconds": 0.3749222469050437
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 44,
+      "source_rgb_sha256": "c24cbe21640218f9238f3d0dab92cc7591933324d6711961a132c271d54a2ef7",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3124339580535889,
+        "median": 4.62025260925293,
+        "p99": 5.694416227340692,
+        "maximum": 18.023710250854492
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0044-unidepth-v1-base.npz",
+      "arrays_sha256": "10b827afb4c17d0433a0765144b4d1addd3d1dbbbc9fccac4e46e492dd23969c",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0044-unidepth-v1-depth.png",
+      "preview_sha256": "894f8e1bd7a49cd7f3e33770ff41b3dd7d9d820903c0a9e45517fa2e6011c53f",
+      "runtime_seconds": 0.351936164079234
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 71,
+      "source_rgb_sha256": "b3c02b0a2c9e8aa38cc7f21f2a43ccc2717c14585a62cd1a2d51124a11150725",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4221646785736084,
+        "median": 4.882594585418701,
+        "p99": 6.228055038452148,
+        "maximum": 20.850788116455078
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0071-unidepth-v1-base.npz",
+      "arrays_sha256": "fe6d4cd9d76bcde4ae3ae834f2b64ec4ba8579feda5682072775e47120760c9e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0071-unidepth-v1-depth.png",
+      "preview_sha256": "36e4ceb839505ad15bd212d2ceb38f09dd2f775fae6176c9471d453b5b6ee973",
+      "runtime_seconds": 0.36670035298448056
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 63,
+      "source_rgb_sha256": "06a49ffdd0e394e914ef8598a5804664a43cc4841055b7f363dab7a7cb38e691",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2833333015441895,
+        "median": 3.697652816772461,
+        "p99": 5.394292206764221,
+        "maximum": 13.439589500427246
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0063-unidepth-v1-base.npz",
+      "arrays_sha256": "f99aaeeca0d6abce7575e5494af4672c33df9a13f7d78039bff6eb1a3ec356fe",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0063-unidepth-v1-depth.png",
+      "preview_sha256": "0a3b25117678080512b42a86874e8ef7bc433865a8cb1e55fc814d09fb8bafab",
+      "runtime_seconds": 0.3632528589805588
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 1,
+      "source_rgb_sha256": "f368ec7ce4bfacebf1fb1505d5c374c8a7f7883585bc19d012e5823feb12ccc8",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.456591010093689,
+        "median": 5.539551258087158,
+        "p99": 8.018572874069214,
+        "maximum": 21.182918548583984
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0001-unidepth-v1-base.npz",
+      "arrays_sha256": "909db47072ffc3955cf42eb570012944748e1bfa07246c23118c812e068b2829",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_001_004-cam_00-0001-unidepth-v1-depth.png",
+      "preview_sha256": "3fe16a986cf6872df45d25ef037ce0cf41a58af4e0a13fc2b737775300527879",
+      "runtime_seconds": 0.36515020893421024
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 4,
+      "source_rgb_sha256": "2258b8fdffddbe7111d6c01041f03378e4b1d4788e73ee8948f431ff9c92bd78",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2656219005584717,
+        "median": 7.586966514587402,
+        "p99": 21.108777046203606,
+        "maximum": 40.3157958984375
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0004-unidepth-v1-base.npz",
+      "arrays_sha256": "4cbc36dbe65f4097507d0462db3f1cd12ef94c0638fb622f31197c07ca6660e0",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0004-unidepth-v1-depth.png",
+      "preview_sha256": "c45f72f242e2a546ed0e771628a0511241be41f9e432e64cfd4eff0152990091",
+      "runtime_seconds": 0.3677719630068168
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 74,
+      "source_rgb_sha256": "2f7de90529e6a2a6bfb0d49a0c91e27ee43a30954fb7b60d2ce81202d4645910",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0754647254943848,
+        "median": 7.092733860015869,
+        "p99": 21.791628952026365,
+        "maximum": 42.975868225097656
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0074-unidepth-v1-base.npz",
+      "arrays_sha256": "1fb6be11329249108f9802fa18b56b1a2ecd122432595eecc72f659506d1c7d0",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0074-unidepth-v1-depth.png",
+      "preview_sha256": "8d09be485c54628a9a9c6e70ac384e87bd3d462f152291c87f159d9f9a02e272",
+      "runtime_seconds": 0.3405267500784248
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 53,
+      "source_rgb_sha256": "32abaaccc52d7f5461ca94d2bf3415a88873b103933290ca36f053bac1898824",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3824819326400757,
+        "median": 7.127065181732178,
+        "p99": 20.607257595062254,
+        "maximum": 38.714630126953125
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0053-unidepth-v1-base.npz",
+      "arrays_sha256": "c8fe09e90c6d1181c71db9c613e27be9719bb3542055fdaad1cbf13801a3ffec",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0053-unidepth-v1-depth.png",
+      "preview_sha256": "63f3645e931cf5fa362e6624ea0fe9976a737a927f7242b372707675199e2434",
+      "runtime_seconds": 0.3487756709801033
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "source_rgb_sha256": "107de12976dfed4dcacc9ca6aab1b4fc956158ed529974b40bdcf65e7a18bb55",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2677233219146729,
+        "median": 8.523940086364746,
+        "p99": 24.12708461761474,
+        "maximum": 32.31992721557617
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0009-unidepth-v1-base.npz",
+      "arrays_sha256": "3d52e4a7508ebea3edeea9472fed11f5a3a1666d1c513dd5ad1ee0daa8c87fd6",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0009-unidepth-v1-depth.png",
+      "preview_sha256": "6ef820da025c24d181f0f08c45e8ad43b29f3a1f5ad3496ce243ee6df05b0707",
+      "runtime_seconds": 0.3638400010531768
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 70,
+      "source_rgb_sha256": "08622788135cd59e59fa6ede17be5f301e1f8bdacf7f5e82ed49f3808030f106",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3433808088302612,
+        "median": 7.7725982666015625,
+        "p99": 21.74120832443236,
+        "maximum": 40.19257736206055
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0070-unidepth-v1-base.npz",
+      "arrays_sha256": "84a58aefe69e52a06e64fa705713e4012617c3185f57181aebd69ef00f7aaee7",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0070-unidepth-v1-depth.png",
+      "preview_sha256": "a793db44d1c154db4e46d425e85c5ff8cf1710e92cbede472cc3710ec70c2b0c",
+      "runtime_seconds": 0.3711240120464936
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 95,
+      "source_rgb_sha256": "7329fc3aa54d6ec2e3ed237d9a736444c13dcef1a7aa3b0a1524cf7518c72d2f",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2516075372695923,
+        "median": 9.98292350769043,
+        "p99": 22.857986736297605,
+        "maximum": 51.985626220703125
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0095-unidepth-v1-base.npz",
+      "arrays_sha256": "124420327cd9bfa783ba4392891b4f3522ead33c298d73ff5b738da9e302146c",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0095-unidepth-v1-depth.png",
+      "preview_sha256": "7da14212b7da77d8cfe5589bd5e02e5004efc50641e9b76c87a517949e86c422",
+      "runtime_seconds": 0.36101233400404453
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 7,
+      "source_rgb_sha256": "11d52040ffb04ec4503cf0662d604b56eafa2fb41f5e0bbe5db795f4a28ae7c7",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3792872428894043,
+        "median": 7.599193572998047,
+        "p99": 22.490392570495572,
+        "maximum": 34.24421691894531
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0007-unidepth-v1-base.npz",
+      "arrays_sha256": "9c4366a82a89dbeb8a1736760c8e9e3871c016b0221119362be2ba9c77cf7435",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0007-unidepth-v1-depth.png",
+      "preview_sha256": "bad8cbd371b29c1e699c2bbe83dc611d0618607f1051b180f770f21aade6dce2",
+      "runtime_seconds": 0.36281363805755973
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 19,
+      "source_rgb_sha256": "79dac792fc1551caf5406193ac8866ddb4b8a27327e09f6b174fcaeaee0e8dfa",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3132325410842896,
+        "median": 8.737724304199219,
+        "p99": 23.357810859680164,
+        "maximum": 29.363086700439453
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0019-unidepth-v1-base.npz",
+      "arrays_sha256": "a327f321d6861a69ee4de4fb54fa6afd3849a492d5e7b1b8b782ff561a954371",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0019-unidepth-v1-depth.png",
+      "preview_sha256": "656907978d6d2554f2686191962beeb06cd71456c8e1bd3dc00861295304af23",
+      "runtime_seconds": 0.3827775079989806
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 56,
+      "source_rgb_sha256": "10bbc839e2417e344bfe9f84b203c309e36110231beb0d982214a5703bd8c5c9",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9729009866714478,
+        "median": 5.967933654785156,
+        "p99": 20.43862422943115,
+        "maximum": 47.7828254699707
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0056-unidepth-v1-base.npz",
+      "arrays_sha256": "d04a7eca054a473044ec638a2e9ef9e340596c9c5266549751600df333467f96",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0056-unidepth-v1-depth.png",
+      "preview_sha256": "c88bd298e0b81bd6f97dd684b9acb8d4d51939f8bf78cbba5612e41b4615d847",
+      "runtime_seconds": 0.33654035499785095
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 94,
+      "source_rgb_sha256": "37d421e2dcecf5140c3fb334643dd8708427972eb864dd7706725883ac9a2019",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3812106847763062,
+        "median": 7.442490577697754,
+        "p99": 23.0857106590271,
+        "maximum": 43.95635223388672
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0094-unidepth-v1-base.npz",
+      "arrays_sha256": "a665e3892ec93aa34f092e288b5a23b5e4de18bf243c040faa0af841f4e763b5",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_006_002-cam_00-0094-unidepth-v1-depth.png",
+      "preview_sha256": "e32f4893486b9935897f3f692dd60d6583013323e0f6b3f97090cecede1cc7d0",
+      "runtime_seconds": 0.35251063108444214
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 42,
+      "source_rgb_sha256": "300fe3874143b20912d673aa9b1005fda8be7d4341e44036b1fba7f311c0c92c",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.532318115234375,
+        "median": 8.190101623535156,
+        "p99": 17.77527000427246,
+        "maximum": 34.697120666503906
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0042-unidepth-v1-base.npz",
+      "arrays_sha256": "2d8d0131373c2f0b6d29c22884a9a35b39f48cbaccaa89b268c5467b1324f612",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0042-unidepth-v1-depth.png",
+      "preview_sha256": "68ec5d7128df2d8db176a9e428f9eb89c33ecbb386f1896bf3f764307c7ed816",
+      "runtime_seconds": 0.38371102698147297
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 89,
+      "source_rgb_sha256": "5b3799f5351226d66870605eb92de42a4bd2d717caa1dd988769f64e0ebdd61f",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.6422607898712158,
+        "median": 4.725401878356934,
+        "p99": 11.204833116531368,
+        "maximum": 20.341571807861328
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0089-unidepth-v1-base.npz",
+      "arrays_sha256": "2a9168233d44eb386806fc36e7c61c76de4ff51c5fa53426b79f341c57d48fc2",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0089-unidepth-v1-depth.png",
+      "preview_sha256": "e8af417792c14c9004a99aabcd4768db2c73622a8010a7a52bd1a3cb175dfd05",
+      "runtime_seconds": 0.3536101459758356
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 83,
+      "source_rgb_sha256": "daa42ac3e8988f370833bb5753d774b39f146429ff252720b2f539ffcb879c94",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3553013801574707,
+        "median": 9.154092788696289,
+        "p99": 22.703552780151366,
+        "maximum": 35.798065185546875
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0083-unidepth-v1-base.npz",
+      "arrays_sha256": "2c1ca5c2b4c0981769381e1205c34850e9ad9b33189b456b734641c9ceff8593",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0083-unidepth-v1-depth.png",
+      "preview_sha256": "a77e34274ea28ae2ead19853df0339516431bb08a8f7ebb9e767696b20ed77b0",
+      "runtime_seconds": 0.35644359700381756
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 45,
+      "source_rgb_sha256": "fb90526e82a1a002f1942bb745d53070d81cef3d66d8196ff7b4c51c8cbc4cd3",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1301699876785278,
+        "median": 4.886116981506348,
+        "p99": 14.934268798828118,
+        "maximum": 29.70147705078125
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0045-unidepth-v1-base.npz",
+      "arrays_sha256": "f52d70dd3e60eb0fdbe3024a02fa797147429edb153929c571f6410cb8ace01e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0045-unidepth-v1-depth.png",
+      "preview_sha256": "6384eb87ca8d81a51178bace3832ff09afe142331435c171e18a163d4b61acfe",
+      "runtime_seconds": 0.3480396339436993
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 27,
+      "source_rgb_sha256": "25b2396b6d3cf023fb91015d699f4671c8fd6cb6a9c1a48302b6923eac7aa57e",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4943288564682007,
+        "median": 9.376094818115234,
+        "p99": 18.982181777954096,
+        "maximum": 38.021976470947266
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0027-unidepth-v1-base.npz",
+      "arrays_sha256": "7dbf67a0c3b0bb31d67ede21f1782e297c7d45d9ff5f9a82a3cb8a0977d70a51",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0027-unidepth-v1-depth.png",
+      "preview_sha256": "4b59803df41b5451989d04d66dc66242545f68efb0fff0895dcf284f3a12f580",
+      "runtime_seconds": 0.37404825806152076
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 54,
+      "source_rgb_sha256": "c886022d009e2fa3b733c146fceab3e536469352c4f0cb4084fcce4dbb2314a7",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3781471252441406,
+        "median": 8.999727249145508,
+        "p99": 19.223411636352537,
+        "maximum": 33.34519958496094
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0054-unidepth-v1-base.npz",
+      "arrays_sha256": "4592740cdd76b7d3a0f3b6a3cb3eecb95139016ab4e21faa4fb3791599b05170",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0054-unidepth-v1-depth.png",
+      "preview_sha256": "96fccfa4d5a924cc0e3575106bb946ffe7c3ce106869e4a79ed9747abf2610f7",
+      "runtime_seconds": 0.37562153302133083
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 86,
+      "source_rgb_sha256": "30a51c4eafcab9d55b00a40b96fa93986921514ab02ef7f6470335c2f3a5d078",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1198318004608154,
+        "median": 7.4335856437683105,
+        "p99": 14.189272584915145,
+        "maximum": 32.238502502441406
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0086-unidepth-v1-base.npz",
+      "arrays_sha256": "845aa27ef4975df477aaf89c1dd129383240613d299f2df7446565277e4bf034",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0086-unidepth-v1-depth.png",
+      "preview_sha256": "dcb36303c7488f60d467bcd957badd095ff7ec516ef16b3209c4f0f61dd21b80",
+      "runtime_seconds": 0.3723635299829766
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 72,
+      "source_rgb_sha256": "4dc8b4660053d4e81c35276c39bccbcc193c3032c9403fbb15a7c34ca17015ea",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4928603172302246,
+        "median": 10.166370391845703,
+        "p99": 17.656567173004145,
+        "maximum": 44.80692672729492
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0072-unidepth-v1-base.npz",
+      "arrays_sha256": "72d2e0d5338b19f7cd163c74cbbdfb1fc15c04498ae3be14192b117163fa72ac",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0072-unidepth-v1-depth.png",
+      "preview_sha256": "adcfee208f7924b5595f764ec76565e03ccc857409ddd2353a7d3622c7264e6d",
+      "runtime_seconds": 0.3768715700134635
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 46,
+      "source_rgb_sha256": "c2378c7f05dc328bf0fa7d4b35e2d18268a1faed0c1cb313c48d56832fca6446",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2535710334777832,
+        "median": 4.375133514404297,
+        "p99": 18.15129932403564,
+        "maximum": 32.78957748413086
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0046-unidepth-v1-base.npz",
+      "arrays_sha256": "fff617a86561271f16450367c19d37a68a185932d1de02d1ae128bb2df187aeb",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0046-unidepth-v1-depth.png",
+      "preview_sha256": "987f0da99bf9cebbe8af14eaa41f36f353f14bc52d6e71127a807d494aab84de",
+      "runtime_seconds": 0.3535893450025469
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 74,
+      "source_rgb_sha256": "b3286f64e3af3b08b17f900fca8b06c3403858acda713a251ee3942032d66f23",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0985958576202393,
+        "median": 7.632876873016357,
+        "p99": 14.779773063659666,
+        "maximum": 27.883222579956055
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0074-unidepth-v1-base.npz",
+      "arrays_sha256": "17b8f7f027dfcd29e7682780e3a3aae9a46d39cf915fd2da5f0f63c14ccd58ef",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_001-cam_00-0074-unidepth-v1-depth.png",
+      "preview_sha256": "bce1f01cf883ecc9b57c60e2df5f55b67774b65f8badd648a12706d39ee1744a",
+      "runtime_seconds": 0.367206864990294
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 48,
+      "source_rgb_sha256": "b1dadb94d7a71a1fe322ff49e39ad1706dec1b5d376582e716a0eff2906adb09",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0837286710739136,
+        "median": 3.3652708530426025,
+        "p99": 12.572932405471796,
+        "maximum": 22.131208419799805
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0048-unidepth-v1-base.npz",
+      "arrays_sha256": "78bdf97ceaaaaa6de2e2894231977910c42fb818fe235b6066a93e73ce25792e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0048-unidepth-v1-depth.png",
+      "preview_sha256": "dfebce25994ed42a6563b0b7e79610a43b6e8a6a8841bd8431ad640d0db00e99",
+      "runtime_seconds": 0.347399024059996
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 49,
+      "source_rgb_sha256": "b776e5cb444272e56612d4c19a8ec5c4f502bf5a8df254afb1b66387a3e260ed",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.5356049537658691,
+        "median": 2.5578670501708984,
+        "p99": 8.912712993621813,
+        "maximum": 19.193702697753906
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0049-unidepth-v1-base.npz",
+      "arrays_sha256": "08cf3fa3f77f77a76f92264b68df30c7799c27441306e3987a8326706af3b9d3",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0049-unidepth-v1-depth.png",
+      "preview_sha256": "17dedb3ccce75beb3c94dbc80767c99a2a5c90c1c90da9a177a343e0dda797dc",
+      "runtime_seconds": 0.3614827160490677
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 91,
+      "source_rgb_sha256": "8d8ed05f0e1c32224b6c8b1701d26e1f891eb78af03ffb8a10466138596b04de",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.8945987224578857,
+        "median": 1.3732638359069824,
+        "p99": 10.843722419738768,
+        "maximum": 14.58903980255127
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0091-unidepth-v1-base.npz",
+      "arrays_sha256": "2e1e98bd73d069da674698eb3558c3bb8ec16abe66648c8780f208fb707b89d5",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0091-unidepth-v1-depth.png",
+      "preview_sha256": "8a97e7868c771c06bb83ea30b7edbe8487d5396cb5bd70608166745af9a0e025",
+      "runtime_seconds": 0.325822307029739
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 80,
+      "source_rgb_sha256": "69198047459337b87a7c21459ffaddc3c84c6c855150c7fbfb845d3b72a1d3a9",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9900845885276794,
+        "median": 2.7416534423828125,
+        "p99": 7.454331588745113,
+        "maximum": 19.811513900756836
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0080-unidepth-v1-base.npz",
+      "arrays_sha256": "b5de60525b4494ac11122acbc40e718321bc74c7b279ffa34eb92e8877cab778",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0080-unidepth-v1-depth.png",
+      "preview_sha256": "e5036f073c555cc95305bead0ea535859ed35b1714348564e0ddc5d60086042d",
+      "runtime_seconds": 0.346895860042423
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 58,
+      "source_rgb_sha256": "c4e943ca76a7a987f2a797e17957c11d322bbc843cf42f0f96d8e27fa4e38aa7",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.8813148736953735,
+        "median": 2.5960607528686523,
+        "p99": 8.731064033508297,
+        "maximum": 13.536120414733887
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0058-unidepth-v1-base.npz",
+      "arrays_sha256": "92c75c9ce626eb4a36c1065db8d2e421f5fb34c5c7ead6b259e3482d2b3ac36a",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0058-unidepth-v1-depth.png",
+      "preview_sha256": "a49d4d127768f6bef3b781abaf2f3c61946d941ca876bcb93df97c7cf7589110",
+      "runtime_seconds": 0.3533776259282604
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 44,
+      "source_rgb_sha256": "921088ecf7f2855d9b7c1f1edf845d6cc2796a9a88610cc57e73537e605ee7db",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0127509832382202,
+        "median": 2.684633255004883,
+        "p99": 9.975465688705437,
+        "maximum": 19.953567504882812
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0044-unidepth-v1-base.npz",
+      "arrays_sha256": "af145c4520cb08654e60469ae8ca5cd2b8a8f7398248c86ea3dcfd013e4eb176",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0044-unidepth-v1-depth.png",
+      "preview_sha256": "5c2f413fda7a57931753846a1c0909026222700d41072310352e7e4b450acc0b",
+      "runtime_seconds": 0.35344631609041244
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 15,
+      "source_rgb_sha256": "802b59df8d18f75b21ce8427656ae642f2bfb9af043e9b0cf0658979b78e348e",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1762501001358032,
+        "median": 3.12642240524292,
+        "p99": 10.630907230377197,
+        "maximum": 22.898189544677734
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0015-unidepth-v1-base.npz",
+      "arrays_sha256": "22e8ea70dcbc9ee36782d2b3ae546ba3531c1a898cc825a2bc2345c35f8cae50",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0015-unidepth-v1-depth.png",
+      "preview_sha256": "abbc0d5dc3c6559ba3be2d3c148f55fbf066c848fab92bfab33f1b01e52bbad9",
+      "runtime_seconds": 0.3408971589524299
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 20,
+      "source_rgb_sha256": "c44f82a6e04d1404e642d096bb24227c086088bdcc73e87eb654ed31a499f58e",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.7513574361801147,
+        "median": 2.323772430419922,
+        "p99": 7.273960061073301,
+        "maximum": 8.747682571411133
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0020-unidepth-v1-base.npz",
+      "arrays_sha256": "109ee6cc5ef1f1d8744cc4d2de7eb11820c4efb0356dbab55f9ca5126e0594f2",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0020-unidepth-v1-depth.png",
+      "preview_sha256": "475fa5c15b41fe70b2778e489838de8d23c1018c334f9d8dfe850e605a3f5d98",
+      "runtime_seconds": 0.35642020497471094
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 23,
+      "source_rgb_sha256": "9c1a52909b2b3fe0fa9b52d8ed85ea04c35bd7a1366b408cdee224a0bd797c6a",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9012347459793091,
+        "median": 2.8982086181640625,
+        "p99": 7.029561247825616,
+        "maximum": 15.848071098327637
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0023-unidepth-v1-base.npz",
+      "arrays_sha256": "71750c8ad9d7aa8e065fc3ac239bd02554385b9d24a785cbb9a3d92c04715ed3",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0023-unidepth-v1-depth.png",
+      "preview_sha256": "2271a5076a83def6e43617d937f3ae557534efc3e18ea1c52cf7ccacc1d5303e",
+      "runtime_seconds": 0.35848371498286724
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 87,
+      "source_rgb_sha256": "7a302e9b1475b8e2b0fcded3f38fe47e44c3a5811babb69f30ac9447738a8f51",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.7013324499130249,
+        "median": 2.8747787475585938,
+        "p99": 7.746972074508665,
+        "maximum": 12.549480438232422
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0087-unidepth-v1-base.npz",
+      "arrays_sha256": "e285918ad4a4e52395960021a413860169142dc54ce9bb080c0e96fa4da6a01c",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_016_009-cam_00-0087-unidepth-v1-depth.png",
+      "preview_sha256": "ef43e2e6f6f41ebf031dafa472dbfa62d150b2476bf51acf75207eb9ea69e54e",
+      "runtime_seconds": 0.3575490789953619
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 77,
+      "source_rgb_sha256": "8d5b5075780716eddfe80094855cd76fe6e125fa254d16ff4e5d48a9c29b909d",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3482532501220703,
+        "median": 5.535956382751465,
+        "p99": 7.171394658088682,
+        "maximum": 17.96504020690918
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0077-unidepth-v1-base.npz",
+      "arrays_sha256": "75f4cc1de2840627bd728685a090a97b024f18207beb6f67006a45bda5a47483",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0077-unidepth-v1-depth.png",
+      "preview_sha256": "68b623f73f1de737a8f1430080964b9ed2f1e879a97d0bfd9f878304787e3de3",
+      "runtime_seconds": 0.3540905440459028
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 88,
+      "source_rgb_sha256": "a8761d0862ea81f4ad881aea2f2074ae11f81b3c3521abb441928fefe883e784",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.290090560913086,
+        "median": 2.847196102142334,
+        "p99": 8.11270842552185,
+        "maximum": 11.267093658447266
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0088-unidepth-v1-base.npz",
+      "arrays_sha256": "37753267f31b6c5943d67a506fa383c3f921fd9f40968774113fe7298dce94ac",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0088-unidepth-v1-depth.png",
+      "preview_sha256": "a2ba6c5e928b4ca521b487586e6e2083b845c11508451b2f876811c538a0ef3d",
+      "runtime_seconds": 0.3256899151019752
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 87,
+      "source_rgb_sha256": "f552da45d4a6c017f5238f88a423daac57d45ea12e8dbf813b143ef941e94a33",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.6851084232330322,
+        "median": 4.360493183135986,
+        "p99": 10.204573707580565,
+        "maximum": 17.966020584106445
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0087-unidepth-v1-base.npz",
+      "arrays_sha256": "69af8442da36ecfa9550d40fef6ddf6dabfb12028e9ca1b173e859b425e5a820",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0087-unidepth-v1-depth.png",
+      "preview_sha256": "4607b8da238ad4c0f93871c9f0b596eca4a71eaf9c23581853ad13a0fbdfdad6",
+      "runtime_seconds": 0.32759090000763535
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 31,
+      "source_rgb_sha256": "1cecda9f8f5f6504d0832105cb96ec10548aaeca8a6826ee372e8a937bb3c039",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.0915576219558716,
+        "median": 2.514820098876953,
+        "p99": 3.1719305086135856,
+        "maximum": 8.47779655456543
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0031-unidepth-v1-base.npz",
+      "arrays_sha256": "70e3a7b382f490bc22247c45bf25d7de0371e928f5cf0d2e06c691d66e040b12",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0031-unidepth-v1-depth.png",
+      "preview_sha256": "eca21e213b95ae0adeb88a2ea7bfa73a9991b9fc265db7b9ce76171a655af044",
+      "runtime_seconds": 0.3363419590750709
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 30,
+      "source_rgb_sha256": "a781076c639a0bb236393eaacdd8055aaa17cfce2660f93bcf0d73eb01e84341",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.273414134979248,
+        "median": 3.5323522090911865,
+        "p99": 5.263899412155151,
+        "maximum": 15.170801162719727
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0030-unidepth-v1-base.npz",
+      "arrays_sha256": "458a99d230b863de75b9678a05a48b6c6a2762d3f15f15f5f881bda45c660219",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0030-unidepth-v1-depth.png",
+      "preview_sha256": "b607bbdb589e47ed2080c84a492e12b0da3049c2893327503d091afd85b190dd",
+      "runtime_seconds": 0.3524713759543374
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 8,
+      "source_rgb_sha256": "6983fe3f2bcf89f63021d019cbe289a35865142dd6d101a3a1fff1b7b7728f88",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.9224298596382141,
+        "median": 1.4765794277191162,
+        "p99": 7.6521349620819095,
+        "maximum": 7.830929279327393
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0008-unidepth-v1-base.npz",
+      "arrays_sha256": "ba0e9f96d1d2df1ef771a52b5717bcafb78712d15c79b15f86e71f3c420dd5fd",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0008-unidepth-v1-depth.png",
+      "preview_sha256": "0feddbf423fc846760aac4e2081dcbfdff51243538702f02f20ba74ae7c6fd63",
+      "runtime_seconds": 0.319266798091121
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 95,
+      "source_rgb_sha256": "c04f696b2db1bfe3080a5ba907e7b1c1197bce914ecd802c667099b9306f845e",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.345038652420044,
+        "median": 5.487595558166504,
+        "p99": 7.971296958923339,
+        "maximum": 19.073152542114258
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0095-unidepth-v1-base.npz",
+      "arrays_sha256": "4775582ff191f98d02cec8b5420d5158c17d349a45f728ce5a7874e58b069b93",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0095-unidepth-v1-depth.png",
+      "preview_sha256": "dbfc53654944711427e135f7c6ae9cc6cd25b017df8c07c3125ee9854c043436",
+      "runtime_seconds": 0.3728204920189455
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "source_rgb_sha256": "fa59ee72f27e573822491accc3eb997d039fb4eecb9538b8e65ae3a80185bbc9",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2273741960525513,
+        "median": 5.329577445983887,
+        "p99": 7.697873182296753,
+        "maximum": 14.812191009521484
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0009-unidepth-v1-base.npz",
+      "arrays_sha256": "ea91a7de6150ee09f5ab869487dde903bae708dcc8d6029f7e909822fb772a69",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0009-unidepth-v1-depth.png",
+      "preview_sha256": "193c99b1000a410c09fb52413f3831ca0a4f1bbdf281133245017560c318a8ff",
+      "runtime_seconds": 0.3674366569612175
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 4,
+      "source_rgb_sha256": "63e8d2abce94b73a859a0130ca1176c03564882aca4ae95c81485e08853c0cee",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4178409576416016,
+        "median": 3.5972323417663574,
+        "p99": 7.51169780254364,
+        "maximum": 29.03403663635254
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0004-unidepth-v1-base.npz",
+      "arrays_sha256": "ffc7d753671d8bfd3ef6b272e0a50b385116332198bd4cf48db1adb374b882ce",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0004-unidepth-v1-depth.png",
+      "preview_sha256": "133a0fbe16c6948680a0b6986a739c79875cae0bdd4ab0929a6185da46a90177",
+      "runtime_seconds": 0.34470572194550186
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 42,
+      "source_rgb_sha256": "6ff351db263942a0927ad79c17ee43eeba4c21b5f7dd081ee86cac9233e86124",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.435384750366211,
+        "median": 5.594736099243164,
+        "p99": 7.681078205108642,
+        "maximum": 18.830982208251953
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0042-unidepth-v1-base.npz",
+      "arrays_sha256": "8f8bd5b1d2f542b2abceaf6e2fd1941331a68d45d2dbb65bc2e7dc14d749b63c",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_009_006-cam_00-0042-unidepth-v1-depth.png",
+      "preview_sha256": "d42c4870b52382f8ca1c7c2115d90b1c13ae18ffd83cf9b7d6db69df92c12bc8",
+      "runtime_seconds": 0.36164510902017355
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 66,
+      "source_rgb_sha256": "75c0db6ad51acd6be807d00fa29fee553a85eb773a20ef26a0185067c60f1f27",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3236620426177979,
+        "median": 4.5943522453308105,
+        "p99": 10.009935150146484,
+        "maximum": 20.865097045898438
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0066-unidepth-v1-base.npz",
+      "arrays_sha256": "80c03b03cbda5d795bef0042f1160cbbc390e8dd651f4242f34e1a7bb76e7950",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0066-unidepth-v1-depth.png",
+      "preview_sha256": "225aa8dff6873d1958219e79275fc3092d59b0a73aef6ec477ee61b7299dcb9c",
+      "runtime_seconds": 0.34898006601724774
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 92,
+      "source_rgb_sha256": "60594ed9d7f15ba7aa5da4b447ce8a922b59f30aba10b1454c1818bef02df974",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.7238374352455139,
+        "median": 1.6959638595581055,
+        "p99": 6.184033169746398,
+        "maximum": 7.111256122589111
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0092-unidepth-v1-base.npz",
+      "arrays_sha256": "be2657eb4f88350179e08219c148f520b3a0f54ad7f49b2f483226172ec07f34",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0092-unidepth-v1-depth.png",
+      "preview_sha256": "91821cc1664a26549ba67c050830a3fe5fd638ec7b92653e0e3e704ac2c880e5",
+      "runtime_seconds": 0.3234961039852351
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 63,
+      "source_rgb_sha256": "da4aabc3d7282e9c779d5ba500be951a07472566f35bd577dce55202965321a3",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2862331867218018,
+        "median": 4.113334655761719,
+        "p99": 10.948009395599364,
+        "maximum": 18.152833938598633
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0063-unidepth-v1-base.npz",
+      "arrays_sha256": "be3288b6f8402d43576d6f1688bf551d4e1357bbcf869dbb366dabd9a5a403e4",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0063-unidepth-v1-depth.png",
+      "preview_sha256": "1a5ae49dfa1e095f6be833e79fa04fce76f40aa654251cf95f4a4fd930522978",
+      "runtime_seconds": 0.34340333694126457
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 58,
+      "source_rgb_sha256": "172e8258684a3c48bfbd12a1f1b2889803ef07ac72be8184e5c4a4cdfe3e3ad4",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4137319326400757,
+        "median": 5.831508636474609,
+        "p99": 12.693872489929198,
+        "maximum": 22.040414810180664
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0058-unidepth-v1-base.npz",
+      "arrays_sha256": "5a3b23f0aa23619b2ca68c8ede78ce1d6fa558423de222bd953ce1c930d52285",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0058-unidepth-v1-depth.png",
+      "preview_sha256": "bd3e57ba8f76a635fd30e1e15a0f0bd84bd882f03c0bb1d2ada17d7fb8657e80",
+      "runtime_seconds": 0.33794595301151276
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 60,
+      "source_rgb_sha256": "057b29158e744f088ddd0e90a770349111363dc3fe24ef45ed8cabb6866ddca6",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4096311330795288,
+        "median": 6.184192657470703,
+        "p99": 13.652076492309565,
+        "maximum": 21.272096633911133
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0060-unidepth-v1-base.npz",
+      "arrays_sha256": "cf82f93afc8c8a1fd6d7dd5ebad10c7a1cde360d8144a58238cffa18dd387b8f",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0060-unidepth-v1-depth.png",
+      "preview_sha256": "d0d838ea6688987a00211ad5afddf547202b639438e12b495fc4a1da076862ae",
+      "runtime_seconds": 0.33418803906533867
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 40,
+      "source_rgb_sha256": "f18b44bd441dc56a1ebcb4e23c68ac68a5ba3a8614899ea9fe5c3382633bbcbd",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1556665897369385,
+        "median": 3.0706820487976074,
+        "p99": 7.643507170677185,
+        "maximum": 14.240656852722168
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0040-unidepth-v1-base.npz",
+      "arrays_sha256": "2cf4cc23ab79377ba32dd468bae39d19e4070c191227f2e71b7766df0e2e0efa",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0040-unidepth-v1-depth.png",
+      "preview_sha256": "7d82370425bf3cc4945966251916fc488415cadd581ad0b89b52e926805f7b9f",
+      "runtime_seconds": 0.3506181549746543
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 48,
+      "source_rgb_sha256": "e2afc066af5e4d4635a351c4f8bd88662ac8d277e8d8161183c4bbe378d98d58",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3406904935836792,
+        "median": 4.629500389099121,
+        "p99": 11.10273946762085,
+        "maximum": 19.3134708404541
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0048-unidepth-v1-base.npz",
+      "arrays_sha256": "424b626ded2815678fa844e50ec90f89ccde88bc3167676615cdd0e953c66cc8",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0048-unidepth-v1-depth.png",
+      "preview_sha256": "fe3505b667d32950dad01cb82fd5eb15a7224305516aee74ec5a0020eeef35ef",
+      "runtime_seconds": 0.3467706230003387
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 54,
+      "source_rgb_sha256": "9e635653aca813ead903526c2749a63b75fd98dfdc74da69655af6e56842ab14",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3514888286590576,
+        "median": 4.154061317443848,
+        "p99": 10.630689525604247,
+        "maximum": 25.29549217224121
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0054-unidepth-v1-base.npz",
+      "arrays_sha256": "f5546414c6a3627cb6816c14ef68a56e137c4d1265b4cfaa518a2a2a25c05c17",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0054-unidepth-v1-depth.png",
+      "preview_sha256": "efc9d84d6b0b556563d8a4626493a499db76782ecb6030050036731eb6116771",
+      "runtime_seconds": 0.35142777406144887
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "source_rgb_sha256": "433a911ff38d3cf511b1c5a7822a83ab054834e7f849e326d254c40728e57acf",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3232210874557495,
+        "median": 3.6025638580322266,
+        "p99": 9.385333595275878,
+        "maximum": 17.290136337280273
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0036-unidepth-v1-base.npz",
+      "arrays_sha256": "1ed522b3bb5fd4892b29cfd27ae575fabfdb92d07bc63bfe019054b0c2feeaed",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0036-unidepth-v1-depth.png",
+      "preview_sha256": "4cc86516715267dfc538fe9e3cf81f344e2f369e1f9a2b668afcb872305647c2",
+      "runtime_seconds": 0.35763968294486403
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "source_rgb_sha256": "b7068d88b3c2715efac591a2b432aced34c1c227ed9ed49ecf7b42d7a850fbfd",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.1422593593597412,
+        "median": 4.418943881988525,
+        "p99": 10.069150466918945,
+        "maximum": 15.53099536895752
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0069-unidepth-v1-base.npz",
+      "arrays_sha256": "d5ccb7c015bd943c1e9caed09cc6f6a1c5de3d9a43aa5a2ebef7b69579a00a46",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0069-unidepth-v1-depth.png",
+      "preview_sha256": "04cfa7af451ef4a839329d24367529122c41a21b3cbcfeeff5243b84e3129011",
+      "runtime_seconds": 0.3395793109666556
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "source_rgb_sha256": "4cc9f10ae4397c2691e4de069935fd0e25d8c3b088abc38462c2807cf406fcfa",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2008285522460938,
+        "median": 6.698753356933594,
+        "p99": 19.792818012237547,
+        "maximum": 20.893505096435547
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0009-unidepth-v1-base.npz",
+      "arrays_sha256": "4e1f633e581661a18629824e87918858274aa179a2b39d75cfde9221aa843bd5",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0009-unidepth-v1-depth.png",
+      "preview_sha256": "80cdcc19a6ada31c5c33e69e2f1cb43fbe85ae606520382c47c3cbdecd8a61f7",
+      "runtime_seconds": 0.3481785940239206
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 24,
+      "source_rgb_sha256": "04727ea1d91fb804e7e9105e2fe52c469cfb5f82d90867ae1f11820b0fc8a342",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4564733505249023,
+        "median": 7.261503219604492,
+        "p99": 17.830172576904296,
+        "maximum": 34.546226501464844
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0024-unidepth-v1-base.npz",
+      "arrays_sha256": "179f6c87be7b9da3f44a5d8b31eca9687c82ed5547754811a063bd05e6f54c1e",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0024-unidepth-v1-depth.png",
+      "preview_sha256": "515c588701af550c680cd3e64af5ea0f576b061f6f21932a96d2421d65f7fd53",
+      "runtime_seconds": 0.3589554639765993
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 77,
+      "source_rgb_sha256": "0061f7418ada7020a67bd37cb27da8cce555ad2b8abd5a47bfe54862ddaa0907",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.382462501525879,
+        "median": 6.04520320892334,
+        "p99": 12.144857120513855,
+        "maximum": 21.565589904785156
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0077-unidepth-v1-base.npz",
+      "arrays_sha256": "8e50774674f3569784369d819b69c1f29c2ca0c94420c78873d0d685ffb790b3",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0077-unidepth-v1-depth.png",
+      "preview_sha256": "4d271b6ae3feea9f1b0375cb88d767bfa192b5eeadd875d035cca7c6a4ca30d6",
+      "runtime_seconds": 0.3722505740588531
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 6,
+      "source_rgb_sha256": "8db4ae5950e0dc4415ca0dc611b883b4a24787ccbc03f34edd0f6e7c34efa0ec",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4188497066497803,
+        "median": 7.315920352935791,
+        "p99": 20.320680751800538,
+        "maximum": 24.27480125427246
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0006-unidepth-v1-base.npz",
+      "arrays_sha256": "dab9388cbe1ab17527b3b097b93158e1b0ee39efcdaae4ba9c0b29c35990cb6d",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0006-unidepth-v1-depth.png",
+      "preview_sha256": "50ee2c7d81936fe283b5c8c7c53eda7f772879dbda9fe6a7a5d45b258212489e",
+      "runtime_seconds": 0.354343660059385
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 98,
+      "source_rgb_sha256": "54191377220a3d99d8c72117f32189852f6519b2622b9a2436be416ff6ff40c5",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.8895119428634644,
+        "median": 4.138339519500732,
+        "p99": 13.294501981735227,
+        "maximum": 19.040449142456055
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0098-unidepth-v1-base.npz",
+      "arrays_sha256": "117081a48d0025a3b7673a34437390af304a40b0b83daeb504311ec166a0b6d4",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0098-unidepth-v1-depth.png",
+      "preview_sha256": "0a6df0c3f76f8db24e2840d1aa72892a3adeb2334a5395b631c2dd3b6cccd661",
+      "runtime_seconds": 0.3404070659307763
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 88,
+      "source_rgb_sha256": "ef868287247beb1ddad12a4957d270af683ce7704bfe0d7b635db9b30abcc8bf",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.838244616985321,
+        "median": 1.7858105897903442,
+        "p99": 10.854876642227158,
+        "maximum": 15.214142799377441
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0088-unidepth-v1-base.npz",
+      "arrays_sha256": "d90bdbbb102793270d6a4abbd30ea67ba42b4ef43f93367eb6727327f0a47de2",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0088-unidepth-v1-depth.png",
+      "preview_sha256": "27eeb7722abe92a8e51f03072bf4843b1c765346e45138a814d93477dcfcd569",
+      "runtime_seconds": 0.32276965596247464
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 7,
+      "source_rgb_sha256": "f9ad423dcfd374f985325dcdbbeed4c82231794285ff261c392bddef70a4d75b",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.2375202178955078,
+        "median": 6.728019714355469,
+        "p99": 22.01001443862915,
+        "maximum": 27.564178466796875
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0007-unidepth-v1-base.npz",
+      "arrays_sha256": "cb665d6e7b215e308f75704d8d1ccc78ef514e5e249b9177a1caef920cffa329",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0007-unidepth-v1-depth.png",
+      "preview_sha256": "5f16389366b161f35f30769681393868f7deb000eedf3de81fbd55b4b8e3fb05",
+      "runtime_seconds": 0.3599861420225352
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 18,
+      "source_rgb_sha256": "0b689f7bb6ebc5beed29a44949701847c4048bee1233d8f81b684e79cbdf665b",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.4408538341522217,
+        "median": 7.617240905761719,
+        "p99": 18.251451396942134,
+        "maximum": 23.31011962890625
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0018-unidepth-v1-base.npz",
+      "arrays_sha256": "589e91587c42620e192afcc5e8bc1da0d2b0f31f6d180e3222d7f7358dfa4dc1",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0018-unidepth-v1-depth.png",
+      "preview_sha256": "e6ebaa8b100475e09ffbb086a0b483a7b6d518b37045133d9db943fe61063ab8",
+      "runtime_seconds": 0.3597700269892812
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "source_rgb_sha256": "8b596258f30edf78c9fe748f7e86ec2193b1de16bcd99f9287182aeb1d3d45ac",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 1.3072283267974854,
+        "median": 4.894980430603027,
+        "p99": 13.150360469818114,
+        "maximum": 21.902462005615234
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0069-unidepth-v1-base.npz",
+      "arrays_sha256": "b6ce503b5dc7acff6760a3d8de8c483666ffded6da84ec7a776b76ff5faa314d",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0069-unidepth-v1-depth.png",
+      "preview_sha256": "44c2d6f05d6a07c25f782f24afdde635700ac1e2e556911b47d5cf780406f3ba",
+      "runtime_seconds": 0.353928656084463
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 84,
+      "source_rgb_sha256": "e11d35d058ae883bfc021a4835be3e79d3f7eeffbfd53d40ed649b0452279a4b",
+      "shape_hw": [
+        768,
+        1024
+      ],
+      "depth_m": {
+        "minimum": 0.964850127696991,
+        "median": 4.293050765991211,
+        "p99": 7.161554393768309,
+        "maximum": 19.097105026245117
+      },
+      "all_finite": true,
+      "all_positive": true,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0084-unidepth-v1-base.npz",
+      "arrays_sha256": "ef349e8c6072aa70568e137c5962261b113dc212a7bfc3bbe90b117714dc3bfa",
+      "preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_frozen_base_depth_v1_linux5080/ai_031_010-cam_00-0084-unidepth-v1-depth.png",
+      "preview_sha256": "c376f51f23f7de1b51ea2bb242c7106db8783762ac2863184068db88c40c811a",
+      "runtime_seconds": 0.37136637896765023
+    }
+  ],
+  "summary": {
+    "samples": 100,
+    "expected_samples": 100,
+    "train_samples": 80,
+    "validation_samples": 20,
+    "all_finite": true,
+    "all_positive": true,
+    "peak_cuda_memory_bytes": 2284896256,
+    "runtime_seconds": 40.536494011990726
+  },
+  "quality_boundary": "frozen RGB-only metric-depth input artifact; no source truth depth or truth intrinsics were passed to UniDepth; this record does not assess hidden-layer quality"
+}

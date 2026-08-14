@@ -1,0 +1,16 @@
+{
+  "schema_version": "stage1.6-single-sample-overfit-failure-v1",
+  "status": "failed_before_optimization",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "sample": "ai_001_001",
+  "requested_steps": 500,
+  "completed_steps": 0,
+  "failure": {
+    "stage": "initial_model_forward",
+    "reason": "CUDA median with indices has no deterministic implementation while deterministic algorithms were required",
+    "resolution": "replace sample log-depth median normalization with deterministic mean and mean absolute deviation; canonical rerun is v2"
+  },
+  "artifacts_written": 0,
+  "quality_boundary": "implementation failure before optimization; no convergence or quality conclusion"
+}

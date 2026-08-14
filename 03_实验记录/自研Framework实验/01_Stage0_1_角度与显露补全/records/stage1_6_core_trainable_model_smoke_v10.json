@@ -1,0 +1,29 @@
+{
+  "schema_version": "stage1.6-core-trainable-model-smoke-v10",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONWARNINGS=error PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 30,
+  "tests_passed": 30,
+  "tests_failed": 0,
+  "capabilities": {
+    "stage1_6_trainable_model_contract": true,
+    "camera_ray_conditioning": true,
+    "deeper_context_encoder_to_stride_16": true,
+    "delta_conditioned_support_and_uncertainty_heads": true,
+    "target_view_verified_free_space_negative_loss": true,
+    "unknown_pixels_excluded_from_verified_support_loss": true,
+    "float32_serialized_margin_recheck": true
+  },
+  "files_sha256": {
+    "源码/Adaptive3DGS/src/adaptive3dgs/models/occlusion_hidden.py": "afddf16b75cdbe8c62320553685e0bf978d7633f837ce2371645a5b113692af5",
+    "源码/Adaptive3DGS/src/adaptive3dgs/supervision.py": "1549a05207f771cc4ccd98dd1237ee43037d11494f96bb38c14cf0de7cba5c5d",
+    "源码/Adaptive3DGS/tests/test_occlusion_hidden_model.py": "443c1bedf2820894930ec0592322aa58c2d5a09f89c2c85f9d5b276dc1b94392",
+    "源码/Adaptive3DGS/tests/test_supervision.py": "bbd969947260e074728e8f4b3383af45ecf2d8eed9e65f650d79006eb7224d7a",
+    "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_03_candidate_v1.json": "b7a9daa9a0ea430244d47a5ab2dbaf60dd2ce338229fab69d171b29d3b6f10ff"
+  },
+  "supersedes": "stage1_6_core_quantized_supervision_smoke_v9.json",
+  "quality_boundary": "implementation contract only; the scene-diverse HLP-TRAIN-03 validation candidate failed its frozen support-separation gate"
+}

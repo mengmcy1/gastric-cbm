@@ -1,0 +1,547 @@
+{
+  "schema_version": "stage1.4-flash3d-layer-ab-v1",
+  "status": "complete_metrics_partial_protocol",
+  "scope": "same Flash3D source prediction and scaled poses; layer1 baseline vs layers1+2",
+  "producer_machine_id": "linux5080",
+  "device": {
+    "logical": "cuda:0",
+    "physical_selected_by_cuda_visible_devices": 1,
+    "name": "NVIDIA GeForce RTX 5080",
+    "peak_memory_bytes": 2543844352
+  },
+  "inputs": {
+    "dataset_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_hlp_app_01_final_v1.json",
+    "dataset_record_sha256": "8a762ed1d6a0cedb407fc05c1727d70d4ca04421f77b7d21b6e1ae5e80a00e24",
+    "scale_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_hlp_app_01_scales_v1.json",
+    "scale_record_sha256": "0a7a5b3410304b66f743802bba6ce6cc8ad426e220dbdae24d94f471e86f928c",
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+    "checkpoint_sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420"
+  },
+  "metrics_scope": {
+    "computed": [
+      "PSNR",
+      "SSIM",
+      "MAE"
+    ],
+    "pending_before_protocol_quality_gate": [
+      "LPIPS",
+      "DISTS",
+      "independent occlusion_hidden truth mask"
+    ],
+    "crop": "official Flash3D 5% border crop"
+  },
+  "summary": {
+    "target_views": 10,
+    "mean_psnr_delta_db": 0.9377810116422507,
+    "median_psnr_delta_db": 1.0492665471970328,
+    "psnr_improved_views": 8,
+    "mean_ssim_delta": 0.056959427893161774,
+    "ssim_improved_views": 9,
+    "mean_effect_region_mae_delta": -0.02427644468843937,
+    "effect_region_mae_improved_views": 9,
+    "total_runtime_seconds": 6.651833755080588
+  },
+  "views": [
+    {
+      "sequence": "1b87f55dec310243",
+      "side": "left",
+      "angle_deg": -14.995666084763226,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/left.jpg",
+      "target_image_sha256": "09ca6c5a7bf2943c99fafcfc318b7cca584a0113cad73447025ae899191a8b81",
+      "translation_scale": 0.5290918350219727,
+      "inference_and_full_render_seconds": 1.578454761998728,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 50932,
+      "effect_region_fraction_of_crop": 0.6437310414560162,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.08240563422441483,
+          "mse": 0.01615689881145954,
+          "psnr": 17.916419949425446,
+          "ssim": 0.7110225558280945
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.09187962114810944,
+          "mse": 0.02863403968513012,
+          "psnr": 15.431173774691914,
+          "ssim": 0.6867234706878662
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 50932,
+          "mae": 0.08177027851343155,
+          "mse": 0.015409312210977077,
+          "psnr": 18.122167454245734,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 50932,
+          "mae": 0.09658699482679367,
+          "mse": 0.03479965403676033,
+          "psnr": 14.584250736014877,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": -2.4852461747335326,
+        "ssim": -0.02429908514022827,
+        "mae_effect_region": 0.014816716313362122
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/1b87f55dec310243/left_review.png"
+    },
+    {
+      "sequence": "1b87f55dec310243",
+      "side": "right",
+      "angle_deg": 14.990207838987926,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/right.jpg",
+      "target_image_sha256": "c16f42175d33fa59c09fae564982755dccb6f7838efb81b7db4eede768e58e9f",
+      "translation_scale": 0.5290918350219727,
+      "inference_and_full_render_seconds": 1.578454761998728,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 70043,
+      "effect_region_fraction_of_crop": 0.8852755308392315,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.07307857275009155,
+          "mse": 0.011871912516653538,
+          "psnr": 19.254793123408746,
+          "ssim": 0.6703484654426575
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.04509057104587555,
+          "mse": 0.006863303482532501,
+          "psnr": 21.634667969893833,
+          "ssim": 0.7466943860054016
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 70043,
+          "mae": 0.07538702338933945,
+          "mse": 0.011769586242735386,
+          "psnr": 19.292388044170035,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 70043,
+          "mae": 0.04373966157436371,
+          "mse": 0.00610718410462141,
+          "psnr": 22.141589877467243,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 2.3798748464850874,
+        "ssim": 0.07634592056274414,
+        "mae_effect_region": -0.03164736181497574
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/1b87f55dec310243/right_review.png"
+    },
+    {
+      "sequence": "168c85ce00de0c6b",
+      "side": "left",
+      "angle_deg": -15.005301454203558,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/left.jpg",
+      "target_image_sha256": "06c0a8d14afd7d2dda49cba7ac6da32a6485938748ab71d86fc7fa976e474ba8",
+      "translation_scale": 1.0130423307418823,
+      "inference_and_full_render_seconds": 0.29907580302096903,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 51802,
+      "effect_region_fraction_of_crop": 0.654726996966633,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.10256905853748322,
+          "mse": 0.016646677628159523,
+          "psnr": 17.78672430730307,
+          "ssim": 0.7406661510467529
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.09430653601884842,
+          "mse": 0.014869735576212406,
+          "psnr": 18.276967543302913,
+          "ssim": 0.7562470436096191
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 51802,
+          "mae": 0.09001556783914566,
+          "mse": 0.011790868826210499,
+          "psnr": 19.284541921460725,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 51802,
+          "mae": 0.07759761065244675,
+          "mse": 0.0091008385643363,
+          "psnr": 20.4091858931789,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 0.49024323599984143,
+        "ssim": 0.015580892562866211,
+        "mae_effect_region": -0.012417957186698914
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/168c85ce00de0c6b/left_review.png"
+    },
+    {
+      "sequence": "168c85ce00de0c6b",
+      "side": "right",
+      "angle_deg": 15.009276816575435,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/right.jpg",
+      "target_image_sha256": "cd629c5cfea84873bf0bea40ba205e13afe13c607d107ecf257627b57e6fff90",
+      "translation_scale": 1.0130423307418823,
+      "inference_and_full_render_seconds": 0.29907580302096903,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 71259,
+      "effect_region_fraction_of_crop": 0.90064459049545,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.07562371343374252,
+          "mse": 0.012872833758592606,
+          "psnr": 18.90325839245458,
+          "ssim": 0.7520692348480225
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.06906363368034363,
+          "mse": 0.009612904861569405,
+          "psnr": 20.171453558570587,
+          "ssim": 0.7929474711418152
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 71259,
+          "mae": 0.07793904095888138,
+          "mse": 0.013864868320524693,
+          "psnr": 18.580842507122334,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 71259,
+          "mae": 0.07049950212240219,
+          "mse": 0.010229742154479027,
+          "psnr": 19.901353127490516,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 1.2681951661160085,
+        "ssim": 0.040878236293792725,
+        "mae_effect_region": -0.007439538836479187
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/168c85ce00de0c6b/right_review.png"
+    },
+    {
+      "sequence": "195fbef2c08715e9",
+      "side": "left",
+      "angle_deg": -15.010146919091575,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement1_linux5080/195fbef2c08715e9/left.jpg",
+      "target_image_sha256": "d8a7c2f9cc8600cea1eaf45e9d014522962ff636ceb50e598d8a5b4a62e770da",
+      "translation_scale": 0.8900639414787292,
+      "inference_and_full_render_seconds": 0.1384885139996186,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 72793,
+      "effect_region_fraction_of_crop": 0.9200328614762386,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.20819905400276184,
+          "mse": 0.06669644266366959,
+          "psnr": 11.7589732909302,
+          "ssim": 0.23582883179187775
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.19895116984844208,
+          "mse": 0.0667637437582016,
+          "psnr": 11.754593183687359,
+          "ssim": 0.29536792635917664
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 72793,
+          "mae": 0.20700475573539734,
+          "mse": 0.06618198752403259,
+          "psnr": 11.792601945989695,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 72793,
+          "mae": 0.19692566990852356,
+          "mse": 0.06624531000852585,
+          "psnr": 11.788448631951852,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": -0.004380107242841547,
+        "ssim": 0.05953909456729889,
+        "mae_effect_region": -0.01007908582687378
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/195fbef2c08715e9/left_review.png"
+    },
+    {
+      "sequence": "195fbef2c08715e9",
+      "side": "right",
+      "angle_deg": 15.013350831378306,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement1_linux5080/195fbef2c08715e9/right.jpg",
+      "target_image_sha256": "fb662190bcc99158a0971373d10e87f46b4d49e25edb69d53d43e5f230496686",
+      "translation_scale": 0.8900639414787292,
+      "inference_and_full_render_seconds": 0.1384885139996186,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 71810,
+      "effect_region_fraction_of_crop": 0.907608695652174,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.20081238448619843,
+          "mse": 0.06256046891212463,
+          "psnr": 12.03700004750238,
+          "ssim": 0.27457165718078613
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.1696859449148178,
+          "mse": 0.05167330056428909,
+          "psnr": 12.867337975780437,
+          "ssim": 0.35289430618286133
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 71810,
+          "mae": 0.20197010040283203,
+          "mse": 0.0626118928194046,
+          "psnr": 12.033431668649877,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 71810,
+          "mae": 0.167682483792305,
+          "mse": 0.050612907856702805,
+          "psnr": 12.957387105109742,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 0.8303379282780572,
+        "ssim": 0.0783226490020752,
+        "mae_effect_region": -0.03428761661052704
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/195fbef2c08715e9/right_review.png"
+    },
+    {
+      "sequence": "8c2c302994f6cea1",
+      "side": "left",
+      "angle_deg": -15.015454600186256,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement2_linux5080/8c2c302994f6cea1/left.jpg",
+      "target_image_sha256": "ba9650d3656edcbd1ab2e2124f3aad01b20093f1029472c42dcd28f69ad2c8d5",
+      "translation_scale": 1.259450078010559,
+      "inference_and_full_render_seconds": 0.1363739810185507,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 69922,
+      "effect_region_fraction_of_crop": 0.8837462082912032,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.07419974356889725,
+          "mse": 0.011298111639916897,
+          "psnr": 19.46994138188794,
+          "ssim": 0.7330557703971863
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.0421830415725708,
+          "mse": 0.0068903411738574505,
+          "psnr": 21.617592735560468,
+          "ssim": 0.8070161938667297
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 69922,
+          "mae": 0.07774482667446136,
+          "mse": 0.011718129739165306,
+          "psnr": 19.3114169794041,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 69922,
+          "mae": 0.04153851792216301,
+          "mse": 0.006730782799422741,
+          "psnr": 21.719344237849775,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 2.1476513536725292,
+        "ssim": 0.07396042346954346,
+        "mae_effect_region": -0.036206308752298355
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/8c2c302994f6cea1/left_review.png"
+    },
+    {
+      "sequence": "8c2c302994f6cea1",
+      "side": "right",
+      "angle_deg": 15.024854764048454,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement2_linux5080/8c2c302994f6cea1/right.jpg",
+      "target_image_sha256": "965091226859c9c27b9893509e2dfea4e6c91a1c5ec18ab6c4622c2cbdb3dc2d",
+      "translation_scale": 1.259450078010559,
+      "inference_and_full_render_seconds": 0.1363739810185507,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 66570,
+      "effect_region_fraction_of_crop": 0.8413801820020222,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.074325330555439,
+          "mse": 0.01218605786561966,
+          "psnr": 19.14136763954891,
+          "ssim": 0.746802568435669
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.049929436296224594,
+          "mse": 0.007398602087050676,
+          "psnr": 21.308503293542422,
+          "ssim": 0.7913548946380615
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 66570,
+          "mae": 0.07687578350305557,
+          "mse": 0.012791481800377369,
+          "psnr": 18.93079142741741,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 66570,
+          "mae": 0.047838106751441956,
+          "mse": 0.007092747837305069,
+          "psnr": 21.491854799954897,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 2.167135653993512,
+        "ssim": 0.04455232620239258,
+        "mae_effect_region": -0.029037676751613617
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/8c2c302994f6cea1/right_review.png"
+    },
+    {
+      "sequence": "c53178af617eaa65",
+      "side": "left",
+      "angle_deg": -15.021246260951756,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/left.jpg",
+      "target_image_sha256": "102c044a359c749e2189c13fafa34ee604028b4e79ec7dbbde3a8eb684639b33",
+      "translation_scale": 1.4960638284683228,
+      "inference_and_full_render_seconds": 0.13093709503300488,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 78889,
+      "effect_region_fraction_of_crop": 0.9970803842264914,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.1957775503396988,
+          "mse": 0.058026161044836044,
+          "psnr": 12.363761609914608,
+          "ssim": 0.3010707199573517
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.12454932928085327,
+          "mse": 0.03669526055455208,
+          "psnr": 14.353900242471575,
+          "ssim": 0.4657345712184906
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 78889,
+          "mae": 0.19548717141151428,
+          "mse": 0.05786753445863724,
+          "psnr": 12.375650210720742,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 78889,
+          "mae": 0.12405072152614594,
+          "mse": 0.03647422417998314,
+          "psnr": 14.38013936937886,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 1.9901386325569668,
+        "ssim": 0.16466385126113892,
+        "mae_effect_region": -0.07143644988536835
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/c53178af617eaa65/left_review.png"
+    },
+    {
+      "sequence": "c53178af617eaa65",
+      "side": "right",
+      "angle_deg": 15.026040174913511,
+      "target_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/right.jpg",
+      "target_image_sha256": "743cdd27ee48797016f007dc2845d179ab9d2b8ae0e68ce74893832e4f02c816",
+      "translation_scale": 1.4960638284683228,
+      "inference_and_full_render_seconds": 0.13093709503300488,
+      "effect_region_definition": "max_abs(full_layers12-layer1)>1/255 within official 5% crop",
+      "effect_region_pixels": 57622,
+      "effect_region_fraction_of_crop": 0.7282861476238625,
+      "official_crop_metrics": {
+        "layer1": {
+          "pixels": 79120,
+          "mae": 0.12097413092851639,
+          "mse": 0.024473847821354866,
+          "psnr": 16.112977447385575,
+          "ssim": 0.6373298168182373
+        },
+        "layers12": {
+          "pixels": 79120,
+          "mae": 0.10273843258619308,
+          "mse": 0.021345989778637886,
+          "psnr": 16.706837028682454,
+          "ssim": 0.6773797869682312
+        }
+      },
+      "effect_region_metrics": {
+        "layer1": {
+          "pixels": 57622,
+          "mae": 0.10401078313589096,
+          "mse": 0.0182756707072258,
+          "psnr": 17.381266757051456,
+          "ssim": null
+        },
+        "layers12": {
+          "pixels": 57622,
+          "mae": 0.07898161560297012,
+          "mse": 0.013988286256790161,
+          "psnr": 18.54235488854048,
+          "ssim": null
+        }
+      },
+      "delta_layers12_minus_layer1": {
+        "psnr_db": 0.5938595812968792,
+        "ssim": 0.040049970149993896,
+        "mae_effect_region": -0.025029167532920837
+      },
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-APP-01_flash3d_layer_ab_v1_linux5080/c53178af617eaa65/right_review.png"
+    }
+  ],
+  "quality_boundary": "PSNR/SSIM/MAE A/B is diagnostic; protocol quality pass requires LPIPS, DISTS, semantic region truth, and confidence calibration. OutsideFOV remains unsupported."
+}

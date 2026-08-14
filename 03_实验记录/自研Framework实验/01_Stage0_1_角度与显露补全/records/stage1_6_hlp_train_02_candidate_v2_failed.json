@@ -1,0 +1,15 @@
+{
+  "schema_version": "stage1.6-hlp-train-02-candidate-failure-v2",
+  "status": "failed_before_optimization",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 3,
+  "completed_steps": 0,
+  "output_directory": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_candidate_v2_linux5080",
+  "artifacts_written": 0,
+  "failure": {
+    "stage": "initial target-view free-space evaluation",
+    "reason": "deterministic CUDA matrix multiplication requires CUBLAS_WORKSPACE_CONFIG with CUDA >= 10.2",
+    "resolution": "set CUBLAS_WORKSPACE_CONFIG=:4096:8 before process start; canonical rerun is v3"
+  },
+  "quality_boundary": "environment determinism failure only; no optimization or quality conclusion"
+}

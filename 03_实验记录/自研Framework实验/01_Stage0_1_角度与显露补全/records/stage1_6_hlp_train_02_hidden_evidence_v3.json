@@ -1,0 +1,3037 @@
+{
+  "schema_version": "stage1.6-hlp-train-02-hidden-evidence-v3",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "inputs": {
+    "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_02_triplets_v1.json",
+    "config_sha256": "7eabe4ca9e9ab786a1a80d90c146002225762f08b9f18fe5581af283d27f015f",
+    "dataset_root": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-02_v1_linux5080",
+    "camera_parameters": "源码/ml-hypersim/contrib/mikeroberts3000/metadata_camera_parameters.csv",
+    "camera_parameters_sha256": "0b40e0884ba2458e7bdcdbb27de46a4ec6eacbfbbb4ef0d70188d78098cebdc9"
+  },
+  "label_policy": {
+    "relative_behind_margin": 0.01,
+    "absolute_behind_margin_m": 0.01,
+    "minimum_positive_fraction": 0.001,
+    "unobserved_source_rays": "unknown_not_negative",
+    "source_truth_depth_model_input": false,
+    "source_truth_depth_usage": "offline_label_construction_only"
+  },
+  "results": [
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 99,
+      "positive_pixels": 75697,
+      "positive_fraction": 0.0962537129720052,
+      "source_view_coverage_pixels": 496379,
+      "multi_observed_positive_pixels": 38973,
+      "hidden_delta_z_m": {
+        "minimum": 0.029458045959472656,
+        "median": 1.457087516784668,
+        "p99": 1.86529531955719
+      },
+      "unknown_pixels": 710735,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0099-hidden-evidence.npz",
+      "arrays_sha256": "334fdc5d90a7b1fde7e194b07799f05b19b440404745ef3557cd848111a466be",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 94,
+      "positive_pixels": 1002,
+      "positive_fraction": 0.00127410888671875,
+      "source_view_coverage_pixels": 132946,
+      "multi_observed_positive_pixels": 954,
+      "hidden_delta_z_m": {
+        "minimum": 0.017627835273742676,
+        "median": 0.20073795318603516,
+        "p99": 0.952007954120636
+      },
+      "unknown_pixels": 785430,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0094-hidden-evidence.npz",
+      "arrays_sha256": "fd7e1183d37c833c70bdc6a3aaf6803ddb54d663d9256fbfe2a2f263da06c4f9",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 82,
+      "positive_pixels": 40458,
+      "positive_fraction": 0.05144500732421875,
+      "source_view_coverage_pixels": 651476,
+      "multi_observed_positive_pixels": 8530,
+      "hidden_delta_z_m": {
+        "minimum": 0.033361196517944336,
+        "median": 1.3486220836639404,
+        "p99": 1.7290669405460357
+      },
+      "unknown_pixels": 745974,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0082-hidden-evidence.npz",
+      "arrays_sha256": "c3103351064f0975dfbf94e5032d0851a1b91f48adc79e4055852ef8bfa2a15e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 56,
+      "positive_pixels": 14695,
+      "positive_fraction": 0.018685658772786457,
+      "source_view_coverage_pixels": 599920,
+      "multi_observed_positive_pixels": 1535,
+      "hidden_delta_z_m": {
+        "minimum": 0.015389204025268555,
+        "median": 0.1882838010787964,
+        "p99": 0.8282134175300598
+      },
+      "unknown_pixels": 771737,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0056-hidden-evidence.npz",
+      "arrays_sha256": "bf67ac820ec3567979fe65775390be9305bbc4745c8f6f0b985529303f47bb49",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "positive_pixels": 67862,
+      "positive_fraction": 0.08629099527994792,
+      "source_view_coverage_pixels": 465753,
+      "multi_observed_positive_pixels": 41131,
+      "hidden_delta_z_m": {
+        "minimum": 0.03421974182128906,
+        "median": 1.4442557096481323,
+        "p99": 1.8212389755249023
+      },
+      "unknown_pixels": 718570,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0009-hidden-evidence.npz",
+      "arrays_sha256": "ad75d39bba840a7bfe273acdc3e5df6ceb21c632a67e37f8abe375d34145049c",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 18,
+      "positive_pixels": 39876,
+      "positive_fraction": 0.0507049560546875,
+      "source_view_coverage_pixels": 517575,
+      "multi_observed_positive_pixels": 8880,
+      "hidden_delta_z_m": {
+        "minimum": 0.01056218147277832,
+        "median": 1.0282235145568848,
+        "p99": 1.5017033219337463
+      },
+      "unknown_pixels": 746556,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0018-hidden-evidence.npz",
+      "arrays_sha256": "c1c939dfe503210694b51ad4b9eccfce17d91b8deabd095a6fb75d63d328d502",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 33,
+      "positive_pixels": 65394,
+      "positive_fraction": 0.08315277099609375,
+      "source_view_coverage_pixels": 576677,
+      "multi_observed_positive_pixels": 12731,
+      "hidden_delta_z_m": {
+        "minimum": 0.010706722736358643,
+        "median": 1.5453884601593018,
+        "p99": 2.2083194708824156
+      },
+      "unknown_pixels": 721038,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0033-hidden-evidence.npz",
+      "arrays_sha256": "67cb42b41f628223dc4c0d46071a7e6225529e0a73debf6598d341280ad0c2bc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 23,
+      "positive_pixels": 52543,
+      "positive_fraction": 0.06681187947591145,
+      "source_view_coverage_pixels": 497457,
+      "multi_observed_positive_pixels": 14625,
+      "hidden_delta_z_m": {
+        "minimum": 0.015048623085021973,
+        "median": 1.345175862312317,
+        "p99": 1.5967088985443116
+      },
+      "unknown_pixels": 733889,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0023-hidden-evidence.npz",
+      "arrays_sha256": "0b206cc8155415daf9eb2eb844b3268660746f289723c6ba31e94933cf5056c1",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 35,
+      "positive_pixels": 7543,
+      "positive_fraction": 0.009591420491536459,
+      "source_view_coverage_pixels": 105411,
+      "multi_observed_positive_pixels": 918,
+      "hidden_delta_z_m": {
+        "minimum": 0.010019958019256592,
+        "median": 0.32416558265686035,
+        "p99": 1.0201127529144287
+      },
+      "unknown_pixels": 778889,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0035-hidden-evidence.npz",
+      "arrays_sha256": "aac8ff17d35a1c46889e13b1f09a1b3c465372f4c481df75353545ea7ee8a5dc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "camera": "cam_00",
+      "source_frame": 14,
+      "positive_pixels": 19281,
+      "positive_fraction": 0.024517059326171875,
+      "source_view_coverage_pixels": 446269,
+      "multi_observed_positive_pixels": 16017,
+      "hidden_delta_z_m": {
+        "minimum": 0.016090869903564453,
+        "median": 0.7563779354095459,
+        "p99": 1.6338515520095827
+      },
+      "unknown_pixels": 767151,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_001-cam_00-0014-hidden-evidence.npz",
+      "arrays_sha256": "b4a61830bd1b4ebe383571deafca1ad69af029b06a034b86986fca3297e3f693",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 64,
+      "positive_pixels": 15056,
+      "positive_fraction": 0.019144694010416668,
+      "source_view_coverage_pixels": 436956,
+      "multi_observed_positive_pixels": 4877,
+      "hidden_delta_z_m": {
+        "minimum": 0.031975507736206055,
+        "median": 0.4973047971725464,
+        "p99": 0.8485893964767456
+      },
+      "unknown_pixels": 771376,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0064-hidden-evidence.npz",
+      "arrays_sha256": "bd88fb65a7840ae1efdafe655a59f1774cd08b4242e9d201cf28b808c706008a",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 47,
+      "positive_pixels": 35252,
+      "positive_fraction": 0.044825236002604164,
+      "source_view_coverage_pixels": 590063,
+      "multi_observed_positive_pixels": 23257,
+      "hidden_delta_z_m": {
+        "minimum": 0.026673555374145508,
+        "median": 0.4579308032989502,
+        "p99": 1.811971554756164
+      },
+      "unknown_pixels": 751180,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0047-hidden-evidence.npz",
+      "arrays_sha256": "95edad8cd131b40cd86cce41979104df93c1bee6341e867fb8bd432e7649a1b8",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 55,
+      "positive_pixels": 41711,
+      "positive_fraction": 0.05303827921549479,
+      "source_view_coverage_pixels": 230878,
+      "multi_observed_positive_pixels": 17922,
+      "hidden_delta_z_m": {
+        "minimum": 0.025485515594482422,
+        "median": 0.4678823947906494,
+        "p99": 1.1393072366714478
+      },
+      "unknown_pixels": 744721,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0055-hidden-evidence.npz",
+      "arrays_sha256": "de382002d0d3a45cdf21e37bc2279caab53abc3978ed13da5b0daa2314bb1fc9",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 50,
+      "positive_pixels": 20188,
+      "positive_fraction": 0.025670369466145832,
+      "source_view_coverage_pixels": 533328,
+      "multi_observed_positive_pixels": 9178,
+      "hidden_delta_z_m": {
+        "minimum": 0.03301668167114258,
+        "median": 0.21229982376098633,
+        "p99": 0.6998542070388794
+      },
+      "unknown_pixels": 766244,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0050-hidden-evidence.npz",
+      "arrays_sha256": "0fed7832d2ab4587655109d909df9abb0e6de09e7d0f50ae45e0a69ece2478db",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 3,
+      "positive_pixels": 19246,
+      "positive_fraction": 0.024472554524739582,
+      "source_view_coverage_pixels": 383915,
+      "multi_observed_positive_pixels": 11480,
+      "hidden_delta_z_m": {
+        "minimum": 0.02638864517211914,
+        "median": 0.20111453533172607,
+        "p99": 0.952007734775543
+      },
+      "unknown_pixels": 767186,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0003-hidden-evidence.npz",
+      "arrays_sha256": "215d24a24d915e9fdc1654d1b097d5c3b5143b50a6db10807ab12e3d09ba5a88",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 70,
+      "positive_pixels": 20500,
+      "positive_fraction": 0.026067097981770832,
+      "source_view_coverage_pixels": 604764,
+      "multi_observed_positive_pixels": 7717,
+      "hidden_delta_z_m": {
+        "minimum": 0.03681588172912598,
+        "median": 0.2707397937774658,
+        "p99": 1.8493960666656493
+      },
+      "unknown_pixels": 765932,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0070-hidden-evidence.npz",
+      "arrays_sha256": "b0f8c7b8eef023c54e4e30ee53725c185900c751b0ec95b2eb98553dbe56c5cc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "positive_pixels": 19129,
+      "positive_fraction": 0.024323781331380207,
+      "source_view_coverage_pixels": 183201,
+      "multi_observed_positive_pixels": 11500,
+      "hidden_delta_z_m": {
+        "minimum": 0.030753612518310547,
+        "median": 0.2813878059387207,
+        "p99": 1.2917191314697267
+      },
+      "unknown_pixels": 767303,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0036-hidden-evidence.npz",
+      "arrays_sha256": "9f79d4bac941ae271ca8d9929f54b4b2da833982a68c5ef60e685d553c6b18d1",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 67,
+      "positive_pixels": 42192,
+      "positive_fraction": 0.05364990234375,
+      "source_view_coverage_pixels": 413844,
+      "multi_observed_positive_pixels": 30864,
+      "hidden_delta_z_m": {
+        "minimum": 0.03159451484680176,
+        "median": 0.4078996181488037,
+        "p99": 1.9526041722297665
+      },
+      "unknown_pixels": 744240,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0067-hidden-evidence.npz",
+      "arrays_sha256": "c236fd10e6f9126d5e3c49e5b2bcac9b6f90d7bbf82c0ffa9f9f44663033c7ab",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 38,
+      "positive_pixels": 28361,
+      "positive_fraction": 0.03606287638346354,
+      "source_view_coverage_pixels": 382027,
+      "multi_observed_positive_pixels": 10632,
+      "hidden_delta_z_m": {
+        "minimum": 0.025594472885131836,
+        "median": 0.07578802108764648,
+        "p99": 1.335080337524414
+      },
+      "unknown_pixels": 758071,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0038-hidden-evidence.npz",
+      "arrays_sha256": "60ce790839637fce66cfec16ab4012bbef8d2f34e8407148ccdb44ad627a9883",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "source_frame": 14,
+      "positive_pixels": 18308,
+      "positive_fraction": 0.023279825846354168,
+      "source_view_coverage_pixels": 525011,
+      "multi_observed_positive_pixels": 10628,
+      "hidden_delta_z_m": {
+        "minimum": 0.04080367088317871,
+        "median": 0.2917366027832031,
+        "p99": 2.0538932180404665
+      },
+      "unknown_pixels": 768124,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_006-cam_00-0014-hidden-evidence.npz",
+      "arrays_sha256": "7e5cd765feac8b7533192aacb9c1d378a5f56bfebf49728f4bf2eb6b6380ce09",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 45,
+      "positive_pixels": 137306,
+      "positive_fraction": 0.1745936075846354,
+      "source_view_coverage_pixels": 570646,
+      "multi_observed_positive_pixels": 65196,
+      "hidden_delta_z_m": {
+        "minimum": 0.011715412139892578,
+        "median": 2.5087730884552,
+        "p99": 5.59260950088501
+      },
+      "unknown_pixels": 649126,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0045-hidden-evidence.npz",
+      "arrays_sha256": "6d6dbe369b508a5d2c1f421e621eead1c1ae500b08f8c5452c86641825bcd0d3",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "positive_pixels": 36440,
+      "positive_fraction": 0.046335856119791664,
+      "source_view_coverage_pixels": 487698,
+      "multi_observed_positive_pixels": 5011,
+      "hidden_delta_z_m": {
+        "minimum": 0.024107933044433594,
+        "median": 2.163156270980835,
+        "p99": 3.4884933996200562
+      },
+      "unknown_pixels": 749992,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0069-hidden-evidence.npz",
+      "arrays_sha256": "ec4d4853a68bbe77734def8cd4fad0f7088618ea6911edc975bff21816b32bd1",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 72,
+      "positive_pixels": 39654,
+      "positive_fraction": 0.05042266845703125,
+      "source_view_coverage_pixels": 340598,
+      "multi_observed_positive_pixels": 20420,
+      "hidden_delta_z_m": {
+        "minimum": 0.03475546836853027,
+        "median": 1.6113892793655396,
+        "p99": 3.531437599658967
+      },
+      "unknown_pixels": 746778,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0072-hidden-evidence.npz",
+      "arrays_sha256": "550209486a0bd67ee8d8762c33ec9ed45f427f45d8f15f2c8effa219db9a3253",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 29,
+      "positive_pixels": 84643,
+      "positive_fraction": 0.10762914021809895,
+      "source_view_coverage_pixels": 602286,
+      "multi_observed_positive_pixels": 42860,
+      "hidden_delta_z_m": {
+        "minimum": 0.01875925064086914,
+        "median": 1.302297830581665,
+        "p99": 3.275569524765015
+      },
+      "unknown_pixels": 701789,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0029-hidden-evidence.npz",
+      "arrays_sha256": "f8b38c35351a911d714a848a8d2601d6a67e87de1a683a5be1e96b405395e55e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 35,
+      "positive_pixels": 45232,
+      "positive_fraction": 0.057515462239583336,
+      "source_view_coverage_pixels": 603223,
+      "multi_observed_positive_pixels": 15888,
+      "hidden_delta_z_m": {
+        "minimum": 0.01923501491546631,
+        "median": 1.8455654382705688,
+        "p99": 2.9436226224899293
+      },
+      "unknown_pixels": 741200,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0035-hidden-evidence.npz",
+      "arrays_sha256": "e35ca3d0cbbc17cdf95372a3e81bfd0169862c53b5b352b37fb3969b02aaac5e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 16,
+      "positive_pixels": 191169,
+      "positive_fraction": 0.24308395385742188,
+      "source_view_coverage_pixels": 558166,
+      "multi_observed_positive_pixels": 59092,
+      "hidden_delta_z_m": {
+        "minimum": 0.010010063648223877,
+        "median": 4.298913955688477,
+        "p99": 6.453498897552491
+      },
+      "unknown_pixels": 595263,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0016-hidden-evidence.npz",
+      "arrays_sha256": "ecda71ec36d11e5f1ade75dbb92c6462252285d70c89be6a82a46b6600979dbe",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 43,
+      "positive_pixels": 45447,
+      "positive_fraction": 0.057788848876953125,
+      "source_view_coverage_pixels": 469001,
+      "multi_observed_positive_pixels": 13681,
+      "hidden_delta_z_m": {
+        "minimum": 0.017348647117614746,
+        "median": 2.2021515369415283,
+        "p99": 3.7516436052322395
+      },
+      "unknown_pixels": 740985,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0043-hidden-evidence.npz",
+      "arrays_sha256": "d4fee53c0da864a96a88947050d9cd4efb3fa7110e068ac712a3463dd22c117a",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 75,
+      "positive_pixels": 40324,
+      "positive_fraction": 0.051274617513020836,
+      "source_view_coverage_pixels": 330292,
+      "multi_observed_positive_pixels": 7411,
+      "hidden_delta_z_m": {
+        "minimum": 0.018854618072509766,
+        "median": 1.7577708959579468,
+        "p99": 3.149419538974762
+      },
+      "unknown_pixels": 746108,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0075-hidden-evidence.npz",
+      "arrays_sha256": "cb58ea79be5805a5ab295761fdce0f860387d422038cbbb6b42b1851e9ef65e2",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 13,
+      "positive_pixels": 46693,
+      "positive_fraction": 0.05937321980794271,
+      "source_view_coverage_pixels": 473445,
+      "multi_observed_positive_pixels": 34175,
+      "hidden_delta_z_m": {
+        "minimum": 0.028239011764526367,
+        "median": 1.7547359466552734,
+        "p99": 2.9588499927520755
+      },
+      "unknown_pixels": 739739,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0013-hidden-evidence.npz",
+      "arrays_sha256": "3fe6ed3604cd208d801b12732fe380f27d8ba22b880324859558cf447f49de72",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "source_frame": 89,
+      "positive_pixels": 62295,
+      "positive_fraction": 0.07921218872070312,
+      "source_view_coverage_pixels": 373850,
+      "multi_observed_positive_pixels": 3533,
+      "hidden_delta_z_m": {
+        "minimum": 0.01609957218170166,
+        "median": 1.115844488143921,
+        "p99": 1.9679331159591675
+      },
+      "unknown_pixels": 724137,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_005-cam_00-0089-hidden-evidence.npz",
+      "arrays_sha256": "8c51c5c3906bf0413f66989b869cdb0985c55f9e93150987a42fd75e174d7596",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 8,
+      "positive_pixels": 33791,
+      "positive_fraction": 0.04296747843424479,
+      "source_view_coverage_pixels": 500101,
+      "multi_observed_positive_pixels": 5148,
+      "hidden_delta_z_m": {
+        "minimum": 0.015621542930603027,
+        "median": 0.6146217584609985,
+        "p99": 0.6813080310821533
+      },
+      "unknown_pixels": 752641,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0008-hidden-evidence.npz",
+      "arrays_sha256": "4421eac1e7bfe8d13379036923014b6519fa133fa4acc62ad5a2af5f1afe0938",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 97,
+      "positive_pixels": 16351,
+      "positive_fraction": 0.020791371663411457,
+      "source_view_coverage_pixels": 443301,
+      "multi_observed_positive_pixels": 2002,
+      "hidden_delta_z_m": {
+        "minimum": 0.0186154842376709,
+        "median": 0.4545114040374756,
+        "p99": 1.1728692054748535
+      },
+      "unknown_pixels": 770081,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0097-hidden-evidence.npz",
+      "arrays_sha256": "3fdcaddd9e4eba3bd1d17bd9b509a657e322a7bc6c24978ab938d6dbf5f7d045",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 41,
+      "positive_pixels": 39487,
+      "positive_fraction": 0.05021031697591146,
+      "source_view_coverage_pixels": 525063,
+      "multi_observed_positive_pixels": 22529,
+      "hidden_delta_z_m": {
+        "minimum": 0.025249958038330078,
+        "median": 0.3536398410797119,
+        "p99": 0.9584076213836669
+      },
+      "unknown_pixels": 746945,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0041-hidden-evidence.npz",
+      "arrays_sha256": "814439e92369a9c56228c50ce7e621c0a6848e6613c258cee02434a59e8ee548",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 66,
+      "positive_pixels": 9567,
+      "positive_fraction": 0.012165069580078125,
+      "source_view_coverage_pixels": 134662,
+      "multi_observed_positive_pixels": 1078,
+      "hidden_delta_z_m": {
+        "minimum": 0.010196328163146973,
+        "median": 0.21077370643615723,
+        "p99": 0.5709788966178895
+      },
+      "unknown_pixels": 776865,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0066-hidden-evidence.npz",
+      "arrays_sha256": "9e4b789cf2626b845f229a5b44ccba5f25dc374de8048d5d8d99903e3a3fd136",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 68,
+      "positive_pixels": 11516,
+      "positive_fraction": 0.014643351236979166,
+      "source_view_coverage_pixels": 74895,
+      "multi_observed_positive_pixels": 6,
+      "hidden_delta_z_m": {
+        "minimum": 0.010115563869476318,
+        "median": 0.6659518480300903,
+        "p99": 0.897625955939293
+      },
+      "unknown_pixels": 774916,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0068-hidden-evidence.npz",
+      "arrays_sha256": "f71ae91c06959fda27398c31dd55af0fc44a714152beb011b12ac433538ab7e4",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "positive_pixels": 34847,
+      "positive_fraction": 0.04431025187174479,
+      "source_view_coverage_pixels": 423516,
+      "multi_observed_positive_pixels": 4942,
+      "hidden_delta_z_m": {
+        "minimum": 0.03135085105895996,
+        "median": 0.2936112880706787,
+        "p99": 0.6454723834991457
+      },
+      "unknown_pixels": 751585,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0036-hidden-evidence.npz",
+      "arrays_sha256": "73b4e193747aaa9576b9a6fdbc530b830d9f6d836f20fc3705de33c2a1ea3e1b",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 44,
+      "positive_pixels": 29526,
+      "positive_fraction": 0.03754425048828125,
+      "source_view_coverage_pixels": 347554,
+      "multi_observed_positive_pixels": 17107,
+      "hidden_delta_z_m": {
+        "minimum": 0.030834674835205078,
+        "median": 0.3049370050430298,
+        "p99": 0.4780425429344177
+      },
+      "unknown_pixels": 756906,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0044-hidden-evidence.npz",
+      "arrays_sha256": "d7d75be42432b89ea592a8bd58ae1b785d892edbe3172537fddc3b3e63f75bac",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 71,
+      "positive_pixels": 40894,
+      "positive_fraction": 0.051999409993489586,
+      "source_view_coverage_pixels": 584020,
+      "multi_observed_positive_pixels": 15871,
+      "hidden_delta_z_m": {
+        "minimum": 0.02471756935119629,
+        "median": 0.47995030879974365,
+        "p99": 0.9861402082443237
+      },
+      "unknown_pixels": 745538,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0071-hidden-evidence.npz",
+      "arrays_sha256": "e9791875d245d2bfdebc6f4b2fa6007f5838afb9f449dfdf99188e01cb15608f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 63,
+      "positive_pixels": 27161,
+      "positive_fraction": 0.03453699747721354,
+      "source_view_coverage_pixels": 526444,
+      "multi_observed_positive_pixels": 3032,
+      "hidden_delta_z_m": {
+        "minimum": 0.015644431114196777,
+        "median": 0.4561593532562256,
+        "p99": 0.7056221008300781
+      },
+      "unknown_pixels": 759271,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0063-hidden-evidence.npz",
+      "arrays_sha256": "8ed0e4f6c502508c8ebc97a22155e92eae99459c40d1944b6cd14b1a5855442a",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "source_frame": 1,
+      "positive_pixels": 39777,
+      "positive_fraction": 0.050579071044921875,
+      "source_view_coverage_pixels": 428285,
+      "multi_observed_positive_pixels": 25537,
+      "hidden_delta_z_m": {
+        "minimum": 0.03795957565307617,
+        "median": 0.41811609268188477,
+        "p99": 0.6896993827819824
+      },
+      "unknown_pixels": 746655,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_001_004-cam_00-0001-hidden-evidence.npz",
+      "arrays_sha256": "983c09821eb3082447c44bf3601face4646b95dd374ebf27d5c11c33ce4150bc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 4,
+      "positive_pixels": 53056,
+      "positive_fraction": 0.06746419270833333,
+      "source_view_coverage_pixels": 559900,
+      "multi_observed_positive_pixels": 24391,
+      "hidden_delta_z_m": {
+        "minimum": 0.01576542854309082,
+        "median": 2.192739963531494,
+        "p99": 5.205706095695494
+      },
+      "unknown_pixels": 733376,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0004-hidden-evidence.npz",
+      "arrays_sha256": "7e08be0965bea5aa9231d6fd982b9f4bc37d0a2c3e7ee3d028a621e402476d2e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 74,
+      "positive_pixels": 80936,
+      "positive_fraction": 0.10291544596354167,
+      "source_view_coverage_pixels": 479416,
+      "multi_observed_positive_pixels": 34107,
+      "hidden_delta_z_m": {
+        "minimum": 0.03251385688781738,
+        "median": 3.976715087890625,
+        "p99": 7.208543133735656
+      },
+      "unknown_pixels": 705496,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0074-hidden-evidence.npz",
+      "arrays_sha256": "664a6ae286cbe7db9951dfe5b88b872c102e9edc99cee577651e434231aad7a2",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 53,
+      "positive_pixels": 74186,
+      "positive_fraction": 0.09433237711588542,
+      "source_view_coverage_pixels": 308958,
+      "multi_observed_positive_pixels": 69709,
+      "hidden_delta_z_m": {
+        "minimum": 0.04372739791870117,
+        "median": 2.6465024948120117,
+        "p99": 5.2803977251052805
+      },
+      "unknown_pixels": 712246,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0053-hidden-evidence.npz",
+      "arrays_sha256": "69a60f7668485cd51b5bc72dfddc172375d457b4444eaf479dcf047edf76ba9f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "positive_pixels": 80088,
+      "positive_fraction": 0.101837158203125,
+      "source_view_coverage_pixels": 558085,
+      "multi_observed_positive_pixels": 41168,
+      "hidden_delta_z_m": {
+        "minimum": 0.026996135711669922,
+        "median": 1.782646656036377,
+        "p99": 5.3099316835403485
+      },
+      "unknown_pixels": 706344,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0009-hidden-evidence.npz",
+      "arrays_sha256": "da598790100cf06d4e55960d0cc03e03fc68bb529dedd97112293eb5fbbaf195",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 70,
+      "positive_pixels": 16224,
+      "positive_fraction": 0.0206298828125,
+      "source_view_coverage_pixels": 615911,
+      "multi_observed_positive_pixels": 10770,
+      "hidden_delta_z_m": {
+        "minimum": 0.031022310256958008,
+        "median": 1.6628961563110352,
+        "p99": 4.119126772880554
+      },
+      "unknown_pixels": 770208,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0070-hidden-evidence.npz",
+      "arrays_sha256": "5abe7fd273731a69965ac2f03c4033641e9f7da9b319ab0201f96fc8736764f4",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 95,
+      "positive_pixels": 27881,
+      "positive_fraction": 0.03545252482096354,
+      "source_view_coverage_pixels": 447227,
+      "multi_observed_positive_pixels": 5690,
+      "hidden_delta_z_m": {
+        "minimum": 0.010367035865783691,
+        "median": 1.7658576965332031,
+        "p99": 4.1445334434509284
+      },
+      "unknown_pixels": 758551,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0095-hidden-evidence.npz",
+      "arrays_sha256": "14a4896486c386c9bfa0b9a3e7cbab4c267f6f8da2b518a98b8bdbea366f1c9c",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 7,
+      "positive_pixels": 82713,
+      "positive_fraction": 0.10517501831054688,
+      "source_view_coverage_pixels": 511261,
+      "multi_observed_positive_pixels": 46482,
+      "hidden_delta_z_m": {
+        "minimum": 0.028911113739013672,
+        "median": 2.2150185108184814,
+        "p99": 5.523345375061036
+      },
+      "unknown_pixels": 703719,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0007-hidden-evidence.npz",
+      "arrays_sha256": "453338d94dfae88ba33b42337469a53950b89e64b2eb1aa965df7d7037a5bb4e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 19,
+      "positive_pixels": 55474,
+      "positive_fraction": 0.07053883870442708,
+      "source_view_coverage_pixels": 568324,
+      "multi_observed_positive_pixels": 18991,
+      "hidden_delta_z_m": {
+        "minimum": 0.02867889404296875,
+        "median": 2.424309730529785,
+        "p99": 4.410564947128295
+      },
+      "unknown_pixels": 730958,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0019-hidden-evidence.npz",
+      "arrays_sha256": "675986c0c0d94c975a39a9583029562d2c05c9d1296162d25b659a83cc589ec9",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 56,
+      "positive_pixels": 131052,
+      "positive_fraction": 0.1666412353515625,
+      "source_view_coverage_pixels": 535032,
+      "multi_observed_positive_pixels": 46025,
+      "hidden_delta_z_m": {
+        "minimum": 0.018804430961608887,
+        "median": 2.3548030853271484,
+        "p99": 5.373285474777223
+      },
+      "unknown_pixels": 655380,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0056-hidden-evidence.npz",
+      "arrays_sha256": "30d592c91b39bf73b503515b30c8431d8b2458ba97e4e795f0aab17ba33bcbab",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "source_frame": 94,
+      "positive_pixels": 32023,
+      "positive_fraction": 0.04071935017903646,
+      "source_view_coverage_pixels": 573607,
+      "multi_observed_positive_pixels": 7386,
+      "hidden_delta_z_m": {
+        "minimum": 0.02919793128967285,
+        "median": 1.73569917678833,
+        "p99": 3.675007138252258
+      },
+      "unknown_pixels": 754409,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_006_002-cam_00-0094-hidden-evidence.npz",
+      "arrays_sha256": "cb5bdd89af0cdc6f33bce56b0179402217c0c653d9be6fdf44372ece36b6933d",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 42,
+      "positive_pixels": 115173,
+      "positive_fraction": 0.14645004272460938,
+      "source_view_coverage_pixels": 532680,
+      "multi_observed_positive_pixels": 39382,
+      "hidden_delta_z_m": {
+        "minimum": 0.02594161033630371,
+        "median": 4.773725986480713,
+        "p99": 26.512837448120116
+      },
+      "unknown_pixels": 671259,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0042-hidden-evidence.npz",
+      "arrays_sha256": "7a3a34021001f021564e16773755e283078045459a7ef74f8c7e94b836478968",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 89,
+      "positive_pixels": 114497,
+      "positive_fraction": 0.14559046427408853,
+      "source_view_coverage_pixels": 135865,
+      "multi_observed_positive_pixels": 37345,
+      "hidden_delta_z_m": {
+        "minimum": 0.08596324920654297,
+        "median": 8.958840370178223,
+        "p99": 24.76653694152832
+      },
+      "unknown_pixels": 671935,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0089-hidden-evidence.npz",
+      "arrays_sha256": "186dcafbc977c9f98d12d75dfa41fe3884cbd7a416e66cb0b394a328a1260c3b",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 83,
+      "positive_pixels": 197918,
+      "positive_fraction": 0.25166575113932294,
+      "source_view_coverage_pixels": 521875,
+      "multi_observed_positive_pixels": 74558,
+      "hidden_delta_z_m": {
+        "minimum": 0.04033160209655762,
+        "median": 9.633615493774414,
+        "p99": 23.90416572570801
+      },
+      "unknown_pixels": 588514,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0083-hidden-evidence.npz",
+      "arrays_sha256": "78a69fbb3ce9aa25ac63cab3dc25d7a2cf0f291d79a53bd778d25ff51b9a48f4",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 45,
+      "positive_pixels": 323438,
+      "positive_fraction": 0.41127268473307294,
+      "source_view_coverage_pixels": 380903,
+      "multi_observed_positive_pixels": 132925,
+      "hidden_delta_z_m": {
+        "minimum": 0.03278398513793945,
+        "median": 7.637442111968994,
+        "p99": 27.020997829437256
+      },
+      "unknown_pixels": 462994,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0045-hidden-evidence.npz",
+      "arrays_sha256": "ed3f2a800c380c71f5d332fe44e706d1249f7ceb68737fe23a0821dac75f4c55",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 27,
+      "positive_pixels": 116737,
+      "positive_fraction": 0.14843877156575522,
+      "source_view_coverage_pixels": 446452,
+      "multi_observed_positive_pixels": 27770,
+      "hidden_delta_z_m": {
+        "minimum": 0.037813425064086914,
+        "median": 7.3157429695129395,
+        "p99": 20.865204467773438
+      },
+      "unknown_pixels": 669695,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0027-hidden-evidence.npz",
+      "arrays_sha256": "40e8be42e58983984bfee2c21318ae5c7bdb5d2108d9432e7c0e75ac0a0307df",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 54,
+      "positive_pixels": 208088,
+      "positive_fraction": 0.2645975748697917,
+      "source_view_coverage_pixels": 343748,
+      "multi_observed_positive_pixels": 123242,
+      "hidden_delta_z_m": {
+        "minimum": 0.05791616439819336,
+        "median": 7.1621222496032715,
+        "p99": 27.454533519744874
+      },
+      "unknown_pixels": 578344,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0054-hidden-evidence.npz",
+      "arrays_sha256": "a24db7d82841a612a1037c12b50dcf7f6cbe2edd3e093cd4af4b11f27b7b4fdc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 86,
+      "positive_pixels": 147512,
+      "positive_fraction": 0.18757120768229166,
+      "source_view_coverage_pixels": 471474,
+      "multi_observed_positive_pixels": 44617,
+      "hidden_delta_z_m": {
+        "minimum": 0.02780938148498535,
+        "median": 5.594522953033447,
+        "p99": 23.144120159149168
+      },
+      "unknown_pixels": 638920,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0086-hidden-evidence.npz",
+      "arrays_sha256": "e7fb9a5cead63dacaa1bfcffae339335e7a7c19374f80d97020429ad33ccc4cf",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 72,
+      "positive_pixels": 97084,
+      "positive_fraction": 0.12344868977864583,
+      "source_view_coverage_pixels": 328181,
+      "multi_observed_positive_pixels": 37077,
+      "hidden_delta_z_m": {
+        "minimum": 0.03158164024353027,
+        "median": 6.299161911010742,
+        "p99": 22.01329843521118
+      },
+      "unknown_pixels": 689348,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0072-hidden-evidence.npz",
+      "arrays_sha256": "6125202b09937bca6324e3a51730587bb746fa75eb952dd9de27766673609d83",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 46,
+      "positive_pixels": 249161,
+      "positive_fraction": 0.31682459513346356,
+      "source_view_coverage_pixels": 298147,
+      "multi_observed_positive_pixels": 167345,
+      "hidden_delta_z_m": {
+        "minimum": 0.11633682250976562,
+        "median": 9.988263130187988,
+        "p99": 26.229145812988282
+      },
+      "unknown_pixels": 537271,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0046-hidden-evidence.npz",
+      "arrays_sha256": "ba02136fccabdcb79235ff2d4bdfb054c294e71fd738dc0f4ee09e883a3490bc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "source_frame": 74,
+      "positive_pixels": 228570,
+      "positive_fraction": 0.29064178466796875,
+      "source_view_coverage_pixels": 469397,
+      "multi_observed_positive_pixels": 80178,
+      "hidden_delta_z_m": {
+        "minimum": 0.02994990348815918,
+        "median": 8.067493438720703,
+        "p99": 19.636111278533935
+      },
+      "unknown_pixels": 557862,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_001-cam_00-0074-hidden-evidence.npz",
+      "arrays_sha256": "478853c71fcedd0654af3b01dc004452301b6f6209e799347e61c4931f56ba32",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 48,
+      "positive_pixels": 119220,
+      "positive_fraction": 0.1515960693359375,
+      "source_view_coverage_pixels": 544776,
+      "multi_observed_positive_pixels": 61368,
+      "hidden_delta_z_m": {
+        "minimum": 0.010001897811889648,
+        "median": 1.5135173797607422,
+        "p99": 6.893807730674739
+      },
+      "unknown_pixels": 667212,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0048-hidden-evidence.npz",
+      "arrays_sha256": "a2ba26df25512f37aa68a702cdfd39b2d613d7e28b6c896d6ac863756ec10ef6",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 49,
+      "positive_pixels": 56459,
+      "positive_fraction": 0.0717913309733073,
+      "source_view_coverage_pixels": 380480,
+      "multi_observed_positive_pixels": 30321,
+      "hidden_delta_z_m": {
+        "minimum": 0.013423323631286621,
+        "median": 1.6394028663635254,
+        "p99": 12.12578758239746
+      },
+      "unknown_pixels": 729973,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0049-hidden-evidence.npz",
+      "arrays_sha256": "24c5aff88f65e0682ea186bb934494d835f8b99e888fc586255d3c3734bb3014",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 91,
+      "positive_pixels": 91625,
+      "positive_fraction": 0.11650721232096355,
+      "source_view_coverage_pixels": 251973,
+      "multi_observed_positive_pixels": 47669,
+      "hidden_delta_z_m": {
+        "minimum": 0.01381981372833252,
+        "median": 3.1727094650268555,
+        "p99": 11.182140159606934
+      },
+      "unknown_pixels": 694807,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0091-hidden-evidence.npz",
+      "arrays_sha256": "bc7957f7beb2a5a5acf021757d72c9787fd913b7246ed87fb1037ea86511f578",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 80,
+      "positive_pixels": 100784,
+      "positive_fraction": 0.12815348307291666,
+      "source_view_coverage_pixels": 443926,
+      "multi_observed_positive_pixels": 43235,
+      "hidden_delta_z_m": {
+        "minimum": 0.01025611162185669,
+        "median": 6.013064861297607,
+        "p99": 11.936222372055054
+      },
+      "unknown_pixels": 685648,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0080-hidden-evidence.npz",
+      "arrays_sha256": "7ce217217478b51ebc8dc96ab92805e5b1fc3029a447f252d3456fe198e921e5",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 58,
+      "positive_pixels": 157326,
+      "positive_fraction": 0.20005035400390625,
+      "source_view_coverage_pixels": 525747,
+      "multi_observed_positive_pixels": 46433,
+      "hidden_delta_z_m": {
+        "minimum": 0.010004878044128418,
+        "median": 1.3646807670593262,
+        "p99": 11.290983438491821
+      },
+      "unknown_pixels": 629106,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0058-hidden-evidence.npz",
+      "arrays_sha256": "ff9f9ab917d065662ff05f73ce760a22c04b4a975d3654741bac2a917e71bc4f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 44,
+      "positive_pixels": 81063,
+      "positive_fraction": 0.10307693481445312,
+      "source_view_coverage_pixels": 326097,
+      "multi_observed_positive_pixels": 18827,
+      "hidden_delta_z_m": {
+        "minimum": 0.010040879249572754,
+        "median": 1.6750693321228027,
+        "p99": 10.032271842956543
+      },
+      "unknown_pixels": 705369,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0044-hidden-evidence.npz",
+      "arrays_sha256": "a683781e047b44c813e8e9284eb3b589b8ac3e24e201608e89aeef3fda537e25",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 15,
+      "positive_pixels": 94241,
+      "positive_fraction": 0.11983362833658855,
+      "source_view_coverage_pixels": 497713,
+      "multi_observed_positive_pixels": 64776,
+      "hidden_delta_z_m": {
+        "minimum": 0.010034561157226562,
+        "median": 2.1612555980682373,
+        "p99": 7.68095855712891
+      },
+      "unknown_pixels": 692191,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0015-hidden-evidence.npz",
+      "arrays_sha256": "8597d7794b4912c15b09bbc5bdf7ffa4c57b3b323a848b91166ee54f82378e66",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 20,
+      "positive_pixels": 151400,
+      "positive_fraction": 0.19251505533854166,
+      "source_view_coverage_pixels": 243180,
+      "multi_observed_positive_pixels": 42425,
+      "hidden_delta_z_m": {
+        "minimum": 0.018894672393798828,
+        "median": 8.042207717895508,
+        "p99": 12.897247495651246
+      },
+      "unknown_pixels": 635032,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0020-hidden-evidence.npz",
+      "arrays_sha256": "4f71f5d973f60f9586ca260c98bc36cd08230c24449fdd9516bf7a9aa07918aa",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 23,
+      "positive_pixels": 73111,
+      "positive_fraction": 0.09296544392903645,
+      "source_view_coverage_pixels": 255674,
+      "multi_observed_positive_pixels": 25519,
+      "hidden_delta_z_m": {
+        "minimum": 0.01002877950668335,
+        "median": 1.5139505863189697,
+        "p99": 9.380748462677
+      },
+      "unknown_pixels": 713321,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0023-hidden-evidence.npz",
+      "arrays_sha256": "a2a502ce712b9d4fe8020befd3d7365730106dd2a9cf8387b812abcc84e0d30d",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "source_frame": 87,
+      "positive_pixels": 139440,
+      "positive_fraction": 0.17730712890625,
+      "source_view_coverage_pixels": 307420,
+      "multi_observed_positive_pixels": 66241,
+      "hidden_delta_z_m": {
+        "minimum": 0.010003447532653809,
+        "median": 6.169654369354248,
+        "p99": 11.599531841278075
+      },
+      "unknown_pixels": 646992,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_016_009-cam_00-0087-hidden-evidence.npz",
+      "arrays_sha256": "76c6300ebacc8eb9649a7cbefd8bb6d2c944b644c49212e9caf5cce6ab8947b3",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 77,
+      "positive_pixels": 12683,
+      "positive_fraction": 0.016127268473307293,
+      "source_view_coverage_pixels": 550072,
+      "multi_observed_positive_pixels": 2263,
+      "hidden_delta_z_m": {
+        "minimum": 0.037978410720825195,
+        "median": 1.318976640701294,
+        "p99": 1.6883761167526246
+      },
+      "unknown_pixels": 773749,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0077-hidden-evidence.npz",
+      "arrays_sha256": "f900efba82264330acefc2671bf89b43a0a86176998c518ab6083835550933f0",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 88,
+      "positive_pixels": 88097,
+      "positive_fraction": 0.11202112833658855,
+      "source_view_coverage_pixels": 441456,
+      "multi_observed_positive_pixels": 26752,
+      "hidden_delta_z_m": {
+        "minimum": 0.6701231002807617,
+        "median": 3.7139389514923096,
+        "p99": 5.156673107147217
+      },
+      "unknown_pixels": 698335,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0088-hidden-evidence.npz",
+      "arrays_sha256": "d76430992089b0dce2b9dc80dc00c84dae5f9ba19b069d5e9bc50d393e604b56",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 87,
+      "positive_pixels": 283808,
+      "positive_fraction": 0.3608805338541667,
+      "source_view_coverage_pixels": 525577,
+      "multi_observed_positive_pixels": 134990,
+      "hidden_delta_z_m": {
+        "minimum": 0.03802657127380371,
+        "median": 3.3697566986083984,
+        "p99": 4.48156183719635
+      },
+      "unknown_pixels": 502624,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0087-hidden-evidence.npz",
+      "arrays_sha256": "ad350b303bc3d036f239e94a8729056e4fb19d3b27ff09ba6b373b7a436aa170",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 31,
+      "positive_pixels": 890,
+      "positive_fraction": 0.0011316935221354167,
+      "source_view_coverage_pixels": 101847,
+      "multi_observed_positive_pixels": 51,
+      "hidden_delta_z_m": {
+        "minimum": 0.015435218811035156,
+        "median": 0.2243669629096985,
+        "p99": 0.3510158371925354
+      },
+      "unknown_pixels": 785542,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0031-hidden-evidence.npz",
+      "arrays_sha256": "e20ba0fa771634f498f1b0a25fb8cedb9a2d4fc3379023e0e8bab51cca5402fe",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 30,
+      "positive_pixels": 3118,
+      "positive_fraction": 0.003964742024739583,
+      "source_view_coverage_pixels": 169511,
+      "multi_observed_positive_pixels": 64,
+      "hidden_delta_z_m": {
+        "minimum": 0.0160597562789917,
+        "median": 0.17899763584136963,
+        "p99": 0.8363429105281829
+      },
+      "unknown_pixels": 783314,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0030-hidden-evidence.npz",
+      "arrays_sha256": "0dc9f5947127c00ef26a0cbfa1bc3510049ae01416512fbd67a84e0ae0bf2d43",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 8,
+      "positive_pixels": 219121,
+      "positive_fraction": 0.2786267598470052,
+      "source_view_coverage_pixels": 387766,
+      "multi_observed_positive_pixels": 177563,
+      "hidden_delta_z_m": {
+        "minimum": 0.050937652587890625,
+        "median": 3.936522960662842,
+        "p99": 4.444088363647461
+      },
+      "unknown_pixels": 567311,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0008-hidden-evidence.npz",
+      "arrays_sha256": "9a28028613932f12b215cd533f2e2e52b5c32bc8bdcf40c448db86a7c066981b",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 95,
+      "positive_pixels": 50950,
+      "positive_fraction": 0.06478627522786458,
+      "source_view_coverage_pixels": 473918,
+      "multi_observed_positive_pixels": 41224,
+      "hidden_delta_z_m": {
+        "minimum": 0.041300296783447266,
+        "median": 0.7856627702713013,
+        "p99": 1.773244240283966
+      },
+      "unknown_pixels": 735482,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0095-hidden-evidence.npz",
+      "arrays_sha256": "8185feb15f9b371124c50a498f3c492ef7f74d1e490c4a8d097d9a83692e3b0e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "positive_pixels": 58019,
+      "positive_fraction": 0.0737749735514323,
+      "source_view_coverage_pixels": 398919,
+      "multi_observed_positive_pixels": 48053,
+      "hidden_delta_z_m": {
+        "minimum": 0.038681745529174805,
+        "median": 0.7453949451446533,
+        "p99": 2.3258355903625487
+      },
+      "unknown_pixels": 728413,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0009-hidden-evidence.npz",
+      "arrays_sha256": "964ea5d12d71606af5f894dc082227526267cf9df065d133cdd3c51e46c30c83",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 4,
+      "positive_pixels": 3732,
+      "positive_fraction": 0.0047454833984375,
+      "source_view_coverage_pixels": 604923,
+      "multi_observed_positive_pixels": 137,
+      "hidden_delta_z_m": {
+        "minimum": 0.03971076011657715,
+        "median": 1.0901228189468384,
+        "p99": 1.2739888739585876
+      },
+      "unknown_pixels": 782700,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0004-hidden-evidence.npz",
+      "arrays_sha256": "70c53393c93d6a9c71ff56f71eb56243692a9b6ce2803e3e87e95f4a8651e820",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "source_frame": 42,
+      "positive_pixels": 34002,
+      "positive_fraction": 0.04323577880859375,
+      "source_view_coverage_pixels": 444044,
+      "multi_observed_positive_pixels": 22474,
+      "hidden_delta_z_m": {
+        "minimum": 0.039427757263183594,
+        "median": 1.4810072183609009,
+        "p99": 2.212209436893463
+      },
+      "unknown_pixels": 752430,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_009_006-cam_00-0042-hidden-evidence.npz",
+      "arrays_sha256": "708eedc0f299c402964675310a4d1bdbcd9b9034d0390fe81582185ff7cb414d",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 66,
+      "positive_pixels": 140187,
+      "positive_fraction": 0.17825698852539062,
+      "source_view_coverage_pixels": 369892,
+      "multi_observed_positive_pixels": 106288,
+      "hidden_delta_z_m": {
+        "minimum": 0.028406858444213867,
+        "median": 3.772942543029785,
+        "p99": 14.214796447753905
+      },
+      "unknown_pixels": 646245,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0066-hidden-evidence.npz",
+      "arrays_sha256": "90082e54791873ded9b9f34d08c38c42bd4ff11ea1648f5bf55917b4c1f7f7e6",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 92,
+      "positive_pixels": 155993,
+      "positive_fraction": 0.19835535685221353,
+      "source_view_coverage_pixels": 369748,
+      "multi_observed_positive_pixels": 74195,
+      "hidden_delta_z_m": {
+        "minimum": 0.010155439376831055,
+        "median": 3.279407262802124,
+        "p99": 4.422026405334471
+      },
+      "unknown_pixels": 630439,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0092-hidden-evidence.npz",
+      "arrays_sha256": "2d673f5de269ee442f87cc22a4128bec67011ad97f2ba7760fa9be7d2e75edaa",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 63,
+      "positive_pixels": 47703,
+      "positive_fraction": 0.060657501220703125,
+      "source_view_coverage_pixels": 607599,
+      "multi_observed_positive_pixels": 6636,
+      "hidden_delta_z_m": {
+        "minimum": 0.035462141036987305,
+        "median": 3.6393065452575684,
+        "p99": 15.954784965515145
+      },
+      "unknown_pixels": 738729,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0063-hidden-evidence.npz",
+      "arrays_sha256": "e38d77854849d153a237d366a34aaed36979a9519a4aeb902f32260452006c02",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 58,
+      "positive_pixels": 40286,
+      "positive_fraction": 0.051226298014322914,
+      "source_view_coverage_pixels": 84579,
+      "multi_observed_positive_pixels": 40169,
+      "hidden_delta_z_m": {
+        "minimum": 0.04132556915283203,
+        "median": 2.5244970321655273,
+        "p99": 2.778200554847717
+      },
+      "unknown_pixels": 746146,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0058-hidden-evidence.npz",
+      "arrays_sha256": "e9df8e6b43646506c1eb68842d6d1de36fc3810169cadc23f9d7353777002d8e",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 60,
+      "positive_pixels": 39471,
+      "positive_fraction": 0.050189971923828125,
+      "source_view_coverage_pixels": 485505,
+      "multi_observed_positive_pixels": 30113,
+      "hidden_delta_z_m": {
+        "minimum": 0.044820308685302734,
+        "median": 2.758106231689453,
+        "p99": 14.634481716156008
+      },
+      "unknown_pixels": 746961,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0060-hidden-evidence.npz",
+      "arrays_sha256": "ceec70f6dad3e6c7336bfa19cbb9ad48eb445cd1a8c9ab9d1aa73b5d0d8ba89c",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 40,
+      "positive_pixels": 103632,
+      "positive_fraction": 0.13177490234375,
+      "source_view_coverage_pixels": 342808,
+      "multi_observed_positive_pixels": 25515,
+      "hidden_delta_z_m": {
+        "minimum": 0.01834547519683838,
+        "median": 2.463574171066284,
+        "p99": 14.581869297027588
+      },
+      "unknown_pixels": 682800,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0040-hidden-evidence.npz",
+      "arrays_sha256": "5cffb544467368e73186d044231f6283cb52d066770e67333fc53fd008b10a1f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 48,
+      "positive_pixels": 117990,
+      "positive_fraction": 0.15003204345703125,
+      "source_view_coverage_pixels": 585389,
+      "multi_observed_positive_pixels": 73853,
+      "hidden_delta_z_m": {
+        "minimum": 0.03435969352722168,
+        "median": 3.0153629779815674,
+        "p99": 13.257917251586914
+      },
+      "unknown_pixels": 668442,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0048-hidden-evidence.npz",
+      "arrays_sha256": "d3a2975de6b12a9627dc9e931cfa72fd14c1862f1d0d496c9b60b7c4773f2573",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 54,
+      "positive_pixels": 41364,
+      "positive_fraction": 0.0525970458984375,
+      "source_view_coverage_pixels": 325391,
+      "multi_observed_positive_pixels": 25709,
+      "hidden_delta_z_m": {
+        "minimum": 0.02862262725830078,
+        "median": 2.25575852394104,
+        "p99": 11.83067924499512
+      },
+      "unknown_pixels": 745068,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0054-hidden-evidence.npz",
+      "arrays_sha256": "a8b764a6293bf3b18e074bfad4df57a872736a1384f829dc368c77ce4f7dd746",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 36,
+      "positive_pixels": 72381,
+      "positive_fraction": 0.09203720092773438,
+      "source_view_coverage_pixels": 366733,
+      "multi_observed_positive_pixels": 11679,
+      "hidden_delta_z_m": {
+        "minimum": 0.018735408782958984,
+        "median": 2.4466910362243652,
+        "p99": 14.283090782165523
+      },
+      "unknown_pixels": 714051,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0036-hidden-evidence.npz",
+      "arrays_sha256": "7d776e68aa6640215c682746b136a442c1573a95f37a37be0d7556b4ec2cea1a",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "positive_pixels": 46976,
+      "positive_fraction": 0.059733072916666664,
+      "source_view_coverage_pixels": 378816,
+      "multi_observed_positive_pixels": 34401,
+      "hidden_delta_z_m": {
+        "minimum": 0.019394278526306152,
+        "median": 3.893704414367676,
+        "p99": 15.050426959991455
+      },
+      "unknown_pixels": 739456,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_004_003-cam_00-0069-hidden-evidence.npz",
+      "arrays_sha256": "bb510651e66d3e773278808a7d5aa60ed33ca86eb47cfef7651d085b09b91f3f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 9,
+      "positive_pixels": 210728,
+      "positive_fraction": 0.2679545084635417,
+      "source_view_coverage_pixels": 473172,
+      "multi_observed_positive_pixels": 116723,
+      "hidden_delta_z_m": {
+        "minimum": 0.016931533813476562,
+        "median": 2.9746344089508057,
+        "p99": 8.046480436325076
+      },
+      "unknown_pixels": 575704,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0009-hidden-evidence.npz",
+      "arrays_sha256": "417c5f3d29aaedf05b56e838cf5fdc8e4a4a5ca6907347e41217293541bbc79f",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 24,
+      "positive_pixels": 208234,
+      "positive_fraction": 0.26478322347005206,
+      "source_view_coverage_pixels": 427587,
+      "multi_observed_positive_pixels": 98147,
+      "hidden_delta_z_m": {
+        "minimum": 0.023308992385864258,
+        "median": 2.7679085731506348,
+        "p99": 12.803822412490842
+      },
+      "unknown_pixels": 578198,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0024-hidden-evidence.npz",
+      "arrays_sha256": "9e1b64049dc14d107081fad8445751d39a5e7ff5d4989be74c1b7e96a3e2c2ff",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 77,
+      "positive_pixels": 171809,
+      "positive_fraction": 0.21846644083658853,
+      "source_view_coverage_pixels": 391156,
+      "multi_observed_positive_pixels": 119790,
+      "hidden_delta_z_m": {
+        "minimum": 0.02543187141418457,
+        "median": 4.120504856109619,
+        "p99": 9.87321441650391
+      },
+      "unknown_pixels": 614623,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0077-hidden-evidence.npz",
+      "arrays_sha256": "f1b67daa5bc760d3b4de4f864b24dc12cc0fe7850604186c6bdf6606faca6ba8",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 6,
+      "positive_pixels": 186357,
+      "positive_fraction": 0.23696517944335938,
+      "source_view_coverage_pixels": 524350,
+      "multi_observed_positive_pixels": 109211,
+      "hidden_delta_z_m": {
+        "minimum": 0.018531203269958496,
+        "median": 3.0036187171936035,
+        "p99": 7.9152625274658215
+      },
+      "unknown_pixels": 600075,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0006-hidden-evidence.npz",
+      "arrays_sha256": "cc9289490b0b7abcad60ed62358f565ebc448e22402248363892773aaa7d8817",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 98,
+      "positive_pixels": 167726,
+      "positive_fraction": 0.2132746378580729,
+      "source_view_coverage_pixels": 325677,
+      "multi_observed_positive_pixels": 90349,
+      "hidden_delta_z_m": {
+        "minimum": 0.028280973434448242,
+        "median": 3.163161039352417,
+        "p99": 13.402031421661377
+      },
+      "unknown_pixels": 618706,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0098-hidden-evidence.npz",
+      "arrays_sha256": "ebc0a985221336c2cf2616dd6e47b03ad3366527614a3a9190cbba5079d0c698",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 88,
+      "positive_pixels": 419126,
+      "positive_fraction": 0.5329462687174479,
+      "source_view_coverage_pixels": 514683,
+      "multi_observed_positive_pixels": 184994,
+      "hidden_delta_z_m": {
+        "minimum": 0.014695048332214355,
+        "median": 5.5481038093566895,
+        "p99": 9.544502019882202
+      },
+      "unknown_pixels": 367306,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0088-hidden-evidence.npz",
+      "arrays_sha256": "c6f9456a90dd9030723745937baff169aae5b0ae7b45c890c52444c376af3d52",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 7,
+      "positive_pixels": 220152,
+      "positive_fraction": 0.279937744140625,
+      "source_view_coverage_pixels": 422151,
+      "multi_observed_positive_pixels": 135862,
+      "hidden_delta_z_m": {
+        "minimum": 0.03775334358215332,
+        "median": 4.105208396911621,
+        "p99": 8.652165184020994
+      },
+      "unknown_pixels": 566280,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0007-hidden-evidence.npz",
+      "arrays_sha256": "070440ee9c81bab6470954952d1cf94f8f84c7c79ce0e58591e3a00b689908dd",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 18,
+      "positive_pixels": 165529,
+      "positive_fraction": 0.21048100789388022,
+      "source_view_coverage_pixels": 472307,
+      "multi_observed_positive_pixels": 95619,
+      "hidden_delta_z_m": {
+        "minimum": 0.021188020706176758,
+        "median": 2.5986428260803223,
+        "p99": 10.887768287658693
+      },
+      "unknown_pixels": 620903,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0018-hidden-evidence.npz",
+      "arrays_sha256": "e1c1aee23ab7cc9bd028f0ab99e98c9c2226803f655162931b8e3a462537201a",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 69,
+      "positive_pixels": 105960,
+      "positive_fraction": 0.134735107421875,
+      "source_view_coverage_pixels": 429423,
+      "multi_observed_positive_pixels": 36483,
+      "hidden_delta_z_m": {
+        "minimum": 0.03943490982055664,
+        "median": 3.149019718170166,
+        "p99": 6.4612188816070555
+      },
+      "unknown_pixels": 680472,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0069-hidden-evidence.npz",
+      "arrays_sha256": "7273ce70c015faeb9280f78d3000fd0b51b5844c66f71d2000cd2baa9fd262f6",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "source_frame": 84,
+      "positive_pixels": 152826,
+      "positive_fraction": 0.19432830810546875,
+      "source_view_coverage_pixels": 413799,
+      "multi_observed_positive_pixels": 115667,
+      "hidden_delta_z_m": {
+        "minimum": 0.010057628154754639,
+        "median": 3.248347282409668,
+        "p99": 8.840416431427002
+      },
+      "unknown_pixels": 633606,
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_hidden_evidence_v3_linux5080/ai_031_010-cam_00-0084-hidden-evidence.npz",
+      "arrays_sha256": "d7299ef05fc5d3b36c63550bf985c0c3862ee76e4ae109a2a5c8581ac6c324cc",
+      "gates": {
+        "has_positive_evidence": true,
+        "positive_fraction_above_minimum": true,
+        "all_positive_depths_strictly_behind_absolute_margin": true,
+        "all_positive_depths_strictly_behind_relative_margin": true,
+        "unknown_pixels_are_not_serialized_as_negative_labels": true
+      }
+    }
+  ],
+  "gates": {
+    "ai_001_001-cam_00-0099:has_positive_evidence": true,
+    "ai_001_001-cam_00-0099:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0099:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0099:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0099:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0094:has_positive_evidence": true,
+    "ai_001_001-cam_00-0094:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0094:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0094:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0094:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0082:has_positive_evidence": true,
+    "ai_001_001-cam_00-0082:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0082:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0082:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0082:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0056:has_positive_evidence": true,
+    "ai_001_001-cam_00-0056:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0056:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0056:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0056:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0009:has_positive_evidence": true,
+    "ai_001_001-cam_00-0009:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0009:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0009:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0009:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0018:has_positive_evidence": true,
+    "ai_001_001-cam_00-0018:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0018:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0018:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0018:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0033:has_positive_evidence": true,
+    "ai_001_001-cam_00-0033:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0033:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0033:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0033:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0023:has_positive_evidence": true,
+    "ai_001_001-cam_00-0023:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0023:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0023:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0023:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0035:has_positive_evidence": true,
+    "ai_001_001-cam_00-0035:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0035:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0035:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0035:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_001-cam_00-0014:has_positive_evidence": true,
+    "ai_001_001-cam_00-0014:positive_fraction_above_minimum": true,
+    "ai_001_001-cam_00-0014:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_001-cam_00-0014:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_001-cam_00-0014:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0064:has_positive_evidence": true,
+    "ai_001_006-cam_00-0064:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0064:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0064:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0064:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0047:has_positive_evidence": true,
+    "ai_001_006-cam_00-0047:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0047:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0047:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0047:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0055:has_positive_evidence": true,
+    "ai_001_006-cam_00-0055:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0055:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0055:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0055:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0050:has_positive_evidence": true,
+    "ai_001_006-cam_00-0050:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0050:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0050:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0050:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0003:has_positive_evidence": true,
+    "ai_001_006-cam_00-0003:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0003:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0003:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0003:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0070:has_positive_evidence": true,
+    "ai_001_006-cam_00-0070:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0070:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0070:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0070:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0036:has_positive_evidence": true,
+    "ai_001_006-cam_00-0036:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0036:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0036:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0036:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0067:has_positive_evidence": true,
+    "ai_001_006-cam_00-0067:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0067:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0067:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0067:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0038:has_positive_evidence": true,
+    "ai_001_006-cam_00-0038:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0038:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0038:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0038:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_006-cam_00-0014:has_positive_evidence": true,
+    "ai_001_006-cam_00-0014:positive_fraction_above_minimum": true,
+    "ai_001_006-cam_00-0014:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_006-cam_00-0014:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_006-cam_00-0014:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0045:has_positive_evidence": true,
+    "ai_001_005-cam_00-0045:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0045:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0045:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0045:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0069:has_positive_evidence": true,
+    "ai_001_005-cam_00-0069:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0069:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0069:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0069:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0072:has_positive_evidence": true,
+    "ai_001_005-cam_00-0072:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0072:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0072:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0072:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0029:has_positive_evidence": true,
+    "ai_001_005-cam_00-0029:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0029:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0029:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0029:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0035:has_positive_evidence": true,
+    "ai_001_005-cam_00-0035:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0035:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0035:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0035:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0016:has_positive_evidence": true,
+    "ai_001_005-cam_00-0016:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0016:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0016:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0016:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0043:has_positive_evidence": true,
+    "ai_001_005-cam_00-0043:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0043:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0043:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0043:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0075:has_positive_evidence": true,
+    "ai_001_005-cam_00-0075:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0075:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0075:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0075:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0013:has_positive_evidence": true,
+    "ai_001_005-cam_00-0013:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0013:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0013:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0013:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_005-cam_00-0089:has_positive_evidence": true,
+    "ai_001_005-cam_00-0089:positive_fraction_above_minimum": true,
+    "ai_001_005-cam_00-0089:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_005-cam_00-0089:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_005-cam_00-0089:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0008:has_positive_evidence": true,
+    "ai_001_004-cam_00-0008:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0008:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0008:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0008:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0097:has_positive_evidence": true,
+    "ai_001_004-cam_00-0097:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0097:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0097:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0097:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0041:has_positive_evidence": true,
+    "ai_001_004-cam_00-0041:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0041:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0041:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0041:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0066:has_positive_evidence": true,
+    "ai_001_004-cam_00-0066:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0066:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0066:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0066:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0068:has_positive_evidence": true,
+    "ai_001_004-cam_00-0068:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0068:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0068:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0068:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0036:has_positive_evidence": true,
+    "ai_001_004-cam_00-0036:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0036:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0036:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0036:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0044:has_positive_evidence": true,
+    "ai_001_004-cam_00-0044:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0044:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0044:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0044:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0071:has_positive_evidence": true,
+    "ai_001_004-cam_00-0071:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0071:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0071:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0071:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0063:has_positive_evidence": true,
+    "ai_001_004-cam_00-0063:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0063:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0063:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0063:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_001_004-cam_00-0001:has_positive_evidence": true,
+    "ai_001_004-cam_00-0001:positive_fraction_above_minimum": true,
+    "ai_001_004-cam_00-0001:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_001_004-cam_00-0001:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_001_004-cam_00-0001:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0004:has_positive_evidence": true,
+    "ai_006_002-cam_00-0004:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0004:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0004:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0004:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0074:has_positive_evidence": true,
+    "ai_006_002-cam_00-0074:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0074:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0074:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0074:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0053:has_positive_evidence": true,
+    "ai_006_002-cam_00-0053:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0053:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0053:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0053:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0009:has_positive_evidence": true,
+    "ai_006_002-cam_00-0009:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0009:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0009:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0009:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0070:has_positive_evidence": true,
+    "ai_006_002-cam_00-0070:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0070:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0070:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0070:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0095:has_positive_evidence": true,
+    "ai_006_002-cam_00-0095:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0095:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0095:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0095:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0007:has_positive_evidence": true,
+    "ai_006_002-cam_00-0007:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0007:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0007:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0007:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0019:has_positive_evidence": true,
+    "ai_006_002-cam_00-0019:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0019:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0019:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0019:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0056:has_positive_evidence": true,
+    "ai_006_002-cam_00-0056:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0056:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0056:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0056:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_006_002-cam_00-0094:has_positive_evidence": true,
+    "ai_006_002-cam_00-0094:positive_fraction_above_minimum": true,
+    "ai_006_002-cam_00-0094:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_006_002-cam_00-0094:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_006_002-cam_00-0094:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0042:has_positive_evidence": true,
+    "ai_009_001-cam_00-0042:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0042:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0042:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0042:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0089:has_positive_evidence": true,
+    "ai_009_001-cam_00-0089:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0089:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0089:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0089:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0083:has_positive_evidence": true,
+    "ai_009_001-cam_00-0083:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0083:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0083:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0083:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0045:has_positive_evidence": true,
+    "ai_009_001-cam_00-0045:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0045:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0045:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0045:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0027:has_positive_evidence": true,
+    "ai_009_001-cam_00-0027:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0027:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0027:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0027:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0054:has_positive_evidence": true,
+    "ai_009_001-cam_00-0054:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0054:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0054:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0054:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0086:has_positive_evidence": true,
+    "ai_009_001-cam_00-0086:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0086:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0086:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0086:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0072:has_positive_evidence": true,
+    "ai_009_001-cam_00-0072:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0072:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0072:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0072:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0046:has_positive_evidence": true,
+    "ai_009_001-cam_00-0046:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0046:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0046:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0046:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_001-cam_00-0074:has_positive_evidence": true,
+    "ai_009_001-cam_00-0074:positive_fraction_above_minimum": true,
+    "ai_009_001-cam_00-0074:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_001-cam_00-0074:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_001-cam_00-0074:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0048:has_positive_evidence": true,
+    "ai_016_009-cam_00-0048:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0048:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0048:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0048:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0049:has_positive_evidence": true,
+    "ai_016_009-cam_00-0049:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0049:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0049:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0049:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0091:has_positive_evidence": true,
+    "ai_016_009-cam_00-0091:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0091:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0091:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0091:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0080:has_positive_evidence": true,
+    "ai_016_009-cam_00-0080:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0080:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0080:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0080:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0058:has_positive_evidence": true,
+    "ai_016_009-cam_00-0058:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0058:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0058:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0058:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0044:has_positive_evidence": true,
+    "ai_016_009-cam_00-0044:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0044:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0044:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0044:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0015:has_positive_evidence": true,
+    "ai_016_009-cam_00-0015:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0015:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0015:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0015:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0020:has_positive_evidence": true,
+    "ai_016_009-cam_00-0020:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0020:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0020:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0020:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0023:has_positive_evidence": true,
+    "ai_016_009-cam_00-0023:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0023:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0023:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0023:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_016_009-cam_00-0087:has_positive_evidence": true,
+    "ai_016_009-cam_00-0087:positive_fraction_above_minimum": true,
+    "ai_016_009-cam_00-0087:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_016_009-cam_00-0087:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_016_009-cam_00-0087:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0077:has_positive_evidence": true,
+    "ai_009_006-cam_00-0077:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0077:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0077:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0077:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0088:has_positive_evidence": true,
+    "ai_009_006-cam_00-0088:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0088:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0088:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0088:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0087:has_positive_evidence": true,
+    "ai_009_006-cam_00-0087:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0087:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0087:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0087:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0031:has_positive_evidence": true,
+    "ai_009_006-cam_00-0031:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0031:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0031:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0031:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0030:has_positive_evidence": true,
+    "ai_009_006-cam_00-0030:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0030:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0030:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0030:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0008:has_positive_evidence": true,
+    "ai_009_006-cam_00-0008:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0008:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0008:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0008:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0095:has_positive_evidence": true,
+    "ai_009_006-cam_00-0095:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0095:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0095:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0095:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0009:has_positive_evidence": true,
+    "ai_009_006-cam_00-0009:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0009:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0009:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0009:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0004:has_positive_evidence": true,
+    "ai_009_006-cam_00-0004:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0004:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0004:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0004:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_009_006-cam_00-0042:has_positive_evidence": true,
+    "ai_009_006-cam_00-0042:positive_fraction_above_minimum": true,
+    "ai_009_006-cam_00-0042:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_009_006-cam_00-0042:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_009_006-cam_00-0042:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0066:has_positive_evidence": true,
+    "ai_004_003-cam_00-0066:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0066:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0066:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0066:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0092:has_positive_evidence": true,
+    "ai_004_003-cam_00-0092:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0092:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0092:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0092:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0063:has_positive_evidence": true,
+    "ai_004_003-cam_00-0063:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0063:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0063:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0063:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0058:has_positive_evidence": true,
+    "ai_004_003-cam_00-0058:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0058:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0058:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0058:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0060:has_positive_evidence": true,
+    "ai_004_003-cam_00-0060:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0060:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0060:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0060:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0040:has_positive_evidence": true,
+    "ai_004_003-cam_00-0040:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0040:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0040:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0040:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0048:has_positive_evidence": true,
+    "ai_004_003-cam_00-0048:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0048:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0048:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0048:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0054:has_positive_evidence": true,
+    "ai_004_003-cam_00-0054:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0054:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0054:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0054:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0036:has_positive_evidence": true,
+    "ai_004_003-cam_00-0036:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0036:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0036:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0036:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_004_003-cam_00-0069:has_positive_evidence": true,
+    "ai_004_003-cam_00-0069:positive_fraction_above_minimum": true,
+    "ai_004_003-cam_00-0069:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_004_003-cam_00-0069:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_004_003-cam_00-0069:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0009:has_positive_evidence": true,
+    "ai_031_010-cam_00-0009:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0009:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0009:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0009:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0024:has_positive_evidence": true,
+    "ai_031_010-cam_00-0024:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0024:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0024:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0024:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0077:has_positive_evidence": true,
+    "ai_031_010-cam_00-0077:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0077:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0077:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0077:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0006:has_positive_evidence": true,
+    "ai_031_010-cam_00-0006:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0006:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0006:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0006:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0098:has_positive_evidence": true,
+    "ai_031_010-cam_00-0098:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0098:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0098:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0098:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0088:has_positive_evidence": true,
+    "ai_031_010-cam_00-0088:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0088:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0088:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0088:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0007:has_positive_evidence": true,
+    "ai_031_010-cam_00-0007:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0007:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0007:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0007:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0018:has_positive_evidence": true,
+    "ai_031_010-cam_00-0018:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0018:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0018:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0018:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0069:has_positive_evidence": true,
+    "ai_031_010-cam_00-0069:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0069:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0069:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0069:unknown_pixels_are_not_serialized_as_negative_labels": true,
+    "ai_031_010-cam_00-0084:has_positive_evidence": true,
+    "ai_031_010-cam_00-0084:positive_fraction_above_minimum": true,
+    "ai_031_010-cam_00-0084:all_positive_depths_strictly_behind_absolute_margin": true,
+    "ai_031_010-cam_00-0084:all_positive_depths_strictly_behind_relative_margin": true,
+    "ai_031_010-cam_00-0084:unknown_pixels_are_not_serialized_as_negative_labels": true
+  },
+  "summary": {
+    "triplets": 100,
+    "expected_triplets": 100,
+    "train_triplets": 80,
+    "validation_triplets": 20,
+    "positive_pixels": 8721744,
+    "minimum_positive_fraction": 0.0011316935221354167,
+    "median_positive_fraction": 0.0727831522623698,
+    "gate_count": 500,
+    "all_gates_pass": true,
+    "runtime_seconds": 381.6819562430028
+  },
+  "quality_boundary": "positive hidden evidence only; no dense support negatives, model training, or test-set result"
+}

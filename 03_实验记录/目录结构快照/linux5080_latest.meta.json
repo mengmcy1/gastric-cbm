@@ -1,18 +1,18 @@
 {
   "schema_version": "1.1-artifact-tree-snapshot",
   "producer_machine_id": "linux5080",
-  "captured_at": "2026-08-13T17:02:48+08:00",
+  "captured_at": "2026-08-14T15:32:43+08:00",
   "scan_roots": [
     "03_实验记录/SHARP浅3D实验",
     "03_实验记录/自研Framework实验",
     "03_实验记录/InfiniSplat复现实验"
   ],
-  "entries": 3329,
+  "entries": 8446,
   "counts": {
-    "directory": 472,
-    "file": 2856,
+    "directory": 1393,
+    "file": 7052,
     "symlink": 1,
     "other": 0
   },
-  "file_bytes": 12710754325
+  "file_bytes": 21073544406
 }

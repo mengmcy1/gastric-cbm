@@ -1,0 +1,281 @@
+{
+  "schema_version": "stage1.4-re10k-scale-v1",
+  "status": "pass",
+  "scope": "official Flash3D source-frame UniDepth/COLMAP RANSAC translation scale",
+  "producer_machine_id": "linux5080",
+  "device": {
+    "logical": "cuda:0",
+    "physical_selected_by_cuda_visible_devices": 1,
+    "name": "NVIDIA GeForce RTX 5080",
+    "peak_memory_bytes": 2521155584
+  },
+  "environment": {
+    "torch": "2.9.0+cu128",
+    "torch_cuda": "12.8",
+    "flash3d_commit": "a71c9b92b07a76cf944f2ed894f384f0891a1960",
+    "unidepth_commit": "bebc4b2fdda5c223693c390739db76897aee42e5",
+    "nystrom_source_commit": "7fffd3d65c0a30053d26d23871b985ac7665c36d"
+  },
+  "inputs": {
+    "dataset_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_hlp_app_01_final_v1.json",
+    "dataset_record_sha256": "8a762ed1d6a0cedb407fc05c1727d70d4ca04421f77b7d21b6e1ae5e80a00e24",
+    "pcl_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_hlp_app_01_colmap_v1.json",
+    "pcl_record_sha256": "38c46bcaa4f0db1e4cd914516ce97e7bc20c8304c611d732c37017a4d9ea3d36",
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+    "checkpoint_sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420"
+  },
+  "method": {
+    "depth_layer": "first of two Flash3D Gaussian depth layers",
+    "padding_crop": 32,
+    "grid_sample_align_corners": false,
+    "ransac_iterations": 1000,
+    "ransac_sample_size": 5,
+    "ransac_log_residual_threshold": 0.1,
+    "pose_application": "multiply relative camera translation by recovered scale"
+  },
+  "summary": {
+    "sequence_count": 5,
+    "all_metadata_pcl_frame_counts_match": true,
+    "all_scales_positive_finite": true,
+    "minimum_ransac_inlier_fraction": 0.5283018946647644,
+    "total_runtime_seconds": 4.510804677964188
+  },
+  "sequences": [
+    {
+      "sequence": "1b87f55dec310243",
+      "source_frame_index": 185,
+      "source_timestamp_microseconds": "175208367",
+      "source_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/source.jpg",
+      "source_image_sha256": "e1f8b3db9857dd46894624eb21288c3423b77b0901970dca1650f1f5ca2e7a67",
+      "metadata": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/1b87f55dec310243/metadata.txt",
+      "metadata_sha256": "7f34ec2c3c8ffcdbcc947af13d161e84e6f41e540c0eb2df3acba9e8144dc382",
+      "sparse_pcl": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/1b87f55dec310243.pickle.gz",
+      "sparse_pcl_sha256": "717d252455283df382cc7a023a81aded33eee990303a74aa1eec0cfc43cbc201",
+      "metadata_frames": 279,
+      "pcl_frames": 279,
+      "image_wh": [
+        640,
+        360
+      ],
+      "normalized_intrinsics_fx_fy_cx_cy": [
+        0.478228499,
+        0.850183954,
+        0.5,
+        0.5
+      ],
+      "network_unpadded_wh": [
+        384,
+        256
+      ],
+      "translation_scale_predicted_depth_per_colmap_unit": 0.5290918350219727,
+      "runtime_seconds": 1.5422099099960178,
+      "sparse_geometry": {
+        "visible_sparse_points": 846,
+        "positive_colmap_z_points": 846,
+        "positive_colmap_z_fraction": 1.0
+      },
+      "ransac": {
+        "seed": 20260814,
+        "num_iterations": 1000,
+        "sample_size": 5,
+        "log_residual_threshold": 0.1,
+        "valid_correspondences": 846,
+        "inlier_count": 661,
+        "inlier_fraction": 0.7813238501548767,
+        "median_abs_log_residual": 0.06256508827209473,
+        "p95_abs_log_residual": 0.20713165402412415,
+        "colmap_z_median": 4.423964023590088,
+        "predicted_depth_median": 2.31889271736145
+      }
+    },
+    {
+      "sequence": "168c85ce00de0c6b",
+      "source_frame_index": 73,
+      "source_timestamp_microseconds": "97096000",
+      "source_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/source.jpg",
+      "source_image_sha256": "c3cb246179d44a578d25c199cc73a0613983a23593da9416428027ce1be870b3",
+      "metadata": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_linux5080/168c85ce00de0c6b/metadata.txt",
+      "metadata_sha256": "68c66824d2abfbe2cc9303a47743eb960748f16bd0b5ac088034f44ccf2d693b",
+      "sparse_pcl": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/168c85ce00de0c6b.pickle.gz",
+      "sparse_pcl_sha256": "3d04219183fd5699ef4797d053b8ab9eb68a92ec356f3a1cf1af1d6f621213bd",
+      "metadata_frames": 279,
+      "pcl_frames": 279,
+      "image_wh": [
+        640,
+        360
+      ],
+      "normalized_intrinsics_fx_fy_cx_cy": [
+        0.50119559,
+        0.89101436,
+        0.5,
+        0.5
+      ],
+      "network_unpadded_wh": [
+        384,
+        256
+      ],
+      "translation_scale_predicted_depth_per_colmap_unit": 1.0130423307418823,
+      "runtime_seconds": 0.3061515729641542,
+      "sparse_geometry": {
+        "visible_sparse_points": 825,
+        "positive_colmap_z_points": 825,
+        "positive_colmap_z_fraction": 1.0
+      },
+      "ransac": {
+        "seed": 20260815,
+        "num_iterations": 1000,
+        "sample_size": 5,
+        "log_residual_threshold": 0.1,
+        "valid_correspondences": 825,
+        "inlier_count": 646,
+        "inlier_fraction": 0.7830303311347961,
+        "median_abs_log_residual": 0.047899723052978516,
+        "p95_abs_log_residual": 0.29120761156082153,
+        "colmap_z_median": 3.609290599822998,
+        "predicted_depth_median": 3.6302692890167236
+      }
+    },
+    {
+      "sequence": "195fbef2c08715e9",
+      "source_frame_index": 179,
+      "source_timestamp_microseconds": "188655133",
+      "source_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement1_linux5080/195fbef2c08715e9/source.jpg",
+      "source_image_sha256": "ea09ea207e19b4210094317827c007a2988d77e27749fa3e6048047a0958312a",
+      "metadata": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement1_linux5080/195fbef2c08715e9/metadata.txt",
+      "metadata_sha256": "054afbba09e4f8c9915b5053291c0c25c164677bab4d89309788a689cb03ebfd",
+      "sparse_pcl": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/195fbef2c08715e9.pickle.gz",
+      "sparse_pcl_sha256": "3422746a197fb04b01d3df707f010476d8eab805b140e92548af2b3eab31c2c9",
+      "metadata_frames": 279,
+      "pcl_frames": 279,
+      "image_wh": [
+        640,
+        360
+      ],
+      "normalized_intrinsics_fx_fy_cx_cy": [
+        0.49960501,
+        0.888186688,
+        0.5,
+        0.5
+      ],
+      "network_unpadded_wh": [
+        384,
+        256
+      ],
+      "translation_scale_predicted_depth_per_colmap_unit": 0.8900639414787292,
+      "runtime_seconds": 0.12862291606143117,
+      "sparse_geometry": {
+        "visible_sparse_points": 1325,
+        "positive_colmap_z_points": 1325,
+        "positive_colmap_z_fraction": 1.0
+      },
+      "ransac": {
+        "seed": 20260816,
+        "num_iterations": 1000,
+        "sample_size": 5,
+        "log_residual_threshold": 0.1,
+        "valid_correspondences": 1325,
+        "inlier_count": 700,
+        "inlier_fraction": 0.5283018946647644,
+        "median_abs_log_residual": 0.08570384979248047,
+        "p95_abs_log_residual": 0.7352973818778992,
+        "colmap_z_median": 5.087457180023193,
+        "predicted_depth_median": 3.7549233436584473
+      }
+    },
+    {
+      "sequence": "8c2c302994f6cea1",
+      "source_frame_index": 40,
+      "source_timestamp_microseconds": "314013700",
+      "source_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement2_linux5080/8c2c302994f6cea1/source.jpg",
+      "source_image_sha256": "b9ed61daf5f527878d1968973ecc4673d52c52a7f50288a63ceee8ea4d00cf23",
+      "metadata": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement2_linux5080/8c2c302994f6cea1/metadata.txt",
+      "metadata_sha256": "fca2ddc3d5219f4275131c969f42a9f156c7549b5e52cd2d0d1645fabe584058",
+      "sparse_pcl": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/8c2c302994f6cea1.pickle.gz",
+      "sparse_pcl_sha256": "e83bcca9a7765c2db3b793d87e29e843515961295972160fdf5c70ca90ecfcc8",
+      "metadata_frames": 264,
+      "pcl_frames": 264,
+      "image_wh": [
+        640,
+        360
+      ],
+      "normalized_intrinsics_fx_fy_cx_cy": [
+        0.496103703,
+        0.881962127,
+        0.5,
+        0.5
+      ],
+      "network_unpadded_wh": [
+        384,
+        256
+      ],
+      "translation_scale_predicted_depth_per_colmap_unit": 1.259450078010559,
+      "runtime_seconds": 0.1242007800610736,
+      "sparse_geometry": {
+        "visible_sparse_points": 725,
+        "positive_colmap_z_points": 725,
+        "positive_colmap_z_fraction": 1.0
+      },
+      "ransac": {
+        "seed": 20260817,
+        "num_iterations": 1000,
+        "sample_size": 5,
+        "log_residual_threshold": 0.1,
+        "valid_correspondences": 725,
+        "inlier_count": 528,
+        "inlier_fraction": 0.7282758951187134,
+        "median_abs_log_residual": 0.05257844924926758,
+        "p95_abs_log_residual": 0.35545215010643005,
+        "colmap_z_median": 2.5220892429351807,
+        "predicted_depth_median": 3.1336801052093506
+      }
+    },
+    {
+      "sequence": "c53178af617eaa65",
+      "source_frame_index": 48,
+      "source_timestamp_microseconds": "55622000",
+      "source_image": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/source.jpg",
+      "source_image_sha256": "4c3e52d4195be884d6e8ea183a921af3467808389a4871856de64d0f6da80ad1",
+      "metadata": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/metadata.txt",
+      "metadata_sha256": "ee7d74b82cd5bdbdac9cb535a31ee1e6bdb2371dcdbd5645b3b86486feb732c5",
+      "sparse_pcl": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/c53178af617eaa65.pickle.gz",
+      "sparse_pcl_sha256": "bc3278e93e1385845dca72e957098314cae2cc81f06684767ec86c8f53a85886",
+      "metadata_frames": 257,
+      "pcl_frames": 257,
+      "image_wh": [
+        640,
+        360
+      ],
+      "normalized_intrinsics_fx_fy_cx_cy": [
+        0.509611525,
+        0.905976044,
+        0.5,
+        0.5
+      ],
+      "network_unpadded_wh": [
+        384,
+        256
+      ],
+      "translation_scale_predicted_depth_per_colmap_unit": 1.4960638284683228,
+      "runtime_seconds": 0.12584206007886678,
+      "sparse_geometry": {
+        "visible_sparse_points": 2442,
+        "positive_colmap_z_points": 2442,
+        "positive_colmap_z_fraction": 1.0
+      },
+      "ransac": {
+        "seed": 20260818,
+        "num_iterations": 1000,
+        "sample_size": 5,
+        "log_residual_threshold": 0.1,
+        "valid_correspondences": 2442,
+        "inlier_count": 1702,
+        "inlier_fraction": 0.6969696879386902,
+        "median_abs_log_residual": 0.07357442378997803,
+        "p95_abs_log_residual": 0.29501456022262573,
+        "colmap_z_median": 3.3775296211242676,
+        "predicted_depth_median": 4.876145362854004
+      }
+    }
+  ],
+  "quality_boundary": "scale pass enables metric-consistent target pose; it does not establish novel-view RGB quality, dense hidden-depth accuracy, or OutsideFOV support"
+}

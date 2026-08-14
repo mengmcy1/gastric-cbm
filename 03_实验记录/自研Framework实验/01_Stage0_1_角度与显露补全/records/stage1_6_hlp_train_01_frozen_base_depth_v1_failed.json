@@ -1,0 +1,15 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-frozen-base-depth-failure-v1",
+  "status": "failed_before_model_construction",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "output_directory": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_frozen_base_depth_v1_linux5080",
+  "files_written": 0,
+  "failure": {
+    "stage": "UniDepthV1.from_pretrained",
+    "reason": "local Hugging Face cache contained pytorch_model.bin but not config.json; offline from_pretrained could not construct the model",
+    "resolution": "load the repository-frozen config_v1_vitl14.json and the same cached weight file directly; canonical rerun is v2"
+  },
+  "data_arrays_accessed": 0,
+  "quality_boundary": "initialization failure only; no inference result or quality conclusion"
+}

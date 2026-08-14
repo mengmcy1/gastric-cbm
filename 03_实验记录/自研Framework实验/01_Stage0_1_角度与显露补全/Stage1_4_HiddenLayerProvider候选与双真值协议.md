@@ -1,6 +1,6 @@
 # Stage 1.4 HiddenLayerProvider 候选与双真值协议
 
-> 状态：**v1 边界已冻结（2026-08-13）；Flash3D 确定为 `OcclusionHiddenProvider` 首候选，`OutsideFOVProvider` 尚未选定。**
+> 状态：**v1 边界已冻结（2026-08-13）；Flash3D 首候选已完成 `HLP-APP-01` 受控 A/B 和 `HLP-GEO-01` 稠密几何评价。原始米制几何 AbsRel 23.33%，oracle 尺度对齐后仍为18.17%，且 opacity/alpha 不能作为稳定 confidence；因此原样不通过 `OcclusionHiddenProvider`，固化为对照基线。下一步转 Stage 1.5 自研可替换 Provider 骨架；`OutsideFOVProvider` 尚未选定。**
 
 ## 1. 先拆接口，不让一个模型承担它做不到的区域
 
@@ -32,7 +32,9 @@ MINE 保留为第二候选/消融：它能输出任意深度 RGB 与 volume dens
 - 使用官方 RealEstate10K 测试元数据和 Flash3D 官方 `re10k_mine_filtered` 验证序列；
 - 新脚本按相机外参计算真实有符号水平夹角，不使用官方 `tgt5/tgt10` 时间偏移标签代替角度；
 - 30°总范围固定为源视角0°、左右目标约 -15°/+15°，单端允许 ±2.5°筛选误差；
-- 48个官方验证序列全部找到元数据，16个序列存在合格源帧，当前每序列最多保存3组，共48个候选三元组；
+- 48个官方验证序列全部找到元数据，16个序列存在合格源帧，每序列最多保存3组，共48个候选三元组；
+- `HLP-APP-01` 已完成5个不同序列、15帧 RGB 的小型集；文件哈希、帧时间戳与元数据对应、组内图像尺寸均已校验，正式记录为 `records/stage1_4_hlp_app_01_final_v1.json`；
+- 官方 RealEstate10K 位姿的平移尺度不定。Flash3D 官方评价使用 `pcl.test.tar` 内的稀疏 COLMAP 点云与 UniDepth 估计深度尺度；未恢复该尺度前，15帧 RGB/位姿只能记为外观真值数据就绪，不得开始正式目标视角质量判定；
 - 记录为 `records/stage1_4_re10k_angle_triplets_v1.json/.csv`。
 
 该数据只提供目标 RGB、内参和位姿，可评价新视角 RGB 与视频一致性；它没有稠密深度，不能直接评价隐藏层深度，也不能可靠拆分遮挡后区与视野外区。
@@ -41,7 +43,9 @@ MINE 保留为第二候选/消融：它能输出任意深度 RGB 与 volume dens
 
 Hypersim 官方发布包含 RGB、逐像素相机距离、世界坐标、相机位姿和场景内参，适合构造真值可见性、遮挡后区和视野外区。其 `depth_meters` 是到光心的欧氏距离，不是 Z-depth，进入 CLB 前必须按官方内参转换。
 
-全量数据约1.9TB，不进入当前机器。只采用官方 test split，先从官方 ZIP 远程索引中筛相机轨迹和约 ±15°三元组，再按文件下载选中帧的 RGB、depth/position、相机姿态和必要元数据。首版目标为3个场景，每个场景1个三元组；在完成角度、遮挡显露量和下载体积预检前不批量下载。
+全量数据约1.9TB，不进入当前机器。首版已冻结官方 test split 的3个 `cam_00` 三元组：`ai_001_010` 27/61/65、`ai_005_001` 21/2/25、`ai_008_005` 43/17/72；端点均约为 ±15°。只通过远程 ZIP Range 获取选中的39个 RGB/depth/position/姿态文件，共44.43 MB，不下载三个完整场景 ZIP。
+
+已将每个目标像素投影到源相机，用 world position 到源相机的距离与源 `depth_meters` 区分 `observed_from_source`、`occlusion_hidden`、`outside_source_fov`、`geometry_conflict` 和 `unresolved`。v2 的 position→depth 相对 P99 全部不高于0.2%，6个目标均有非空遮挡后与视锥外真值；正式记录为 `records/stage1_4_hlp_geo_01_visibility_v2.json`。
 
 ## 4. 评价口径
 
@@ -61,10 +65,13 @@ Hypersim 官方发布包含 RGB、逐像素相机距离、世界坐标、相机�
 
 ## 6. 当前硬结论与下一步
 
-已通过的只是 Provider **静态预检**与 RealEstate10K **角度数据预检**，尚未运行 Flash3D 推理。下一步顺序固定为：
+截至2026-08-14，Provider **静态预检**、RealEstate10K **角度数据预检**和 Flash3D **RTX 5080 最小层输出推理**均已通过。最小推理固定 UniDepth commit `bebc4b2`（Flash3D 首发时最新版本），使用 xFormers 0.0.25.post1 的 Nyström 公式与显式多头折叠兼容层；不宣称与当年未固定环境逐比特一致。下一步顺序为：
 
-1. 建立隔离、RTX 5080兼容的 `flash3d` 环境，先做官方 checkpoint 单图最小推理；
-2. 从48个候选中选择5个不同序列，下载源/左右目标9至15张图，建立 `HLP-APP-01`；
-3. 实现 Flash3D→CLB adapter，先只评价 `occlusion_hidden`，不声称覆盖 `outside_source_fov`；
-4. 远程扫描 Hypersim test 场景内相机姿态，冻结3个 `HLP-GEO-01` 三元组后才下载选定文件；
-5. 两个真值集通过后，才把候选接到 P01，不直接重跑30°视频。
+1. 保留已通过的 `flash3d` 隔离环境与 `stage1_4_flash3d_layer_smoke_v1.json`，不再重复建环境；
+2. ✅ 已建立5个不同序列、15帧 RGB 的 `HLP-APP-01`，7次受限下载失败亦保留回执；
+3. ✅ 已从官方约10.31 GB `pcl.test.tar` 定向取得5个稀疏 COLMAP 成员，仅传输约289.5 MB Range 数据，成员结构与帧对齐全部通过；
+4. ✅ 已按官方 UniDepth/COLMAP RANSAC 口径恢复5个序列的平移尺度，并完成 Flash3D 第二层到 CLB 的原始 schema 适配；由于原模型无独立置信度，当前两类 confidence 均固定为0，状态只是 `schema_pass_uncalibrated`；
+5. 在同一源高斯与已恢复目标位姿上渲染“第一层” vs “第一+第二层” A/B，先评价 `occlusion_hidden`，不声称覆盖 `outside_source_fov`；
+6. 远程扫描 Hypersim test 场景内相机姿态，冻结3个 `HLP-GEO-01` 三元组后才下载选定文件；
+7. ✅ `HLP-GEO-01` 原始米制评价已完成：遮挡后覆盖高，但 AbsRel 23.33%、δ<1.10 24.80%；oracle 尺度对齐后仍只有18.17%/39.50%；
+8. Flash3D 原样不通过 Provider 门，不接 P01，不继续针对它调参；转 Stage 1.5 实现自研可替换 Provider 骨架和可训练遮挡后几何分支。

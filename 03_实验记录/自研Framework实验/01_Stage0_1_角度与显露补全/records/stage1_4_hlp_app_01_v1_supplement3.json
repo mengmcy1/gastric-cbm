@@ -1,0 +1,55 @@
+{
+  "schema_version": "stage1.4-hlp-app-01-v1",
+  "status": "partial_failure",
+  "producer_machine_id": "linux5080",
+  "scope": "five distinct RealEstate10K source/left/right RGB triplets; no depth truth",
+  "selection": {
+    "rule": "lowest angle_error_sum_deg, at most one triplet per sequence",
+    "requested_sequence_count": 1,
+    "excluded_sequences": [
+      "168c85ce00de0c6b",
+      "195fbef2c08715e9",
+      "1b87f55dec310243",
+      "83a449617d36a17b",
+      "8c2c302994f6cea1",
+      "93e6c08c33206a0c",
+      "99bf0dc41a750511",
+      "ba26189581b38b93",
+      "c767b97c0d3caca4",
+      "fc966f25afa3659f"
+    ],
+    "selected_sequences": [
+      "4811a66f87b0dd6a"
+    ],
+    "successful_sequence_count": 0,
+    "failed_sequence_count": 1
+  },
+  "inputs": {
+    "triplets": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_re10k_angle_triplets_v1.json",
+      "bytes": 43906,
+      "sha256": "e2bdcadd72eb2a502ea49b5405acb79079ed60c776c71287837355af3a4b236c"
+    },
+    "metadata_tar": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/RealEstate10K.tar.gz",
+      "bytes": 752332631,
+      "sha256": "af18e4d560ee9f73120128e53a56da215e118f3fb52018c14a66aa0f8ed691db"
+    }
+  },
+  "source_protocol": {
+    "downloader_basis": "Flash3D official download_realestate10k.py",
+    "stream": "360p progressive MP4",
+    "timestamp_unit": "microseconds",
+    "full_dataset_downloaded": false,
+    "files_deleted": false
+  },
+  "sequences": [],
+  "failures": [
+    {
+      "sequence": "4811a66f87b0dd6a",
+      "error_type": "RemoteDisconnected",
+      "error": "Remote end closed connection without response"
+    }
+  ],
+  "quality_boundary": "RGB/pose appearance set only; no dense depth and no provider-quality conclusion"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "stage1.5-core-interface-smoke-v5",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "source_root": "源码/Adaptive3DGS",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 15,
+  "tests_passed": 15,
+  "tests_failed": 0,
+  "capabilities": {
+    "provider_clb_validation": true,
+    "safe_clb_manifest_npz_io": true,
+    "occlusion_geometry_and_confidence_evaluator": true,
+    "hlp_geo_hypersim_adapter": {
+      "rgb_tonemap": "official percentile/gamma formula with finite-positive-depth valid mask",
+      "depth": "radial distance converted to positive camera Z",
+      "camera": "Hypersim right/up/back converted to OpenCV right/down/forward",
+      "default_source_depth_truth_exposed": false
+    },
+    "flash3d_read_only_reference_adapter": {
+      "source_layer_mapping": "layer 2 mapped to uncalibrated occlusion_hidden CLB",
+      "target_render_mapping": "opacity-weighted Z divided by accumulated alpha",
+      "alpha_semantics": "support probability only; never geometry confidence",
+      "geometry_confidence": "zero because the reference has no calibrated confidence head",
+      "outside_source_fov_supported": false
+    }
+  },
+  "files_sha256": {
+    "源码/Adaptive3DGS/pyproject.toml": "9a42d97921238e141659d1d9bbbb6a0d956f80365b84223119af30aeadebe984",
+    "源码/Adaptive3DGS/src/adaptive3dgs/__init__.py": "1e9bbb0eb9b1a76b4e7053707b3234e1b3075d4989115300e14a2e50745a9a2d",
+    "源码/Adaptive3DGS/src/adaptive3dgs/clb.py": "02ac73be90413fea1d9b9556f730cbc1cb6bdadd2092d135140e6e4f3da90dd8",
+    "源码/Adaptive3DGS/src/adaptive3dgs/evaluation.py": "3665a9ea72442c59b28919141ebb9b4335249a323574ff469e66545d9b0e586b",
+    "源码/Adaptive3DGS/src/adaptive3dgs/io.py": "2bbe81e7f5ab96a6010db174984f90084e8791c158641c1c7720ec6b18900225",
+    "源码/Adaptive3DGS/src/adaptive3dgs/providers.py": "6555224d485baa61eabe793dd55eb884fbdc2baeab4beca73618201fb65b162a",
+    "源码/Adaptive3DGS/src/adaptive3dgs/registry.py": "e60136f5067f2bd5fbc5ea07d1c364229b3126be01d73e5f8c9f01a3b0f6d640",
+    "源码/Adaptive3DGS/src/adaptive3dgs/validation.py": "e1ee0640efa7e00636bfd9f84bb761729dee1dff3d3abe022f85c62d42624cc7",
+    "源码/Adaptive3DGS/src/adaptive3dgs/datasets/__init__.py": "50f5c02447025813bdbd52f2df219da19176665dc847e3a8a86a235d622cab46",
+    "源码/Adaptive3DGS/src/adaptive3dgs/datasets/hypersim.py": "f385a23b2b2589498b578e860c96063dc814ae17186834d9240e5445591d48b3",
+    "源码/Adaptive3DGS/src/adaptive3dgs/adapters/__init__.py": "a884cdca8720675bf177733aa2a81f0995ae165b8e4066cf77a4f613fc70ac61",
+    "源码/Adaptive3DGS/src/adaptive3dgs/adapters/flash3d.py": "57f2b1d7c20a68956819b6b6a5117e2c1f54b70ace942e02ccccece2596ea2df",
+    "源码/Adaptive3DGS/tests/test_core.py": "5cdfc5fab8bde24b8525854fe3574333bdee6ec7bcceff0f46bbe6728afcad4c",
+    "源码/Adaptive3DGS/tests/test_evaluation.py": "51ef0f7b2bb4e07526a3ffeb219a1f7a98ba099a5f6e600d9dee91c68614859f",
+    "源码/Adaptive3DGS/tests/test_hypersim.py": "d8d4dbd57e43ed0008a2f465d244a5b926a3a1743fd9cd81da50813490fefee5",
+    "源码/Adaptive3DGS/tests/test_flash3d_adapter.py": "28ea4d3591d9b99d2031ae2c5729d883fd6bd638f2460be68e42f086a8e19cb0"
+  },
+  "supersedes": "stage1_5_core_interface_smoke_v4.json",
+  "quality_boundary": "CPU mapping contract only; the repository-specific Flash3D backend has not yet reproduced the frozen GPU metrics through this adapter"
+}

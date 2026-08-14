@@ -1,0 +1,121 @@
+{
+  "schema_version": "stage1.4-flash3d-layer-smoke-v1",
+  "status": "pass",
+  "scope": "official checkpoint layer schema; no novel-view quality conclusion",
+  "device": {
+    "logical": "cuda:0",
+    "physical_selected_by_cuda_visible_devices": 1,
+    "name": "NVIDIA GeForce RTX 5080",
+    "peak_memory_bytes": 2489876480
+  },
+  "environment": {
+    "python_torch": "2.9.0+cu128",
+    "torch_cuda": "12.8",
+    "flash3d_commit": "a71c9b92b07a76cf944f2ed894f384f0891a1960",
+    "unidepth_commit": "bebc4b2fdda5c223693c390739db76897aee42e5",
+    "compatibility": {
+      "dino_attention": "historical_unidepth_pytorch_reference_attention",
+      "nystrom_formula_source": "xformers_v0.0.25.post1",
+      "nystrom_source_commit": "7fffd3d65c0a30053d26d23871b985ac7665c36d",
+      "nystrom_shape_adapter": "B,N,H,D -> B*H,N,D -> B,N,H,D",
+      "fidelity_boundary": "not claimed bitwise-identical to the original unpinned environment"
+    }
+  },
+  "inputs": {
+    "image": "03_实验记录/SHARP浅3D实验/01_先导样本/P01_building/input.jpg",
+    "image_sha256": "68ee4c66cdc910673b536af507f51c757e5325b02139c84585afe610b0c80da4",
+    "image_original_wh": [
+      4096,
+      3072
+    ],
+    "image_network_wh_with_padding": [
+      448,
+      320
+    ],
+    "focal_px_original": 3195.073,
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+    "checkpoint_sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420"
+  },
+  "checkpoint_load": {
+    "external_unidepth_missing_count": 698,
+    "external_unidepth_missing_expected": true,
+    "external_unidepth_source": "separately loaded pretrained UniDepth weights",
+    "unexpected_missing_keys": [],
+    "unexpected_keys": []
+  },
+  "runtime_seconds": 0.8950698509579524,
+  "outputs": {
+    "depth": {
+      "shape": [
+        2,
+        1,
+        320,
+        448
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    },
+    "gauss_means": {
+      "shape": [
+        2,
+        4,
+        143360
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    },
+    "gauss_opacity": {
+      "shape": [
+        2,
+        1,
+        320,
+        448
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    },
+    "gauss_scaling": {
+      "shape": [
+        2,
+        3,
+        320,
+        448
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    },
+    "gauss_rotation": {
+      "shape": [
+        2,
+        4,
+        320,
+        448
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    },
+    "gauss_features_dc": {
+      "shape": [
+        2,
+        3,
+        320,
+        448
+      ],
+      "dtype": "torch.float32",
+      "finite_fraction": 1.0
+    }
+  },
+  "layer_checks": {
+    "layer_count": 2,
+    "positive_finite_depth_fraction": 1.0,
+    "positive_second_layer_increment_fraction": 1.0,
+    "minimum_second_layer_increment": 4.57763671875e-05,
+    "opacity_min": 0.13005439937114716,
+    "opacity_max": 0.9997269511222839
+  },
+  "capability_boundary": {
+    "outside_source_fov_supported": false,
+    "native_independent_confidence": false,
+    "opacity_is_confidence": false
+  }
+}

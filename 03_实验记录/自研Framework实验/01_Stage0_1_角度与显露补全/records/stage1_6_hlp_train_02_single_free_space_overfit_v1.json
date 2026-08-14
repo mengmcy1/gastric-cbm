@@ -1,0 +1,56 @@
+{
+  "schema_version": "stage1.6-single-free-space-overfit-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 3,
+  "sample": {
+    "split": "train",
+    "scene": "ai_001_001",
+    "source_frame": 99
+  },
+  "model_inputs": [
+    "source_rgb",
+    "frozen_base_depth",
+    "source_camera_rays_xy"
+  ],
+  "source_truth_usage": "label-side ratio and free-space projection only",
+  "initial": {
+    "ratio_abs_rel": 2.941663980484009,
+    "ratio_mae": 0.4104155898094177,
+    "positive_support_mean": 0.4649653732776642,
+    "verified_negative_support_mean": 0.4973948299884796,
+    "verified_negative_pixels": 236,
+    "positive_confidence_mean": 0.44010812044143677,
+    "positive_confidence_std": 0.019890809431672096
+  },
+  "final": {
+    "ratio_abs_rel": 0.09129728376865387,
+    "ratio_mae": 0.03118685446679592,
+    "positive_support_mean": 0.8652390241622925,
+    "verified_negative_support_mean": 0.13487213850021362,
+    "verified_negative_pixels": 52,
+    "positive_confidence_mean": 0.9082005620002747,
+    "positive_confidence_std": 0.08424846082925797
+  },
+  "ratio_abs_rel_relative_improvement": 0.9689640678288374,
+  "support_separation": 0.7303668856620789,
+  "gates": {
+    "ratio_abs_rel_improved_by_90_percent": true,
+    "final_ratio_abs_rel_below_0_10": true,
+    "positive_minus_verified_negative_support_above_0_50": true,
+    "verified_negative_pixels_nonzero": true
+  },
+  "artifacts": {
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_single_free_space_overfit_v1_linux5080/model.pt",
+    "checkpoint_sha256": "e0e9d383b7aa4f66ad8ddb9ce0452f08ddc7e017104ce97a26faa63f6686df8b",
+    "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_single_free_space_overfit_v1_linux5080/prediction.npz",
+    "arrays_sha256": "b65fa5883134530e081af2cfe2eddf44a325ffc3645e679078d779ec36b13c7b",
+    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-02_single_free_space_overfit_v1_linux5080/history.json",
+    "history_sha256": "666f3c7038fc27294252adbfd9c6a289aa5881674785d884acedb87771855082"
+  },
+  "runtime": {
+    "seconds": 64.63499831000809,
+    "peak_cuda_memory_bytes": 529517568
+  },
+  "quality_boundary": "single train-sample free-space memorization only; no validation or test conclusion"
+}

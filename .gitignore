@@ -10,6 +10,10 @@
 # PPT 结构检查中间日志
 *.inspect.ndjson
 
+# 本地 PPT 临时总结与复制素材（不提交 Git）
+/临时_PPT_InfiniSplat问题总结_20260814/
+/临时_PPT_自研Framework近期结果_20260814/
+
 # Temp Word files
 ~$*
 

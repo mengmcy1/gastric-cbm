@@ -1,0 +1,27 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-small-training-v1",
+  "status": "frozen_before_run",
+  "train_scenes": 8,
+  "validation_scenes": 2,
+  "test_scenes_used": 0,
+  "input_size_hw": [384, 512],
+  "epochs": 150,
+  "optimizer": "AdamW",
+  "learning_rate": 0.003,
+  "learning_rate_schedule": "cosine_to_one_percent",
+  "weight_decay": 0.00001,
+  "base_channels": 16,
+  "support_weight": 0.5,
+  "uncertainty_weight": 0.02,
+  "validation_interval_epochs": 5,
+  "checkpoint_selection_score": "val_ratio_abs_rel + 0.25*(1-val_positive_support_mean) + 0.05*val_unknown_support_mean",
+  "gates": {
+    "best_validation_selection_score_relative_improvement_minimum": 0.1,
+    "best_validation_ratio_abs_rel_below_initial": true,
+    "best_validation_positive_minus_unknown_support_minimum": 0.05,
+    "best_train_ratio_abs_rel_relative_improvement_minimum": 0.5,
+    "all_outputs_finite": true,
+    "strictly_positive_relative_increment": true
+  },
+  "quality_boundary": "hyperparameters and gates frozen on train-side single-sample evidence before any 2-scene validation run; HLP-GEO test and P01 remain untouched"
+}

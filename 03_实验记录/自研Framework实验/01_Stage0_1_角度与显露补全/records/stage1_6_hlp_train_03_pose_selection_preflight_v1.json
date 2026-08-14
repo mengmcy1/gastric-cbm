@@ -1,0 +1,2085 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-pose-selection-v1",
+  "status": "failed_selection",
+  "producer_machine_id": "linux5080",
+  "output_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_preflight_v1.json",
+  "selection_policy": {
+    "minimum_endpoint_translation_m": 0.1,
+    "maximum_endpoint_error_deg": 3.0
+  },
+  "summary": {
+    "candidate_scenes": 80,
+    "selected_triplets": 79,
+    "train_triplets": 59,
+    "validation_triplets": 20,
+    "held_out_overlap_count": 0,
+    "all_endpoint_errors_within_limit": true,
+    "all_endpoint_translations_above_minimum": true
+  },
+  "scenes": [
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 83,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_024_010",
+          "camera": "cam_00",
+          "scene_type": "Art gallery",
+          "scene_triplet_rank": 1,
+          "source_frame": 16,
+          "left_frame": 22,
+          "right_frame": 90,
+          "left_yaw_deg": -14.968306873654674,
+          "right_yaw_deg": 14.93537616507418,
+          "left_translation_m": 2.4755303079463773,
+          "right_translation_m": 6.313679438424471,
+          "angle_error_sum_deg": 0.09631696127114608
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_007",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 59,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_007",
+          "camera": "cam_00",
+          "scene_type": "Bathroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 91,
+          "left_frame": 54,
+          "right_frame": 97,
+          "left_yaw_deg": -14.965044548030871,
+          "right_yaw_deg": 15.072916603671311,
+          "left_translation_m": 1.2347440915366232,
+          "right_translation_m": 2.079263212458435,
+          "angle_error_sum_deg": 0.10787205564044022
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 89,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_006",
+          "camera": "cam_00",
+          "scene_type": "Bedroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 64,
+          "left_frame": 47,
+          "right_frame": 77,
+          "left_yaw_deg": -14.919080325084174,
+          "right_yaw_deg": 14.929341560748647,
+          "left_translation_m": 2.4612882867547197,
+          "right_translation_m": 1.498873869566825,
+          "angle_error_sum_deg": 0.15157811416717948
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_009_001",
+          "camera": "cam_00",
+          "scene_type": "Courtyard",
+          "scene_triplet_rank": 1,
+          "source_frame": 42,
+          "left_frame": 50,
+          "right_frame": 74,
+          "left_yaw_deg": -14.988100130113283,
+          "right_yaw_deg": 14.9912180623705,
+          "left_translation_m": 0.5259315807610321,
+          "right_translation_m": 3.704200891778249,
+          "angle_error_sum_deg": 0.020681807516217177
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_007_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 75,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_007_002",
+          "camera": "cam_00",
+          "scene_type": "Dining room",
+          "scene_triplet_rank": 1,
+          "source_frame": 96,
+          "left_frame": 24,
+          "right_frame": 74,
+          "left_yaw_deg": -15.041207123810507,
+          "right_yaw_deg": 14.816431191113145,
+          "left_translation_m": 1.362269724925335,
+          "right_translation_m": 1.2332894358111492,
+          "angle_error_sum_deg": 0.22477593269736218
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_023_004",
+          "camera": "cam_00",
+          "scene_type": "Hall",
+          "scene_triplet_rank": 1,
+          "source_frame": 80,
+          "left_frame": 47,
+          "right_frame": 76,
+          "left_yaw_deg": -14.994605942163274,
+          "right_yaw_deg": 14.938885791649327,
+          "left_translation_m": 1.3436213786257412,
+          "right_translation_m": 1.7155882093011556,
+          "angle_error_sum_deg": 0.06650826618739991
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 87,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_013_002",
+          "camera": "cam_00",
+          "scene_type": "Hallway",
+          "scene_triplet_rank": 1,
+          "source_frame": 95,
+          "left_frame": 58,
+          "right_frame": 30,
+          "left_yaw_deg": -15.016579225023786,
+          "right_yaw_deg": 15.018769536255075,
+          "left_translation_m": 10.016361867586488,
+          "right_translation_m": 10.748439404904811,
+          "angle_error_sum_deg": 0.03534876127886122
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_027_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 55,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_027_005",
+          "camera": "cam_00",
+          "scene_type": "Hotel lobby",
+          "scene_triplet_rank": 1,
+          "source_frame": 49,
+          "left_frame": 46,
+          "right_frame": 67,
+          "left_yaw_deg": -15.101514774567832,
+          "right_yaw_deg": 14.885595461147652,
+          "left_translation_m": 2.9278328639786313,
+          "right_translation_m": 1.2961013031614188,
+          "angle_error_sum_deg": 0.21591931342018
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 90,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_005",
+          "camera": "cam_00",
+          "scene_type": "Kitchen",
+          "scene_triplet_rank": 1,
+          "source_frame": 45,
+          "left_frame": 52,
+          "right_frame": 44,
+          "left_yaw_deg": -15.08520455906994,
+          "right_yaw_deg": 14.977407622898854,
+          "left_translation_m": 1.2882117135457862,
+          "right_translation_m": 0.5180403225117662,
+          "angle_error_sum_deg": 0.10779693617108599
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 74,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_053_001",
+          "camera": "cam_00",
+          "scene_type": "Lecture theater",
+          "scene_triplet_rank": 1,
+          "source_frame": 91,
+          "left_frame": 40,
+          "right_frame": 77,
+          "left_yaw_deg": -15.036292004908992,
+          "right_yaw_deg": 15.13728781081029,
+          "left_translation_m": 0.2710511145289406,
+          "right_translation_m": 0.5792785908303384,
+          "angle_error_sum_deg": 0.1735798157192825
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_016_009",
+          "camera": "cam_00",
+          "scene_type": "Library",
+          "scene_triplet_rank": 1,
+          "source_frame": 48,
+          "left_frame": 15,
+          "right_frame": 61,
+          "left_yaw_deg": -14.997577393232689,
+          "right_yaw_deg": 14.884310833838411,
+          "left_translation_m": 0.19862122783269837,
+          "right_translation_m": 1.2640519851757586,
+          "angle_error_sum_deg": 0.1181117729289003
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_004",
+          "camera": "cam_00",
+          "scene_type": "Living room",
+          "scene_triplet_rank": 1,
+          "source_frame": 8,
+          "left_frame": 30,
+          "right_frame": 34,
+          "left_yaw_deg": -14.94906961336401,
+          "right_yaw_deg": 14.857956229196475,
+          "left_translation_m": 2.6473778301994204,
+          "right_translation_m": 0.4389317657701974,
+          "angle_error_sum_deg": 0.19297415743951518
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_002",
+      "camera": "cam_01",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_002",
+          "camera": "cam_01",
+          "scene_type": "Office",
+          "scene_triplet_rank": 1,
+          "source_frame": 73,
+          "left_frame": 41,
+          "right_frame": 21,
+          "left_yaw_deg": -14.878544750924465,
+          "right_yaw_deg": 15.014326482498321,
+          "left_translation_m": 3.090198214337049,
+          "right_translation_m": 2.9711559057378216,
+          "angle_error_sum_deg": 0.13578173157385542
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_005_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 81,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_005_009",
+          "camera": "cam_00",
+          "scene_type": "Office (building foyer)",
+          "scene_triplet_rank": 1,
+          "source_frame": 35,
+          "left_frame": 28,
+          "right_frame": 1,
+          "left_yaw_deg": -14.854412487443529,
+          "right_yaw_deg": 15.005526224578254,
+          "left_translation_m": 1.4781575951897377,
+          "right_translation_m": 1.8685805961633313,
+          "angle_error_sum_deg": 0.1511137371347253
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 72,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_047_002",
+          "camera": "cam_00",
+          "scene_type": "Office (conference room)",
+          "scene_triplet_rank": 1,
+          "source_frame": 69,
+          "left_frame": 42,
+          "right_frame": 64,
+          "left_yaw_deg": -14.966016989563593,
+          "right_yaw_deg": 15.023163076315035,
+          "left_translation_m": 1.2760620683527322,
+          "right_translation_m": 4.875431539288807,
+          "angle_error_sum_deg": 0.05714608675144106
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 82,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_008_001",
+          "camera": "cam_00",
+          "scene_type": "Office (home)",
+          "scene_triplet_rank": 1,
+          "source_frame": 92,
+          "left_frame": 82,
+          "right_frame": 98,
+          "left_yaw_deg": -14.932624464751896,
+          "right_yaw_deg": 15.021624879442241,
+          "left_translation_m": 1.560403415780817,
+          "right_translation_m": 1.802315559569171,
+          "angle_error_sum_deg": 0.0890004146903447
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_041_008",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 67,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_041_008",
+          "camera": "cam_00",
+          "scene_type": "Office (waiting area)",
+          "scene_triplet_rank": 1,
+          "source_frame": 73,
+          "left_frame": 2,
+          "right_frame": 93,
+          "left_yaw_deg": -15.00251984502638,
+          "right_yaw_deg": 15.075473090619779,
+          "left_translation_m": 8.195238609961487,
+          "right_translation_m": 3.9691106024375777,
+          "angle_error_sum_deg": 0.07799293564615972
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_007",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 87,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_002_007",
+          "camera": "cam_00",
+          "scene_type": "Other",
+          "scene_triplet_rank": 1,
+          "source_frame": 28,
+          "left_frame": 50,
+          "right_frame": 88,
+          "left_yaw_deg": -15.016062505454757,
+          "right_yaw_deg": 15.02354502873759,
+          "left_translation_m": 2.5271759355647934,
+          "right_translation_m": 7.420482676271053,
+          "angle_error_sum_deg": 0.039607534192347416
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 79,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_006_002",
+          "camera": "cam_00",
+          "scene_type": "Restaurant",
+          "scene_triplet_rank": 1,
+          "source_frame": 4,
+          "left_frame": 15,
+          "right_frame": 50,
+          "left_yaw_deg": -14.999419813958234,
+          "right_yaw_deg": 15.051805334620072,
+          "left_translation_m": 2.86024269331651,
+          "right_translation_m": 1.0079699281576275,
+          "angle_error_sum_deg": 0.052385520661838214
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 56,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_009_002",
+          "camera": "cam_00",
+          "scene_type": "Retail space",
+          "scene_triplet_rank": 1,
+          "source_frame": 83,
+          "left_frame": 77,
+          "right_frame": 38,
+          "left_yaw_deg": -14.67664214629816,
+          "right_yaw_deg": 15.004220184234612,
+          "left_translation_m": 1.2469956890604914,
+          "right_translation_m": 2.0497230162808333,
+          "angle_error_sum_deg": 0.32757803793645124
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_009_006",
+          "camera": "cam_00",
+          "scene_type": "Staircase",
+          "scene_triplet_rank": 1,
+          "source_frame": 77,
+          "left_frame": 84,
+          "right_frame": 45,
+          "left_yaw_deg": -14.989094528931156,
+          "right_yaw_deg": 14.912156699473128,
+          "left_translation_m": 1.486586037100424,
+          "right_translation_m": 0.41610916208103355,
+          "angle_error_sum_deg": 0.09874877159571582
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_010",
+      "camera": "cam_00",
+      "status": "insufficient_qualifying_triplets",
+      "qualifying_source_count": 0,
+      "requested_triplets": 1
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 70,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_026_001",
+          "camera": "cam_00",
+          "scene_type": "Art gallery",
+          "scene_triplet_rank": 1,
+          "source_frame": 62,
+          "left_frame": 87,
+          "right_frame": 98,
+          "left_yaw_deg": -14.94127956844171,
+          "right_yaw_deg": 15.05252421251465,
+          "left_translation_m": 12.00061533279751,
+          "right_translation_m": 11.052921827791218,
+          "angle_error_sum_deg": 0.11124464407293999
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 62,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_003_001",
+          "camera": "cam_00",
+          "scene_type": "Bathroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 81,
+          "left_frame": 12,
+          "right_frame": 55,
+          "left_yaw_deg": -14.738066381751564,
+          "right_yaw_deg": 15.016395801318938,
+          "left_translation_m": 0.6989054569107127,
+          "right_translation_m": 1.0333119895991913,
+          "angle_error_sum_deg": 0.278329419567374
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_002_009",
+          "camera": "cam_00",
+          "scene_type": "Bedroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 63,
+          "left_frame": 3,
+          "right_frame": 85,
+          "left_yaw_deg": -14.95293115544991,
+          "right_yaw_deg": 15.096237276091864,
+          "left_translation_m": 2.0516870391223017,
+          "right_translation_m": 0.9799939994338075,
+          "angle_error_sum_deg": 0.14330612064195414
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_018_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 87,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_018_006",
+          "camera": "cam_00",
+          "scene_type": "Courtyard",
+          "scene_triplet_rank": 1,
+          "source_frame": 81,
+          "left_frame": 94,
+          "right_frame": 86,
+          "left_yaw_deg": -15.025000204362934,
+          "right_yaw_deg": 15.025838577480926,
+          "left_translation_m": 1.5118055918224296,
+          "right_translation_m": 2.817601232701458,
+          "angle_error_sum_deg": 0.05083878184385959
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_008_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 85,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_008_004",
+          "camera": "cam_00",
+          "scene_type": "Dining room",
+          "scene_triplet_rank": 1,
+          "source_frame": 12,
+          "left_frame": 26,
+          "right_frame": 11,
+          "left_yaw_deg": -15.077275753040482,
+          "right_yaw_deg": 14.99212739277817,
+          "left_translation_m": 2.6145348450572414,
+          "right_translation_m": 0.41981157961756843,
+          "angle_error_sum_deg": 0.08514836026231087
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_008",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 48,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_023_008",
+          "camera": "cam_00",
+          "scene_type": "Hall",
+          "scene_triplet_rank": 1,
+          "source_frame": 9,
+          "left_frame": 88,
+          "right_frame": 62,
+          "left_yaw_deg": -14.963283026488774,
+          "right_yaw_deg": 14.847273644931745,
+          "left_translation_m": 6.638926084878734,
+          "right_translation_m": 3.740867698669393,
+          "angle_error_sum_deg": 0.18944332857948076
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 48,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_016_005",
+          "camera": "cam_00",
+          "scene_type": "Hallway",
+          "scene_triplet_rank": 1,
+          "source_frame": 15,
+          "left_frame": 18,
+          "right_frame": 54,
+          "left_yaw_deg": -15.017743316015169,
+          "right_yaw_deg": 15.022567098671832,
+          "left_translation_m": 0.5614580383240119,
+          "right_translation_m": 1.5092306536480664,
+          "angle_error_sum_deg": 0.04031041468700103
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_031_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_031_001",
+          "camera": "cam_00",
+          "scene_type": "Hotel lobby",
+          "scene_triplet_rank": 1,
+          "source_frame": 1,
+          "left_frame": 67,
+          "right_frame": 4,
+          "left_yaw_deg": -14.911401558980895,
+          "right_yaw_deg": 14.96908193950109,
+          "left_translation_m": 1.1023017549464198,
+          "right_translation_m": 1.9479196966764085,
+          "angle_error_sum_deg": 0.11951650151801552
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_002_004",
+          "camera": "cam_00",
+          "scene_type": "Kitchen",
+          "scene_triplet_rank": 1,
+          "source_frame": 53,
+          "left_frame": 39,
+          "right_frame": 46,
+          "left_yaw_deg": -14.996118938768094,
+          "right_yaw_deg": 14.962340180079769,
+          "left_translation_m": 1.9368109812073868,
+          "right_translation_m": 0.1954852180164366,
+          "angle_error_sum_deg": 0.04154088115213739
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_002",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 56,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_053_002",
+          "camera": "cam_00",
+          "scene_type": "Lecture theater",
+          "scene_triplet_rank": 1,
+          "source_frame": 38,
+          "left_frame": 16,
+          "right_frame": 50,
+          "left_yaw_deg": -15.001630549146658,
+          "right_yaw_deg": 14.745269913027663,
+          "left_translation_m": 5.825868462216862,
+          "right_translation_m": 3.9080069749566975,
+          "angle_error_sum_deg": 0.25636063611899473
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 82,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_023_001",
+          "camera": "cam_00",
+          "scene_type": "Library",
+          "scene_triplet_rank": 1,
+          "source_frame": 1,
+          "left_frame": 33,
+          "right_frame": 60,
+          "left_yaw_deg": -15.014695990570276,
+          "right_yaw_deg": 14.960651983628416,
+          "left_translation_m": 1.8321052720374909,
+          "right_translation_m": 4.521929251701028,
+          "angle_error_sum_deg": 0.054044006941859735
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_008",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 67,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_008",
+          "camera": "cam_00",
+          "scene_type": "Living room",
+          "scene_triplet_rank": 1,
+          "source_frame": 28,
+          "left_frame": 49,
+          "right_frame": 7,
+          "left_yaw_deg": -15.195221759304745,
+          "right_yaw_deg": 15.046026551271323,
+          "left_translation_m": 3.17357097693825,
+          "right_translation_m": 0.5707715944051508,
+          "angle_error_sum_deg": 0.24124831057606855
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 86,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_003",
+          "camera": "cam_00",
+          "scene_type": "Office",
+          "scene_triplet_rank": 1,
+          "source_frame": 34,
+          "left_frame": 87,
+          "right_frame": 6,
+          "left_yaw_deg": -14.91636284816717,
+          "right_yaw_deg": 15.072545039056143,
+          "left_translation_m": 1.4929596216074594,
+          "right_translation_m": 0.6877830989640048,
+          "angle_error_sum_deg": 0.15618219088897334
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 74,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_013_003",
+          "camera": "cam_00",
+          "scene_type": "Office (building foyer)",
+          "scene_triplet_rank": 1,
+          "source_frame": 47,
+          "left_frame": 31,
+          "right_frame": 27,
+          "left_yaw_deg": -15.033739198453834,
+          "right_yaw_deg": 15.046838585825444,
+          "left_translation_m": 4.599333621870721,
+          "right_translation_m": 2.6925165317250266,
+          "angle_error_sum_deg": 0.08057778427927786
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 83,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_047_004",
+          "camera": "cam_00",
+          "scene_type": "Office (conference room)",
+          "scene_triplet_rank": 1,
+          "source_frame": 44,
+          "left_frame": 71,
+          "right_frame": 58,
+          "left_yaw_deg": -14.975789292541386,
+          "right_yaw_deg": 14.9299136666039,
+          "left_translation_m": 2.149357295955735,
+          "right_translation_m": 1.9891743248861407,
+          "angle_error_sum_deg": 0.09429704085471435
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_015_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 86,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_015_005",
+          "camera": "cam_00",
+          "scene_type": "Office (home)",
+          "scene_triplet_rank": 1,
+          "source_frame": 79,
+          "left_frame": 38,
+          "right_frame": 46,
+          "left_yaw_deg": -14.985028468453386,
+          "right_yaw_deg": 14.962702164119298,
+          "left_translation_m": 7.204389461439034,
+          "right_translation_m": 5.885715191458761,
+          "angle_error_sum_deg": 0.05226936742731603
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_010",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_002_010",
+          "camera": "cam_00",
+          "scene_type": "Other",
+          "scene_triplet_rank": 1,
+          "source_frame": 16,
+          "left_frame": 36,
+          "right_frame": 5,
+          "left_yaw_deg": -14.952347647599511,
+          "right_yaw_deg": 15.014327137305896,
+          "left_translation_m": 3.625641929141454,
+          "right_translation_m": 3.4952181900116943,
+          "angle_error_sum_deg": 0.06197948970638478
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_012_010",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_012_010",
+          "camera": "cam_00",
+          "scene_type": "Restaurant",
+          "scene_triplet_rank": 1,
+          "source_frame": 73,
+          "left_frame": 74,
+          "right_frame": 55,
+          "left_yaw_deg": -15.013644948295704,
+          "right_yaw_deg": 15.041727623453056,
+          "left_translation_m": 1.2799288337139443,
+          "right_translation_m": 3.7347302240330444,
+          "angle_error_sum_deg": 0.055372571748760535
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 59,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_009_005",
+          "camera": "cam_00",
+          "scene_type": "Retail space",
+          "scene_triplet_rank": 1,
+          "source_frame": 86,
+          "left_frame": 55,
+          "right_frame": 63,
+          "left_yaw_deg": -14.909014448079105,
+          "right_yaw_deg": 15.073347891878333,
+          "left_translation_m": 3.4630444269819796,
+          "right_translation_m": 0.6069380731991915,
+          "angle_error_sum_deg": 0.16433344379922765
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 5,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_019_006",
+          "camera": "cam_00",
+          "scene_type": "Staircase",
+          "scene_triplet_rank": 1,
+          "source_frame": 41,
+          "left_frame": 50,
+          "right_frame": 63,
+          "left_yaw_deg": -14.231183143077505,
+          "right_yaw_deg": 13.726497952703307,
+          "left_translation_m": 3.651880292016364,
+          "right_translation_m": 2.9213286953874302,
+          "angle_error_sum_deg": 2.0423189042191883
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_018",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 55,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_024_018",
+          "camera": "cam_00",
+          "scene_type": "Transit station",
+          "scene_triplet_rank": 1,
+          "source_frame": 37,
+          "left_frame": 27,
+          "right_frame": 46,
+          "left_yaw_deg": -15.145239315829649,
+          "right_yaw_deg": 14.99039654872078,
+          "left_translation_m": 2.323323444592218,
+          "right_translation_m": 2.334550092631943,
+          "angle_error_sum_deg": 0.15484276710886924
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_004_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 74,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_004_001",
+          "camera": "cam_00",
+          "scene_type": "Bathroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 14,
+          "left_frame": 93,
+          "right_frame": 27,
+          "left_yaw_deg": -15.003173112615551,
+          "right_yaw_deg": 15.020769728778875,
+          "left_translation_m": 0.8696961894666859,
+          "right_translation_m": 2.759366217134222,
+          "angle_error_sum_deg": 0.02394284139442604
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_004",
+      "camera": "cam_01",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 86,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_003_004",
+          "camera": "cam_01",
+          "scene_type": "Bedroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 48,
+          "left_frame": 2,
+          "right_frame": 71,
+          "left_yaw_deg": -15.079839794949596,
+          "right_yaw_deg": 14.902982525380036,
+          "left_translation_m": 0.764319107867146,
+          "right_translation_m": 1.0473163528740264,
+          "angle_error_sum_deg": 0.1768572695695596
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_019_007",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_019_007",
+          "camera": "cam_00",
+          "scene_type": "Courtyard",
+          "scene_triplet_rank": 1,
+          "source_frame": 71,
+          "left_frame": 15,
+          "right_frame": 26,
+          "left_yaw_deg": -15.107737817671198,
+          "right_yaw_deg": 14.936174493969194,
+          "left_translation_m": 0.7066411445830612,
+          "right_translation_m": 1.887220378925682,
+          "angle_error_sum_deg": 0.17156332370200467
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_011_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 88,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_011_005",
+          "camera": "cam_00",
+          "scene_type": "Dining room",
+          "scene_triplet_rank": 1,
+          "source_frame": 41,
+          "left_frame": 58,
+          "right_frame": 68,
+          "left_yaw_deg": -15.048404357952549,
+          "right_yaw_deg": 15.02063631118028,
+          "left_translation_m": 2.7862601614175464,
+          "right_translation_m": 0.6698526885688026,
+          "angle_error_sum_deg": 0.06904066913282847
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_023_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 59,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_023_009",
+          "camera": "cam_00",
+          "scene_type": "Hall",
+          "scene_triplet_rank": 1,
+          "source_frame": 59,
+          "left_frame": 46,
+          "right_frame": 34,
+          "left_yaw_deg": -14.973530327766477,
+          "right_yaw_deg": 15.015676109485241,
+          "left_translation_m": 2.134762366006803,
+          "right_translation_m": 4.180226658943078,
+          "angle_error_sum_deg": 0.04214578171876404
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_026_009",
+          "camera": "cam_00",
+          "scene_type": "Hallway",
+          "scene_triplet_rank": 1,
+          "source_frame": 42,
+          "left_frame": 10,
+          "right_frame": 93,
+          "left_yaw_deg": -14.98508188271433,
+          "right_yaw_deg": 15.011222929367323,
+          "left_translation_m": 2.439171641221697,
+          "right_translation_m": 1.0096134206998608,
+          "angle_error_sum_deg": 0.026141046652993438
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_032_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_032_003",
+          "camera": "cam_00",
+          "scene_type": "Hotel lobby",
+          "scene_triplet_rank": 1,
+          "source_frame": 98,
+          "left_frame": 74,
+          "right_frame": 71,
+          "left_yaw_deg": -15.065317485514848,
+          "right_yaw_deg": 15.0081911445165,
+          "left_translation_m": 3.3646185854672197,
+          "right_translation_m": 2.6613755959224243,
+          "angle_error_sum_deg": 0.07350863003134833
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_002_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_002_005",
+          "camera": "cam_00",
+          "scene_type": "Kitchen",
+          "scene_triplet_rank": 1,
+          "source_frame": 76,
+          "left_frame": 94,
+          "right_frame": 9,
+          "left_yaw_deg": -14.97242608320028,
+          "right_yaw_deg": 14.89230344214437,
+          "left_translation_m": 1.3603381847399498,
+          "right_translation_m": 1.2330485146018348,
+          "angle_error_sum_deg": 0.1352704746553517
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_053_006",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 74,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_053_006",
+          "camera": "cam_00",
+          "scene_type": "Lecture theater",
+          "scene_triplet_rank": 1,
+          "source_frame": 2,
+          "left_frame": 44,
+          "right_frame": 36,
+          "left_yaw_deg": -15.054758891519851,
+          "right_yaw_deg": 15.05064771842587,
+          "left_translation_m": 4.155632343560667,
+          "right_translation_m": 4.312889651098418,
+          "angle_error_sum_deg": 0.10540660994572093
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 84,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_001_009",
+          "camera": "cam_00",
+          "scene_type": "Living room",
+          "scene_triplet_rank": 1,
+          "source_frame": 16,
+          "left_frame": 7,
+          "right_frame": 21,
+          "left_yaw_deg": -14.858568105194836,
+          "right_yaw_deg": 15.00495001557991,
+          "left_translation_m": 3.8410808189403736,
+          "right_translation_m": 2.114455517762135,
+          "angle_error_sum_deg": 0.14638191038507387
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 79,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_003_009",
+          "camera": "cam_00",
+          "scene_type": "Office",
+          "scene_triplet_rank": 1,
+          "source_frame": 77,
+          "left_frame": 51,
+          "right_frame": 66,
+          "left_yaw_deg": -14.973946648214689,
+          "right_yaw_deg": 14.96614499770339,
+          "left_translation_m": 3.2484899137534935,
+          "right_translation_m": 1.442979313739295,
+          "angle_error_sum_deg": 0.05990835408192119
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_026_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 50,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_026_005",
+          "camera": "cam_00",
+          "scene_type": "Office (building foyer)",
+          "scene_triplet_rank": 1,
+          "source_frame": 89,
+          "left_frame": 11,
+          "right_frame": 75,
+          "left_yaw_deg": -15.148097910897238,
+          "right_yaw_deg": 15.08155155282038,
+          "left_translation_m": 4.0158036082778645,
+          "right_translation_m": 4.869965940727927,
+          "angle_error_sum_deg": 0.22964946371761918
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_047_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 65,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_047_005",
+          "camera": "cam_00",
+          "scene_type": "Office (conference room)",
+          "scene_triplet_rank": 1,
+          "source_frame": 48,
+          "left_frame": 20,
+          "right_frame": 56,
+          "left_yaw_deg": -15.045145115468905,
+          "right_yaw_deg": 15.051214717524182,
+          "left_translation_m": 3.9275602172061954,
+          "right_translation_m": 3.1495045791224663,
+          "angle_error_sum_deg": 0.09635983299308748
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_034_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 76,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_034_001",
+          "camera": "cam_00",
+          "scene_type": "Office (home)",
+          "scene_triplet_rank": 1,
+          "source_frame": 22,
+          "left_frame": 41,
+          "right_frame": 26,
+          "left_yaw_deg": -15.062451445008168,
+          "right_yaw_deg": 14.902467427749134,
+          "left_translation_m": 0.6088640876557475,
+          "right_translation_m": 0.45857407110043746,
+          "angle_error_sum_deg": 0.15998401725903477
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_003_005",
+      "camera": "cam_01",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 76,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_003_005",
+          "camera": "cam_01",
+          "scene_type": "Other",
+          "scene_triplet_rank": 1,
+          "source_frame": 39,
+          "left_frame": 45,
+          "right_frame": 36,
+          "left_yaw_deg": -15.041326987522785,
+          "right_yaw_deg": 15.010238854453924,
+          "left_translation_m": 4.1151747776539045,
+          "right_translation_m": 1.5382013044744258,
+          "angle_error_sum_deg": 0.05156584197670888
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_013_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_013_009",
+          "camera": "cam_00",
+          "scene_type": "Restaurant",
+          "scene_triplet_rank": 1,
+          "source_frame": 88,
+          "left_frame": 97,
+          "right_frame": 40,
+          "left_yaw_deg": -14.9621353645411,
+          "right_yaw_deg": 15.086607272633072,
+          "left_translation_m": 2.088515857458517,
+          "right_translation_m": 2.7338754432336803,
+          "angle_error_sum_deg": 0.12447190809197295
+        }
+      ]
+    },
+    {
+      "split": "train",
+      "scene": "ai_017_008",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 87,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "train",
+          "scene": "ai_017_008",
+          "camera": "cam_00",
+          "scene_type": "Retail space",
+          "scene_triplet_rank": 1,
+          "source_frame": 87,
+          "left_frame": 83,
+          "right_frame": 20,
+          "left_yaw_deg": -15.058621039455003,
+          "right_yaw_deg": 15.036049995120534,
+          "left_translation_m": 0.6510058562150726,
+          "right_translation_m": 1.7161473561249259,
+          "angle_error_sum_deg": 0.09467103457553705
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 85,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_024_013",
+          "camera": "cam_00",
+          "scene_type": "Art gallery",
+          "scene_triplet_rank": 1,
+          "source_frame": 35,
+          "left_frame": 32,
+          "right_frame": 22,
+          "left_yaw_deg": -15.118613734576403,
+          "right_yaw_deg": 14.981570181181127,
+          "left_translation_m": 3.5813301488904306,
+          "right_translation_m": 3.3431691518774858,
+          "angle_error_sum_deg": 0.13704355339527652
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 93,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_004_003",
+          "camera": "cam_00",
+          "scene_type": "Bathroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 66,
+          "left_frame": 26,
+          "right_frame": 99,
+          "left_yaw_deg": -15.024046297170162,
+          "right_yaw_deg": 15.032014770897486,
+          "left_translation_m": 3.383462953056483,
+          "right_translation_m": 0.7862758194990523,
+          "angle_error_sum_deg": 0.05606106806764899
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_007_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 87,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_007_001",
+          "camera": "cam_00",
+          "scene_type": "Bedroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 22,
+          "left_frame": 39,
+          "right_frame": 60,
+          "left_yaw_deg": -15.015376893301633,
+          "right_yaw_deg": 14.998863518879235,
+          "left_translation_m": 5.53584008674326,
+          "right_translation_m": 5.773661511870531,
+          "angle_error_sum_deg": 0.01651337442239864
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 43,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_024_012",
+          "camera": "cam_00",
+          "scene_type": "Hall",
+          "scene_triplet_rank": 1,
+          "source_frame": 64,
+          "left_frame": 81,
+          "right_frame": 98,
+          "left_yaw_deg": -15.004137311486506,
+          "right_yaw_deg": 15.023296027122758,
+          "left_translation_m": 7.271440109800554,
+          "right_translation_m": 1.6953060008106753,
+          "angle_error_sum_deg": 0.027433338609263558
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_016_004",
+          "camera": "cam_00",
+          "scene_type": "Hallway",
+          "scene_triplet_rank": 1,
+          "source_frame": 30,
+          "left_frame": 7,
+          "right_frame": 99,
+          "left_yaw_deg": -14.984648447101174,
+          "right_yaw_deg": 15.009014698308691,
+          "left_translation_m": 4.228069579378069,
+          "right_translation_m": 4.694431876121858,
+          "angle_error_sum_deg": 0.024366251207517564
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 80,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_031_004",
+          "camera": "cam_00",
+          "scene_type": "Hotel lobby",
+          "scene_triplet_rank": 1,
+          "source_frame": 65,
+          "left_frame": 72,
+          "right_frame": 52,
+          "left_yaw_deg": -14.988549845842341,
+          "right_yaw_deg": 15.035272057315268,
+          "left_translation_m": 2.0395043148603387,
+          "right_translation_m": 0.6202745202451193,
+          "angle_error_sum_deg": 0.0467222114729271
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 71,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_015_001",
+          "camera": "cam_00",
+          "scene_type": "Kitchen",
+          "scene_triplet_rank": 1,
+          "source_frame": 0,
+          "left_frame": 43,
+          "right_frame": 26,
+          "left_yaw_deg": -14.985083334062793,
+          "right_yaw_deg": 14.929732606637753,
+          "left_translation_m": 0.3842806271452183,
+          "right_translation_m": 1.722233449192255,
+          "angle_error_sum_deg": 0.08518405929945416
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 58,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_053_003",
+          "camera": "cam_00",
+          "scene_type": "Lecture theater",
+          "scene_triplet_rank": 1,
+          "source_frame": 29,
+          "left_frame": 8,
+          "right_frame": 62,
+          "left_yaw_deg": -15.177282998100113,
+          "right_yaw_deg": 14.926818160334774,
+          "left_translation_m": 0.9778293758879547,
+          "right_translation_m": 3.2976671253042986,
+          "angle_error_sum_deg": 0.2504648377653389
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 79,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_003_010",
+          "camera": "cam_01",
+          "scene_type": "Living room",
+          "scene_triplet_rank": 1,
+          "source_frame": 72,
+          "left_frame": 45,
+          "right_frame": 16,
+          "left_yaw_deg": -14.936900571746754,
+          "right_yaw_deg": 14.973343759137661,
+          "left_translation_m": 1.5218707442206503,
+          "right_translation_m": 2.8883468904775937,
+          "angle_error_sum_deg": 0.08975566911558452
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 73,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_009_009",
+          "camera": "cam_00",
+          "scene_type": "Office (building foyer)",
+          "scene_triplet_rank": 1,
+          "source_frame": 61,
+          "left_frame": 72,
+          "right_frame": 54,
+          "left_yaw_deg": -14.89342644334515,
+          "right_yaw_deg": 15.100144915517724,
+          "left_translation_m": 5.863986955579201,
+          "right_translation_m": 4.43277977436117,
+          "angle_error_sum_deg": 0.20671847217257344
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_047_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 88,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_047_009",
+          "camera": "cam_00",
+          "scene_type": "Office (conference room)",
+          "scene_triplet_rank": 1,
+          "source_frame": 43,
+          "left_frame": 26,
+          "right_frame": 62,
+          "left_yaw_deg": -15.03861523092124,
+          "right_yaw_deg": 14.981870561583603,
+          "left_translation_m": 2.169586565645801,
+          "right_translation_m": 5.4140336764071435,
+          "angle_error_sum_deg": 0.05674466933763611
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_016_001",
+      "camera": "cam_01",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 78,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_016_001",
+          "camera": "cam_01",
+          "scene_type": "Office (home)",
+          "scene_triplet_rank": 1,
+          "source_frame": 16,
+          "left_frame": 28,
+          "right_frame": 99,
+          "left_yaw_deg": -15.026081732013727,
+          "right_yaw_deg": 15.063228806940712,
+          "left_translation_m": 0.3874446249370005,
+          "right_translation_m": 9.411316893303203,
+          "angle_error_sum_deg": 0.08931053895443952
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_019_008",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 88,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_019_008",
+          "camera": "cam_00",
+          "scene_type": "Other",
+          "scene_triplet_rank": 1,
+          "source_frame": 60,
+          "left_frame": 68,
+          "right_frame": 43,
+          "left_yaw_deg": -14.971255533512274,
+          "right_yaw_deg": 14.993924191988977,
+          "left_translation_m": 1.6874043767140072,
+          "right_translation_m": 3.958707754941828,
+          "angle_error_sum_deg": 0.034820274498748915
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_031_010",
+          "camera": "cam_00",
+          "scene_type": "Restaurant",
+          "scene_triplet_rank": 1,
+          "source_frame": 9,
+          "left_frame": 59,
+          "right_frame": 3,
+          "left_yaw_deg": -14.995303208379102,
+          "right_yaw_deg": 15.039019736254811,
+          "left_translation_m": 4.522451105924992,
+          "right_translation_m": 2.030258759327828,
+          "angle_error_sum_deg": 0.04371652787570923
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_005_005",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 69,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_005_005",
+          "camera": "cam_00",
+          "scene_type": "Retail space",
+          "scene_triplet_rank": 1,
+          "source_frame": 59,
+          "left_frame": 76,
+          "right_frame": 22,
+          "left_yaw_deg": -15.038077408596758,
+          "right_yaw_deg": 15.046217532192145,
+          "left_translation_m": 1.1498968866821486,
+          "right_translation_m": 1.2032288418057564,
+          "angle_error_sum_deg": 0.08429494078890265
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_009_007",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 79,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_009_007",
+          "camera": "cam_00",
+          "scene_type": "Staircase",
+          "scene_triplet_rank": 1,
+          "source_frame": 82,
+          "left_frame": 44,
+          "right_frame": 14,
+          "left_yaw_deg": -14.983928080401789,
+          "right_yaw_deg": 14.937728261267244,
+          "left_translation_m": 2.134655429069837,
+          "right_translation_m": 2.0567535968996062,
+          "angle_error_sum_deg": 0.0783436583309669
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_039_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 81,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_039_003",
+          "camera": "cam_00",
+          "scene_type": "Bathroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 41,
+          "left_frame": 40,
+          "right_frame": 86,
+          "left_yaw_deg": -14.97004225563148,
+          "right_yaw_deg": 15.186872701806344,
+          "left_translation_m": 0.9659797572583213,
+          "right_translation_m": 1.2623882124021912,
+          "angle_error_sum_deg": 0.21683044617486402
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_035_003",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 77,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_035_003",
+          "camera": "cam_00",
+          "scene_type": "Bedroom",
+          "scene_triplet_rank": 1,
+          "source_frame": 87,
+          "left_frame": 62,
+          "right_frame": 80,
+          "left_yaw_deg": -14.966031860878005,
+          "right_yaw_deg": 15.050540906548733,
+          "left_translation_m": 1.3855764926750513,
+          "right_translation_m": 2.3315371479838585,
+          "angle_error_sum_deg": 0.08450904567072826
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_038_009",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 72,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_038_009",
+          "camera": "cam_00",
+          "scene_type": "Hotel lobby",
+          "scene_triplet_rank": 1,
+          "source_frame": 64,
+          "left_frame": 55,
+          "right_frame": 70,
+          "left_yaw_deg": -14.972466971405542,
+          "right_yaw_deg": 14.912901501907628,
+          "left_translation_m": 2.3208467825610746,
+          "right_translation_m": 4.92399036967082,
+          "angle_error_sum_deg": 0.1146315266868303
+        }
+      ]
+    },
+    {
+      "split": "val",
+      "scene": "ai_015_004",
+      "camera": "cam_00",
+      "status": "selected",
+      "public_pose_frames": 100,
+      "qualifying_source_count": 62,
+      "selected_triplet_count": 1,
+      "triplets": [
+        {
+          "split": "val",
+          "scene": "ai_015_004",
+          "camera": "cam_00",
+          "scene_type": "Kitchen",
+          "scene_triplet_rank": 1,
+          "source_frame": 31,
+          "left_frame": 27,
+          "right_frame": 52,
+          "left_yaw_deg": -14.726993395090705,
+          "right_yaw_deg": 15.028819985405946,
+          "left_translation_m": 0.22983138374616735,
+          "right_translation_m": 2.5445233132030274,
+          "angle_error_sum_deg": 0.3018265903152404
+        }
+      ]
+    }
+  ],
+  "quality_boundary": "real-pose selection only; RGB-D files and hidden evidence are not fetched or generated yet",
+  "output_config_sha256": "0bab922c9e29e5f00203b90e51765297560b4da61499a63c6d3f296493e53245"
+}

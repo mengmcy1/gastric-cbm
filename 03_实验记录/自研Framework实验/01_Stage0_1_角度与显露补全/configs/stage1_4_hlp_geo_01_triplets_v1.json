@@ -1,0 +1,65 @@
+{
+  "schema_version": "stage1.4-hlp-geo-01-triplets-v1",
+  "dataset_id": "HLP-GEO-01",
+  "source": "Hypersim official public release v1 test split",
+  "target_total_angle_deg": 30.0,
+  "target_endpoint_angle_deg": 15.0,
+  "endpoint_tolerance_deg": 2.5,
+  "selection_rule": "lexicographic test-scene pose screening followed by preview common-view review; no Flash3D output used",
+  "triplets": [
+    {
+      "scene": "ai_001_010",
+      "camera": "cam_00",
+      "source_frame": 27,
+      "left_frame": 61,
+      "right_frame": 65,
+      "left_yaw_deg": -14.998153194528845,
+      "right_yaw_deg": 15.152666715450989,
+      "left_translation_m": 0.6214130574585905,
+      "right_translation_m": 1.6488191070646874,
+      "preview_review": "accept: kitchen with clear shared surfaces and occlusion boundaries"
+    },
+    {
+      "scene": "ai_005_001",
+      "camera": "cam_00",
+      "source_frame": 21,
+      "left_frame": 2,
+      "right_frame": 25,
+      "left_yaw_deg": -15.145665733449219,
+      "right_yaw_deg": 15.022085263871034,
+      "left_translation_m": 7.372115246625322,
+      "right_translation_m": 3.368182513958847,
+      "preview_review": "accept: cathedral with shared columns, chairs, and depth layers; challenging large translation retained"
+    },
+    {
+      "scene": "ai_008_005",
+      "camera": "cam_00",
+      "source_frame": 43,
+      "left_frame": 17,
+      "right_frame": 72,
+      "left_yaw_deg": -14.979795820061685,
+      "right_yaw_deg": 15.045028071562655,
+      "left_translation_m": 2.491791759910715,
+      "right_translation_m": 3.9128538306448295,
+      "preview_review": "accept: dining room with shared pillar, furniture, and wall surfaces"
+    }
+  ],
+  "rejected_preview_candidates": [
+    {
+      "scene": "ai_003_007",
+      "camera": "cam_00",
+      "source_frame": 47,
+      "left_frame": 55,
+      "right_frame": 79,
+      "left_yaw_deg": -14.978078047078235,
+      "right_yaw_deg": 15.014619099486525,
+      "reason": "reject: source staircase view and endpoint ceiling views have insufficient common visible content"
+    }
+  ],
+  "required_frame_modalities": [
+    "final_hdf5/color",
+    "geometry_hdf5/depth_meters",
+    "geometry_hdf5/position"
+  ],
+  "quality_boundary": "triplet pose and preview selection only; dense files and visibility masks not yet validated"
+}

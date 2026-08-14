@@ -1,0 +1,33 @@
+{
+  "schema_version": "stage1.7-official-ldi-true-arc-v4-manual-review",
+  "status": "failed",
+  "review_date": "2026-08-14",
+  "experiment_id": "P01_official_ldi_true_arc30_v4_linux5080",
+  "producer_machine_id": "linux5080",
+  "canonical_run_record": "records/stage1_7_official_ldi_true_arc_v4.json",
+  "reviewed_video": {
+    "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/11_OfficialLDI/P01_official_ldi_true_arc30_v4_linux5080/video/p01_true-arc-30_61f.mp4",
+    "sha256": "d28ca395ab21918847e5b376005168d3b9ebb30771e987b2352090e2d1d64391",
+    "angle_total_deg": 30.0,
+    "endpoint_angles_deg": [-15.0, 15.0],
+    "num_frames": 61,
+    "crop_border": [0.0, 0.0, 0.0, 0.0]
+  },
+  "manual_review": {
+    "left_hole_or_uncovered_severity_0_to_3": 3,
+    "right_hole_or_uncovered_severity_0_to_3": 3,
+    "stretch_or_false_structure_severity_0_to_3": 2,
+    "motion_continuity": "acceptable",
+    "overall_pass": false,
+    "user_words": "3 3 2 连续性还行不通过"
+  },
+  "gate_results": {
+    "left_hole_severity_at_most_1": false,
+    "right_hole_severity_at_most_1": false,
+    "stretch_or_false_structure_at_most_1": false,
+    "motion_continuity_acceptable": true,
+    "overall_30_degree_quality_gate": false
+  },
+  "decision": "Official full LDI preserves acceptable temporal continuity but fails the frozen 30-degree visual-quality gate because both endpoints have severe uncovered holes and visible stretching/false structure. Stop at P01 v4; do not tune crop/background/extrapolation to hide the failure, do not expand P02/P05, and do not convert this mesh to supplemental Gaussians.",
+  "next_direction": "Change the information structure to an explicitly target-view-conditioned provider and design OutsideFOVProvider as a first-class branch; keep full LDI only as a failed structured baseline."
+}

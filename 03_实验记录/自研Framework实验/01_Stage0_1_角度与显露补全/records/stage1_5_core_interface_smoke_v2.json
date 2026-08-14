@@ -1,0 +1,38 @@
+{
+  "schema_version": "stage1.5-core-interface-smoke-v2",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "source_root": "源码/Adaptive3DGS",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 6,
+  "tests_passed": 6,
+  "tests_failed": 0,
+  "covered_gates": [
+    "valid occlusion-hidden CLB result accepted",
+    "non-finite geometry confidence rejected even when alpha is valid",
+    "bad alpha outside the valid mask is still rejected",
+    "provider result cannot cross the expected support type",
+    "synthetic oracle provenance rejected in deployment",
+    "duplicate provider registration rejected"
+  ],
+  "io_capabilities": [
+    "load legacy canonical-layer-bundle v1 manifest and NPZ",
+    "write canonical-layer-bundle v1 with per-NPZ SHA256",
+    "refuse output-directory reuse and unsafe asset paths",
+    "preserve camera anchors and patch metadata"
+  ],
+  "files_sha256": {
+    "源码/Adaptive3DGS/pyproject.toml": "ee2d7d660f8df6cfb5679fabb307bb34827093b53ce78c5083223f75e81155ed",
+    "源码/Adaptive3DGS/src/adaptive3dgs/__init__.py": "5d3b9aea8f85aaae99b8017d25d8f605e108591f21fb2ef29ed63d47f50458b1",
+    "源码/Adaptive3DGS/src/adaptive3dgs/clb.py": "02ac73be90413fea1d9b9556f730cbc1cb6bdadd2092d135140e6e4f3da90dd8",
+    "源码/Adaptive3DGS/src/adaptive3dgs/io.py": "2bbe81e7f5ab96a6010db174984f90084e8791c158641c1c7720ec6b18900225",
+    "源码/Adaptive3DGS/src/adaptive3dgs/providers.py": "6555224d485baa61eabe793dd55eb884fbdc2baeab4beca73618201fb65b162a",
+    "源码/Adaptive3DGS/src/adaptive3dgs/registry.py": "e60136f5067f2bd5fbc5ea07d1c364229b3126be01d73e5f8c9f01a3b0f6d640",
+    "源码/Adaptive3DGS/src/adaptive3dgs/validation.py": "e1ee0640efa7e00636bfd9f84bb761729dee1dff3d3abe022f85c62d42624cc7",
+    "源码/Adaptive3DGS/tests/test_core.py": "5cdfc5fab8bde24b8525854fe3574333bdee6ec7bcceff0f46bbe6728afcad4c"
+  },
+  "supersedes": "stage1_5_core_interface_smoke_v1.json",
+  "quality_boundary": "core schema and I/O interface smoke only; no provider quality claim"
+}

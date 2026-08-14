@@ -1,0 +1,668 @@
+{
+  "schema_version": "stage1.4-flash3d-hypersim-geometry-v1",
+  "status": "complete_raw_geometry_uncalibrated",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "cuda_visible_devices_expected": "1",
+  "scope": "Flash3D second-layer-only geometry on HLP-GEO-01 occlusion_hidden truth",
+  "oracle_source_scale_align": true,
+  "oracle_boundary": "uses source depth truth to align each scene's translation and predicted depth scale; diagnostic only, not deployable RGB-only performance",
+  "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_4_hlp_geo_01_triplets_v1.json",
+  "config_sha256": "0d293e4476e6f84a05b2d5323cfb82250012557cd79eaae2a02b03a3dfa40bb4",
+  "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+  "checkpoint_sha256": "4d717b5543941069fc120733ab4001e6d11fe73ea094d6c6054c5e8b48922420",
+  "coordinate_conversion": "Hypersim right/up/back -> OpenCV right/down/forward using diag(1,-1,-1); translations in meters",
+  "depth_normalization": "rasterizer opacity-weighted Z divided by separately rendered white-layer accumulated alpha",
+  "alpha_threshold": 0.05,
+  "tonemap": {
+    "formula": "official Hypersim CGIntrinsics: 90th percentile brightness -> 0.8 after gamma 1/2.2",
+    "valid_mask_deviation": "finite positive depth proxy used instead of render_entity_id!=-1 because targeted subset does not include entity-id files"
+  },
+  "source_layer1_diagnostics": [
+    {
+      "scene": "ai_001_010",
+      "source_frame": 27,
+      "metrics": {
+        "pixels": 98304,
+        "abs_rel": 0.2908565990486846,
+        "mae_m": 0.9639841235159491,
+        "rmse_m": 1.0419112218631417,
+        "delta_1_05": 0.0019327799479166667,
+        "delta_1_10": 0.005391438802083333
+      },
+      "median_predicted_z_over_truth_z": 1.2836099495615692,
+      "p10_predicted_z_over_truth_z": 1.194061836283527,
+      "p90_predicted_z_over_truth_z": 1.3496542426724478
+    },
+    {
+      "scene": "ai_005_001",
+      "source_frame": 21,
+      "metrics": {
+        "pixels": 97762,
+        "abs_rel": 0.25645558775429267,
+        "mae_m": 9.450564072602901,
+        "rmse_m": 15.662510468406522,
+        "delta_1_05": 0.00636239029479757,
+        "delta_1_10": 0.024406211002229904
+      },
+      "median_predicted_z_over_truth_z": 0.7753268381112901,
+      "p10_predicted_z_over_truth_z": 0.5575915980443097,
+      "p90_predicted_z_over_truth_z": 0.860618756692749
+    },
+    {
+      "scene": "ai_008_005",
+      "source_frame": 43,
+      "metrics": {
+        "pixels": 98304,
+        "abs_rel": 0.13857378076637059,
+        "mae_m": 0.8867796653820837,
+        "rmse_m": 1.241632400885057,
+        "delta_1_05": 0.105010986328125,
+        "delta_1_10": 0.313812255859375
+      },
+      "median_predicted_z_over_truth_z": 0.9050643772365914,
+      "p10_predicted_z_over_truth_z": 0.8053878132027016,
+      "p90_predicted_z_over_truth_z": 1.2092462056369957
+    }
+  ],
+  "results": [
+    {
+      "scene": "ai_001_010",
+      "side": "left",
+      "source_frame": 27,
+      "target_frame": 61,
+      "yaw_deg": -14.998153194528845,
+      "translation_m": 0.6214130574585905,
+      "source_tonemap_scale": 1.0954482163223986,
+      "target_tonemap_scale": 1.1306943353410237,
+      "inference_and_full_render_seconds": 1.032382531906478,
+      "occlusion_hidden_pixels_resized": 4071,
+      "outside_source_fov_pixels_resized": 27182,
+      "layer2_supported_hidden_pixels": 4024,
+      "layer2_hidden_coverage_at_alpha_threshold": 0.988454925079833,
+      "layer2_hidden_geometry": {
+        "pixels": 4024,
+        "abs_rel": 0.0640983600270431,
+        "mae_m": 0.19727276274792457,
+        "rmse_m": 0.300937166582497,
+        "delta_1_05": 0.5298210735586482,
+        "delta_1_10": 0.8250497017892644
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 31,
+          "mean_rendered_alpha": 0.06683184206485748,
+          "fraction_depth_within_10_percent": 0.7741935483870968
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 13,
+          "mean_rendered_alpha": 0.12926867604255676,
+          "fraction_depth_within_10_percent": 0.6923076923076923
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 9,
+          "mean_rendered_alpha": 0.25464993715286255,
+          "fraction_depth_within_10_percent": 0.3333333333333333
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 6,
+          "mean_rendered_alpha": 0.34376227855682373,
+          "fraction_depth_within_10_percent": 0.5
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 8,
+          "mean_rendered_alpha": 0.44561323523521423,
+          "fraction_depth_within_10_percent": 0.25
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 12,
+          "mean_rendered_alpha": 0.5516768097877502,
+          "fraction_depth_within_10_percent": 0.75
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 23,
+          "mean_rendered_alpha": 0.6553859710693359,
+          "fraction_depth_within_10_percent": 0.34782608695652173
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 23,
+          "mean_rendered_alpha": 0.7607582211494446,
+          "fraction_depth_within_10_percent": 0.17391304347826086
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 51,
+          "mean_rendered_alpha": 0.8618157505989075,
+          "fraction_depth_within_10_percent": 0.43137254901960786
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 3848,
+          "mean_rendered_alpha": 0.9948869347572327,
+          "fraction_depth_within_10_percent": 0.840956340956341
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_001_010/left_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_001_010/left_review.png"
+    },
+    {
+      "scene": "ai_001_010",
+      "side": "right",
+      "source_frame": 27,
+      "target_frame": 65,
+      "yaw_deg": 15.152666715450989,
+      "translation_m": 1.6488191070646874,
+      "source_tonemap_scale": 1.0954482163223986,
+      "target_tonemap_scale": 1.208122447612067,
+      "inference_and_full_render_seconds": 1.032382531906478,
+      "occlusion_hidden_pixels_resized": 9423,
+      "outside_source_fov_pixels_resized": 859,
+      "layer2_supported_hidden_pixels": 9364,
+      "layer2_hidden_coverage_at_alpha_threshold": 0.9937387243977502,
+      "layer2_hidden_geometry": {
+        "pixels": 9364,
+        "abs_rel": 0.13985031345555157,
+        "mae_m": 0.38807499427799,
+        "rmse_m": 0.4824554755903783,
+        "delta_1_05": 0.17706108500640752,
+        "delta_1_10": 0.39918838103374626
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 72,
+          "mean_rendered_alpha": 0.06939978152513504,
+          "fraction_depth_within_10_percent": 0.6111111111111112
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 94,
+          "mean_rendered_alpha": 0.16447459161281586,
+          "fraction_depth_within_10_percent": 0.23404255319148937
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 123,
+          "mean_rendered_alpha": 0.2538345754146576,
+          "fraction_depth_within_10_percent": 0.21138211382113822
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 135,
+          "mean_rendered_alpha": 0.3516717553138733,
+          "fraction_depth_within_10_percent": 0.23703703703703705
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 181,
+          "mean_rendered_alpha": 0.45104971528053284,
+          "fraction_depth_within_10_percent": 0.287292817679558
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 241,
+          "mean_rendered_alpha": 0.5515696406364441,
+          "fraction_depth_within_10_percent": 0.3651452282157676
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 367,
+          "mean_rendered_alpha": 0.657071590423584,
+          "fraction_depth_within_10_percent": 0.45776566757493187
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 631,
+          "mean_rendered_alpha": 0.7517187595367432,
+          "fraction_depth_within_10_percent": 0.4405705229793978
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 949,
+          "mean_rendered_alpha": 0.854419469833374,
+          "fraction_depth_within_10_percent": 0.2897787144362487
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 6571,
+          "mean_rendered_alpha": 0.982011079788208,
+          "fraction_depth_within_10_percent": 0.41896210622431895
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_001_010/right_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_001_010/right_review.png"
+    },
+    {
+      "scene": "ai_005_001",
+      "side": "left",
+      "source_frame": 21,
+      "target_frame": 2,
+      "yaw_deg": -15.145665733449219,
+      "translation_m": 7.372115246625322,
+      "source_tonemap_scale": 1.6806343182502896,
+      "target_tonemap_scale": 1.8370099373008484,
+      "inference_and_full_render_seconds": 0.3134608460823074,
+      "occlusion_hidden_pixels_resized": 19479,
+      "outside_source_fov_pixels_resized": 4358,
+      "layer2_supported_hidden_pixels": 19479,
+      "layer2_hidden_coverage_at_alpha_threshold": 1.0,
+      "layer2_hidden_geometry": {
+        "pixels": 19479,
+        "abs_rel": 0.22234670759465047,
+        "mae_m": 7.8498549005620815,
+        "rmse_m": 13.291095778225351,
+        "delta_1_05": 0.13085887365881205,
+        "delta_1_10": 0.2786590687406951
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 6,
+          "mean_rendered_alpha": 0.27963611483573914,
+          "fraction_depth_within_10_percent": 0.0
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 50,
+          "mean_rendered_alpha": 0.35484322905540466,
+          "fraction_depth_within_10_percent": 0.04
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 101,
+          "mean_rendered_alpha": 0.4550551474094391,
+          "fraction_depth_within_10_percent": 0.15841584158415842
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 139,
+          "mean_rendered_alpha": 0.5517477989196777,
+          "fraction_depth_within_10_percent": 0.1079136690647482
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 292,
+          "mean_rendered_alpha": 0.6567925214767456,
+          "fraction_depth_within_10_percent": 0.23972602739726026
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 682,
+          "mean_rendered_alpha": 0.7576715350151062,
+          "fraction_depth_within_10_percent": 0.38269794721407624
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 1825,
+          "mean_rendered_alpha": 0.8592539429664612,
+          "fraction_depth_within_10_percent": 0.38136986301369863
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 16384,
+          "mean_rendered_alpha": 0.9736064672470093,
+          "fraction_depth_within_10_percent": 0.2666015625
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_005_001/left_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_005_001/left_review.png"
+    },
+    {
+      "scene": "ai_005_001",
+      "side": "right",
+      "source_frame": 21,
+      "target_frame": 25,
+      "yaw_deg": 15.022085263871034,
+      "translation_m": 3.368182513958847,
+      "source_tonemap_scale": 1.6806343182502896,
+      "target_tonemap_scale": 1.0449506911934179,
+      "inference_and_full_render_seconds": 0.3134608460823074,
+      "occlusion_hidden_pixels_resized": 17177,
+      "outside_source_fov_pixels_resized": 6219,
+      "layer2_supported_hidden_pixels": 17177,
+      "layer2_hidden_coverage_at_alpha_threshold": 1.0,
+      "layer2_hidden_geometry": {
+        "pixels": 17177,
+        "abs_rel": 0.2496449308129878,
+        "mae_m": 11.281709704930378,
+        "rmse_m": 14.663703207505334,
+        "delta_1_05": 0.10723642079524946,
+        "delta_1_10": 0.21365779821854805
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 20,
+          "mean_rendered_alpha": 0.35195547342300415,
+          "fraction_depth_within_10_percent": 0.0
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 61,
+          "mean_rendered_alpha": 0.4599473476409912,
+          "fraction_depth_within_10_percent": 0.16393442622950818
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 140,
+          "mean_rendered_alpha": 0.5533910393714905,
+          "fraction_depth_within_10_percent": 0.15
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 249,
+          "mean_rendered_alpha": 0.6560952663421631,
+          "fraction_depth_within_10_percent": 0.14056224899598393
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 595,
+          "mean_rendered_alpha": 0.7629444003105164,
+          "fraction_depth_within_10_percent": 0.19663865546218487
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 2613,
+          "mean_rendered_alpha": 0.8620283007621765,
+          "fraction_depth_within_10_percent": 0.20436280137772675
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 13499,
+          "mean_rendered_alpha": 0.9688751697540283,
+          "fraction_depth_within_10_percent": 0.21875694495888584
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_005_001/right_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_005_001/right_review.png"
+    },
+    {
+      "scene": "ai_008_005",
+      "side": "left",
+      "source_frame": 43,
+      "target_frame": 17,
+      "yaw_deg": -14.979795820061685,
+      "translation_m": 2.491791759910715,
+      "source_tonemap_scale": 0.7531628362622865,
+      "target_tonemap_scale": 0.860596411136207,
+      "inference_and_full_render_seconds": 0.13718716299626976,
+      "occlusion_hidden_pixels_resized": 2873,
+      "outside_source_fov_pixels_resized": 59613,
+      "layer2_supported_hidden_pixels": 2873,
+      "layer2_hidden_coverage_at_alpha_threshold": 1.0,
+      "layer2_hidden_geometry": {
+        "pixels": 2873,
+        "abs_rel": 0.16793410836481057,
+        "mae_m": 2.11400820252927,
+        "rmse_m": 3.286208380332725,
+        "delta_1_05": 0.2081447963800905,
+        "delta_1_10": 0.4329968673860077
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 0,
+          "mean_rendered_alpha": null,
+          "fraction_depth_within_10_percent": null
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 6,
+          "mean_rendered_alpha": 0.3714403212070465,
+          "fraction_depth_within_10_percent": 0.16666666666666666
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 11,
+          "mean_rendered_alpha": 0.4585077166557312,
+          "fraction_depth_within_10_percent": 0.8181818181818182
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 11,
+          "mean_rendered_alpha": 0.5630455613136292,
+          "fraction_depth_within_10_percent": 0.8181818181818182
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 29,
+          "mean_rendered_alpha": 0.6706154942512512,
+          "fraction_depth_within_10_percent": 0.6206896551724138
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 66,
+          "mean_rendered_alpha": 0.7572871446609497,
+          "fraction_depth_within_10_percent": 0.5151515151515151
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 131,
+          "mean_rendered_alpha": 0.857315182685852,
+          "fraction_depth_within_10_percent": 0.3969465648854962
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 2619,
+          "mean_rendered_alpha": 0.9897143244743347,
+          "fraction_depth_within_10_percent": 0.42802596410843835
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_008_005/left_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_008_005/left_review.png"
+    },
+    {
+      "scene": "ai_008_005",
+      "side": "right",
+      "source_frame": 43,
+      "target_frame": 72,
+      "yaw_deg": 15.045028071562655,
+      "translation_m": 3.9128538306448295,
+      "source_tonemap_scale": 0.7531628362622865,
+      "target_tonemap_scale": 0.8627839607708522,
+      "inference_and_full_render_seconds": 0.13718716299626976,
+      "occlusion_hidden_pixels_resized": 12675,
+      "outside_source_fov_pixels_resized": 42301,
+      "layer2_supported_hidden_pixels": 12089,
+      "layer2_hidden_coverage_at_alpha_threshold": 0.953767258382643,
+      "layer2_hidden_geometry": {
+        "pixels": 12089,
+        "abs_rel": 0.2464780417181168,
+        "mae_m": 2.898419757692936,
+        "rmse_m": 3.59287949145284,
+        "delta_1_05": 0.11895111258168584,
+        "delta_1_10": 0.22044834146744974
+      },
+      "rendered_alpha_diagnostic_bins": [
+        {
+          "alpha_low": 0.0,
+          "alpha_high": 0.1,
+          "pixels": 177,
+          "mean_rendered_alpha": 0.07343295216560364,
+          "fraction_depth_within_10_percent": 0.13559322033898305
+        },
+        {
+          "alpha_low": 0.1,
+          "alpha_high": 0.2,
+          "pixels": 302,
+          "mean_rendered_alpha": 0.14766991138458252,
+          "fraction_depth_within_10_percent": 0.17880794701986755
+        },
+        {
+          "alpha_low": 0.2,
+          "alpha_high": 0.30000000000000004,
+          "pixels": 312,
+          "mean_rendered_alpha": 0.2493906021118164,
+          "fraction_depth_within_10_percent": 0.13141025641025642
+        },
+        {
+          "alpha_low": 0.30000000000000004,
+          "alpha_high": 0.4,
+          "pixels": 358,
+          "mean_rendered_alpha": 0.35174286365509033,
+          "fraction_depth_within_10_percent": 0.13966480446927373
+        },
+        {
+          "alpha_low": 0.4,
+          "alpha_high": 0.5,
+          "pixels": 363,
+          "mean_rendered_alpha": 0.4528821110725403,
+          "fraction_depth_within_10_percent": 0.14049586776859505
+        },
+        {
+          "alpha_low": 0.5,
+          "alpha_high": 0.6000000000000001,
+          "pixels": 414,
+          "mean_rendered_alpha": 0.5511732697486877,
+          "fraction_depth_within_10_percent": 0.13043478260869565
+        },
+        {
+          "alpha_low": 0.6000000000000001,
+          "alpha_high": 0.7000000000000001,
+          "pixels": 568,
+          "mean_rendered_alpha": 0.6540115475654602,
+          "fraction_depth_within_10_percent": 0.17253521126760563
+        },
+        {
+          "alpha_low": 0.7000000000000001,
+          "alpha_high": 0.8,
+          "pixels": 707,
+          "mean_rendered_alpha": 0.7544587850570679,
+          "fraction_depth_within_10_percent": 0.1753889674681754
+        },
+        {
+          "alpha_low": 0.8,
+          "alpha_high": 0.9,
+          "pixels": 1176,
+          "mean_rendered_alpha": 0.8573048114776611,
+          "fraction_depth_within_10_percent": 0.19812925170068027
+        },
+        {
+          "alpha_low": 0.9,
+          "alpha_high": 1.0,
+          "pixels": 7712,
+          "mean_rendered_alpha": 0.9799250960350037,
+          "fraction_depth_within_10_percent": 0.25103734439834025
+        }
+      ],
+      "truth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_visibility_v2_linux5080/ai_008_005/right_visibility_truth.npz",
+      "review": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/08_HiddenLayerProvider/HLP-GEO-01_flash3d_geometry_v5_oracle_scale_linux5080/ai_008_005/right_review.png"
+    }
+  ],
+  "summary": {
+    "views": 6,
+    "mean_hidden_coverage": 0.9893268179767044,
+    "min_hidden_coverage": 0.953767258382643,
+    "mean_abs_rel_on_supported_hidden": 0.18172541032886005,
+    "median_abs_rel_on_supported_hidden": 0.19514040797973053,
+    "mean_source_layer1_abs_rel": 0.22862865585644931,
+    "source_median_scale_ratios": [
+      1.2836099495615692,
+      0.7753268381112901,
+      0.9050643772365914
+    ],
+    "peak_cuda_memory_bytes": 2560214528,
+    "total_runtime_seconds_after_model_load": 5.121236225939356
+  },
+  "quality_boundary": "raw measurement only; rendered alpha is not confidence, bins are diagnostics, no provider pass/fail or calibrated fusion confidence is claimed"
+}

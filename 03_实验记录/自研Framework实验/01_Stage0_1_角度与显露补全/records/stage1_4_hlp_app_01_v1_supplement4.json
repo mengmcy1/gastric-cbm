@@ -1,0 +1,115 @@
+{
+  "schema_version": "stage1.4-hlp-app-01-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "scope": "five distinct RealEstate10K source/left/right RGB triplets; no depth truth",
+  "selection": {
+    "rule": "lowest angle_error_sum_deg, at most one triplet per sequence",
+    "requested_sequence_count": 1,
+    "excluded_sequences": [
+      "168c85ce00de0c6b",
+      "195fbef2c08715e9",
+      "1b87f55dec310243",
+      "4811a66f87b0dd6a",
+      "83a449617d36a17b",
+      "8c2c302994f6cea1",
+      "93e6c08c33206a0c",
+      "99bf0dc41a750511",
+      "ba26189581b38b93",
+      "c767b97c0d3caca4",
+      "fc966f25afa3659f"
+    ],
+    "selected_sequences": [
+      "c53178af617eaa65"
+    ],
+    "successful_sequence_count": 1,
+    "failed_sequence_count": 0
+  },
+  "inputs": {
+    "triplets": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_4_re10k_angle_triplets_v1.json",
+      "bytes": 43906,
+      "sha256": "e2bdcadd72eb2a502ea49b5405acb79079ed60c776c71287837355af3a4b236c"
+    },
+    "metadata_tar": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/RealEstate10K.tar.gz",
+      "bytes": 752332631,
+      "sha256": "af18e4d560ee9f73120128e53a56da215e118f3fb52018c14a66aa0f8ed691db"
+    }
+  },
+  "source_protocol": {
+    "downloader_basis": "Flash3D official download_realestate10k.py",
+    "stream": "360p progressive MP4",
+    "timestamp_unit": "microseconds",
+    "full_dataset_downloaded": false,
+    "files_deleted": false
+  },
+  "sequences": [
+    {
+      "sequence": "c53178af617eaa65",
+      "video_url": "https://www.youtube.com/watch?v=D1xea6m448Y",
+      "stream": {
+        "itag": 18,
+        "resolution": "360p",
+        "fps": 30,
+        "mime_type": "video/mp4"
+      },
+      "video": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/source_video.mp4",
+        "bytes": 19217277,
+        "sha256": "1edcc18d63136b9eddab835ca43d98d93e924be61932e88266718fcc05869163"
+      },
+      "metadata": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/metadata.txt",
+        "bytes": 58704,
+        "sha256": "ee7d74b82cd5bdbdac9cb535a31ee1e6bdb2371dcdbd5645b3b86486feb732c5"
+      },
+      "triplet": {
+        "sequence": "c53178af617eaa65",
+        "video_url": "https://www.youtube.com/watch?v=D1xea6m448Y",
+        "source_index": 48,
+        "source_timestamp": "55622000",
+        "left_index": 143,
+        "left_timestamp": "58892000",
+        "left_angle_deg": -15.021246260951756,
+        "left_translation": 2.048586682402961,
+        "left_intrinsics_relative_change": 0.0,
+        "right_index": 13,
+        "right_timestamp": "54421000",
+        "right_angle_deg": 15.026040174913511,
+        "right_translation": 0.40062627551120655,
+        "right_intrinsics_relative_change": 0.0,
+        "total_angle_deg": 30.047286435865267,
+        "angle_error_sum_deg": 0.04728643586526715
+      },
+      "frames": {
+        "source": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/source.jpg",
+          "bytes": 30137,
+          "sha256": "4c3e52d4195be884d6e8ea183a921af3467808389a4871856de64d0f6da80ad1",
+          "timestamp_microseconds": "55622000",
+          "frame_index": 48,
+          "angle_deg": 0.0
+        },
+        "left": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/left.jpg",
+          "bytes": 21355,
+          "sha256": "102c044a359c749e2189c13fafa34ee604028b4e79ec7dbbde3a8eb684639b33",
+          "timestamp_microseconds": "58892000",
+          "frame_index": 143,
+          "angle_deg": -15.021246260951756
+        },
+        "right": {
+          "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_v1_supplement4_linux5080/c53178af617eaa65/right.jpg",
+          "bytes": 29912,
+          "sha256": "743cdd27ee48797016f007dc2845d179ab9d2b8ae0e68ce74893832e4f02c816",
+          "timestamp_microseconds": "54421000",
+          "frame_index": 13,
+          "angle_deg": 15.026040174913511
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "quality_boundary": "RGB/pose appearance set only; no dense depth and no provider-quality conclusion"
+}

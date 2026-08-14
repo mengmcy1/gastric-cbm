@@ -1,0 +1,401 @@
+{
+  "schema_version": "stage1.4-remote-tar-members-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "source": {
+    "url": "https://thor.robots.ox.ac.uk/flash3d/pcl.test.tar",
+    "archive_bytes": 10312816640,
+    "official_archive_sha512": "1f36131b23b04ed0ab293d5d509cc191e6f24c30214411aad27ae42737ee0a27dd70bf33443b0f1bdc726e9b58504e6761c99754e43b7bef759535eeb759d065",
+    "archive_sha512_scope": "official full-archive checksum; not recomputed from selected ranges"
+  },
+  "requested_members": [
+    "pcl.test/168c85ce00de0c6b.pickle.gz",
+    "pcl.test/195fbef2c08715e9.pickle.gz",
+    "pcl.test/1b87f55dec310243.pickle.gz",
+    "pcl.test/8c2c302994f6cea1.pickle.gz",
+    "pcl.test/c53178af617eaa65.pickle.gz"
+  ],
+  "completed_members": [
+    {
+      "member": "pcl.test/168c85ce00de0c6b.pickle.gz",
+      "header_offset": 909872128,
+      "member_bytes": 1820428,
+      "output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/168c85ce00de0c6b.pickle.gz",
+      "sha256": "3d04219183fd5699ef4797d053b8ab9eb68a92ec356f3a1cf1af1d6f621213bd",
+      "validation": {
+        "pickle_uncompressed_bytes": 5021176,
+        "keys": [
+          "p3D_ids",
+          "xys",
+          "xyz"
+        ],
+        "xyz_shape": [
+          38515,
+          3
+        ],
+        "frame_count_xys": 279,
+        "frame_count_p3D_ids": 279
+      }
+    },
+    {
+      "member": "pcl.test/195fbef2c08715e9.pickle.gz",
+      "header_offset": 1025199104,
+      "member_bytes": 3155330,
+      "output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/195fbef2c08715e9.pickle.gz",
+      "sha256": "3422746a197fb04b01d3df707f010476d8eab805b140e92548af2b3eab31c2c9",
+      "validation": {
+        "pickle_uncompressed_bytes": 8395064,
+        "keys": [
+          "p3D_ids",
+          "xys",
+          "xyz"
+        ],
+        "xyz_shape": [
+          86297,
+          3
+        ],
+        "frame_count_xys": 279,
+        "frame_count_p3D_ids": 279
+      }
+    },
+    {
+      "member": "pcl.test/1b87f55dec310243.pickle.gz",
+      "header_offset": 1098824192,
+      "member_bytes": 2073148,
+      "output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/1b87f55dec310243.pickle.gz",
+      "sha256": "717d252455283df382cc7a023a81aded33eee990303a74aa1eec0cfc43cbc201",
+      "validation": {
+        "pickle_uncompressed_bytes": 5725221,
+        "keys": [
+          "p3D_ids",
+          "xys",
+          "xyz"
+        ],
+        "xyz_shape": [
+          46416,
+          3
+        ],
+        "frame_count_xys": 279,
+        "frame_count_p3D_ids": 279
+      }
+    },
+    {
+      "member": "pcl.test/8c2c302994f6cea1.pickle.gz",
+      "header_offset": 5753944064,
+      "member_bytes": 1393826,
+      "output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/8c2c302994f6cea1.pickle.gz",
+      "sha256": "e83bcca9a7765c2db3b793d87e29e843515961295972160fdf5c70ca90ecfcc8",
+      "validation": {
+        "pickle_uncompressed_bytes": 3846246,
+        "keys": [
+          "p3D_ids",
+          "xys",
+          "xyz"
+        ],
+        "xyz_shape": [
+          35872,
+          3
+        ],
+        "frame_count_xys": 264,
+        "frame_count_p3D_ids": 264
+      }
+    },
+    {
+      "member": "pcl.test/c53178af617eaa65.pickle.gz",
+      "header_offset": 8039296000,
+      "member_bytes": 4243436,
+      "output": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/HLP-APP-01_colmap_v1_linux5080/c53178af617eaa65.pickle.gz",
+      "sha256": "bc3278e93e1385845dca72e957098314cae2cc81f06684767ec86c8f53a85886",
+      "validation": {
+        "pickle_uncompressed_bytes": 12071176,
+        "keys": [
+          "p3D_ids",
+          "xys",
+          "xyz"
+        ],
+        "xyz_shape": [
+          70178,
+          3
+        ],
+        "frame_count_xys": 257,
+        "frame_count_p3D_ids": 257
+      }
+    }
+  ],
+  "error": null,
+  "range_request_count": 38,
+  "range_bytes_received": 289510232,
+  "range_requests": [
+    {
+      "start": 5152214016,
+      "end": 5160602623,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 26.76756743201986
+    },
+    {
+      "start": 2572698112,
+      "end": 2581086719,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 32.569072889047675
+    },
+    {
+      "start": 1282222592,
+      "end": 1290611199,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 44.24844930099789
+    },
+    {
+      "start": 637162496,
+      "end": 645551103,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 35.72803803405259
+    },
+    {
+      "start": 960392192,
+      "end": 968780799,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 36.227780068991706
+    },
+    {
+      "start": 801596928,
+      "end": 809985535,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 34.19795353803784
+    },
+    {
+      "start": 883458048,
+      "end": 891846655,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 34.03860293899197
+    },
+    {
+      "start": 924524032,
+      "end": 932912639,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 27.350171769037843
+    },
+    {
+      "start": 904504832,
+      "end": 912893439,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 14.178280742955394
+    },
+    {
+      "start": 909872640,
+      "end": 911693067,
+      "bytes": 1820428,
+      "attempt": 1,
+      "seconds": 9.085133285960183
+    },
+    {
+      "start": 1122105856,
+      "end": 1130494463,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 44.56266979104839
+    },
+    {
+      "start": 1042629120,
+      "end": 1051017727,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 35.29174880404025
+    },
+    {
+      "start": 1002995712,
+      "end": 1011384319,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 15.257058263989165
+    },
+    {
+      "start": 1023847936,
+      "end": 1032236543,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 32.69985593005549
+    },
+    {
+      "start": 1025199616,
+      "end": 1028354945,
+      "bytes": 3155330,
+      "attempt": 1,
+      "seconds": 26.865478905965574
+    },
+    {
+      "start": 1084133888,
+      "end": 1092522495,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 32.561126647982746
+    },
+    {
+      "start": 1104082432,
+      "end": 1112471039,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 40.41154730296694
+    },
+    {
+      "start": 1094451712,
+      "end": 1102840319,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 27.057690802030265
+    },
+    {
+      "start": 1098824704,
+      "end": 1100897851,
+      "bytes": 2073148,
+      "attempt": 1,
+      "seconds": 16.792504290002398
+    },
+    {
+      "start": 7733231616,
+      "end": 7741620223,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 35.20655009907205
+    },
+    {
+      "start": 6443441664,
+      "end": 6451830271,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 30.812702376046218
+    },
+    {
+      "start": 5798888448,
+      "end": 5807277055,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 22.564450931036845
+    },
+    {
+      "start": 5476338688,
+      "end": 5484727295,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 23.860930624068715
+    },
+    {
+      "start": 5638271488,
+      "end": 5646660095,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 32.70301799394656
+    },
+    {
+      "start": 5718929408,
+      "end": 5727318015,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 20.82667969004251
+    },
+    {
+      "start": 5759746048,
+      "end": 5768134655,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 35.98285684897564
+    },
+    {
+      "start": 5741008896,
+      "end": 5749397503,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 47.33747647097334
+    },
+    {
+      "start": 5751447552,
+      "end": 5759836159,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 45.546678779996
+    },
+    {
+      "start": 5753944576,
+      "end": 5755338401,
+      "bytes": 1393826,
+      "attempt": 1,
+      "seconds": 11.80778674792964
+    },
+    {
+      "start": 9023109120,
+      "end": 9031497727,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 36.890841332031414
+    },
+    {
+      "start": 8378491904,
+      "end": 8386880511,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 51.947826883988455
+    },
+    {
+      "start": 8056665088,
+      "end": 8065053695,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 35.12388898804784
+    },
+    {
+      "start": 7895737344,
+      "end": 7904125951,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 29.976192125002854
+    },
+    {
+      "start": 7977277952,
+      "end": 7985666559,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 23.32708646496758
+    },
+    {
+      "start": 8018989568,
+      "end": 8027378175,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 34.13178925099783
+    },
+    {
+      "start": 8040461824,
+      "end": 8048850431,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 33.44471925892867
+    },
+    {
+      "start": 8033195520,
+      "end": 8041584127,
+      "bytes": 8388608,
+      "attempt": 1,
+      "seconds": 20.931588985025883
+    },
+    {
+      "start": 8039296512,
+      "end": 8043539947,
+      "bytes": 4243436,
+      "attempt": 2,
+      "seconds": 18.915242766030133
+    }
+  ],
+  "safety": {
+    "full_archive_downloaded": false,
+    "overwrites_refused": true,
+    "files_deleted": false
+  }
+}

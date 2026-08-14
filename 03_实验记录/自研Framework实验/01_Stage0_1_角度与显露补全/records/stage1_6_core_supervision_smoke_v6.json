@@ -1,0 +1,50 @@
+{
+  "schema_version": "stage1.6-core-supervision-smoke-v6",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "source_root": "源码/Adaptive3DGS",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONWARNINGS=error PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 20,
+  "tests_passed": 20,
+  "tests_failed": 0,
+  "capabilities": {
+    "stage1_5_reference_chain": true,
+    "general_hypersim_projective_calibration": "M_cam_from_uv factored into upper-triangular K and camera rotation by RQ",
+    "general_intrinsics_unprojection_and_projection": true,
+    "hypersim_train_val_triplet_loader": {
+      "held_out_overlap_rejected": true,
+      "source_truth_depth_field": "label_only"
+    },
+    "source_hidden_supervision": {
+      "nearest_surface_behind_source_first_hit": true,
+      "positive_evidence_only": true,
+      "unobserved_rays_are_negative": false,
+      "observation_count_and_depth_spread_preserved": true
+    }
+  },
+  "files_sha256": {
+    "源码/Adaptive3DGS/pyproject.toml": "9a42d97921238e141659d1d9bbbb6a0d956f80365b84223119af30aeadebe984",
+    "源码/Adaptive3DGS/src/adaptive3dgs/__init__.py": "441f11d0b22a3bdfa47a88cd79ba554e4ba7b0664b472c784b6fc039a89e6752",
+    "源码/Adaptive3DGS/src/adaptive3dgs/adapters/__init__.py": "a884cdca8720675bf177733aa2a81f0995ae165b8e4066cf77a4f613fc70ac61",
+    "源码/Adaptive3DGS/src/adaptive3dgs/adapters/flash3d.py": "57f2b1d7c20a68956819b6b6a5117e2c1f54b70ace942e02ccccece2596ea2df",
+    "源码/Adaptive3DGS/src/adaptive3dgs/clb.py": "02ac73be90413fea1d9b9556f730cbc1cb6bdadd2092d135140e6e4f3da90dd8",
+    "源码/Adaptive3DGS/src/adaptive3dgs/datasets/__init__.py": "4c516c566998f8f4307d3cdc4283dc57231a4b48def296bdd9d107e7595bb162",
+    "源码/Adaptive3DGS/src/adaptive3dgs/datasets/hypersim.py": "05111eefbd3dcfdfc0467ed2dcba95fa1091a9354e7470d5468f17bd8c7755d7",
+    "源码/Adaptive3DGS/src/adaptive3dgs/datasets/hypersim_training.py": "9522142e1db3c56457d166bff7340c6b3ee59130b30f0fe9c9a9be3b28328a08",
+    "源码/Adaptive3DGS/src/adaptive3dgs/evaluation.py": "3665a9ea72442c59b28919141ebb9b4335249a323574ff469e66545d9b0e586b",
+    "源码/Adaptive3DGS/src/adaptive3dgs/io.py": "2bbe81e7f5ab96a6010db174984f90084e8791c158641c1c7720ec6b18900225",
+    "源码/Adaptive3DGS/src/adaptive3dgs/providers.py": "6555224d485baa61eabe793dd55eb884fbdc2baeab4beca73618201fb65b162a",
+    "源码/Adaptive3DGS/src/adaptive3dgs/registry.py": "e60136f5067f2bd5fbc5ea07d1c364229b3126be01d73e5f8c9f01a3b0f6d640",
+    "源码/Adaptive3DGS/src/adaptive3dgs/supervision.py": "640b0ceeea9e852b47ceaa7f291eb55eaf894aa63308e6274ede2c9e0b421777",
+    "源码/Adaptive3DGS/src/adaptive3dgs/validation.py": "e1ee0640efa7e00636bfd9f84bb761729dee1dff3d3abe022f85c62d42624cc7",
+    "源码/Adaptive3DGS/tests/test_core.py": "5cdfc5fab8bde24b8525854fe3574333bdee6ec7bcceff0f46bbe6728afcad4c",
+    "源码/Adaptive3DGS/tests/test_evaluation.py": "51ef0f7b2bb4e07526a3ffeb219a1f7a98ba099a5f6e600d9dee91c68614859f",
+    "源码/Adaptive3DGS/tests/test_flash3d_adapter.py": "28ea4d3591d9b99d2031ae2c5729d883fd6bd638f2460be68e42f086a8e19cb0",
+    "源码/Adaptive3DGS/tests/test_hypersim.py": "cd4421b53e886ce398f7f21340fc09e5bea28d25d6c477e9a7a867575cfac190",
+    "源码/Adaptive3DGS/tests/test_supervision.py": "f5148052cf3b5a7480a829e6b25d60f648865db8bb09a13e91c44985c3dfd97a"
+  },
+  "supersedes": "stage1_5_core_interface_smoke_v5.json",
+  "quality_boundary": "positive hidden evidence and data plumbing only; no trainable network or test-set quality result"
+}

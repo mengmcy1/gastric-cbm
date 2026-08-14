@@ -17,6 +17,12 @@ import torchvision.transforms.functional as TF
 from hydra import compose, initialize_config_dir
 from PIL import Image
 
+from flash3d_xformers_compat import (
+    XFORMERS_SOURCE_COMMIT,
+    force_dino_reference_attention,
+    install_unidepth_compatibility,
+)
+
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -72,6 +78,7 @@ def main() -> None:
         return original_hub_load(repo_or_dir, model, *hub_args, **hub_kwargs)
 
     torch.hub.load = local_unidepth_hub_load
+    install_unidepth_compatibility()
 
     with initialize_config_dir(version_base=None, config_dir=str(args.repo / "configs")):
         cfg = compose(config_name="config", overrides=["+experiment=layered_re10k"])
@@ -85,6 +92,7 @@ def main() -> None:
     from models.model import GaussianPredictor
 
     model = GaussianPredictor(cfg)
+    force_dino_reference_attention()
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
     # Match Flash3D's official load_model(): these non-learned buffers encode
     # the configured batch size and therefore cannot be copied from its
@@ -95,6 +103,15 @@ def main() -> None:
         for key, value in checkpoint["model"].items()
     }
     load_result = model.load_state_dict(adapted_state, strict=False)
+    external_unidepth_prefix = "models.unidepth_extended.unidepth."
+    external_unidepth_missing = [
+        key for key in load_result.missing_keys
+        if key.startswith(external_unidepth_prefix)
+    ]
+    unexpected_missing = [
+        key for key in load_result.missing_keys
+        if not key.startswith(external_unidepth_prefix)
+    ]
 
     image = Image.open(args.image).convert("RGB")
     original_w, original_h = image.size
@@ -164,6 +181,13 @@ def main() -> None:
             "torch_cuda": torch.version.cuda,
             "flash3d_commit": git_commit(args.repo),
             "unidepth_commit": git_commit(args.repo.parent / "UniDepth"),
+            "compatibility": {
+                "dino_attention": "historical_unidepth_pytorch_reference_attention",
+                "nystrom_formula_source": "xformers_v0.0.25.post1",
+                "nystrom_source_commit": XFORMERS_SOURCE_COMMIT,
+                "nystrom_shape_adapter": "B,N,H,D -> B*H,N,D -> B,N,H,D",
+                "fidelity_boundary": "not claimed bitwise-identical to the original unpinned environment",
+            },
         },
         "inputs": {
             "image": portable_path(args.image),
@@ -175,7 +199,12 @@ def main() -> None:
             "checkpoint_sha256": sha256(args.checkpoint),
         },
         "checkpoint_load": {
-            "missing_keys": list(load_result.missing_keys),
+            "external_unidepth_missing_count": len(external_unidepth_missing),
+            "external_unidepth_missing_expected": (
+                len(external_unidepth_missing) == len(load_result.missing_keys)
+            ),
+            "external_unidepth_source": "separately loaded pretrained UniDepth weights",
+            "unexpected_missing_keys": unexpected_missing,
             "unexpected_keys": list(load_result.unexpected_keys),
         },
         "runtime_seconds": elapsed,
@@ -194,7 +223,7 @@ def main() -> None:
             "opacity_is_confidence": False,
         },
     }
-    if load_result.missing_keys or load_result.unexpected_keys or result["layer_checks"]["positive_second_layer_increment_fraction"] < 1.0:
+    if unexpected_missing or load_result.unexpected_keys or result["layer_checks"]["positive_second_layer_increment_fraction"] < 1.0:
         result["status"] = "fail"
     if any(summary["finite_fraction"] < 1.0 for summary in tensor_summary.values()):
         result["status"] = "fail"

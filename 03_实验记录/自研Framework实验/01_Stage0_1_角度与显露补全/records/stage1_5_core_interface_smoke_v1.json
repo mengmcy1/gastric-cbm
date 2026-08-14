@@ -1,0 +1,28 @@
+{
+  "schema_version": "stage1.5-core-interface-smoke-v1",
+  "status": "pass",
+  "date": "2026-08-14",
+  "producer_machine_id": "linux5080",
+  "source_root": "源码/Adaptive3DGS",
+  "python_environment": "flash3d",
+  "command_portable": "PYTHONPATH=源码/Adaptive3DGS/src python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+  "tests_run": 4,
+  "tests_passed": 4,
+  "tests_failed": 0,
+  "covered_gates": [
+    "valid occlusion-hidden CLB result accepted",
+    "non-finite geometry confidence rejected even when alpha is valid",
+    "synthetic oracle provenance rejected in deployment",
+    "duplicate provider registration rejected"
+  ],
+  "files_sha256": {
+    "源码/Adaptive3DGS/pyproject.toml": "ee2d7d660f8df6cfb5679fabb307bb34827093b53ce78c5083223f75e81155ed",
+    "源码/Adaptive3DGS/src/adaptive3dgs/__init__.py": "d67ec9ec910ed7effe06ec49d1d04d4dfc4e94c6000dc4da90889c40eb344d65",
+    "源码/Adaptive3DGS/src/adaptive3dgs/clb.py": "5f1bf747e5299b37c55149ebfa6b09a5f72a8b09ab51dd3dc0f2da05433c779c",
+    "源码/Adaptive3DGS/src/adaptive3dgs/providers.py": "6555224d485baa61eabe793dd55eb884fbdc2baeab4beca73618201fb65b162a",
+    "源码/Adaptive3DGS/src/adaptive3dgs/registry.py": "e60136f5067f2bd5fbc5ea07d1c364229b3126be01d73e5f8c9f01a3b0f6d640",
+    "源码/Adaptive3DGS/src/adaptive3dgs/validation.py": "2f9e0e6f93b569d340d4b1e59b30fbd8a46bf524e0998daef260f857642bfb1c",
+    "源码/Adaptive3DGS/tests/test_core.py": "a6915cf000085d3dfc269edb078639a11e09003a4c405dc31b8ae89a9b957564"
+  },
+  "quality_boundary": "interface/schema smoke only; no trainable network, dataset loader, renderer, fusion, or provider quality result yet"
+}

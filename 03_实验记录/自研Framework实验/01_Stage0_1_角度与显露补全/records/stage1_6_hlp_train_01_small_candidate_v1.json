@@ -1,0 +1,221 @@
+{
+  "schema_version": "stage1.6-hlp-train-01-small-candidate-v1",
+  "status": "failed",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": "1",
+  "inputs": {
+    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_01_small_training_v1.json",
+    "training_config_sha256": "c506158b23a6e0726d2e5c36b9eac6ccd72b476badc604a8ab44494289beee6b",
+    "evidence_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_01_hidden_evidence_v2.json",
+    "evidence_record_sha256": "fd007f96043925335cbcbd39a3c2c8a6192967f4d9af395ce9456109595f972c",
+    "base_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_01_frozen_base_depth_v2.json",
+    "base_record_sha256": "eacd58118df4492075de625454e075b5b98363567d518a88abb4be03ff0716b4",
+    "model_inputs": [
+      "source_rgb_uint8",
+      "frozen_base_depth_z_float32"
+    ],
+    "source_truth_depth_model_input": false,
+    "held_out_hlp_geo_test_used": false
+  },
+  "initial_train": {
+    "ratio_abs_rel": 3.5710614729577395,
+    "ratio_mae": 0.9321207800364855,
+    "positive_support_mean": 0.5148057092498035,
+    "unknown_support_mean": 0.501474499872579,
+    "positive_confidence_mean": 0.40738393495928726,
+    "positive_confidence_std": 0.04981729019355015,
+    "positive_pixels": 140604,
+    "unknown_pixels": 1432260,
+    "all_finite": true,
+    "strictly_positive_relative_increment": true,
+    "confidence_in_open_unit_interval": true,
+    "selection_score": 3.717433770638918
+  },
+  "initial_validation": {
+    "ratio_abs_rel": 2.2997916393531397,
+    "ratio_mae": 0.4395062750453167,
+    "positive_support_mean": 0.4954248877414041,
+    "unknown_support_mean": 0.5034643514729951,
+    "positive_confidence_mean": 0.4290926737282822,
+    "positive_confidence_std": 0.040554730278996705,
+    "positive_pixels": 87716,
+    "unknown_pixels": 305500,
+    "all_finite": true,
+    "strictly_positive_relative_increment": true,
+    "confidence_in_open_unit_interval": true,
+    "selection_score": 2.4511086349914386
+  },
+  "best_epoch": 5,
+  "best_train": {
+    "ratio_abs_rel": 1.8683422575132331,
+    "ratio_mae": 0.7390710545760945,
+    "positive_support_mean": 0.2717020763468734,
+    "unknown_support_mean": 0.2602949594303758,
+    "positive_confidence_mean": 0.4022804818714039,
+    "positive_confidence_std": 0.019474078605626437,
+    "positive_pixels": 140604,
+    "unknown_pixels": 1432260,
+    "all_finite": true,
+    "strictly_positive_relative_increment": true,
+    "confidence_in_open_unit_interval": true,
+    "selection_score": 2.0634314863980334
+  },
+  "best_validation": {
+    "ratio_abs_rel": 1.3451965629845182,
+    "ratio_mae": 0.44285895852809065,
+    "positive_support_mean": 0.2691396385957237,
+    "unknown_support_mean": 0.2615407886661211,
+    "positive_confidence_mean": 0.39287288842685486,
+    "positive_confidence_std": 0.026430711529070564,
+    "positive_pixels": 87716,
+    "unknown_pixels": 305500,
+    "all_finite": true,
+    "strictly_positive_relative_increment": true,
+    "confidence_in_open_unit_interval": true,
+    "selection_score": 1.5409886927688932
+  },
+  "validation_selection_score_relative_improvement": 0.3713095083709843,
+  "train_ratio_abs_rel_relative_improvement": 0.4768103905067267,
+  "gates": {
+    "validation_selection_score_improved_by_frozen_minimum": true,
+    "validation_ratio_abs_rel_below_initial": true,
+    "validation_positive_minus_unknown_support_above_frozen_minimum": false,
+    "train_ratio_abs_rel_improved_by_frozen_minimum": false,
+    "all_best_outputs_finite": true,
+    "all_best_relative_increments_strictly_positive": true
+  },
+  "predictions": [
+    {
+      "split": "train",
+      "scene": "ai_001_001",
+      "source_frame": 99,
+      "positive_class_prior": 0.0963694304227829,
+      "evidence_arrays_sha256": "334fdc5d90a7b1fde7e194b07799f05b19b440404745ef3557cd848111a466be",
+      "base_arrays_sha256": "cb966e4b10c5b5e77503d1474710cab63a1a2e59429f9a56475b91eefbb4ab1c",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_001-prediction.npz",
+      "arrays_sha256": "cd9202d62d44d21e46360314ceb7426b664f4c994164cf92fb56e06242c39f14",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_001-support.png",
+      "support_preview_sha256": "14b7f284661f39a241fbc170617b8225a44238ab372a0da24e2e2fbdeaa2cd43"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_006",
+      "source_frame": 64,
+      "positive_class_prior": 0.01927693746984005,
+      "evidence_arrays_sha256": "bd88fb65a7840ae1efdafe655a59f1774cd08b4242e9d201cf28b808c706008a",
+      "base_arrays_sha256": "8c09b2e4c9060e59ddd8463ef1ee75936692c0d0d3db8fbbf0f95cbc0e2b4daa",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_006-prediction.npz",
+      "arrays_sha256": "4cef54dfd5c4da47885497d2171e7e243e984cf0b0176b4fa95d1efffc6f9bfe",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_006-support.png",
+      "support_preview_sha256": "c0648d2a433ccebdcb8ea6ca480d10d107689c021f5c9f21a03477c9f145f6cc"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_005",
+      "source_frame": 45,
+      "positive_class_prior": 0.1746927946805954,
+      "evidence_arrays_sha256": "6d6dbe369b508a5d2c1f421e621eead1c1ae500b08f8c5452c86641825bcd0d3",
+      "base_arrays_sha256": "dce611ad1774aa4c94335998998b78cea394fa2b8a4323608a8c1ac7304a93f9",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_005-prediction.npz",
+      "arrays_sha256": "1e28cc7920757485ff996ad72525d8342f691367d7df48588512834514f2acdd",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_005-support.png",
+      "support_preview_sha256": "a865db23b4158356c7fcb8302e6320cd8701eb6b8546693467bf216569c21320"
+    },
+    {
+      "split": "train",
+      "scene": "ai_001_004",
+      "source_frame": 8,
+      "positive_class_prior": 0.0428059920668602,
+      "evidence_arrays_sha256": "4421eac1e7bfe8d13379036923014b6519fa133fa4acc62ad5a2af5f1afe0938",
+      "base_arrays_sha256": "88958f4f811dcf7736dca74f3d283f03411743eb44e23b27dfc9ac4a23a7002f",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_004-prediction.npz",
+      "arrays_sha256": "70ef1abc8bea9b7763b44e18c9348fea5d4f52d17594da04cf57cb7f44878233",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_001_004-support.png",
+      "support_preview_sha256": "21503d558b09abc5db2effba494258a0672b0a6c69991dc1f49947164e3dd50f"
+    },
+    {
+      "split": "train",
+      "scene": "ai_006_002",
+      "source_frame": 4,
+      "positive_class_prior": 0.0674896240234375,
+      "evidence_arrays_sha256": "7e08be0965bea5aa9231d6fd982b9f4bc37d0a2c3e7ee3d028a621e402476d2e",
+      "base_arrays_sha256": "4cbc36dbe65f4097507d0462db3f1cd12ef94c0638fb622f31197c07ca6660e0",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_006_002-prediction.npz",
+      "arrays_sha256": "47465ca212d0f2c20af90e745c417db214707b5bc0d6c33bdaabf85a77a8c94a",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_006_002-support.png",
+      "support_preview_sha256": "adfb086ed139a57184d59e61e8773b2472ff04e9f8f57214db55f53db572fc92"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_001",
+      "source_frame": 42,
+      "positive_class_prior": 0.146728515625,
+      "evidence_arrays_sha256": "7a3a34021001f021564e16773755e283078045459a7ef74f8c7e94b836478968",
+      "base_arrays_sha256": "2d8d0131373c2f0b6d29c22884a9a35b39f48cbaccaa89b268c5467b1324f612",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_009_001-prediction.npz",
+      "arrays_sha256": "a75acf7185c9045828052c3e5f589299b9c34ca027e556d6a823a9d908a62dab",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_009_001-support.png",
+      "support_preview_sha256": "7444c8c7c362ff38b4640cce16647d28035416147a496e71ee06773d9c4cc9ac"
+    },
+    {
+      "split": "train",
+      "scene": "ai_016_009",
+      "source_frame": 48,
+      "positive_class_prior": 0.1515146940946579,
+      "evidence_arrays_sha256": "a2ba26df25512f37aa68a702cdfd39b2d613d7e28b6c896d6ac863756ec10ef6",
+      "base_arrays_sha256": "78bdf97ceaaaaa6de2e2894231977910c42fb818fe235b6066a93e73ce25792e",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_016_009-prediction.npz",
+      "arrays_sha256": "d1627793f5897cf530d320788221b44c919d89032b1789c42938fe83b12b2387",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_016_009-support.png",
+      "support_preview_sha256": "944c1b9c32856b15ccfcd1d6043dd22ba3489b1e9468fecb722e3a915ecae10a"
+    },
+    {
+      "split": "train",
+      "scene": "ai_009_006",
+      "source_frame": 77,
+      "positive_class_prior": 0.01627095602452755,
+      "evidence_arrays_sha256": "f900efba82264330acefc2671bf89b43a0a86176998c518ab6083835550933f0",
+      "base_arrays_sha256": "75f4cc1de2840627bd728685a090a97b024f18207beb6f67006a45bda5a47483",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_009_006-prediction.npz",
+      "arrays_sha256": "4da6aa0ca357d8fd642f6928cb2ad825b818b7b5a7d72e6f6b2ed8d0b6bacebf",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/train-ai_009_006-support.png",
+      "support_preview_sha256": "85e0c365f6ad7f841be4be9db6e246ee29cf94754eeed2be780313dd5ca386f2"
+    },
+    {
+      "split": "val",
+      "scene": "ai_004_003",
+      "source_frame": 66,
+      "positive_class_prior": 0.1786143034696579,
+      "evidence_arrays_sha256": "90082e54791873ded9b9f34d08c38c42bd4ff11ea1648f5bf55917b4c1f7f7e6",
+      "base_arrays_sha256": "80c03b03cbda5d795bef0042f1160cbbc390e8dd651f4242f34e1a7bb76e7950",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/val-ai_004_003-prediction.npz",
+      "arrays_sha256": "414440b74327109da69af164b212ee9bd8cadaf9a649121fda5ed17720b0809d",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/val-ai_004_003-support.png",
+      "support_preview_sha256": "d7b914ff888f9be0d5e85846ef2f3f15c35963e4e9d7250d6fe7a0a837dd3261"
+    },
+    {
+      "split": "val",
+      "scene": "ai_031_010",
+      "source_frame": 9,
+      "positive_class_prior": 0.2675323486328125,
+      "evidence_arrays_sha256": "417c5f3d29aaedf05b56e838cf5fdc8e4a4a5ca6907347e41217293541bbc79f",
+      "base_arrays_sha256": "4e1f633e581661a18629824e87918858274aa179a2b39d75cfde9221aa843bd5",
+      "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/val-ai_031_010-prediction.npz",
+      "arrays_sha256": "e1e9d21fa48e29bd7e328a1cddd38350494bcbe7aa600553b7e3cee5a2143359",
+      "support_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/val-ai_031_010-support.png",
+      "support_preview_sha256": "a2f9876ada43bf4838d933954de79273b1e7d077069d8997c1da676ea0cdaa37"
+    }
+  ],
+  "artifacts": {
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/best_model.pt",
+    "checkpoint_sha256": "1d66f576ea8d8bf17e968c5ba436854c470ec8ee82a8597cc819e2ca558b182a",
+    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-01_small_candidate_v1_linux5080/history.json",
+    "history_sha256": "232bc30a51ed6b3c07390c6419e3f51276fc68fc43bf22bf34cc1e3c07efcc44"
+  },
+  "runtime": {
+    "seconds": 61.189864496933296,
+    "peak_cuda_memory_bytes": 452145152
+  },
+  "quality_boundary": "first 8-train/2-validation geometry candidate; selected without HLP-GEO test or P01; no hidden appearance or target-view render conclusion"
+}

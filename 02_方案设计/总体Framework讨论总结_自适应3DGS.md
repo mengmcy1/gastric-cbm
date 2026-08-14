@@ -685,7 +685,7 @@ Stage 6：材质外观与移动端渲染
 
 `CLB-SYN-01` 表示层和 `CLB-GS-SYN-01` v2 高斯转换层已于2026-08-13分别通过受控合成硬门。高斯转换不使用端点角度渐入，证明共享世界坐标与几何可见性足以表达遮挡后方和中心视锥外两类隐藏表面。这是表示能力结论，不是单图预测或 P01 30° 质量结论。当前瓶颈已前移到 `HiddenLayerProvider`：下一阶段先在有多视图真值的小数据上评估隐藏几何、外观和置信度预测，不用无真值 P01 直接选模型。
 
-### 14.15 Stage 1.4 Provider 拆分与双真值评价（当前执行中）
+### 14.15 Stage 1.4 Provider 拆分与双真值评价（已完成）
 
 `HiddenLayerProvider` 进一步拆成 `OcclusionHiddenProvider` 与 `OutsideFOVProvider`。这个拆分是能力边界，不是实现细节：Flash3D/MINE 一类源视锥内层式模型只能生成同一中心视锥内的遮挡后表面，不能凭自身覆盖中心原图外的世界；后者必须由独立 Provider 负责，最后再进入同一 CLBValidator 与 SurfaceFusion。
 
@@ -693,4 +693,30 @@ Stage 6：材质外观与移动端渲染
 
 评价采用双数据集：`HLP-APP-01` 从 RealEstate10K 的官方 Flash3D 验证序列中按真实相机姿态筛 `-15°/0°/+15°` 三元组，只评价目标 RGB与新视角外观；`HLP-GEO-01` 从 Hypersim test split 中选极小子集，用 RGB、逐像素距离/世界位置、相机位姿和内参评价隐藏几何、深度顺序与支持区。RealEstate10K 没有稠密深度，不允许用 RGB 指标代替几何真值；Hypersim 全量约1.9TB，只允许元数据优先、选中文件按需下载。
 
-当前 Flash3D checkpoint/源码结构静态预检和 RealEstate10K 真实角度预检已通过，尚未完成 GPU 推理。详细冻结协议见 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/Stage1_4_HiddenLayerProvider候选与双真值协议.md`。
+Flash3D checkpoint/源码结构静态预检、RTX 5080 推理、RealEstate10K 外观 A/B 与 Hypersim 稠密几何评价均已完成。双层相对单层通常改善外观，但原始米制遮挡后几何平均 AbsRel 为23.33%、δ<1.10为24.80%；使用源深度真值做不可部署的 oracle 尺度对齐后仍为18.17%/39.50%。高 opacity/alpha 也不稳定对应低几何误差，因此不把它冒充 confidence。Flash3D 原样不通过 `OcclusionHiddenProvider`，固化为参考基线，不接 P01、不继续针对它调参。详细证据见 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/Stage1_4_HiddenLayerProvider候选与双真值协议.md`。
+
+### 14.16 Stage 1.5 自研 Provider 骨架（已完成）
+
+可复用核心代码位于 `源码/Adaptive3DGS/`。第一版已经把 `OcclusionHiddenProvider`、`OutsideFOVProvider`、Provider 注册器、CLB 数据类、部署前验证器、安全 manifest/NPZ I/O，以及模型无关的遮挡后几何/置信度 evaluator 落实为独立 Python 包。HLP-GEO 数据/相机适配层也已接入：默认不向 Provider 暴露源深度真值，3场景、6目标的60项真实数据门全部通过，并准确复现冻结的遮挡后/视锥外掩码统计。Flash3D 只读映射层将第二层规范为未校准 CLB，并将原生目标渲染规范为统一几何预测；Alpha 只作支持概率，confidence 固定为0。当前15项单元测试通过；Stage 1.3 合成 bundle 的61项逐元素 round-trip 门和旧验证器交叉检查也全部通过。
+
+Flash3D 仓库推理/原生渲染后端已完成统一链路回归：6视角隐藏区覆盖率相对冻结 v3 差值全0，AbsRel 最大差约`6.43e-10`，证明“仓库输出 → 只读 adapter → CLB/Validator → evaluator”忠实且可复现；该结果不改变 Flash3D 本身几何质量未通过的判断。下一步不是在 P01 或 Flash3D 上继续调图，而是加入首个自研可训练遮挡后残差几何分支；其输出必须学习独立的支持概率和几何 confidence，不能复用 opacity 命名或语义。中心视锥外内容仍由未来独立 `OutsideFOVProvider` 负责。
+
+### 14.17 Stage 1.6 独立训练监督（已完成，候选未通过）
+
+首个自研 Provider 的数据边界已经冻结：Hypersim 官方 train/val 用于训练与选择，HLP-GEO-01三个官方 test 场景只在候选冻结后评价，P01不参与训练或调参。首批管线冒烟使用8个train、2个val场景，均按真实相机旋转选出总范围30°三元组；130个必要文件通过Range定向获取，没有下载完整场景ZIP。
+
+目标视角first-hit RGB-D只能提供源射线后方表面的正证据，未覆盖源射线不能当作隐藏层不存在。因此核心监督生成器只输出`positive + unknown`：候选必须同时深于源first hit 1 cm与1%，同一源像素保留最近后方表面并记录观测数/深度跨度。canonical v2在10个三元组上产生912,897个正证据像素，最弱场景仍有1.6127%，50项门全部通过。为保留验证场景，核心还加入一般Hypersim投影的RQ分解，可将倾斜传感器分解为上三角K与相机旋转修正。
+
+三头网络已经实现正深度增量、support probability和独立geometry confidence，并加入相机射线、/16上下文、delta-conditioned头与目标视角verified free-space负证据；unknown始终不伪装成负类。实现合同30/30测试通过，单样本几何与support过拟合也通过。
+
+随后依次完成8 train/2 val单帧、相同8/2场景的80/20多源帧，以及40 train/10 val独立场景的场景多样化候选。最终HLP-TRAIN-03在1000次更新后，val ratio AbsRel从3.8958降到2.3451，但support正例/verified-negative分离仅0.02204，未达到冻结0.05门；训练集分离也只有0.02456。候选正式未通过，且按协议未读取HLP-GEO test、未接P01。
+
+该结果将问题边界从“监督或代码是否可学习”缩小为“source-only小型网络对隐藏表面存在性的跨场景可辨识性不足”。下一候选不再只调整优化器或横向更换二维补全器，而改变信息结构：先验证具有显式像素连通和逐层合成的完整LDI管线，必要时再转向显式目标视角条件化Provider。`OutsideFOVProvider`继续独立，不与本阶段混写。
+
+### 14.18 Stage 1.7 完整 LDI 候选（已完成，人工不通过）
+
+官方3D Photo完整LDI链路已在P01上跑通。它不是此前固定端点三网络adapter：本轮实际建立显式像素连通，按深度断边形成局部遮挡组件，迭代补全边缘、深度与颜色，再导出多层mesh。为了保持项目单变量边界，深度使用冻结P01中心深度，焦距使用实测3195.073 px，渲染使用无裁剪61帧`true_arc`总范围30°；官方源码保持固定commit且未修改。
+
+canonical v4自动诊断显示-15°/+15°端点分别有27.81%/26.81%的灰色未覆盖区，三联图还可见树木和栏杆边缘拉伸。用户完整播放后评分为空洞严重度3/3、拉伸或虚假结构2、运动连续性尚可、总体不通过。显式LDI改善了部分遮挡后内容和时间连续性，却没有解决30°所需的大范围中心视锥外内容。
+
+因此完整LDI冻结为结构化失败基线，不通过扩大外推、裁剪或改背景掩盖问题，不扩展P02/P05，也不转补充高斯。下一阶段必须把目标相机作为显式条件，让Provider面向指定±15°视角生成/重建新显露内容，并将中心视锥外区域交给一级`OutsideFOVProvider`；不能继续假设source-only隐藏层或有限边界外推能独自满足30°。
