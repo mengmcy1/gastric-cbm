@@ -1,6 +1,6 @@
 # schema_version: 1.1-artifact-tree-snapshot
 # producer_machine_id: linux5080
-# captured_at: 2026-08-14T15:32:43+08:00
+# captured_at: 2026-08-14T16:05:16+08:00
 # scan_roots: ["03_实验记录/SHARP浅3D实验", "03_实验记录/自研Framework实验", "03_实验记录/InfiniSplat复现实验"]
 # D=directory F=file L=symlink O=other; paths are repository-relative
   [D] InfiniSplat复现实验/
@@ -505,11 +505,110 @@
         [F] summarize_cross_scene_video_black_area.py (2586 bytes)
     [D] 05_跨场景真实大基线/
       [F] README.md (1007 bytes)
+      [D] configs/
+        [F] eth3d_kicker_dsc6497_intrinsics_v1.json (222 bytes)
+        [F] eth3d_kicker_dsc6497_source_inference_v1.json (1327 bytes)
+        [F] eth3d_kicker_dsc6497_to_dsc6508_pair_v1.json (2441 bytes)
+        [F] eth3d_pipes_dsc0639_intrinsics_v1.json (220 bytes)
+        [F] eth3d_pipes_dsc0639_source_inference_v1.json (1364 bytes)
+        [F] eth3d_pipes_dsc0639_to_dsc0640_pair_v1.json (2425 bytes)
+      [D] inputs/
+        [F] eth3d_kicker_dsc6497_manifest.json (609 bytes)
+        [F] eth3d_pipes_dsc0639_manifest.json (580 bytes)
+      [D] logs/
+        [F] ETH3D_kicker_DSC6497_source_inference_v1_linux5080_20260814.log (361 bytes)
+        [F] ETH3D_pipes_DSC0639_source_inference_v1_linux5080_20260814.log (360 bytes)
       [D] outputs/
+        [D] ETH3D_kicker_DSC6497_source_inference_v1_linux5080_20260814/
+          [D] DSC_6497/
+            [F] DSC_6497.ply (82990390 bytes)
+          [F] run_receipt.json (1300 bytes)
+        [D] ETH3D_kicker_DSC6497_to_DSC6508_real_pose_v1_linux5080_20260814/
+          [F] source_input_2016x1344.jpg (908435 bytes)
+          [F] target_ground_truth_2016x1344.jpg (825665 bytes)
+        [D] ETH3D_kicker_DSC6497_to_DSC6508_real_pose_v1_linux5080_20260814_retry1/
+          [F] source_input_2016x1344.jpg (908435 bytes)
+          [F] target_ground_truth_2016x1344.jpg (825665 bytes)
+        [D] ETH3D_pipes_DSC0639_source_inference_v1_linux5080_20260814/
+          [D] DSC_0639/
+            [F] DSC_0639.ply (83159398 bytes)
+          [F] run_receipt.json (1295 bytes)
+        [D] ETH3D_pipes_DSC0639_to_DSC0640_real_pose_v1_linux5080_20260814/
+          [F] source_input_2016x1344.jpg (609933 bytes)
+          [F] target_ground_truth_2016x1344.jpg (638648 bytes)
+        [D] ETH3D_pipes_DSC0639_to_DSC0640_real_pose_v1_linux5080_20260814_retry1/
+          [F] source_input_2016x1344.jpg (609933 bytes)
+          [F] target_ground_truth_2016x1344.jpg (638648 bytes)
         [D] datasets/
           [D] eth3d_kicker/
-            [F] kicker_dslr_undistorted.7z (336981749 bytes)
+            [D] extracted/
+              [D] kicker/
+                [D] dslr_calibration_undistorted/
+                  [F] cameras.txt (169 bytes)
+                  [F] images.txt (4844280 bytes)
+                  [F] points3D.txt (1236839 bytes)
+                [D] images/
+                  [D] dslr_images_undistorted/
+                    [F] DSC_6487.JPG (13697936 bytes)
+                    [F] DSC_6489.JPG (14019114 bytes)
+                    [F] DSC_6490.JPG (14297719 bytes)
+                    [F] DSC_6491.JPG (14514175 bytes)
+                    [F] DSC_6492.JPG (14522968 bytes)
+                    [F] DSC_6493.JPG (14342537 bytes)
+                    [F] DSC_6494.JPG (13753901 bytes)
+                    [F] DSC_6495.JPG (14197582 bytes)
+                    [F] DSC_6496.JPG (13909913 bytes)
+                    [F] DSC_6497.JPG (14164581 bytes)
+                    [F] DSC_6499.JPG (13586973 bytes)
+                    [F] DSC_6500.JPG (13886901 bytes)
+                    [F] DSC_6502.JPG (13514884 bytes)
+                    [F] DSC_6503.JPG (13534487 bytes)
+                    [F] DSC_6504.JPG (14402107 bytes)
+                    [F] DSC_6505.JPG (14096077 bytes)
+                    [F] DSC_6506.JPG (13844585 bytes)
+                    [F] DSC_6507.JPG (13588871 bytes)
+                    [F] DSC_6508.JPG (13590548 bytes)
+                    [F] DSC_6509.JPG (14103691 bytes)
+                    [F] DSC_6510.JPG (13511882 bytes)
+                    [F] DSC_6511.JPG (13419988 bytes)
+                    [F] DSC_6512.JPG (13233786 bytes)
+                    [F] DSC_6513.JPG (13429691 bytes)
+                    [F] DSC_6514.JPG (14033479 bytes)
+                    [F] DSC_6515.JPG (14071660 bytes)
+                    [F] DSC_6516.JPG (13282020 bytes)
+                    [F] DSC_6517.JPG (14013137 bytes)
+                    [F] DSC_6518.JPG (13600307 bytes)
+                    [F] DSC_6519.JPG (14375259 bytes)
+                    [F] DSC_6520.JPG (14317776 bytes)
+            [F] kicker_dslr_undistorted.7z (433074686 bytes)
           [D] eth3d_pipes/
+            [D] extracted/
+              [D] pipes/
+                [D] dslr_calibration_undistorted/
+                  [F] cameras.txt (168 bytes)
+                  [F] images.txt (971781 bytes)
+                  [F] points3D.txt (176384 bytes)
+                [D] images/
+                  [D] dslr_images_undistorted/
+                    [F] DSC_0634.JPG (10385068 bytes)
+                    [F] DSC_0635.JPG (10346406 bytes)
+                    [F] DSC_0636.JPG (10289785 bytes)
+                    [F] DSC_0637.JPG (10489025 bytes)
+                    [F] DSC_0638.JPG (10737033 bytes)
+                    [F] DSC_0639.JPG (10137606 bytes)
+                    [F] DSC_0640.JPG (10372672 bytes)
+                    [F] DSC_0641.JPG (10363187 bytes)
+                    [F] DSC_0642.JPG (10656263 bytes)
+                    [F] DSC_0643.JPG (11019673 bytes)
+                    [F] DSC_0644.JPG (10755119 bytes)
+                    [F] DSC_0645.JPG (11139278 bytes)
+                    [F] DSC_0646.JPG (10630386 bytes)
+                    [F] DSC_0647.JPG (10490689 bytes)
+            [F] pipes_dslr_undistorted.7z (145321540 bytes)
+        [F] eth3d_kicker_large_baseline_candidates_v1.csv (95667 bytes)
+        [F] eth3d_kicker_large_baseline_candidates_v1.json (1705725 bytes)
+        [F] eth3d_pipes_large_baseline_candidates_v1.csv (34169 bytes)
+        [F] eth3d_pipes_large_baseline_candidates_v1.json (591817 bytes)
     [F] PPT临时素材重建索引.md (2244 bytes)
     [F] 实验进度与结果讨论.md (30732 bytes)
   [D] SHARP浅3D实验/
