@@ -25,6 +25,17 @@ class GeometryPrediction:
     geometry_confidence_float32: npt.NDArray[np.float32]
 
 
+@dataclass(frozen=True, slots=True)
+class TargetViewPrediction:
+    """Target-camera RGB-D prediction before conversion to CLB or Gaussians."""
+
+    rgb_uint8: npt.NDArray[np.uint8]
+    depth_z_float32: npt.NDArray[np.float32]
+    support_probability_float32: npt.NDArray[np.float32]
+    geometry_confidence_float32: npt.NDArray[np.float32]
+    appearance_confidence_float32: npt.NDArray[np.float32]
+
+
 def _check_target_prediction(target: GeometryTarget, prediction: GeometryPrediction) -> tuple[int, int]:
     shape = target.depth_z_float32.shape
     if len(shape) != 2 or any(value.shape != shape for value in (
@@ -136,3 +147,118 @@ def evaluate_occlusion_geometry(
         "bins": calibration,
     }
     return result
+
+
+def _region_metrics(
+    name: str,
+    mask: np.ndarray,
+    truth_rgb: np.ndarray,
+    truth_depth: np.ndarray,
+    prediction: TargetViewPrediction,
+    support_threshold: float,
+) -> dict[str, object]:
+    truth_valid = mask & np.isfinite(truth_depth) & (truth_depth > 0)
+    predicted_valid = np.isfinite(prediction.depth_z_float32) & (prediction.depth_z_float32 > 0)
+    supported = truth_valid & predicted_valid & (
+        prediction.support_probability_float32 >= support_threshold
+    )
+    truth_pixels = int(truth_valid.sum())
+    supported_pixels = int(supported.sum())
+    result: dict[str, object] = {
+        "region": name,
+        "truth_pixels": truth_pixels,
+        "supported_pixels": supported_pixels,
+        "coverage": float(supported_pixels / truth_pixels) if truth_pixels else None,
+    }
+    if supported_pixels == 0:
+        result["geometry"] = None
+        result["appearance"] = None
+        return result
+
+    depth_truth = truth_depth[supported].astype(np.float64)
+    depth_pred = prediction.depth_z_float32[supported].astype(np.float64)
+    abs_depth = np.abs(depth_pred - depth_truth)
+    ratio = np.maximum(depth_pred / depth_truth, depth_truth / depth_pred)
+    rgb_truth = truth_rgb[supported].astype(np.float64)
+    rgb_pred = prediction.rgb_uint8[supported].astype(np.float64)
+    rgb_error = rgb_pred - rgb_truth
+    rgb_mse = float(np.mean(rgb_error ** 2))
+    result["geometry"] = {
+        "abs_rel": float(np.mean(abs_depth / depth_truth)),
+        "mae": float(abs_depth.mean()),
+        "rmse": float(np.sqrt(np.mean(abs_depth ** 2))),
+        "delta_1_05": float(np.mean(ratio < 1.05)),
+        "delta_1_10": float(np.mean(ratio < 1.10)),
+    }
+    result["appearance"] = {
+        "mae_0_255": float(np.mean(np.abs(rgb_error))),
+        "rmse_0_255": float(np.sqrt(rgb_mse)),
+        "psnr_db": None if rgb_mse == 0 else float(10.0 * np.log10((255.0 ** 2) / rgb_mse)),
+        "exact_match_fraction": float(np.mean(np.all(rgb_pred == rgb_truth, axis=1))),
+    }
+    return result
+
+
+def evaluate_target_view_prediction(
+    target: GeometryTarget,
+    target_rgb_uint8: npt.NDArray[np.uint8],
+    prediction: TargetViewPrediction,
+    *,
+    support_threshold: float = 0.05,
+) -> dict[str, object]:
+    """Evaluate target-space RGB-D separately on observed, occluded and outside-FOV regions."""
+
+    height, width = _check_target_prediction(
+        target,
+        GeometryPrediction(
+            depth_z_float32=prediction.depth_z_float32,
+            support_probability_float32=prediction.support_probability_float32,
+            geometry_confidence_float32=prediction.geometry_confidence_float32,
+        ),
+    )
+    if not 0 < support_threshold < 1:
+        raise ValueError("support_threshold must be in (0,1)")
+    if target_rgb_uint8.dtype != np.uint8 or target_rgb_uint8.shape != (height, width, 3):
+        raise ValidationError("target RGB must be uint8 HxWx3 and match geometry")
+    if prediction.rgb_uint8.dtype != np.uint8 or prediction.rgb_uint8.shape != (height, width, 3):
+        raise ValidationError("prediction RGB must be uint8 HxWx3 and match geometry")
+    if prediction.appearance_confidence_float32.dtype != np.float32:
+        raise ValidationError("appearance confidence must be float32")
+    if prediction.appearance_confidence_float32.shape != (height, width):
+        raise ValidationError("appearance confidence must match target HxW")
+    if not np.isfinite(prediction.appearance_confidence_float32).all() or not (
+        (prediction.appearance_confidence_float32 >= 0)
+        & (prediction.appearance_confidence_float32 <= 1)
+    ).all():
+        raise ValidationError("appearance confidence must be finite and inside [0,1]")
+
+    masks = {
+        "observed_from_source": target.observed_from_source_mask,
+        "occlusion_hidden": target.occlusion_hidden_mask,
+        "outside_source_fov": target.outside_source_fov_mask,
+    }
+    if any(np.any(first & second) for index, first in enumerate(masks.values()) for second in list(masks.values())[index + 1 :]):
+        raise ValidationError("target evaluation masks must be pairwise disjoint")
+    truth_valid = np.isfinite(target.depth_z_float32) & (target.depth_z_float32 > 0)
+    classified = np.logical_or.reduce(tuple(masks.values()))
+    predicted_support = prediction.support_probability_float32 >= support_threshold
+    return {
+        "support_threshold": support_threshold,
+        "valid_truth_pixels": int(truth_valid.sum()),
+        "classified_truth_pixels": int((classified & truth_valid).sum()),
+        "classified_truth_fraction": float((classified & truth_valid).sum() / truth_valid.sum())
+        if np.any(truth_valid)
+        else None,
+        "support_on_excluded_truth_pixels": int((predicted_support & truth_valid & ~classified).sum()),
+        "regions": {
+            name: _region_metrics(
+                name,
+                mask,
+                target_rgb_uint8,
+                target.depth_z_float32,
+                prediction,
+                support_threshold,
+            )
+            for name, mask in masks.items()
+        },
+    }

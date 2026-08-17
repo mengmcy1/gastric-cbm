@@ -1,9 +1,22 @@
 """Adaptive3DGS core interfaces."""
 
 from .clb import Camera, CanonicalLayerBundle, CanonicalLayerPatch, Provenance, SupportType
-from .evaluation import GeometryPrediction, GeometryTarget, evaluate_occlusion_geometry
+from .evaluation import (
+    GeometryPrediction,
+    GeometryTarget,
+    TargetViewPrediction,
+    evaluate_occlusion_geometry,
+    evaluate_target_view_prediction,
+)
 from .io import load_bundle, save_bundle
-from .providers import OcclusionHiddenProvider, OutsideFOVProvider, ProviderContext, ProviderResult
+from .providers import (
+    OcclusionHiddenProvider,
+    OutsideFOVProvider,
+    ProviderContext,
+    ProviderResult,
+    TargetViewConditionedProvider,
+    TargetViewRequest,
+)
 from .registry import ProviderRegistry
 from .supervision import HiddenLayerEvidence, TargetRGBDObservation, build_source_hidden_evidence
 from .validation import ValidationError, ValidationReport, validate_patch, validate_result
@@ -23,6 +36,9 @@ __all__ = [
     "ProviderResult",
     "SupportType",
     "TargetRGBDObservation",
+    "TargetViewPrediction",
+    "TargetViewConditionedProvider",
+    "TargetViewRequest",
     "ValidationError",
     "ValidationReport",
     "validate_patch",
@@ -30,5 +46,6 @@ __all__ = [
     "load_bundle",
     "save_bundle",
     "evaluate_occlusion_geometry",
+    "evaluate_target_view_prediction",
     "build_source_hidden_evidence",
 ]

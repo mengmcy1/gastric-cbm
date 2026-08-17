@@ -1,0 +1,11 @@
+{
+  "schema_version": "stage1.8-depth-scale-diagnostic-v1",
+  "status": "frozen_before_run",
+  "candidate_record": "records/stage1_8_target_view_candidate_v1.json",
+  "split": "validation",
+  "oracle_scale": "one shared positive scalar per target, median of log(truth_depth/predicted_depth) over the union of both novel regions",
+  "decision": {
+    "both_regions_scale_aligned_abs_rel_maximum_for_scale_dominant": 0.30
+  },
+  "quality_boundary": "Oracle target-depth scale is diagnostic and cannot be used at deployment or to turn the failed candidate into a pass."
+}

@@ -183,7 +183,7 @@
 
 当前实验执行进一步拆分为两个并行分支，但评价口径必须独立记录：
 
-1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型和Stage 1.7官方完整LDI均已正式不通过。Stage 1.7人工评分为空洞3/3、拉伸/虚假结构2、连续性尚可、总体不通过；不再调3D Photo、不扩展P02/P05、不转补充高斯。当前下一结构候选为显式目标视角条件化Provider，并将`OutsideFOVProvider`作为一级独立分支；候选通过独立几何/外观门前不进入Stage 2。
+1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型和Stage 1.7官方完整LDI均已正式不通过。Stage 1.8显式目标视角条件化协议与三分区RGB-D evaluator oracle校准已通过；当前进入目标相机条件接口和单端点过拟合，`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价。候选通过独立几何/外观门前不接P01、不进入Stage 2。
 2. **InfiniSplat 对照复现分支（已暂停）**：官方 RGB 单图 PLY、官方演示视频和 P01 受控总范围5°视频均已跑通，包装层未发现复现 Bug；但官方岩洞示例与 P01 都出现不可接受的模糊和显露空洞，P01 受控5°仍未通过用户质量门。当前不继续调整原版 InfiniSplat 的轨迹、焦距、背景或高斯数；只保留其表面对齐采样和隐式高斯解码作为未来表示层候选。论文作者报告的 SOTA 仍属作者公开结论，不是本地统一评价结论。
 
 InfiniSplat 必须使用独立 `infinisplat` 环境，不得安装到或污染 `sharp` 的 Python 包。当前已验证环境为 Python 3.10.20、PyTorch 2.9.0+cu128、torchvision 0.24.0+cu128、xformers 0.0.33.post1 和 gsplat 1.5.3；Windows 下 gsplat 1.5.3 需要已记录的 MSVC 兼容补丁，并且当前编译时只共用 `sharp` 环境中已有的 CUDA Toolkit 12.8 工具链，不共用 `sharp` 的 Python、PyTorch、gsplat 包或编译二进制。RGB 权重为 3,142,241,921 bytes，文件 SHA256 为 `D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D`；`2A1B61FC...` 是 Hugging Face Xet 存储对象哈希，不是下载文件 SHA256。源码、权重、运行日志和大型输出按外部模型复现方式管理，权重和大型输出只保留本地。
@@ -257,7 +257,7 @@ Framework 中的材质感知模块暂不作为当前主链路或近期实验变�
 
 下一步：
 
-1. 自研主分支已停止 MAT、Flash3D、source-only 三头模型与官方 3D Photo LDI 的继续调参。下一步设计首个显式目标视角条件化 Provider：目标相机进入生成/重建条件，`OcclusionHiddenProvider` 负责中心视锥内遮挡后内容，`OutsideFOVProvider` 负责中心视锥外内容；先在独立多视图真值小集过几何/外观门，再接 P01 true_arc 30°，候选通过前不扩展 P02/P05。
+1. 自研主分支已停止 MAT、Flash3D、source-only 三头模型与官方 3D Photo LDI 的继续调参。Stage 1.8三分区evaluator已完成oracle校准；下一步实现首个显式目标视角条件化 Provider并做单端点过拟合。`OcclusionHiddenProvider`负责中心视锥内遮挡后内容，`OutsideFOVProvider`负责中心视锥外内容；两类先在独立多视图真值上分别过门，再接P01 `true_arc` 30°。
 2. InfiniSplat 对照分支保持暂停，不继续优化原版。只有需要建立失败曲线、出现新官方权重，或自研显式补全成立后要复用其表面对齐解码器时才重启。
 3. 自研 Framework 继续按“角度协议 → 显露补全 → 补充高斯 → 双端点一致性 → 细结构 → 自研基础表示 → Gate 与压缩 → 移动端”推进；第一轮不修改 SHARP 官方源码，通过适配器调用冻结 SHARP 基线。
 4. 可复用的自研模型与核心库放 `源码/Adaptive3DGS/`；Stage 0+1 的正式实验脚本、配置和清单保存在 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/`，大型输出、模型权重和运行日志仅本地保留，不上传 GitHub。

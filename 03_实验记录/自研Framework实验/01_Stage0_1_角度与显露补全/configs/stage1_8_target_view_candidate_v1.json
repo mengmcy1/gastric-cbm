@@ -1,0 +1,38 @@
+{
+  "schema_version": "stage1.8-target-view-candidate-v1",
+  "status": "frozen_before_run",
+  "training_pool_record": "records/stage1_8_target_view_training_pool_v1.json",
+  "expected_train_targets": 64,
+  "expected_validation_targets": 14,
+  "input_size_hw": [384, 512],
+  "architecture": {
+    "name": "TargetViewUNet",
+    "base_channels": 16,
+    "inputs": ["warped_source_rgb", "warped_frozen_base_depth", "warp_coverage", "target_rays_in_source", "target_origin_in_source"],
+    "outputs": ["target_rgb", "target_depth_z", "occlusion_support", "outside_support", "geometry_confidence", "appearance_confidence"]
+  },
+  "optimization": {
+    "optimizer_updates": 2000,
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.00001,
+    "depth_weight": 1.0,
+    "support_weight": 0.5,
+    "confidence_weight": 0.05,
+    "validation_interval_updates": 100,
+    "seed": 20260817
+  },
+  "checkpoint_selection": {
+    "score": "mean over occlusion/outside of rgb_mae/255 + depth_abs_rel + (1-positive_support) + negative_support",
+    "uses_training_metrics": false,
+    "uses_held_out_test": false
+  },
+  "gates": {
+    "validation_novel_rgb_relative_improvement_over_warp_minimum": 0.15,
+    "validation_novel_rgb_mae_0_255_maximum": 35.0,
+    "validation_novel_depth_abs_rel_maximum": 0.30,
+    "validation_branch_support_separation_minimum": 0.10,
+    "train_novel_rgb_relative_improvement_over_warp_minimum": 0.40
+  },
+  "leakage_boundary": "Target RGB-D and masks are label/evaluation only. Validation selects checkpoints only. HLP-GEO/HLP-APP test and P01 are not read."
+}

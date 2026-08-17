@@ -2,7 +2,14 @@ import unittest
 
 import numpy as np
 
-from adaptive3dgs import GeometryPrediction, GeometryTarget, ValidationError, evaluate_occlusion_geometry
+from adaptive3dgs import (
+    GeometryPrediction,
+    GeometryTarget,
+    TargetViewPrediction,
+    ValidationError,
+    evaluate_occlusion_geometry,
+    evaluate_target_view_prediction,
+)
 
 
 def target() -> GeometryTarget:
@@ -49,6 +56,39 @@ class EvaluationTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValidationError, "share one HxW"):
             evaluate_occlusion_geometry(target(), prediction)
+
+    def test_target_view_oracle_is_perfect_in_both_novel_regions(self) -> None:
+        truth = target()
+        rgb = np.arange(18, dtype=np.uint8).reshape(2, 3, 3)
+        prediction = TargetViewPrediction(
+            rgb_uint8=rgb.copy(),
+            depth_z_float32=truth.depth_z_float32.copy(),
+            support_probability_float32=np.ones((2, 3), dtype=np.float32),
+            geometry_confidence_float32=np.ones((2, 3), dtype=np.float32),
+            appearance_confidence_float32=np.ones((2, 3), dtype=np.float32),
+        )
+        result = evaluate_target_view_prediction(truth, rgb, prediction)
+        self.assertEqual(result["support_on_excluded_truth_pixels"], 0)
+        for name in ("occlusion_hidden", "outside_source_fov"):
+            region = result["regions"][name]
+            self.assertEqual(region["coverage"], 1.0)
+            self.assertEqual(region["geometry"]["abs_rel"], 0.0)
+            self.assertEqual(region["appearance"]["mae_0_255"], 0.0)
+            self.assertEqual(region["appearance"]["exact_match_fraction"], 1.0)
+
+    def test_target_view_masks_must_be_disjoint(self) -> None:
+        truth = target()
+        truth.outside_source_fov_mask[0, 0] = True
+        rgb = np.zeros((2, 3, 3), dtype=np.uint8)
+        prediction = TargetViewPrediction(
+            rgb_uint8=rgb,
+            depth_z_float32=truth.depth_z_float32.copy(),
+            support_probability_float32=np.ones((2, 3), dtype=np.float32),
+            geometry_confidence_float32=np.ones((2, 3), dtype=np.float32),
+            appearance_confidence_float32=np.ones((2, 3), dtype=np.float32),
+        )
+        with self.assertRaisesRegex(ValidationError, "pairwise disjoint"):
+            evaluate_target_view_prediction(truth, rgb, prediction)
 
 
 if __name__ == "__main__":

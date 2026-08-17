@@ -1,0 +1,63 @@
+{
+  "schema_version": "stage1.8-pretrained-backbone-audit-v1",
+  "created_at": "2026-08-17",
+  "status": "complete_audit",
+  "scope": "public explicit-camera single-image novel-view backbones for Stage 1.8",
+  "constraints": {
+    "target_gpu_memory_gib": 16,
+    "must_accept_explicit_target_camera": true,
+    "must_not_use_target_ground_truth_as_input": true,
+    "held_out_test_read": false,
+    "p01_read": false
+  },
+  "local_asset_audit": {
+    "reusable_sources": ["Flash3D", "InfiniSplat", "MINE", "SHARP", "UniDepth"],
+    "reusable_pretrained_assets": ["Flash3D re10k checkpoint", "SHARP checkpoint", "ResNet50 checkpoint"],
+    "mat_or_lama_or_3d_photo_weights_found": false
+  },
+  "candidates": [
+    {
+      "name": "GenWarp",
+      "selected": true,
+      "reason": "single target image API directly consumes source RGB, source depth and explicit source/target camera matrices; multi2 was trained across RE10K, ACID, ScanNet and MegaScene",
+      "code_license": "MIT",
+      "weight_license": "CC-BY-NC-4.0 plus upstream use restrictions",
+      "official_memory_claim": null,
+      "download_plan_bytes": 8429409786,
+      "download_plan": ["multi2", "image_encoder", "sd-vae-ft-mse"],
+      "risk": "official repository reports A100 testing but no memory figure; 16 GiB feasibility must be established by a one-target smoke before any val batch"
+    },
+    {
+      "name": "ViewCrafter_25_512",
+      "selected": false,
+      "reason": "official 320x512 variant reports 13.8 GB on A100, but produces a 25-frame video and leaves little headroom on a shared 16 GiB card; retain as fallback"
+    },
+    {
+      "name": "Stable Virtual Camera v1.1",
+      "selected": false,
+      "reason": "strong explicit-camera generalist, but 1.3B gated weights require Hugging Face authentication and outputs remain non-commercial; memory feasibility is not officially bounded for 16 GiB"
+    },
+    {
+      "name": "MetaView",
+      "selected": false,
+      "reason": "explicit yaw/pitch and scale-aware geometry are relevant, but the released stack requires Qwen-Image-Edit plus two Depth Anything 3 giant models and is not a minimal 16 GiB first candidate"
+    }
+  ],
+  "selected_candidate": "GenWarp multi2",
+  "integration_boundary": {
+    "rgb": "GenWarp synthesized target image",
+    "visible_warp_and_support": "GenWarp warped image, mask and correspondence",
+    "depth": "existing frozen RGB-only depth provider applied to synthesized target RGB; target depth truth remains evaluator-only",
+    "first_gate": "one qualified val target runtime/memory/finite-output smoke",
+    "next_gate": "all 14 qualified val targets under the frozen Stage 1.8 region metrics",
+    "forbidden_before_val_pass": ["HLP-GEO test", "HLP-APP test", "P01", "Gaussian Spawn"]
+  },
+  "official_sources": [
+    "https://github.com/sony/genwarp",
+    "https://huggingface.co/Sony/genwarp",
+    "https://github.com/Drexubery/ViewCrafter",
+    "https://github.com/Stability-AI/stable-virtual-camera",
+    "https://github.com/KlingAIResearch/MetaView"
+  ],
+  "decision": "install GenWarp in an isolated environment, download only multi2 and mandatory shared components, then run a one-target 16 GiB feasibility smoke"
+}

@@ -8,6 +8,12 @@ from .occlusion_hidden import (
     positive_unlabeled_logistic_loss,
     positive_verified_negative_logistic_loss,
 )
+from .target_view import (
+    TargetViewLoss,
+    TargetViewOutput,
+    TargetViewUNet,
+    compute_target_view_loss,
+)
 
 __all__ = [
     "HiddenGeometryLoss",
@@ -16,4 +22,8 @@ __all__ = [
     "compute_hidden_geometry_loss",
     "positive_unlabeled_logistic_loss",
     "positive_verified_negative_logistic_loss",
+    "TargetViewLoss",
+    "TargetViewOutput",
+    "TargetViewUNet",
+    "compute_target_view_loss",
 ]

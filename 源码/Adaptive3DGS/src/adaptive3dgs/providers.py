@@ -9,7 +9,7 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 import numpy.typing as npt
 
-from .clb import CanonicalLayerPatch
+from .clb import Camera, CanonicalLayerPatch
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,6 +32,27 @@ class ProviderResult:
     patches: Sequence[CanonicalLayerPatch]
     unsupported_regions: Sequence[str] = ()
     diagnostics: Mapping[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class TargetViewRequest:
+    """Explicit source and requested target camera for target-conditioned inference."""
+
+    source: ProviderContext
+    target_camera: Camera
+    target_height: int
+    target_width: int
+    metadata: Mapping[str, Any] = field(default_factory=dict)
+
+
+class TargetViewConditionedProvider(ABC):
+    """Predict content for one explicit target camera before world-space fusion."""
+
+    provider_id: str
+
+    @abstractmethod
+    def predict_target(self, request: TargetViewRequest) -> Any:
+        raise NotImplementedError
 
 
 class OcclusionHiddenProvider(ABC):

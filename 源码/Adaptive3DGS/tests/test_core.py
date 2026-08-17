@@ -9,6 +9,8 @@ from adaptive3dgs import (
     ProviderResult,
     SupportType,
     ValidationError,
+    TargetViewConditionedProvider,
+    TargetViewRequest,
     validate_result,
 )
 
@@ -78,6 +80,20 @@ class CoreTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             registry.register("provider", object)
         self.assertEqual(registry.available(), ("provider",))
+
+    def test_target_view_request_keeps_explicit_target_camera(self) -> None:
+        from adaptive3dgs import Camera, ProviderContext
+
+        source = ProviderContext(
+            sample_id="sample",
+            rgb_uint8=np.zeros((2, 3, 3), dtype=np.uint8),
+            intrinsics_3x3_float64=np.eye(3, dtype=np.float64),
+            world_to_camera_4x4_float64=np.eye(4, dtype=np.float64),
+        )
+        camera = Camera("target", np.eye(3), np.eye(4), angle_deg=15.0)
+        request = TargetViewRequest(source, camera, 2, 3)
+        self.assertEqual(request.target_camera.camera_id, "target")
+        self.assertTrue(issubclass(TargetViewConditionedProvider, object))
 
 
 if __name__ == "__main__":

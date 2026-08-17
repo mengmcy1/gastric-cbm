@@ -97,6 +97,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--record", type=Path, required=True)
     parser.add_argument("--absolute-tolerance-m", type=float, default=0.02)
     parser.add_argument("--relative-tolerance", type=float, default=0.005)
+    parser.add_argument(
+        "--gate-mode",
+        choices=("all_regions_each_view", "training_pool"),
+        default="all_regions_each_view",
+    )
+    parser.add_argument("--minimum-train-eligible", type=int, default=1)
+    parser.add_argument("--minimum-val-eligible", type=int, default=1)
     return parser.parse_args()
 
 
@@ -204,6 +211,7 @@ def main() -> int:
             classified = observed | occluded | outside | conflict | unresolved
             results.append(
                 {
+                    "split": triplet.get("split"),
                     "scene": scene,
                     "camera": camera,
                     "source_frame": source_frame,
@@ -238,16 +246,34 @@ def main() -> int:
                 }
             )
 
-    gates = {
+    base_gates = {
         "all_target_depth_matches_position_p99_relative_at_most_0_2_percent": all(
             item["target_depth_vs_position_p99_relative"] <= 0.002 for item in results
         ),
         "all_classifications_complete": all(item["classification_complete"] for item in results),
-        "all_views_have_occlusion_hidden_truth": all(item["occlusion_hidden_pixels"] > 0 for item in results),
-        "all_views_have_outside_source_fov_truth": all(item["outside_source_fov_pixels"] > 0 for item in results),
     }
+    eligible = [
+        item for item in results
+        if item["occlusion_hidden_pixels"] > 0 and item["outside_source_fov_pixels"] > 0
+    ]
+    if args.gate_mode == "all_regions_each_view":
+        gates = {
+            **base_gates,
+            "all_views_have_occlusion_hidden_truth": all(item["occlusion_hidden_pixels"] > 0 for item in results),
+            "all_views_have_outside_source_fov_truth": all(item["outside_source_fov_pixels"] > 0 for item in results),
+        }
+        schema_version = "stage1.4-hlp-geo-01-visibility-v1"
+    else:
+        train_eligible = sum(item["split"] == "train" for item in eligible)
+        val_eligible = sum(item["split"] == "val" for item in eligible)
+        gates = {
+            **base_gates,
+            "eligible_train_targets_meet_frozen_minimum": train_eligible >= args.minimum_train_eligible,
+            "eligible_validation_targets_meet_frozen_minimum": val_eligible >= args.minimum_val_eligible,
+        }
+        schema_version = "stage1.8-target-visibility-training-pool-v1"
     record = {
-        "schema_version": "stage1.4-hlp-geo-01-visibility-v1",
+        "schema_version": schema_version,
         "status": "pass" if all(gates.values()) else "fail",
         "producer_machine_id": "linux5080",
         "config": str(args.config.relative_to(Path.cwd())),
@@ -255,6 +281,7 @@ def main() -> int:
         "camera_parameters": str(args.camera_parameters.relative_to(Path.cwd())),
         "camera_parameters_sha256": sha256(args.camera_parameters),
         "classification": {
+            "gate_mode": args.gate_mode,
             "projection": "Hypersim official M_cam_from_uv inverse with pixel-center mapping",
             "depth_comparison": "target world position distance from source vs bilinear source depth_meters",
             "absolute_tolerance_m": args.absolute_tolerance_m,
@@ -273,6 +300,9 @@ def main() -> int:
             "total_occlusion_hidden_pixels": sum(item["occlusion_hidden_pixels"] for item in results),
             "total_outside_source_fov_pixels": sum(item["outside_source_fov_pixels"] for item in results),
             "maximum_geometry_conflict_fraction": max(item["geometry_conflict_fraction"] for item in results),
+            "eligible_target_views_with_both_novel_regions": len(eligible),
+            "eligible_train_target_views": sum(item["split"] == "train" for item in eligible),
+            "eligible_validation_target_views": sum(item["split"] == "val" for item in eligible),
         },
         "quality_boundary": "dense truth masks are ready; Flash3D prediction has not yet been evaluated against them",
     }

@@ -1,6 +1,6 @@
 # 自研 Framework 可同步记录
 
-状态：**Stage 1.6三头Provider与Stage 1.7官方完整LDI均已正式不通过。Stage 1.7用户评分为空洞3/3、拉伸/虚假结构2、连续性尚可、总体不通过；下一阶段转向目标视角条件化与独立OutsideFOVProvider（2026-08-14）**。
+状态：**Stage 1.8-2首个64-train/14-val目标条件候选已正式不通过；support分离通过但RGB/深度质量未过门。下一步为深度尺度上限与冻结预训练生成先验审计（2026-08-17）。**
 
 本目录用于保存从本地大型 `outputs/` 提升出来、可以提交 Git 的小型正式证据。不要在这里保存 PLY、MP4、逐帧图像、Depth、Alpha、NPY、模型或日志。
 
@@ -87,6 +87,18 @@
 - `stage1_6_core_trainable_model_smoke_v10.json`：当前canonical核心记录，supersede v9；相机射线、/16上下文、delta-conditioned独立头、target-view verified free-space与unknown隔离共30项测试全部通过。实现通过不改变HLP-TRAIN-03质量失败结论。
 - `stage1_7_official_ldi_true_arc_v4.json`：官方完整LDI构造接入P01冻结深度、实测焦距和统一`true_arc` 30°轨迹的canonical记录；视频61帧、无裁剪，左右端灰背景自动占比27.81%/26.81%，当前等待人工评阅。
 - `stage1_7_official_ldi_true_arc_v4_manual_review.json`：用户正式评分为空洞3/3、拉伸/虚假结构2、连续性尚可、总体不通过；停止3D Photo调参、P02/P05扩展与补充高斯转换。
+- `stage1_8_target_view_visibility_v1.json` / `v2.json`：保留首两个校准样本选择中val左端没有`outside_source_fov`真值而失败的证据；没有降低4端点双分支非空门。
+- `stage1_8_target_view_visibility_v3.json`：canonical三分区真值；2场景、4端点均同时包含遮挡后和视锥外区域，累计191,988/728,090像素，全部可见性门通过。
+- `stage1_8_target_view_oracle_smoke_v3.json` / `v4.json`：保留目标视角evaluator早期通过记录；v4修正“协议排除区support”的字段语义，均由v5 supersede。
+- `stage1_8_target_view_oracle_smoke_v5.json`：当前canonical evaluator校准记录；2场景、4端点、31/31门通过，两类新显露区oracle覆盖率1、深度AbsRel 0、RGB MAE 0，并登记runner/evaluator及输入SHA256。该pass不是模型质量结果。
+- `stage1_8_target_view_single_overfit_v1.json`：1200步首轮单端点过拟合；绝对RGB/深度/support等门通过，但两区RGB相对改善89.26%/88.17%未过冻结90%门，状态failed并保留。
+- `stage1_8_target_view_single_overfit_v2.json`：canonical单端点可学习性通过；唯一改变为2000步，两区RGB MAE降至2.15/3.88、深度AbsRel 0.33%/0.24%，双support分离及相机敏感性共12/12门通过。只证明单train目标可记忆。
+- `stage1_8_target_view_training_visibility_v1.json`：100端点全量三分区真值；分类与规模门通过，但13端点未过原0.2% depth-position P99门，因此整体保留为fail，数组仍由后续逐端点资格脚本校验。
+- `stage1_8_target_view_training_pool_v1.json`：逐端点严格资格记录；100份数组哈希全部一致，最终64 train/14 val共78目标合格，22个拒绝目标及原因完整登记。
+- `stage1_8_target_view_candidate_v1.json`：首个联合候选，最佳update 800；val support分离0.147/0.634通过，但RGB MAE 43.46/59.43、深度AbsRel 0.593/1.074未过门，状态failed且未读取test/P01。
+- `stage1_8_depth_scale_diagnostic_v1.json`：14个val目标的不可部署逐目标正尺度oracle诊断；两类深度AbsRel对齐后仍为0.441/0.365，均未过0.30，证明全局尺度不是充分修复。
+- `stage1_8_pretrained_backbone_audit_v1.json`：显式相机条件预训练骨干审计；冻结GenWarp `multi2`为首个16GB可运行性候选，最小权重约8.43GB。只允许先做单val目标冒烟，未读取held-out test/P01。
+- `stage1_8_genwarp_environment_v1.json`：`linux5080`隔离环境与权重就绪记录；GenWarp及splatting冻结commit、PyTorch/CUDA兼容版本、两处最小扩展补丁、8个权重文件共8,429,409,786字节及SHA256全部登记。状态暂停在GPU冒烟前。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 

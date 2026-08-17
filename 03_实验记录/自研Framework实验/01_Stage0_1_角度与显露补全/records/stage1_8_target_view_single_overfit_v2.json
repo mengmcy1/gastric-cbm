@@ -1,0 +1,144 @@
+{
+  "schema_version": "stage1.8-target-view-single-overfit-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": "1",
+  "sample": {
+    "split": "train",
+    "scene": "ai_024_010",
+    "source_frame": 16,
+    "side": "left",
+    "target_frame": 22
+  },
+  "inputs": {
+    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_target_view_single_overfit_v2.json",
+    "training_config_sha256": "88127b110846754be2da6f15671f65c1e96c4a56d59e54f217f2bd7bdd06a861",
+    "triplet_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+    "triplet_config_sha256": "0f06c55948b11d36ea1876840d0d8f44d4bdab01ff6f88efa325c3b15d78c85b",
+    "visibility_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_visibility_v3.json",
+    "visibility_record_sha256": "5489a58c3fce8d537df3be93d27ca8013315721a5cd141d1162b4648e68b0641",
+    "base_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_03_frozen_base_depth_v1.json",
+    "base_record_sha256": "66e042281f3870e53adbb4c65a26f428b2fa73a8df7dcb90325248d222e87490",
+    "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_010-cam_00-0016-unidepth-v1-base.npz",
+    "base_arrays_sha256": "4bdef03b31d0e24ffd4921786589cafe7ffbe73d4b6cee793f2a49ae5d8f78ad",
+    "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_oracle_masks_v3_linux5080/ai_024_010/left_visibility_truth.npz",
+    "visibility_arrays_sha256": "8435224d790e8c43defc85bc07e9e487f5116e54e3671649bc939f0afeee5407",
+    "model_inputs": [
+      "warped_source_rgb",
+      "warped_frozen_base_depth",
+      "warp_coverage",
+      "target_rays_in_source",
+      "target_origin_in_source"
+    ],
+    "target_rgb_depth_as_model_input": false,
+    "truth_masks_as_model_input": false,
+    "held_out_test_used": false
+  },
+  "initial_metrics": {
+    "warp_coverage": 0.5772552490234375,
+    "regions": {
+      "observed_from_source": {
+        "pixels": 163834,
+        "rgb_mae_0_255": 39.7608642578125,
+        "depth_abs_rel": 0.5687648057937622,
+        "geometry_confidence_mean": 0.5332802534103394,
+        "appearance_confidence_mean": 0.4564886689186096
+      },
+      "occlusion_hidden": {
+        "pixels": 5595,
+        "rgb_mae_0_255": 29.393104553222656,
+        "depth_abs_rel": 0.45568913221359253,
+        "geometry_confidence_mean": 0.5552298426628113,
+        "appearance_confidence_mean": 0.41897445917129517,
+        "branch_positive_support_mean": 0.45939576625823975,
+        "branch_negative_support_mean": 0.4201505482196808
+      },
+      "outside_source_fov": {
+        "pixels": 26039,
+        "rgb_mae_0_255": 49.091548919677734,
+        "depth_abs_rel": 0.2970885634422302,
+        "geometry_confidence_mean": 0.5482474565505981,
+        "appearance_confidence_mean": 0.4369036555290222,
+        "branch_positive_support_mean": 0.5554537773132324,
+        "branch_negative_support_mean": 0.5209419131278992
+      }
+    }
+  },
+  "final_metrics": {
+    "warp_coverage": 0.5772552490234375,
+    "regions": {
+      "observed_from_source": {
+        "pixels": 163834,
+        "rgb_mae_0_255": 7.458986282348633,
+        "depth_abs_rel": 0.007603741716593504,
+        "geometry_confidence_mean": 0.9838279485702515,
+        "appearance_confidence_mean": 0.9106269478797913
+      },
+      "occlusion_hidden": {
+        "pixels": 5595,
+        "rgb_mae_0_255": 2.1477136611938477,
+        "depth_abs_rel": 0.003276917850598693,
+        "geometry_confidence_mean": 0.9479550123214722,
+        "appearance_confidence_mean": 0.9533679485321045,
+        "branch_positive_support_mean": 0.9888173937797546,
+        "branch_negative_support_mean": 0.018253905698657036
+      },
+      "outside_source_fov": {
+        "pixels": 26039,
+        "rgb_mae_0_255": 3.8836889266967773,
+        "depth_abs_rel": 0.0023840421345084906,
+        "geometry_confidence_mean": 0.98729008436203,
+        "appearance_confidence_mean": 0.9684007167816162,
+        "branch_positive_support_mean": 0.9953415989875793,
+        "branch_negative_support_mean": 0.010781205259263515
+      }
+    }
+  },
+  "opposite_target_rgb_mean_difference_0_1": 0.1891220360994339,
+  "gates": {
+    "occlusion_hidden_rgb_improvement": true,
+    "occlusion_hidden_rgb_absolute": true,
+    "occlusion_hidden_depth": true,
+    "occlusion_hidden_positive_support": true,
+    "occlusion_hidden_negative_support": true,
+    "outside_source_fov_rgb_improvement": true,
+    "outside_source_fov_rgb_absolute": true,
+    "outside_source_fov_depth": true,
+    "outside_source_fov_positive_support": true,
+    "outside_source_fov_negative_support": true,
+    "opposite_target_changes_prediction": true,
+    "all_outputs_finite": true
+  },
+  "artifacts": {
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/model.pt",
+    "checkpoint_sha256": "f1fb097c0875b9f84f893237457f4dc8940083611185e4e21f61bcba92af26eb",
+    "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/prediction.npz",
+    "arrays_sha256": "3eddcb65c5d05a971b92722fffd1cb332e7f5020728ea6d78837fcac48aa1a06",
+    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/history.json",
+    "history_sha256": "d08c3201aa746ed4a020a65046e613396d689f4c63bfcdf81d58b411bbb49428",
+    "previews": {
+      "warped": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/warped.png",
+        "sha256": "edeec798978af862a61a069f9b9cbeb123df88ff4ba7bd4c9a3ab83cf364b0b0"
+      },
+      "target": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/target.png",
+        "sha256": "d6aa92f732429481e96f33dbf6fdcdf65b23cd3c7aaa06d83c012667e9eeef5c"
+      },
+      "prediction": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/prediction.png",
+        "sha256": "29006548f10a4be9ea8fdc2a3cf2cbac68a6168555c5077c42fd93e1d2f89b1e"
+      },
+      "regions": {
+        "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_single_overfit_v2_linux5080/regions.png",
+        "sha256": "88ef40c103b0dca5f9763076cc8e319e0c5b00c3ea9494042c451c5480d0d34b"
+      }
+    }
+  },
+  "runtime": {
+    "seconds": 90.57149215601385,
+    "peak_cuda_memory_bytes": 505463296
+  },
+  "quality_boundary": "single train-target memorization only; not validation, held-out test, P01, CLB or Gaussian quality"
+}

@@ -1,0 +1,293 @@
+{
+  "schema_version": "stage1.8-depth-scale-diagnostic-v1",
+  "status": "complete_diagnostic",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "inputs": {
+    "diagnostic_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_depth_scale_diagnostic_v1.json",
+    "diagnostic_config_sha256": "19ec247adfc0d9509a5bf67cf6fc83822cac1b99d1d57a2ea516c55d4096cde0",
+    "candidate_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_candidate_v1.json",
+    "candidate_record_sha256": "b8ca25b5f23f1f8c7de500f806df63f6adfe1d8587855c00eaf7a65bd470bb62",
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/best_model.pt",
+    "checkpoint_sha256": "e7dd0a2eb48a8770cfc719e3fc6e81ce37e0f7b5150002fd7293f9b41f6341f6",
+    "pool_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_training_pool_v1.json",
+    "pool_record_sha256": "c6205580b8b93d4a3dc3a810ad645ce241e752b8410ed249aa8f1c8190babb9d",
+    "held_out_test_used": false,
+    "oracle_scale_available_at_deployment": false
+  },
+  "summary": {
+    "validation_targets": 14,
+    "regions": {
+      "occlusion_hidden": {
+        "pixels": 429443,
+        "raw_abs_rel": 0.5931413977283329,
+        "scale_aligned_abs_rel": 0.44090890762814783
+      },
+      "outside_source_fov": {
+        "pixels": 881228,
+        "raw_abs_rel": 1.0735911013523174,
+        "scale_aligned_abs_rel": 0.36527245163762245
+      }
+    },
+    "oracle_scale_minimum": 0.21921159327030182,
+    "oracle_scale_median": 0.8073213994503021,
+    "oracle_scale_maximum": 7.941575050354004,
+    "scale_dominant_by_frozen_decision": false
+  },
+  "targets": [
+    {
+      "scene": "ai_024_013",
+      "side": "right",
+      "target_frame": 22,
+      "oracle_scale": 3.892336130142212,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 7351,
+          "raw_abs_rel": 0.6215110421180725,
+          "scale_aligned_abs_rel": 0.47403398156166077
+        },
+        "outside_source_fov": {
+          "pixels": 53572,
+          "raw_abs_rel": 0.7399778366088867,
+          "scale_aligned_abs_rel": 0.2728444039821625
+        }
+      }
+    },
+    {
+      "scene": "ai_004_003",
+      "side": "right",
+      "target_frame": 99,
+      "oracle_scale": 0.5012909173965454,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 12494,
+          "raw_abs_rel": 0.19703292846679688,
+          "scale_aligned_abs_rel": 0.5706455111503601
+        },
+        "outside_source_fov": {
+          "pixels": 97546,
+          "raw_abs_rel": 0.9302368760108948,
+          "scale_aligned_abs_rel": 0.15293371677398682
+        }
+      }
+    },
+    {
+      "scene": "ai_024_012",
+      "side": "left",
+      "target_frame": 81,
+      "oracle_scale": 4.572113037109375,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 24545,
+          "raw_abs_rel": 0.8060432076454163,
+          "scale_aligned_abs_rel": 0.5613598227500916
+        },
+        "outside_source_fov": {
+          "pixels": 25542,
+          "raw_abs_rel": 0.7657037973403931,
+          "scale_aligned_abs_rel": 0.39803823828697205
+        }
+      }
+    },
+    {
+      "scene": "ai_024_012",
+      "side": "right",
+      "target_frame": 98,
+      "oracle_scale": 7.941575050354004,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 4816,
+          "raw_abs_rel": 0.8876529932022095,
+          "scale_aligned_abs_rel": 0.21140988171100616
+        },
+        "outside_source_fov": {
+          "pixels": 118925,
+          "raw_abs_rel": 0.8884342908859253,
+          "scale_aligned_abs_rel": 0.2952899634838104
+        }
+      }
+    },
+    {
+      "scene": "ai_031_004",
+      "side": "left",
+      "target_frame": 72,
+      "oracle_scale": 0.46960416436195374,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 4036,
+          "raw_abs_rel": 0.3961935341358185,
+          "scale_aligned_abs_rel": 0.3620240092277527
+        },
+        "outside_source_fov": {
+          "pixels": 156078,
+          "raw_abs_rel": 1.4513380527496338,
+          "scale_aligned_abs_rel": 0.46147292852401733
+        }
+      }
+    },
+    {
+      "scene": "ai_031_004",
+      "side": "right",
+      "target_frame": 52,
+      "oracle_scale": 0.5597487688064575,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 27080,
+          "raw_abs_rel": 1.0234665870666504,
+          "scale_aligned_abs_rel": 0.44887036085128784
+        },
+        "outside_source_fov": {
+          "pixels": 69191,
+          "raw_abs_rel": 0.8834412693977356,
+          "scale_aligned_abs_rel": 0.2845669388771057
+        }
+      }
+    },
+    {
+      "scene": "ai_015_001",
+      "side": "left",
+      "target_frame": 43,
+      "oracle_scale": 0.3889133334159851,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 5596,
+          "raw_abs_rel": 0.15151961147785187,
+          "scale_aligned_abs_rel": 0.5814835429191589
+        },
+        "outside_source_fov": {
+          "pixels": 73229,
+          "raw_abs_rel": 1.455578088760376,
+          "scale_aligned_abs_rel": 0.17377640306949615
+        }
+      }
+    },
+    {
+      "scene": "ai_015_001",
+      "side": "right",
+      "target_frame": 26,
+      "oracle_scale": 0.21921159327030182,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 22941,
+          "raw_abs_rel": 0.24663448333740234,
+          "scale_aligned_abs_rel": 0.7769104242324829
+        },
+        "outside_source_fov": {
+          "pixels": 36473,
+          "raw_abs_rel": 4.560493469238281,
+          "scale_aligned_abs_rel": 0.24144147336483002
+        }
+      }
+    },
+    {
+      "scene": "ai_053_003",
+      "side": "left",
+      "target_frame": 8,
+      "oracle_scale": 1.0247864723205566,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 21181,
+          "raw_abs_rel": 0.22432559728622437,
+          "scale_aligned_abs_rel": 0.22214235365390778
+        },
+        "outside_source_fov": {
+          "pixels": 24871,
+          "raw_abs_rel": 0.13148579001426697,
+          "scale_aligned_abs_rel": 0.1387832909822464
+        }
+      }
+    },
+    {
+      "scene": "ai_053_003",
+      "side": "right",
+      "target_frame": 62,
+      "oracle_scale": 0.6502519845962524,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 29213,
+          "raw_abs_rel": 0.5492790937423706,
+          "scale_aligned_abs_rel": 0.24164476990699768
+        },
+        "outside_source_fov": {
+          "pixels": 15120,
+          "raw_abs_rel": 0.8631882667541504,
+          "scale_aligned_abs_rel": 0.3164386451244354
+        }
+      }
+    },
+    {
+      "scene": "ai_003_010",
+      "side": "left",
+      "target_frame": 45,
+      "oracle_scale": 1.0514321327209473,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 28678,
+          "raw_abs_rel": 0.538162350654602,
+          "scale_aligned_abs_rel": 0.5269381999969482
+        },
+        "outside_source_fov": {
+          "pixels": 94663,
+          "raw_abs_rel": 0.6058714985847473,
+          "scale_aligned_abs_rel": 0.6440978050231934
+        }
+      }
+    },
+    {
+      "scene": "ai_003_010",
+      "side": "right",
+      "target_frame": 16,
+      "oracle_scale": 0.7993212938308716,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 132506,
+          "raw_abs_rel": 0.7737733125686646,
+          "scale_aligned_abs_rel": 0.5735690593719482
+        },
+        "outside_source_fov": {
+          "pixels": 1409,
+          "raw_abs_rel": 0.5305697321891785,
+          "scale_aligned_abs_rel": 0.6247743964195251
+        }
+      }
+    },
+    {
+      "scene": "ai_009_009",
+      "side": "left",
+      "target_frame": 72,
+      "oracle_scale": 0.8153215050697327,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 61173,
+          "raw_abs_rel": 0.4122546911239624,
+          "scale_aligned_abs_rel": 0.2891480028629303
+        },
+        "outside_source_fov": {
+          "pixels": 26325,
+          "raw_abs_rel": 0.33360397815704346,
+          "scale_aligned_abs_rel": 0.211318701505661
+        }
+      }
+    },
+    {
+      "scene": "ai_009_009",
+      "side": "right",
+      "target_frame": 54,
+      "oracle_scale": 1.7385483980178833,
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 47833,
+          "raw_abs_rel": 0.4982088506221771,
+          "scale_aligned_abs_rel": 0.18136711418628693
+        },
+        "outside_source_fov": {
+          "pixels": 88284,
+          "raw_abs_rel": 0.5290026068687439,
+          "scale_aligned_abs_rel": 0.6589055061340332
+        }
+      }
+    }
+  ],
+  "decision": "global_scale_alone_is_insufficient_change_rgbd_backbone_or_local_geometry",
+  "quality_boundary": "Oracle target-depth scale is diagnostic and cannot be used at deployment or to turn the failed candidate into a pass."
+}

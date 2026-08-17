@@ -1,0 +1,805 @@
+{
+  "schema_version": "stage1.8-target-view-candidate-v1",
+  "status": "failed",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": "1",
+  "inputs": {
+    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_target_view_candidate_v1.json",
+    "training_config_sha256": "297004824dea280040eba881d6d2de648bd47fc33c99aa2906a1affd73b64a37",
+    "pool_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_training_pool_v1.json",
+    "pool_record_sha256": "c6205580b8b93d4a3dc3a810ad645ce241e752b8410ed249aa8f1c8190babb9d",
+    "triplet_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+    "triplet_config_sha256": "0f06c55948b11d36ea1876840d0d8f44d4bdab01ff6f88efa325c3b15d78c85b",
+    "visibility_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_training_visibility_v1.json",
+    "visibility_record_sha256": "fafa93d3d7d3571858064d4118342f815df57b07c41632c31d02f02d6740ea25",
+    "base_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_03_frozen_base_depth_v1.json",
+    "base_record_sha256": "66e042281f3870e53adbb4c65a26f428b2fa73a8df7dcb90325248d222e87490",
+    "model_inputs": [
+      "warped_source_rgb",
+      "warped_frozen_base_depth",
+      "warp_coverage",
+      "target_rays_in_source",
+      "target_origin_in_source"
+    ],
+    "target_rgb_depth_as_model_input": false,
+    "truth_masks_as_model_input": false,
+    "held_out_test_used": false,
+    "p01_used": false
+  },
+  "sample_counts": {
+    "train": 64,
+    "validation": 14
+  },
+  "warp_baselines": {
+    "train": {
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 976801,
+          "rgb_mae_0_255": 91.99074127920183,
+          "depth_abs_rel": 0.8057376575731918
+        },
+        "outside_source_fov": {
+          "pixels": 4284194,
+          "rgb_mae_0_255": 118.92337726372985,
+          "depth_abs_rel": 1.4242107437496785
+        }
+      }
+    },
+    "validation": {
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 429443,
+          "rgb_mae_0_255": 115.9859058710935,
+          "depth_abs_rel": 0.8560864099824875
+        },
+        "outside_source_fov": {
+          "pixels": 881228,
+          "rgb_mae_0_255": 104.49943636225883,
+          "depth_abs_rel": 1.4249156168262587
+        }
+      }
+    }
+  },
+  "initial_train": {
+    "samples": 64,
+    "mean_warp_coverage": 0.4450301419128664,
+    "regions": {
+      "occlusion_hidden": {
+        "pixels": 976801,
+        "rgb_mae_0_255": 56.03090833721374,
+        "depth_abs_rel": 0.6239683027156343,
+        "branch_positive_support_mean": 0.42269710410898176,
+        "branch_negative_support_mean": 0.4219028548349371,
+        "geometry_confidence_mean": 0.5261513941135756,
+        "appearance_confidence_mean": 0.4701783048481763,
+        "support_separation": 0.000794249274044645
+      },
+      "outside_source_fov": {
+        "pixels": 4284194,
+        "rgb_mae_0_255": 47.034323262955816,
+        "depth_abs_rel": 1.513017055258435,
+        "branch_positive_support_mean": 0.5142638669442927,
+        "branch_negative_support_mean": 0.4815305205488761,
+        "geometry_confidence_mean": 0.5136466625426955,
+        "appearance_confidence_mean": 0.48014780309431165,
+        "support_separation": 0.03273334639541664
+      }
+    },
+    "selection_score": 2.2538175705644012,
+    "all_outputs_finite": true
+  },
+  "initial_validation": {
+    "samples": 14,
+    "mean_warp_coverage": 0.402741582265922,
+    "regions": {
+      "occlusion_hidden": {
+        "pixels": 429443,
+        "rgb_mae_0_255": 42.42755323715477,
+        "depth_abs_rel": 0.6279222402799829,
+        "branch_positive_support_mean": 0.41625783257676274,
+        "branch_negative_support_mean": 0.4275937559938209,
+        "geometry_confidence_mean": 0.5280961108235656,
+        "appearance_confidence_mean": 0.4724605550270059,
+        "support_separation": -0.011335923417058136
+      },
+      "outside_source_fov": {
+        "pixels": 881228,
+        "rgb_mae_0_255": 61.19957304674206,
+        "depth_abs_rel": 1.4526973810303716,
+        "branch_positive_support_mean": 0.5109267893046383,
+        "branch_negative_support_mean": 0.4988667932416564,
+        "geometry_confidence_mean": 0.5147516449181394,
+        "appearance_confidence_mean": 0.48598587136002186,
+        "support_separation": 0.012059996062981915
+      }
+    },
+    "selection_score": 2.2431382180261306,
+    "all_outputs_finite": true
+  },
+  "best_update": 800,
+  "best_train": {
+    "samples": 64,
+    "mean_warp_coverage": 0.4450301419128664,
+    "regions": {
+      "occlusion_hidden": {
+        "pixels": 976801,
+        "rgb_mae_0_255": 48.75112489116618,
+        "depth_abs_rel": 0.28402470527073287,
+        "branch_positive_support_mean": 0.6405185623306013,
+        "branch_negative_support_mean": 0.35439537730775533,
+        "geometry_confidence_mean": 0.27583941267125023,
+        "appearance_confidence_mean": 0.2352724940239052,
+        "support_separation": 0.286123185022846
+      },
+      "outside_source_fov": {
+        "pixels": 4284194,
+        "rgb_mae_0_255": 45.485730549092416,
+        "depth_abs_rel": 0.6279791204002043,
+        "branch_positive_support_mean": 0.8310033421824558,
+        "branch_negative_support_mean": 0.09960417288627253,
+        "geometry_confidence_mean": 0.2153077222014462,
+        "appearance_confidence_mean": 0.22588106684562995,
+        "support_separation": 0.7313991692961832
+      }
+    },
+    "selection_score": 1.1320188835980296,
+    "all_outputs_finite": true
+  },
+  "best_validation": {
+    "samples": 14,
+    "mean_warp_coverage": 0.402741582265922,
+    "regions": {
+      "occlusion_hidden": {
+        "pixels": 429443,
+        "rgb_mae_0_255": 43.46286472062926,
+        "depth_abs_rel": 0.593141394766373,
+        "branch_positive_support_mean": 0.5000938969206961,
+        "branch_negative_support_mean": 0.35292907903321025,
+        "geometry_confidence_mean": 0.271805459829314,
+        "appearance_confidence_mean": 0.24698189897424536,
+        "support_separation": 0.1471648178874858
+      },
+      "outside_source_fov": {
+        "pixels": 881228,
+        "rgb_mae_0_255": 59.433075404111655,
+        "depth_abs_rel": 1.0735910904407258,
+        "branch_positive_support_mean": 0.7981769586309004,
+        "branch_negative_support_mean": 0.16383763853748062,
+        "geometry_confidence_mean": 0.22078169274666679,
+        "appearance_confidence_mean": 0.22915666548115085,
+        "support_separation": 0.6343393200934198
+      }
+    },
+    "selection_score": 1.6443709189557256,
+    "all_outputs_finite": true
+  },
+  "gates": {
+    "validation_occlusion_hidden_rgb_relative_improvement": true,
+    "validation_occlusion_hidden_rgb_absolute": false,
+    "validation_occlusion_hidden_depth": false,
+    "validation_occlusion_hidden_support_separation": true,
+    "train_occlusion_hidden_rgb_relative_improvement": true,
+    "validation_outside_source_fov_rgb_relative_improvement": true,
+    "validation_outside_source_fov_rgb_absolute": false,
+    "validation_outside_source_fov_depth": false,
+    "validation_outside_source_fov_support_separation": true,
+    "train_outside_source_fov_rgb_relative_improvement": true,
+    "all_best_outputs_finite": true
+  },
+  "validation_predictions": [
+    {
+      "scene": "ai_024_013",
+      "side": "right",
+      "target_frame": 22,
+      "metrics": {
+        "warp_coverage": 0.3890940546989441,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 133721,
+            "rgb_mae_0_255": 35.85887908935547,
+            "depth_abs_rel": 0.6191431283950806,
+            "geometry_confidence_mean": 0.2333155870437622,
+            "appearance_confidence_mean": 0.20116135478019714
+          },
+          "occlusion_hidden": {
+            "pixels": 7351,
+            "rgb_mae_0_255": 48.971649169921875,
+            "depth_abs_rel": 0.6215109825134277,
+            "geometry_confidence_mean": 0.24343141913414001,
+            "appearance_confidence_mean": 0.20813700556755066,
+            "branch_positive_support_mean": 0.523373007774353,
+            "branch_negative_support_mean": 0.41916584968566895
+          },
+          "outside_source_fov": {
+            "pixels": 53572,
+            "rgb_mae_0_255": 33.19276428222656,
+            "depth_abs_rel": 0.7399778366088867,
+            "geometry_confidence_mean": 0.25884443521499634,
+            "appearance_confidence_mean": 0.2805197536945343,
+            "branch_positive_support_mean": 0.9191344976425171,
+            "branch_negative_support_mean": 0.042449552565813065
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+      "base_arrays_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_013-right-0022-prediction.png",
+      "prediction_sha256": "33d56719c71c21a077e1ad65cdd688504abac64ed233ddfb3424dee245b1f633",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_013-right-0022-target.png",
+      "target_preview_sha256": "6fbe43b0ef1abd4d8887c4fbcec00cd9c5aaaa202e5eb5f9dc9e2f60e7e81c28"
+    },
+    {
+      "scene": "ai_004_003",
+      "side": "right",
+      "target_frame": 99,
+      "metrics": {
+        "warp_coverage": 0.4596761167049408,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 84333,
+            "rgb_mae_0_255": 34.563846588134766,
+            "depth_abs_rel": 0.2851654589176178,
+            "geometry_confidence_mean": 0.33474335074424744,
+            "appearance_confidence_mean": 0.2375587671995163
+          },
+          "occlusion_hidden": {
+            "pixels": 12494,
+            "rgb_mae_0_255": 70.94081115722656,
+            "depth_abs_rel": 0.19703297317028046,
+            "geometry_confidence_mean": 0.32754454016685486,
+            "appearance_confidence_mean": 0.22634916007518768,
+            "branch_positive_support_mean": 0.6402971744537354,
+            "branch_negative_support_mean": 0.3121439516544342
+          },
+          "outside_source_fov": {
+            "pixels": 97546,
+            "rgb_mae_0_255": 32.569488525390625,
+            "depth_abs_rel": 0.9302369952201843,
+            "geometry_confidence_mean": 0.20752616226673126,
+            "appearance_confidence_mean": 0.2150745987892151,
+            "branch_positive_support_mean": 0.8744582533836365,
+            "branch_negative_support_mean": 0.08238869905471802
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0066-unidepth-v1-base.npz",
+      "base_arrays_sha256": "80c03b03cbda5d795bef0042f1160cbbc390e8dd651f4242f34e1a7bb76e7950",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_004_003/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "fa22e0c00097a0dc805630b1166ad38143b3fa3872f0748669496f813ef82307",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_004_003-right-0099-prediction.png",
+      "prediction_sha256": "920536ee395b76b2389dbd04bfeb0c4fd952300971361898f70f4aca6794350a",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_004_003-right-0099-target.png",
+      "target_preview_sha256": "7173b07f77d15184fca154d7664105509cd3e7605dd062bff613ac62126b1390"
+    },
+    {
+      "scene": "ai_024_012",
+      "side": "left",
+      "target_frame": 81,
+      "metrics": {
+        "warp_coverage": 0.2036844938993454,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 141870,
+            "rgb_mae_0_255": 53.41697311401367,
+            "depth_abs_rel": 0.7748276591300964,
+            "geometry_confidence_mean": 0.2252979725599289,
+            "appearance_confidence_mean": 0.23362654447555542
+          },
+          "occlusion_hidden": {
+            "pixels": 24545,
+            "rgb_mae_0_255": 54.93364715576172,
+            "depth_abs_rel": 0.8060430884361267,
+            "geometry_confidence_mean": 0.2311101108789444,
+            "appearance_confidence_mean": 0.23291799426078796,
+            "branch_positive_support_mean": 0.31499072909355164,
+            "branch_negative_support_mean": 0.2665857970714569
+          },
+          "outside_source_fov": {
+            "pixels": 25542,
+            "rgb_mae_0_255": 48.1981201171875,
+            "depth_abs_rel": 0.7657038569450378,
+            "geometry_confidence_mean": 0.2045830488204956,
+            "appearance_confidence_mean": 0.2310628741979599,
+            "branch_positive_support_mean": 0.8948408961296082,
+            "branch_negative_support_mean": 0.653579831123352
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_012-cam_00-0064-unidepth-v1-base.npz",
+      "base_arrays_sha256": "bd9cf8be2a7ae22d54764546dc6ad1228fb7e22abf0b4ee16214dc8618d9384a",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_012/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "f24be3d801fae41921a41042bcdc5eee13506ee4e733029ca1e24e47149d03f3",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_012-left-0081-prediction.png",
+      "prediction_sha256": "cfab1d57cd4a2596a94cc726d00a9e10eab7c06aa13100e1119877b64e8950cc",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_012-left-0081-target.png",
+      "target_preview_sha256": "4eecfd0d5b8cd792b08071d0c5e6779ca9f33ac9fa9028075b35ce2f323d2020"
+    },
+    {
+      "scene": "ai_024_012",
+      "side": "right",
+      "target_frame": 98,
+      "metrics": {
+        "warp_coverage": 0.2694498896598816,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 70734,
+            "rgb_mae_0_255": 45.746910095214844,
+            "depth_abs_rel": 0.8743577003479004,
+            "geometry_confidence_mean": 0.3182980716228485,
+            "appearance_confidence_mean": 0.17673064768314362
+          },
+          "occlusion_hidden": {
+            "pixels": 4816,
+            "rgb_mae_0_255": 52.05754470825195,
+            "depth_abs_rel": 0.8876529932022095,
+            "geometry_confidence_mean": 0.31239956617355347,
+            "appearance_confidence_mean": 0.15850964188575745,
+            "branch_positive_support_mean": 0.3806116580963135,
+            "branch_negative_support_mean": 0.3066886365413666
+          },
+          "outside_source_fov": {
+            "pixels": 118925,
+            "rgb_mae_0_255": 58.36650848388672,
+            "depth_abs_rel": 0.8884342312812805,
+            "geometry_confidence_mean": 0.2024010270833969,
+            "appearance_confidence_mean": 0.24932894110679626,
+            "branch_positive_support_mean": 0.8002120852470398,
+            "branch_negative_support_mean": 0.05166707932949066
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_012-cam_00-0064-unidepth-v1-base.npz",
+      "base_arrays_sha256": "bd9cf8be2a7ae22d54764546dc6ad1228fb7e22abf0b4ee16214dc8618d9384a",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_012/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "fa82cf6649643e089c9c1ed3a59bb105e7d1d11781fb05a888407f74bd3b14e0",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_012-right-0098-prediction.png",
+      "prediction_sha256": "e0cb919253a5c896aa20429fc9a0e8deb4c1fd2bd72d7bf716531116cbe65200",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_024_012-right-0098-target.png",
+      "target_preview_sha256": "853219953e30aaabcfa8f96fc75a29d83ea8e32493c3cbffdfe675e95ed0b71d"
+    },
+    {
+      "scene": "ai_031_004",
+      "side": "left",
+      "target_frame": 72,
+      "metrics": {
+        "warp_coverage": 0.4643758237361908,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 34227,
+            "rgb_mae_0_255": 76.7637710571289,
+            "depth_abs_rel": 0.7331598401069641,
+            "geometry_confidence_mean": 0.3901720345020294,
+            "appearance_confidence_mean": 0.2086189091205597
+          },
+          "occlusion_hidden": {
+            "pixels": 4036,
+            "rgb_mae_0_255": 85.82463073730469,
+            "depth_abs_rel": 0.39619362354278564,
+            "geometry_confidence_mean": 0.3838423192501068,
+            "appearance_confidence_mean": 0.18887872993946075,
+            "branch_positive_support_mean": 0.737582266330719,
+            "branch_negative_support_mean": 0.31441885232925415
+          },
+          "outside_source_fov": {
+            "pixels": 156078,
+            "rgb_mae_0_255": 101.31724548339844,
+            "depth_abs_rel": 1.4513380527496338,
+            "geometry_confidence_mean": 0.24957714974880219,
+            "appearance_confidence_mean": 0.2165001928806305,
+            "branch_positive_support_mean": 0.7128546833992004,
+            "branch_negative_support_mean": 0.09747262299060822
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_031_004-cam_00-0065-unidepth-v1-base.npz",
+      "base_arrays_sha256": "892d8467b5604c6ca0ccdaadeffdf43bbed74613f62e0fc13287737ecb04309f",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_031_004/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "578841773a4aabb5c1bb4efdb7bb36013582c59e3d521949d5b68af5c55e807e",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_031_004-left-0072-prediction.png",
+      "prediction_sha256": "0486aca0bb3ff77794009bbd01773055c3e292264841e7d4a4f94c6b3eff233a",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_031_004-left-0072-target.png",
+      "target_preview_sha256": "dad8cd78d06c4f4830f565d9f615e33a8c220603f298a557065f90608b601de1"
+    },
+    {
+      "scene": "ai_031_004",
+      "side": "right",
+      "target_frame": 52,
+      "metrics": {
+        "warp_coverage": 0.4774526059627533,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 97366,
+            "rgb_mae_0_255": 80.12139129638672,
+            "depth_abs_rel": 1.6008579730987549,
+            "geometry_confidence_mean": 0.30175304412841797,
+            "appearance_confidence_mean": 0.2277844101190567
+          },
+          "occlusion_hidden": {
+            "pixels": 27080,
+            "rgb_mae_0_255": 63.903072357177734,
+            "depth_abs_rel": 1.0234665870666504,
+            "geometry_confidence_mean": 0.36114034056663513,
+            "appearance_confidence_mean": 0.23634301126003265,
+            "branch_positive_support_mean": 0.5255517363548279,
+            "branch_negative_support_mean": 0.3214191794395447
+          },
+          "outside_source_fov": {
+            "pixels": 69191,
+            "rgb_mae_0_255": 130.56204223632812,
+            "depth_abs_rel": 0.8834413290023804,
+            "geometry_confidence_mean": 0.18228687345981598,
+            "appearance_confidence_mean": 0.2058485746383667,
+            "branch_positive_support_mean": 0.9428584575653076,
+            "branch_negative_support_mean": 0.16427898406982422
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_031_004-cam_00-0065-unidepth-v1-base.npz",
+      "base_arrays_sha256": "892d8467b5604c6ca0ccdaadeffdf43bbed74613f62e0fc13287737ecb04309f",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_031_004/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "1ad7a5509a4007af8728617fa8f56b97a8ccccb456a1556fd9e77e8cb873c302",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_031_004-right-0052-prediction.png",
+      "prediction_sha256": "0d45f9a55b0cdd80c80df2cf721e86353c51bfc2b3c0be9eb4608e701b8dcd88",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_031_004-right-0052-target.png",
+      "target_preview_sha256": "a99af6d6aa57f27f7c8e593fbf2ff22ccceddf42d778cd4de9bda9d8b0b1394e"
+    },
+    {
+      "scene": "ai_015_001",
+      "side": "left",
+      "target_frame": 43,
+      "metrics": {
+        "warp_coverage": 0.5387725830078125,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 116659,
+            "rgb_mae_0_255": 39.96772384643555,
+            "depth_abs_rel": 0.27505823969841003,
+            "geometry_confidence_mean": 0.3091108500957489,
+            "appearance_confidence_mean": 0.2064104527235031
+          },
+          "occlusion_hidden": {
+            "pixels": 5596,
+            "rgb_mae_0_255": 39.128089904785156,
+            "depth_abs_rel": 0.15151961147785187,
+            "geometry_confidence_mean": 0.3252936899662018,
+            "appearance_confidence_mean": 0.21444663405418396,
+            "branch_positive_support_mean": 0.6924650073051453,
+            "branch_negative_support_mean": 0.3774334192276001
+          },
+          "outside_source_fov": {
+            "pixels": 73229,
+            "rgb_mae_0_255": 38.169944763183594,
+            "depth_abs_rel": 1.4555778503417969,
+            "geometry_confidence_mean": 0.20608897507190704,
+            "appearance_confidence_mean": 0.2161109894514084,
+            "branch_positive_support_mean": 0.9470721483230591,
+            "branch_negative_support_mean": 0.06865299493074417
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_015_001-cam_00-0000-unidepth-v1-base.npz",
+      "base_arrays_sha256": "81b7c74819c13ccd7bf387979802fd54c68f4985d9c45bbf03d6e4d6913d4366",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_015_001/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "64d59524435c8b322408998bd11250c006ca8a811689895c82219d1cd1bfedbd",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_015_001-left-0043-prediction.png",
+      "prediction_sha256": "613f38174e2761440525c069bf904ee4a02be24d086d13eaeb9cf9ccd3958312",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_015_001-left-0043-target.png",
+      "target_preview_sha256": "69b11db286ef0cad44c2d385246eda4b701c207e8003d9251c6090eddea7022e"
+    },
+    {
+      "scene": "ai_015_001",
+      "side": "right",
+      "target_frame": 26,
+      "metrics": {
+        "warp_coverage": 0.5886179804801941,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 135237,
+            "rgb_mae_0_255": 42.611820220947266,
+            "depth_abs_rel": 0.4800524115562439,
+            "geometry_confidence_mean": 0.28889861702919006,
+            "appearance_confidence_mean": 0.22397035360336304
+          },
+          "occlusion_hidden": {
+            "pixels": 22941,
+            "rgb_mae_0_255": 41.159915924072266,
+            "depth_abs_rel": 0.24663449823856354,
+            "geometry_confidence_mean": 0.2796848714351654,
+            "appearance_confidence_mean": 0.2230301797389984,
+            "branch_positive_support_mean": 0.5497580766677856,
+            "branch_negative_support_mean": 0.43830499053001404
+          },
+          "outside_source_fov": {
+            "pixels": 36473,
+            "rgb_mae_0_255": 31.63068389892578,
+            "depth_abs_rel": 4.560493469238281,
+            "geometry_confidence_mean": 0.2925204932689667,
+            "appearance_confidence_mean": 0.22541621327400208,
+            "branch_positive_support_mean": 0.18009889125823975,
+            "branch_negative_support_mean": 0.24713186919689178
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_015_001-cam_00-0000-unidepth-v1-base.npz",
+      "base_arrays_sha256": "81b7c74819c13ccd7bf387979802fd54c68f4985d9c45bbf03d6e4d6913d4366",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_015_001/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "c005c1502377163e90274ed16d455dad7e26f3986ab8ee6641715618aa574da5",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_015_001-right-0026-prediction.png",
+      "prediction_sha256": "477bea6322c659295779bf12c7266e2a9d81a73d665ebbc913ddea16ae2f035f",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_015_001-right-0026-target.png",
+      "target_preview_sha256": "09ee57d8e85c3333a35c95470592a514cbc5baee7c9b63571aa6cdc3c47cc0d7"
+    },
+    {
+      "scene": "ai_053_003",
+      "side": "left",
+      "target_frame": 8,
+      "metrics": {
+        "warp_coverage": 0.6494191884994507,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 148563,
+            "rgb_mae_0_255": 36.25082778930664,
+            "depth_abs_rel": 0.35332292318344116,
+            "geometry_confidence_mean": 0.28892719745635986,
+            "appearance_confidence_mean": 0.22378776967525482
+          },
+          "occlusion_hidden": {
+            "pixels": 21181,
+            "rgb_mae_0_255": 42.983280181884766,
+            "depth_abs_rel": 0.22432555258274078,
+            "geometry_confidence_mean": 0.3307098150253296,
+            "appearance_confidence_mean": 0.2049870640039444,
+            "branch_positive_support_mean": 0.6443338990211487,
+            "branch_negative_support_mean": 0.3709665536880493
+          },
+          "outside_source_fov": {
+            "pixels": 24871,
+            "rgb_mae_0_255": 33.74143600463867,
+            "depth_abs_rel": 0.1314857304096222,
+            "geometry_confidence_mean": 0.18980516493320465,
+            "appearance_confidence_mean": 0.18525536358356476,
+            "branch_positive_support_mean": 0.9387789964675903,
+            "branch_negative_support_mean": 0.19348010420799255
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_053_003-cam_00-0029-unidepth-v1-base.npz",
+      "base_arrays_sha256": "40fe3436746b628d792665a41c9ab5b61a6104ca525ad3fdd69414de51221739",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_053_003/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "37e693cd145680b94530d2ba69caa43348fc337a8df6ba5edb7b25d743513001",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_053_003-left-0008-prediction.png",
+      "prediction_sha256": "65aa751e5069f1f394da87cc68997e6bd8e9cc6e14eba866cc2b1dfb8a4f95fc",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_053_003-left-0008-target.png",
+      "target_preview_sha256": "e84f1d896dc0f6c7dfb947282e22f4f9918ce7930c04565c4f4938507b073005"
+    },
+    {
+      "scene": "ai_053_003",
+      "side": "right",
+      "target_frame": 62,
+      "metrics": {
+        "warp_coverage": 0.4275156855583191,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 149732,
+            "rgb_mae_0_255": 47.58382797241211,
+            "depth_abs_rel": 0.61738520860672,
+            "geometry_confidence_mean": 0.20891666412353516,
+            "appearance_confidence_mean": 0.23435762524604797
+          },
+          "occlusion_hidden": {
+            "pixels": 29213,
+            "rgb_mae_0_255": 33.2855339050293,
+            "depth_abs_rel": 0.5492790937423706,
+            "geometry_confidence_mean": 0.21529193222522736,
+            "appearance_confidence_mean": 0.2913248538970947,
+            "branch_positive_support_mean": 0.5685383081436157,
+            "branch_negative_support_mean": 0.42908748984336853
+          },
+          "outside_source_fov": {
+            "pixels": 15120,
+            "rgb_mae_0_255": 41.951961517333984,
+            "depth_abs_rel": 0.8631881475448608,
+            "geometry_confidence_mean": 0.3668351173400879,
+            "appearance_confidence_mean": 0.2761806845664978,
+            "branch_positive_support_mean": 0.8898157477378845,
+            "branch_negative_support_mean": 0.15327829122543335
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_053_003-cam_00-0029-unidepth-v1-base.npz",
+      "base_arrays_sha256": "40fe3436746b628d792665a41c9ab5b61a6104ca525ad3fdd69414de51221739",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_053_003/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "f8ee677f6e9d332e14e8274cb96657a347105437f51c0e7f489fa3012f011a03",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_053_003-right-0062-prediction.png",
+      "prediction_sha256": "32206366caefe1ebe7681ea9e4552ed85371ac853c63e69247056df6d571722e",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_053_003-right-0062-target.png",
+      "target_preview_sha256": "78c4ddc01d8483d025719a3fe5fb0e75ba754072f0e5a7ee1813808491a07927"
+    },
+    {
+      "scene": "ai_003_010",
+      "side": "left",
+      "target_frame": 45,
+      "metrics": {
+        "warp_coverage": 0.4672953486442566,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 68439,
+            "rgb_mae_0_255": 28.44351577758789,
+            "depth_abs_rel": 0.30453673005104065,
+            "geometry_confidence_mean": 0.2940532863140106,
+            "appearance_confidence_mean": 0.2526714503765106
+          },
+          "occlusion_hidden": {
+            "pixels": 28678,
+            "rgb_mae_0_255": 55.43562698364258,
+            "depth_abs_rel": 0.538162350654602,
+            "geometry_confidence_mean": 0.22760143876075745,
+            "appearance_confidence_mean": 0.2686648666858673,
+            "branch_positive_support_mean": 0.38120466470718384,
+            "branch_negative_support_mean": 0.32537972927093506
+          },
+          "outside_source_fov": {
+            "pixels": 94663,
+            "rgb_mae_0_255": 36.801666259765625,
+            "depth_abs_rel": 0.6058715581893921,
+            "geometry_confidence_mean": 0.2096896469593048,
+            "appearance_confidence_mean": 0.24553276598453522,
+            "branch_positive_support_mean": 0.6932006478309631,
+            "branch_negative_support_mean": 0.30166858434677124
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_003_010-cam_01-0072-unidepth-v1-base.npz",
+      "base_arrays_sha256": "e71890a68dea0349a771d7c1b7ae6e5a1c191b9fed8ea82e8d516f047b589b35",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_003_010/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "b489de64713e4d2ba2784c4bda0efa01afe3c511411362847d5548720cebd9ea",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_003_010-left-0045-prediction.png",
+      "prediction_sha256": "7e64da99b6cf082f139c7654cd72ea0f90b0078202e3d29143930e6c787a2483",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_003_010-left-0045-target.png",
+      "target_preview_sha256": "89a68e03296987d92937854ba76085825abd25e623d3d8d51f2266d464048399"
+    },
+    {
+      "scene": "ai_003_010",
+      "side": "right",
+      "target_frame": 16,
+      "metrics": {
+        "warp_coverage": 0.0874786376953125,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 61434,
+            "rgb_mae_0_255": 32.815589904785156,
+            "depth_abs_rel": 0.2390763759613037,
+            "geometry_confidence_mean": 0.18492351472377777,
+            "appearance_confidence_mean": 0.23443083465099335
+          },
+          "occlusion_hidden": {
+            "pixels": 132506,
+            "rgb_mae_0_255": 40.50071716308594,
+            "depth_abs_rel": 0.7737733125686646,
+            "geometry_confidence_mean": 0.23816294968128204,
+            "appearance_confidence_mean": 0.28200188279151917,
+            "branch_positive_support_mean": 0.46847638487815857,
+            "branch_negative_support_mean": 0.3666481077671051
+          },
+          "outside_source_fov": {
+            "pixels": 1409,
+            "rgb_mae_0_255": 62.0380859375,
+            "depth_abs_rel": 0.5305697321891785,
+            "geometry_confidence_mean": 0.29902443289756775,
+            "appearance_confidence_mean": 0.21557708084583282,
+            "branch_positive_support_mean": 0.9609012007713318,
+            "branch_negative_support_mean": 0.27727100253105164
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_003_010-cam_01-0072-unidepth-v1-base.npz",
+      "base_arrays_sha256": "e71890a68dea0349a771d7c1b7ae6e5a1c191b9fed8ea82e8d516f047b589b35",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_003_010/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "aa017f02214089fcdf8e5c765a7a3d4f967b5a4d6f9fa18d2687f3d54d6c083f",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_003_010-right-0016-prediction.png",
+      "prediction_sha256": "0336e98e5a78637a5eb11cb07adcae7dda86d32765768ce96ec6e8917f70a866",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_003_010-right-0016-target.png",
+      "target_preview_sha256": "ffc69a1cb043a82f0f37ed38e2d368a4401f5f718ab6566bf4a733a5736778f9"
+    },
+    {
+      "scene": "ai_009_009",
+      "side": "left",
+      "target_frame": 72,
+      "metrics": {
+        "warp_coverage": 0.24713134765625,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 106107,
+            "rgb_mae_0_255": 51.07039260864258,
+            "depth_abs_rel": 0.5031665563583374,
+            "geometry_confidence_mean": 0.24935287237167358,
+            "appearance_confidence_mean": 0.21725641191005707
+          },
+          "occlusion_hidden": {
+            "pixels": 61173,
+            "rgb_mae_0_255": 35.732749938964844,
+            "depth_abs_rel": 0.4122547507286072,
+            "geometry_confidence_mean": 0.24387718737125397,
+            "appearance_confidence_mean": 0.22144320607185364,
+            "branch_positive_support_mean": 0.450780987739563,
+            "branch_negative_support_mean": 0.3839125633239746
+          },
+          "outside_source_fov": {
+            "pixels": 26325,
+            "rgb_mae_0_255": 50.997764587402344,
+            "depth_abs_rel": 0.3336040675640106,
+            "geometry_confidence_mean": 0.16566553711891174,
+            "appearance_confidence_mean": 0.2806880474090576,
+            "branch_positive_support_mean": 0.8638050556182861,
+            "branch_negative_support_mean": 0.2411157488822937
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_009_009-cam_00-0061-unidepth-v1-base.npz",
+      "base_arrays_sha256": "7a3f127d4144c23b86e6e0ccfc03feea29795467f6e187f4b71609db9ed954ee",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_009_009/left_visibility_truth.npz",
+      "visibility_arrays_sha256": "ba9edf6415e814ead0a8d56e7293ae4ff60d70599081c3b4e53df79cc8acea2f",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_009_009-left-0072-prediction.png",
+      "prediction_sha256": "e6819ef9637118c5f10b8fa2e9a3b27bbc24a4e958ba7d67a07c9f0c7bfa61f7",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_009_009-left-0072-target.png",
+      "target_preview_sha256": "abad4a811bcd5ecb40c3fd3e3fc6517f17f954c54ac8fd628813da7175357ab1"
+    },
+    {
+      "scene": "ai_009_009",
+      "side": "right",
+      "target_frame": 54,
+      "metrics": {
+        "warp_coverage": 0.3684183955192566,
+        "regions": {
+          "observed_from_source": {
+            "pixels": 59345,
+            "rgb_mae_0_255": 45.40720748901367,
+            "depth_abs_rel": 0.5282610654830933,
+            "geometry_confidence_mean": 0.31044015288352966,
+            "appearance_confidence_mean": 0.21718358993530273
+          },
+          "occlusion_hidden": {
+            "pixels": 47833,
+            "rgb_mae_0_255": 32.49428176879883,
+            "depth_abs_rel": 0.4982088506221771,
+            "geometry_confidence_mean": 0.37218257784843445,
+            "appearance_confidence_mean": 0.21484848856925964,
+            "branch_positive_support_mean": 0.6023919582366943,
+            "branch_negative_support_mean": 0.26402851939201355
+          },
+          "outside_source_fov": {
+            "pixels": 88284,
+            "rgb_mae_0_255": 46.0269775390625,
+            "depth_abs_rel": 0.5290026068687439,
+            "geometry_confidence_mean": 0.21438120305538177,
+            "appearance_confidence_mean": 0.2104378640651703,
+            "branch_positive_support_mean": 0.8141712546348572,
+            "branch_negative_support_mean": 0.31923988461494446
+          }
+        }
+      },
+      "base_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_009_009-cam_00-0061-unidepth-v1-base.npz",
+      "base_arrays_sha256": "7a3f127d4144c23b86e6e0ccfc03feea29795467f6e187f4b71609db9ed954ee",
+      "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_009_009/right_visibility_truth.npz",
+      "visibility_arrays_sha256": "3ba11d8221acccf636bfb1aca7e30e882d8d6333d76769f45f7d35335887ef8c",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_009_009-right-0054-prediction.png",
+      "prediction_sha256": "1456e2c02b37cacf9f0f01d9ee73a87b94c13a5fa70655e1ad29f5253bd761d1",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/val-ai_009_009-right-0054-target.png",
+      "target_preview_sha256": "5dea017d533ae9c6061b0b0336a1aa719e2364bdd8388c1f2e7bc50d6f4ad58a"
+    }
+  ],
+  "artifacts": {
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/best_model.pt",
+    "checkpoint_sha256": "e7dd0a2eb48a8770cfc719e3fc6e81ce37e0f7b5150002fd7293f9b41f6341f6",
+    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_candidate_v1_linux5080/history.json",
+    "history_sha256": "33e352387ad50eca447f7d0c7b5c7b339f8f0930e5251f7ca4850f2af3a71e0e"
+  },
+  "runtime": {
+    "seconds": 762.794901011046,
+    "peak_cuda_memory_bytes": 1456656384
+  },
+  "quality_boundary": "64-train/14-val target candidate selected without held-out test or P01; pass is required before test"
+}

@@ -1,0 +1,351 @@
+{
+  "schema_version": "stage1.8-target-view-oracle-smoke-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "inputs": {
+    "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_target_view_oracle_smoke_v3.json",
+    "config_sha256": "9ef8619c74f1a6703d7a88579b52ed14ad680396037bf2557ffcbe46320b1734",
+    "camera_parameters": "源码/ml-hypersim/contrib/mikeroberts3000/metadata_camera_parameters.csv",
+    "camera_parameters_sha256": "0b40e0884ba2458e7bdcdbb27de46a4ec6eacbfbbb4ef0d70188d78098cebdc9",
+    "visibility_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_visibility_v3.json",
+    "visibility_record_sha256": "5489a58c3fce8d537df3be93d27ca8013315721a5cd141d1162b4648e68b0641"
+  },
+  "summary": {
+    "samples": 2,
+    "targets": 4,
+    "gates": 31,
+    "all_gates_pass": true,
+    "occlusion_hidden_pixels": 191988,
+    "outside_source_fov_pixels": 728090,
+    "visibility_status": "pass"
+  },
+  "targets": [
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "target_id": "ai_024_010-cam_00-left-0022",
+      "side": "left",
+      "yaw_deg": -14.968306873654674,
+      "evaluation": {
+        "support_threshold": 0.05,
+        "valid_truth_pixels": 786431,
+        "classified_truth_pixels": 781910,
+        "classified_truth_fraction": 0.9942512439107818,
+        "false_support_on_unclassified_truth_pixels": 4521,
+        "regions": {
+          "observed_from_source": {
+            "region": "observed_from_source",
+            "truth_pixels": 655846,
+            "supported_pixels": 655846,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "occlusion_hidden": {
+            "region": "occlusion_hidden",
+            "truth_pixels": 22406,
+            "supported_pixels": 22406,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "outside_source_fov": {
+            "region": "outside_source_fov",
+            "truth_pixels": 103658,
+            "supported_pixels": 103658,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "target_id": "ai_024_010-cam_00-right-0090",
+      "side": "right",
+      "yaw_deg": 14.93537616507418,
+      "evaluation": {
+        "support_threshold": 0.05,
+        "valid_truth_pixels": 786432,
+        "classified_truth_pixels": 782467,
+        "classified_truth_fraction": 0.994958241780599,
+        "false_support_on_unclassified_truth_pixels": 3965,
+        "regions": {
+          "observed_from_source": {
+            "region": "observed_from_source",
+            "truth_pixels": 683144,
+            "supported_pixels": 683144,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "occlusion_hidden": {
+            "region": "occlusion_hidden",
+            "truth_pixels": 52202,
+            "supported_pixels": 52202,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "outside_source_fov": {
+            "region": "outside_source_fov",
+            "truth_pixels": 47121,
+            "supported_pixels": 47121,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "target_id": "ai_024_012-cam_00-left-0081",
+      "side": "left",
+      "yaw_deg": -15.004137311486506,
+      "evaluation": {
+        "support_threshold": 0.05,
+        "valid_truth_pixels": 786160,
+        "classified_truth_pixels": 767988,
+        "classified_truth_fraction": 0.9768851124453037,
+        "false_support_on_unclassified_truth_pixels": 18172,
+        "regions": {
+          "observed_from_source": {
+            "region": "observed_from_source",
+            "truth_pixels": 568084,
+            "supported_pixels": 568084,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "occlusion_hidden": {
+            "region": "occlusion_hidden",
+            "truth_pixels": 98195,
+            "supported_pixels": 98195,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "outside_source_fov": {
+            "region": "outside_source_fov",
+            "truth_pixels": 101709,
+            "supported_pixels": 101709,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "target_id": "ai_024_012-cam_00-right-0098",
+      "side": "right",
+      "yaw_deg": 15.023296027122758,
+      "evaluation": {
+        "support_threshold": 0.05,
+        "valid_truth_pixels": 786096,
+        "classified_truth_pixels": 777994,
+        "classified_truth_fraction": 0.9896933707842299,
+        "false_support_on_unclassified_truth_pixels": 8102,
+        "regions": {
+          "observed_from_source": {
+            "region": "observed_from_source",
+            "truth_pixels": 283207,
+            "supported_pixels": 283207,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "occlusion_hidden": {
+            "region": "occlusion_hidden",
+            "truth_pixels": 19185,
+            "supported_pixels": 19185,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          },
+          "outside_source_fov": {
+            "region": "outside_source_fov",
+            "truth_pixels": 475602,
+            "supported_pixels": 475602,
+            "coverage": 1.0,
+            "geometry": {
+              "abs_rel": 0.0,
+              "mae": 0.0,
+              "rmse": 0.0,
+              "delta_1_05": 1.0,
+              "delta_1_10": 1.0
+            },
+            "appearance": {
+              "mae_0_255": 0.0,
+              "rmse_0_255": 0.0,
+              "psnr_db": null,
+              "exact_match_fraction": 1.0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "gates": {
+    "two_samples": true,
+    "four_targets": true,
+    "provider_context_has_no_source_depth_truth": true,
+    "ai_024_010-cam_00-left-0022_novel_regions_nonempty": true,
+    "ai_024_010-cam_00-left-0022_hidden_coverage_exact": true,
+    "ai_024_010-cam_00-left-0022_hidden_depth_exact": true,
+    "ai_024_010-cam_00-left-0022_hidden_rgb_exact": true,
+    "ai_024_010-cam_00-left-0022_outside_coverage_exact": true,
+    "ai_024_010-cam_00-left-0022_outside_depth_exact": true,
+    "ai_024_010-cam_00-left-0022_outside_rgb_exact": true,
+    "ai_024_010-cam_00-right-0090_novel_regions_nonempty": true,
+    "ai_024_010-cam_00-right-0090_hidden_coverage_exact": true,
+    "ai_024_010-cam_00-right-0090_hidden_depth_exact": true,
+    "ai_024_010-cam_00-right-0090_hidden_rgb_exact": true,
+    "ai_024_010-cam_00-right-0090_outside_coverage_exact": true,
+    "ai_024_010-cam_00-right-0090_outside_depth_exact": true,
+    "ai_024_010-cam_00-right-0090_outside_rgb_exact": true,
+    "ai_024_012-cam_00-left-0081_novel_regions_nonempty": true,
+    "ai_024_012-cam_00-left-0081_hidden_coverage_exact": true,
+    "ai_024_012-cam_00-left-0081_hidden_depth_exact": true,
+    "ai_024_012-cam_00-left-0081_hidden_rgb_exact": true,
+    "ai_024_012-cam_00-left-0081_outside_coverage_exact": true,
+    "ai_024_012-cam_00-left-0081_outside_depth_exact": true,
+    "ai_024_012-cam_00-left-0081_outside_rgb_exact": true,
+    "ai_024_012-cam_00-right-0098_novel_regions_nonempty": true,
+    "ai_024_012-cam_00-right-0098_hidden_coverage_exact": true,
+    "ai_024_012-cam_00-right-0098_hidden_depth_exact": true,
+    "ai_024_012-cam_00-right-0098_hidden_rgb_exact": true,
+    "ai_024_012-cam_00-right-0098_outside_coverage_exact": true,
+    "ai_024_012-cam_00-right-0098_outside_depth_exact": true,
+    "ai_024_012-cam_00-right-0098_outside_rgb_exact": true
+  },
+  "leakage_boundary": "Exact target RGB-D is used only to calibrate evaluator output. ProviderContext contains no source depth truth, and this run performs no model training.",
+  "quality_boundary": "Oracle pass proves mask/data/evaluator alignment only; it is not a learned-provider quality result."
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "stage1.8-target-view-single-overfit-v2",
+  "status": "frozen_before_run",
+  "supersedes": "configs/stage1_8_target_view_single_overfit_v1.json",
+  "v1_result": "All absolute RGB, depth, support, camera-sensitivity and finite-value gates passed; relative RGB improvement reached 89.26%/88.17% but missed the frozen 90% gate.",
+  "only_change_from_v1": "Increase optimizer steps from 1200 to 2000; keep data, architecture, loss weights, learning rate and all gates unchanged.",
+  "sample": {
+    "split": "train",
+    "scene": "ai_024_010",
+    "source_frame": 16,
+    "target_side": "left",
+    "target_frame": 22
+  },
+  "input_size_hw": [384, 512],
+  "architecture": {
+    "name": "TargetViewUNet",
+    "base_channels": 16,
+    "inputs": ["warped_source_rgb", "warped_frozen_base_depth", "warp_coverage", "target_rays_in_source", "target_origin_in_source"],
+    "outputs": ["target_rgb", "target_depth_z", "occlusion_support", "outside_support", "geometry_confidence", "appearance_confidence"]
+  },
+  "optimization": {
+    "steps": 2000,
+    "learning_rate": 0.001,
+    "weight_decay": 0.00001,
+    "depth_weight": 1.0,
+    "support_weight": 0.5,
+    "confidence_weight": 0.05,
+    "seed": 20260817
+  },
+  "gates": {
+    "both_novel_rgb_mae_relative_improvement_minimum": 0.90,
+    "both_novel_rgb_mae_0_255_maximum": 12.0,
+    "both_novel_depth_abs_rel_maximum": 0.10,
+    "branch_positive_support_minimum": 0.80,
+    "branch_negative_support_maximum": 0.20,
+    "opposite_target_rgb_mean_difference_minimum_0_1": 0.01
+  },
+  "leakage_boundary": "Target RGB-D and truth masks are loss/evaluation only; model inputs contain source RGB, frozen RGB-only BaseDepth, source/target cameras and derived target-space geometry only."
+}

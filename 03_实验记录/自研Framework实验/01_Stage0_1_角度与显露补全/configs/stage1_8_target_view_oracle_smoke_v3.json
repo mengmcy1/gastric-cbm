@@ -1,0 +1,67 @@
+{
+  "schema_version": "stage1.8-target-view-oracle-smoke-v3",
+  "status": "frozen",
+  "supersedes": "configs/stage1_8_target_view_oracle_smoke_v2.json",
+  "selection_audit": "A read-only audit of all 10 frozen Stage 1.6 validation triplets selected the first validation triplet whose left and right targets both contain outside_source_fov truth.",
+  "prior_failures": {
+    "v1": "ai_024_013 left endpoint had zero outside_source_fov truth pixels",
+    "v2": "ai_004_003 left endpoint had zero outside_source_fov truth pixels"
+  },
+  "source_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+  "purpose": "Calibrate target-view region masks and RGB-D evaluator before any target-conditioned model training.",
+  "target_motion": {
+    "total_yaw_deg": 30.0,
+    "left_endpoint_deg": -15.0,
+    "right_endpoint_deg": 15.0
+  },
+  "selection_policy": {
+    "train_triplets": 1,
+    "validation_triplets": 1,
+    "targets_per_triplet": 2,
+    "selection": "Keep v1 train triplet; use the first frozen validation triplet with nonzero outside-FOV truth at both endpoints.",
+    "model_training": false
+  },
+  "held_out_test_scenes": [
+    "ai_001_010",
+    "ai_005_001",
+    "ai_008_005"
+  ],
+  "triplets": [
+    {
+      "split": "train",
+      "scene": "ai_024_010",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "source_frame": 16,
+      "left_frame": 22,
+      "right_frame": 90,
+      "left_yaw_deg": -14.968306873654674,
+      "right_yaw_deg": 14.93537616507418,
+      "left_translation_m": 2.4755303079463773,
+      "right_translation_m": 6.313679438424471
+    },
+    {
+      "split": "val",
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "scene_type": "Hall",
+      "source_frame": 64,
+      "left_frame": 81,
+      "right_frame": 98,
+      "left_yaw_deg": -15.004137311486506,
+      "right_yaw_deg": 15.023296027122758,
+      "left_translation_m": 7.271440109800554,
+      "right_translation_m": 1.6953060008106753
+    }
+  ],
+  "oracle_gates": {
+    "all_four_targets_present": true,
+    "all_masks_pairwise_disjoint": true,
+    "all_targets_have_occlusion_hidden_pixels": true,
+    "all_targets_have_outside_source_fov_pixels": true,
+    "both_novel_regions_coverage": 1.0,
+    "both_novel_regions_depth_abs_rel_max": 1e-7,
+    "both_novel_regions_rgb_mae_0_255_max": 0.0
+  },
+  "leakage_boundary": "Target RGB-D is used only as oracle/evaluator truth in this smoke and must not enter future model inputs."
+}
