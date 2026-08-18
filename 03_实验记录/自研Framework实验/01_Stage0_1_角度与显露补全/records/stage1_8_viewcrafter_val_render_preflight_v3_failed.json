@@ -1,0 +1,14 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-render-preflight-v3-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_after_cuda_render_before_artifact_write",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "failure": "The 25-frame CUDA point render completed, but PyTorch 2.7 rejected replacing frame zero outside inference_mode because the renderer result was an inference tensor.",
+  "model_loaded": false,
+  "gpu_render_run": true,
+  "gpu_diffusion_run": false,
+  "held_out_test_read": false,
+  "p01_read": false,
+  "resolution": "Move the official source-frame replacement into the same torch.inference_mode block. Canonical render preflight is v4."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "stage1.8-viewcrafter-audit-v1",
+  "created_at": "2026-08-18",
+  "status": "selected_for_one_val_smoke",
+  "producer_machine_id": "linux5080",
+  "official_source": {
+    "repository": "https://github.com/Drexubery/ViewCrafter",
+    "commit": "97cdb8634b28708cbd50912d57c52f23c5ffbf09",
+    "code_license": "Apache-2.0",
+    "checkpoint_repository": "https://huggingface.co/Drexubery/ViewCrafter_25_512",
+    "checkpoint_revision": "8db619bda8cd745ac8df3918095f959517ecd318",
+    "checkpoint_file": "model.ckpt",
+    "checkpoint_bytes": 10437386907,
+    "checkpoint_lfs_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "checkpoint_git_blob_id": "59fd20f32a3fc647beed03939787dcbffc5890b4",
+    "superseded_unverified_identifier": "0864b08b5b990a9307ea657bff9112e749130be8fe0666f97c3aae64a48f7a49"
+  },
+  "official_runtime_claim": {
+    "resolution_hw": [320, 512],
+    "frames": 25,
+    "ddim_steps": 50,
+    "gpu": "A100 40GB",
+    "peak_memory_gb": 13.8,
+    "runtime_seconds": 50,
+    "perframe_ae": true
+  },
+  "protocol_audit": {
+    "official_single_view_eval_allowed": false,
+    "reason": "The official evaluation mode loads target video frames and uses DUSt3R-estimated target poses; this violates the frozen target-image leakage boundary.",
+    "official_single_view_target_directly_accepts_arbitrary_4x4": false,
+    "reason_2": "The public CLI exposes spherical d_phi/d_theta/d_r/pan controls around a center-depth origin rather than a calibrated arbitrary source/target 4x4 pair.",
+    "underlying_renderer_accepts_explicit_cameras": true,
+    "qualified_adapter": "Unproject frozen source RGB plus RGB-only BaseDepth with the calibrated source intrinsics, interpolate the true source-to-target camera trajectory into 25 explicit PyTorch3D cameras, feed only the rendered RGB video to the frozen diffusion model, and evaluate only the final target frame.",
+    "dust3r_checkpoint_required_for_adapter": false,
+    "dust3r_bytes_avoided": 2285005731,
+    "target_rgb_model_input": false,
+    "target_depth_model_input": false,
+    "held_out_test_read": false,
+    "p01_read": false
+  },
+  "frozen_first_smoke": {
+    "target": "ai_024_013/source35/right22/14.981570181181127deg",
+    "input_resolution_hw": [320, 512],
+    "frames": 25,
+    "ddim_steps": 50,
+    "seed": 20260818,
+    "gates": [
+      "exact final camera projection agreement",
+      "all rendered and generated frames finite",
+      "final frame shape 3x320x512",
+      "peak reserved memory <= 15.5 GiB",
+      "no target truth enters renderer or diffusion"
+    ]
+  },
+  "stop_boundary": "Do not run all 14 val targets unless the one-target adapter, finite-output and 16 GiB gates pass. A smoke pass still does not establish RGB quality."
+}

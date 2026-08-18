@@ -1,0 +1,222 @@
+{
+  "schema_version": "stage1.8-genwarp-val-smoke-v1",
+  "created_at": "2026-08-18T13:28:34+0800",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": [
+    0
+  ],
+  "inputs": {
+    "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_genwarp_val_smoke_v1.json",
+    "config_sha256": "86706a19723f70fb49a12d8115cbb05dd0014d227267958f0ae52b46eed19280",
+    "dataset_root": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_v1_linux5080",
+    "camera_parameters": "源码/ml-hypersim/contrib/mikeroberts3000/metadata_camera_parameters.csv",
+    "camera_parameters_sha256": "0b40e0884ba2458e7bdcdbb27de46a4ec6eacbfbbb4ef0d70188d78098cebdc9",
+    "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+    "base_depth_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+    "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+    "visibility_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81",
+    "visibility_keys_read_after_inference_for_audit_only": [
+      "geometry_conflict_uint8",
+      "observed_from_source_uint8",
+      "occlusion_hidden_uint8",
+      "outside_source_fov_uint8",
+      "sampled_source_depth_m_float32",
+      "target_depth_meters_float32",
+      "target_point_distance_from_source_m_float32",
+      "unresolved_uint8",
+      "valid_target_uint8"
+    ],
+    "held_out_test_read": false,
+    "p01_read": false
+  },
+  "target": {
+    "split": "val",
+    "scene": "ai_024_013",
+    "camera": "cam_00",
+    "source_frame": 35,
+    "side": "right",
+    "target_frame": 22,
+    "yaw_deg": 14.981570181181127
+  },
+  "adapter": {
+    "original_shape_hw": [
+      768,
+      1024
+    ],
+    "crop_xywh": [
+      128,
+      0,
+      768,
+      768
+    ],
+    "output_shape_hw": [
+      512,
+      512
+    ],
+    "source_intrinsics_after_crop_resize": [
+      [
+        589.3202831022501,
+        0.0,
+        255.66666666666669
+      ],
+      [
+        0.0,
+        589.32028310225,
+        302.8568458789099
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "target_intrinsics_after_crop_resize": [
+      [
+        589.3202831022501,
+        0.0,
+        255.66666666666669
+      ],
+      [
+        0.0,
+        589.32028310225,
+        302.8568458789099
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "coordinate_conversion": "OpenCV right/down/forward to OpenGL right/up/back via diag(1,-1,-1,1)",
+    "geometry_gate": {
+      "compared_points": 4096,
+      "median_px": 5.684341886080802e-14,
+      "p99_px": 2.6204363853071055e-13,
+      "maximum_px": 7.190186943645084e-13
+    }
+  },
+  "model": {
+    "source_commit": "22c03b6ae349013b7099801f4815cf1d0fd09c35",
+    "checkpoint_name": "multi2",
+    "half_precision_weights": true,
+    "num_inference_steps": 20,
+    "guidance_scale": 3.5,
+    "seed": 20260818
+  },
+  "runtime": {
+    "seconds_including_model_load": 35.8033820129931,
+    "peak_allocated_bytes": 4947667968,
+    "peak_reserved_bytes": 5414846464,
+    "peak_allocated_gib": 4.607874870300293,
+    "peak_reserved_gib": 5.04296875
+  },
+  "outputs": {
+    "synthesized": {
+      "shape": [
+        1,
+        3,
+        512,
+        512
+      ],
+      "dtype": "torch.float16",
+      "all_finite": true,
+      "nonfinite_values": 0,
+      "finite_minimum": 0.051513671875,
+      "finite_maximum": 1.0,
+      "finite_mean": 0.668489933013916,
+      "finite_std": 0.17291507124900818
+    },
+    "warped": {
+      "shape": [
+        1,
+        3,
+        512,
+        512
+      ],
+      "dtype": "torch.float32",
+      "all_finite": true,
+      "nonfinite_values": 0,
+      "finite_minimum": 0.0,
+      "finite_maximum": 0.9999539852142334,
+      "finite_mean": 0.39368295669555664,
+      "finite_std": 0.3345029354095459
+    },
+    "mask": {
+      "shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "dtype": "torch.float32",
+      "all_finite": true,
+      "nonfinite_values": 0,
+      "finite_minimum": 0.0,
+      "finite_maximum": 1.0,
+      "finite_mean": 0.6131935119628906,
+      "finite_std": 0.4870196282863617
+    },
+    "correspondence": {
+      "shape": [
+        1,
+        2,
+        512,
+        512
+      ],
+      "dtype": "torch.float32",
+      "all_finite": true,
+      "nonfinite_values": 0,
+      "finite_minimum": -1000000.0,
+      "finite_maximum": 1232432.0,
+      "finite_mean": 30.304414749145508,
+      "finite_std": 4994.76171875,
+      "visible_region_all_finite": true,
+      "visible_region_values": 321490
+    }
+  },
+  "artifacts": {
+    "source": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/source.png",
+      "sha256": "533fa57aa7e5630c27ed669a1cf45532703c295fdaee4078d5ee3011da247d19"
+    },
+    "target_truth_val_only": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/target_truth_val_only.png",
+      "sha256": "1da9674f87f9792abb2fbadc0a6e9b98f33fc9cd1904b870057334c28883e772"
+    },
+    "warped": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/warped.png",
+      "sha256": "26bbb6706ff6b138c0fdfa8a49cabb1931a818beded55531cd0071ed46765147"
+    },
+    "synthesized": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/synthesized.png",
+      "sha256": "28005323e0fc0527e264ed2487fd939028792ed9b7efbd29184b2cb053d5917e"
+    },
+    "warp_valid": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/warp_valid.png",
+      "sha256": "6ee42999afc0c7369e232c8ad65ff9e1e75f381fd37de0052271b06fc36d3673"
+    },
+    "comparison": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_retry2_linux5080/comparison_source_warp_synth_truth.png",
+      "sha256": "7d7a621bb57cc2c641e047435019b823bdae64fa912274965967a989926f8893"
+    }
+  },
+  "gates": {
+    "frozen": {
+      "geometry_projection_p99_px_max": 0.05,
+      "geometry_projection_max_px_max": 0.1,
+      "minimum_compared_geometry_points": 1000,
+      "peak_reserved_gib_max": 15.5,
+      "required_image_outputs_finite": true,
+      "correspondence_visible_region_finite": true,
+      "synthesized_range": [
+        0.0,
+        1.0
+      ],
+      "minimum_synthesized_std": 0.01
+    },
+    "result": "pass"
+  },
+  "quality_boundary": "This smoke gates adapter geometry, executable compatibility and memory only. It does not establish GenWarp quality, does not tune on validation RGB, and does not read held-out test or P01."
+}

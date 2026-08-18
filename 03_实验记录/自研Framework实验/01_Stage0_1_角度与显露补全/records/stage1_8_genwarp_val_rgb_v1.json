@@ -1,0 +1,746 @@
+{
+  "schema_version": "stage1.8-genwarp-val-rgb-v1",
+  "created_at": "2026-08-18T13:34:19+0800",
+  "status": "failed_rgb_gate",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "visible_cuda_devices": [
+    0
+  ],
+  "inputs": {
+    "triplet_config": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+      "sha256": "0f06c55948b11d36ea1876840d0d8f44d4bdab01ff6f88efa325c3b15d78c85b"
+    },
+    "qualification_pool": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_training_pool_v1.json",
+      "sha256": "c6205580b8b93d4a3dc3a810ad645ce241e752b8410ed249aa8f1c8190babb9d"
+    },
+    "base_depth_record": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_03_frozen_base_depth_v1.json",
+      "sha256": "66e042281f3870e53adbb4c65a26f428b2fa73a8df7dcb90325248d222e87490"
+    },
+    "passed_smoke_record": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_genwarp_val_smoke_v1.json",
+      "sha256": "f9e40d82d56ad39158e2f345b03c21521a21118b01769c1de59bb5ca6c7ac94e"
+    },
+    "held_out_test_read": false,
+    "p01_read": false
+  },
+  "adapter": {
+    "input_size_hw": [
+      512,
+      512
+    ],
+    "crop_policy": "center_square_then_bilinear_resize",
+    "opencv_to_opengl": "diag(1,-1,-1,1)",
+    "projective_warp_dtype": "float32",
+    "network_weights_dtype": "float16",
+    "near_m": 0.01,
+    "far_m": 100.0
+  },
+  "model": {
+    "source_commit": "22c03b6ae349013b7099801f4815cf1d0fd09c35",
+    "checkpoint_name": "multi2",
+    "num_inference_steps": 20,
+    "guidance_scale": 3.5,
+    "seed_base": 2026081800
+  },
+  "results": [
+    {
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "source_frame": 35,
+      "side": "right",
+      "target_frame": 22,
+      "yaw_deg": 14.981570181181127,
+      "seed": 2026081800,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 2.6204363853071055e-13,
+        "maximum_px": 7.190186943645084e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 12438,
+          "genwarp_rgb_mae_0_255": 23.86097526550293,
+          "warp_rgb_mae_0_255": 61.29985809326172,
+          "relative_improvement_over_warp": 0.610749910233058,
+          "genwarp_error_sum": 296782.8125,
+          "warp_error_sum": 762447.625
+        },
+        "outside_source_fov": {
+          "pixels": 51541,
+          "genwarp_rgb_mae_0_255": 26.6011962890625,
+          "warp_rgb_mae_0_255": 161.1152801513672,
+          "relative_improvement_over_warp": 0.8348933989124385,
+          "genwarp_error_sum": 1371052.25,
+          "warp_error_sum": 8304043.0
+        }
+      },
+      "warp_coverage": 0.6131935119628906,
+      "runtime_seconds": 2.4078942260239273,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+        "base_depth_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+        "visibility_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_013-right-0022/synthesized.png",
+        "synthesized_sha256": "48999eb67a0f432e2f322ca0201720791e9e8023c8fdbaa32b0b3bc9e7933bde",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_013-right-0022/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "12cd366dc718d8509f38134329c7b1eb116b8284d515d1bea974537227e193a4"
+      }
+    },
+    {
+      "scene": "ai_004_003",
+      "camera": "cam_00",
+      "source_frame": 66,
+      "side": "right",
+      "target_frame": 99,
+      "yaw_deg": 15.032014770897486,
+      "seed": 2026081801,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 4.0194366942304644e-14,
+        "p99_px": 1.6077746776921858e-13,
+        "maximum_px": 2.898457019905882e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 21214,
+          "genwarp_rgb_mae_0_255": 58.68714141845703,
+          "warp_rgb_mae_0_255": 67.49250793457031,
+          "relative_improvement_over_warp": 0.13046435501625642,
+          "genwarp_error_sum": 1244989.0,
+          "warp_error_sum": 1431786.0
+        },
+        "outside_source_fov": {
+          "pixels": 127547,
+          "genwarp_rgb_mae_0_255": 32.86069107055664,
+          "warp_rgb_mae_0_255": 159.50057983398438,
+          "relative_improvement_over_warp": 0.793977607449706,
+          "genwarp_error_sum": 4191282.75,
+          "warp_error_sum": 20343820.0
+        }
+      },
+      "warp_coverage": 0.5162887573242188,
+      "runtime_seconds": 1.7950992819387466,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_004_003-cam_00-0066-unidepth-v1-base.npz",
+        "base_depth_sha256": "80c03b03cbda5d795bef0042f1160cbbc390e8dd651f4242f34e1a7bb76e7950",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_004_003/right_visibility_truth.npz",
+        "visibility_sha256": "fa22e0c00097a0dc805630b1166ad38143b3fa3872f0748669496f813ef82307"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_004_003-right-0099/synthesized.png",
+        "synthesized_sha256": "56a3ceb3e80b634bdeb023bf433113a185e53283fa2c09d0170478905b052112",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_004_003-right-0099/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "5ff2f8036dabd9d2713f4cbbe9f113379e78bcba211d75ff2bc09b940bc41e07"
+      }
+    },
+    {
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "source_frame": 64,
+      "side": "left",
+      "target_frame": 81,
+      "yaw_deg": -15.004137311486506,
+      "seed": 2026081802,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 1.2710574864626038e-13,
+        "maximum_px": 2.6203521364587025e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 38214,
+          "genwarp_rgb_mae_0_255": 94.77830505371094,
+          "warp_rgb_mae_0_255": 137.24801635742188,
+          "relative_improvement_over_warp": 0.3094377057742761,
+          "genwarp_error_sum": 3621858.25,
+          "warp_error_sum": 5244795.5
+        },
+        "outside_source_fov": {
+          "pixels": 29427,
+          "genwarp_rgb_mae_0_255": 77.17427825927734,
+          "warp_rgb_mae_0_255": 109.00965881347656,
+          "relative_improvement_over_warp": 0.29204183281292406,
+          "genwarp_error_sum": 2271007.5,
+          "warp_error_sum": 3207827.25
+        }
+      },
+      "warp_coverage": 0.2999114990234375,
+      "runtime_seconds": 1.69445453514345,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_012-cam_00-0064-unidepth-v1-base.npz",
+        "base_depth_sha256": "bd9cf8be2a7ae22d54764546dc6ad1228fb7e22abf0b4ee16214dc8618d9384a",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_012/left_visibility_truth.npz",
+        "visibility_sha256": "f24be3d801fae41921a41042bcdc5eee13506ee4e733029ca1e24e47149d03f3"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_012-left-0081/synthesized.png",
+        "synthesized_sha256": "17b95c12a80afcdbb309a2688e79b1415dbabd50dfe427c7604ac83245372091",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_012-left-0081/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "5db965982e9a5f16f27ac78e469133410e1bca2139a4474f75a9c751d3e317f6"
+      }
+    },
+    {
+      "scene": "ai_024_012",
+      "camera": "cam_00",
+      "source_frame": 64,
+      "side": "right",
+      "target_frame": 98,
+      "yaw_deg": 15.023296027122758,
+      "seed": 2026081803,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 2.0495186137532011e-13,
+        "maximum_px": 3.979039320256561e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 7518,
+          "genwarp_rgb_mae_0_255": 60.00141143798828,
+          "warp_rgb_mae_0_255": 54.31524658203125,
+          "relative_improvement_over_warp": -0.10468819003462193,
+          "genwarp_error_sum": 451090.625,
+          "warp_error_sum": 408342.03125
+        },
+        "outside_source_fov": {
+          "pixels": 152906,
+          "genwarp_rgb_mae_0_255": 49.12348937988281,
+          "warp_rgb_mae_0_255": 121.1746597290039,
+          "relative_improvement_over_warp": 0.5946059226430425,
+          "genwarp_error_sum": 7511276.0,
+          "warp_error_sum": 18528332.0
+        }
+      },
+      "warp_coverage": 0.27469635009765625,
+      "runtime_seconds": 1.7420816810335964,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_012-cam_00-0064-unidepth-v1-base.npz",
+        "base_depth_sha256": "bd9cf8be2a7ae22d54764546dc6ad1228fb7e22abf0b4ee16214dc8618d9384a",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_012/right_visibility_truth.npz",
+        "visibility_sha256": "fa82cf6649643e089c9c1ed3a59bb105e7d1d11781fb05a888407f74bd3b14e0"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_012-right-0098/synthesized.png",
+        "synthesized_sha256": "2f97df8646a68f63000b9f628963d22a05e63c5c5d76d364d1316b456c7d472b",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_024_012-right-0098/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "afd1f9926ceeddf16cf24cae7d9d3101e6d7830bd8d2a94852dfe3ed3a10087d"
+      }
+    },
+    {
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "source_frame": 65,
+      "side": "left",
+      "target_frame": 72,
+      "yaw_deg": -14.988549845842341,
+      "seed": 2026081804,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 4.263256414560601e-14,
+        "p99_px": 1.2710574864626038e-13,
+        "maximum_px": 2.3437142008433856e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 3798,
+          "genwarp_rgb_mae_0_255": 77.51166534423828,
+          "warp_rgb_mae_0_255": 88.01173400878906,
+          "relative_improvement_over_warp": 0.11930305410756048,
+          "genwarp_error_sum": 294389.3125,
+          "warp_error_sum": 334268.5625
+        },
+        "outside_source_fov": {
+          "pixels": 217397,
+          "genwarp_rgb_mae_0_255": 115.15326690673828,
+          "warp_rgb_mae_0_255": 52.16448211669922,
+          "relative_improvement_over_warp": -1.2075033094189331,
+          "genwarp_error_sum": 25033974.0,
+          "warp_error_sum": 11340402.0
+        }
+      },
+      "warp_coverage": 0.4537391662597656,
+      "runtime_seconds": 1.555398026946932,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_031_004-cam_00-0065-unidepth-v1-base.npz",
+        "base_depth_sha256": "892d8467b5604c6ca0ccdaadeffdf43bbed74613f62e0fc13287737ecb04309f",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_031_004/left_visibility_truth.npz",
+        "visibility_sha256": "578841773a4aabb5c1bb4efdb7bb36013582c59e3d521949d5b68af5c55e807e"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_031_004-left-0072/synthesized.png",
+        "synthesized_sha256": "a5c73d46bf4add9c798b6fab3a9156ac64d17f0c16ffa38823ae3d170fb55e2a",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_031_004-left-0072/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "7526172a58af94d4335fe186940a96276433ceb2db32948c66b01c735f4809ac"
+      }
+    },
+    {
+      "scene": "ai_031_004",
+      "camera": "cam_00",
+      "source_frame": 65,
+      "side": "right",
+      "target_frame": 52,
+      "yaw_deg": 15.035272057315268,
+      "seed": 2026081805,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 4.0194366942304644e-14,
+        "p99_px": 1.2710574864626038e-13,
+        "maximum_px": 2.8457214390443806e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 41255,
+          "genwarp_rgb_mae_0_255": 69.03468322753906,
+          "warp_rgb_mae_0_255": 63.71054458618164,
+          "relative_improvement_over_warp": -0.08356762096351922,
+          "genwarp_error_sum": 2848026.0,
+          "warp_error_sum": 2628378.5
+        },
+        "outside_source_fov": {
+          "pixels": 79313,
+          "genwarp_rgb_mae_0_255": 16.262248992919922,
+          "warp_rgb_mae_0_255": 0.38574936985969543,
+          "relative_improvement_over_warp": -41.15755167360304,
+          "genwarp_error_sum": 1289807.75,
+          "warp_error_sum": 30594.939453125
+        }
+      },
+      "warp_coverage": 0.5684585571289062,
+      "runtime_seconds": 1.5710739728529006,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_031_004-cam_00-0065-unidepth-v1-base.npz",
+        "base_depth_sha256": "892d8467b5604c6ca0ccdaadeffdf43bbed74613f62e0fc13287737ecb04309f",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_031_004/right_visibility_truth.npz",
+        "visibility_sha256": "1ad7a5509a4007af8728617fa8f56b97a8ccccb456a1556fd9e77e8cb873c302"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_031_004-right-0052/synthesized.png",
+        "synthesized_sha256": "d1489dbc726613737c819d739d041ad88089aec05b412e15859fac04d2f94b5e",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_031_004-right-0052/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "530994027595b1c71c880d0a1a5d23599022bc0b312cd380645cce7eec595ecc"
+      }
+    },
+    {
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "source_frame": 0,
+      "side": "left",
+      "target_frame": 43,
+      "yaw_deg": -14.985083334062793,
+      "seed": 2026081806,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 2.2857333034988846e-13,
+        "maximum_px": 3.4224270219716276e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 8002,
+          "genwarp_rgb_mae_0_255": 44.22574996948242,
+          "warp_rgb_mae_0_255": 37.05205154418945,
+          "relative_improvement_over_warp": -0.19361136904220788,
+          "genwarp_error_sum": 353894.4375,
+          "warp_error_sum": 296490.53125
+        },
+        "outside_source_fov": {
+          "pixels": 86495,
+          "genwarp_rgb_mae_0_255": 97.61886596679688,
+          "warp_rgb_mae_0_255": 165.31182861328125,
+          "relative_improvement_over_warp": 0.40948650326069824,
+          "genwarp_error_sum": 8443544.0,
+          "warp_error_sum": 14298647.0
+        }
+      },
+      "warp_coverage": 0.5745315551757812,
+      "runtime_seconds": 1.79093405790627,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_015_001-cam_00-0000-unidepth-v1-base.npz",
+        "base_depth_sha256": "81b7c74819c13ccd7bf387979802fd54c68f4985d9c45bbf03d6e4d6913d4366",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_015_001/left_visibility_truth.npz",
+        "visibility_sha256": "64d59524435c8b322408998bd11250c006ca8a811689895c82219d1cd1bfedbd"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_015_001-left-0043/synthesized.png",
+        "synthesized_sha256": "249b0f714fe834c887ff6366991d40331fcd9b7f4b431c6da914f41456ab4409",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_015_001-left-0043/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "a69834953776ec72f140ff13d06ac39c1eb4cdf739ff87b09b59015dddbf0f7c"
+      }
+    },
+    {
+      "scene": "ai_015_001",
+      "camera": "cam_00",
+      "source_frame": 0,
+      "side": "right",
+      "target_frame": 26,
+      "yaw_deg": 14.929732606637753,
+      "seed": 2026081807,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 4.263256414560601e-14,
+        "p99_px": 1.56964020692204e-13,
+        "maximum_px": 3.694822225952521e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 38902,
+          "genwarp_rgb_mae_0_255": 42.77446365356445,
+          "warp_rgb_mae_0_255": 50.15666961669922,
+          "relative_improvement_over_warp": 0.14718293737503108,
+          "genwarp_error_sum": 1664012.25,
+          "warp_error_sum": 1951194.75
+        },
+        "outside_source_fov": {
+          "pixels": 21148,
+          "genwarp_rgb_mae_0_255": 72.1634750366211,
+          "warp_rgb_mae_0_255": 88.97187042236328,
+          "relative_improvement_over_warp": 0.1889180850750931,
+          "genwarp_error_sum": 1526113.25,
+          "warp_error_sum": 1881577.125
+        }
+      },
+      "warp_coverage": 0.9439735412597656,
+      "runtime_seconds": 1.8058437190484256,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_015_001-cam_00-0000-unidepth-v1-base.npz",
+        "base_depth_sha256": "81b7c74819c13ccd7bf387979802fd54c68f4985d9c45bbf03d6e4d6913d4366",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_015_001/right_visibility_truth.npz",
+        "visibility_sha256": "c005c1502377163e90274ed16d455dad7e26f3986ab8ee6641715618aa574da5"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_015_001-right-0026/synthesized.png",
+        "synthesized_sha256": "767bacb80fad0caff5a658faf100e0a73fa63c27228cbfc5f8618c545cf92910",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_015_001-right-0026/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "bf0a775686dc4b466e91953f8d433a268d42f1065825e55fbbacb16a8bc949b8"
+      }
+    },
+    {
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "source_frame": 29,
+      "side": "left",
+      "target_frame": 8,
+      "yaw_deg": -15.177282998100113,
+      "seed": 2026081808,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 1.6077746776921858e-13,
+        "maximum_px": 2.5421149729252077e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 33817,
+          "genwarp_rgb_mae_0_255": 30.20554542541504,
+          "warp_rgb_mae_0_255": 40.746604919433594,
+          "relative_improvement_over_warp": 0.2586978599778046,
+          "genwarp_error_sum": 1021460.9375,
+          "warp_error_sum": 1377928.0
+        },
+        "outside_source_fov": {
+          "pixels": 10058,
+          "genwarp_rgb_mae_0_255": 22.293075561523438,
+          "warp_rgb_mae_0_255": 122.84559631347656,
+          "relative_improvement_over_warp": 0.8185276783985311,
+          "genwarp_error_sum": 224223.75,
+          "warp_error_sum": 1235581.0
+        }
+      },
+      "warp_coverage": 0.7904281616210938,
+      "runtime_seconds": 1.8733876689802855,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_053_003-cam_00-0029-unidepth-v1-base.npz",
+        "base_depth_sha256": "40fe3436746b628d792665a41c9ab5b61a6104ca525ad3fdd69414de51221739",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_053_003/left_visibility_truth.npz",
+        "visibility_sha256": "37e693cd145680b94530d2ba69caa43348fc337a8df6ba5edb7b25d743513001"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_053_003-left-0008/synthesized.png",
+        "synthesized_sha256": "d6aa3b26aba204b17d44f663ffd00cde5e4426693f593e8c13a14b8048ab177c",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_053_003-left-0008/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "7f9dc5258d35e611ecf544aa4bdc4b23ce855877d8f6a6f3b4502b523801297e"
+      }
+    },
+    {
+      "scene": "ai_053_003",
+      "camera": "cam_00",
+      "source_frame": 29,
+      "side": "right",
+      "target_frame": 62,
+      "yaw_deg": 14.926818160334774,
+      "seed": 2026081809,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 5.084229945850415e-13,
+        "maximum_px": 2.3437142008433857e-12
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 40622,
+          "genwarp_rgb_mae_0_255": 33.94533157348633,
+          "warp_rgb_mae_0_255": 52.02342987060547,
+          "relative_improvement_over_warp": 0.3474991622444662,
+          "genwarp_error_sum": 1378927.25,
+          "warp_error_sum": 2113295.75
+        },
+        "outside_source_fov": {
+          "pixels": 914,
+          "genwarp_rgb_mae_0_255": 8.354181289672852,
+          "warp_rgb_mae_0_255": 91.9345703125,
+          "relative_improvement_over_warp": 0.9091290549216069,
+          "genwarp_error_sum": 7635.7216796875,
+          "warp_error_sum": 84028.1953125
+        }
+      },
+      "warp_coverage": 0.7539596557617188,
+      "runtime_seconds": 2.0592460508923978,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_053_003-cam_00-0029-unidepth-v1-base.npz",
+        "base_depth_sha256": "40fe3436746b628d792665a41c9ab5b61a6104ca525ad3fdd69414de51221739",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_053_003/right_visibility_truth.npz",
+        "visibility_sha256": "f8ee677f6e9d332e14e8274cb96657a347105437f51c0e7f489fa3012f011a03"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_053_003-right-0062/synthesized.png",
+        "synthesized_sha256": "c95c36c4dc68f36971fb8622a2231fb57d2a94ae7eef09f89c7ae5b281a244f5",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_053_003-right-0062/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "50482ec49f6e9f77690040600cab183f449a5524f6bf12ce21d26e1d241f5361"
+      }
+    },
+    {
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "source_frame": 72,
+      "side": "left",
+      "target_frame": 45,
+      "yaw_deg": -14.936900571746754,
+      "seed": 2026081810,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 2.842170943040401e-14,
+        "p99_px": 1.0247593068766006e-13,
+        "maximum_px": 1.4210854715202004e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 32343,
+          "genwarp_rgb_mae_0_255": 29.483139038085938,
+          "warp_rgb_mae_0_255": 108.81713104248047,
+          "relative_improvement_over_warp": 0.7290579272249312,
+          "genwarp_error_sum": 953573.1875,
+          "warp_error_sum": 3519472.5
+        },
+        "outside_source_fov": {
+          "pixels": 116620,
+          "genwarp_rgb_mae_0_255": 24.8392333984375,
+          "warp_rgb_mae_0_255": 115.91283416748047,
+          "relative_improvement_over_warp": 0.7857076519883233,
+          "genwarp_error_sum": 2896751.5,
+          "warp_error_sum": 13517755.0
+        }
+      },
+      "warp_coverage": 0.5526008605957031,
+      "runtime_seconds": 1.7344092759303749,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_003_010-cam_01-0072-unidepth-v1-base.npz",
+        "base_depth_sha256": "e71890a68dea0349a771d7c1b7ae6e5a1c191b9fed8ea82e8d516f047b589b35",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_003_010/left_visibility_truth.npz",
+        "visibility_sha256": "b489de64713e4d2ba2784c4bda0efa01afe3c511411362847d5548720cebd9ea"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_003_010-left-0045/synthesized.png",
+        "synthesized_sha256": "84483cd3caa1377a2254233f2ecd1fe93c9d6bf945729aeaced998866f0e6987",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_003_010-left-0045/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "5e7c1a9b852a1bf77005a76cc0d818a1aaa469576f806752a7f9c9b6100ba90a"
+      }
+    },
+    {
+      "scene": "ai_003_010",
+      "camera": "cam_01",
+      "source_frame": 72,
+      "side": "right",
+      "target_frame": 16,
+      "yaw_deg": 14.973343759137661,
+      "seed": 2026081811,
+      "geometry_gate": {
+        "compared_points": 2164,
+        "median_px": 6.355287432313019e-14,
+        "p99_px": 1.2862197421537486e-12,
+        "maximum_px": 1.6463612699567982e-10
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 180744,
+          "genwarp_rgb_mae_0_255": 26.409570693969727,
+          "warp_rgb_mae_0_255": 143.59271240234375,
+          "relative_improvement_over_warp": 0.8160800067626645,
+          "genwarp_error_sum": 4773371.5,
+          "warp_error_sum": 25953520.0
+        },
+        "outside_source_fov": {
+          "pixels": 143,
+          "genwarp_rgb_mae_0_255": 12.948355674743652,
+          "warp_rgb_mae_0_255": 155.59017944335938,
+          "relative_improvement_over_warp": 0.9167790941493364,
+          "genwarp_error_sum": 1851.6148681640625,
+          "warp_error_sum": 22249.396484375
+        }
+      },
+      "warp_coverage": 0.2994651794433594,
+      "runtime_seconds": 1.6140573909506202,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_003_010-cam_01-0072-unidepth-v1-base.npz",
+        "base_depth_sha256": "e71890a68dea0349a771d7c1b7ae6e5a1c191b9fed8ea82e8d516f047b589b35",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_003_010/right_visibility_truth.npz",
+        "visibility_sha256": "aa017f02214089fcdf8e5c765a7a3d4f967b5a4d6f9fa18d2687f3d54d6c083f"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_003_010-right-0016/synthesized.png",
+        "synthesized_sha256": "090e0293f8c0326781d8d084401e3c0b8ed609d7156e01438d866462b65c9773",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_003_010-right-0016/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "55892661cfd69894edb48b46b7addf1859d091831d7a70816f9b79ff7ae16fb5"
+      }
+    },
+    {
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "source_frame": 61,
+      "side": "left",
+      "target_frame": 72,
+      "yaw_deg": -14.89342644334515,
+      "seed": 2026081812,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 7.791709393054201e-14,
+        "p99_px": 2.3437142008433856e-13,
+        "maximum_px": 4.687428401686771e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 73771,
+          "genwarp_rgb_mae_0_255": 72.9013671875,
+          "warp_rgb_mae_0_255": 93.94054412841797,
+          "relative_improvement_over_warp": 0.2239626897642527,
+          "genwarp_error_sum": 5378006.5,
+          "warp_error_sum": 6930088.0
+        },
+        "outside_source_fov": {
+          "pixels": 31050,
+          "genwarp_rgb_mae_0_255": 52.60935974121094,
+          "warp_rgb_mae_0_255": 119.47514343261719,
+          "relative_improvement_over_warp": 0.5596627195439853,
+          "genwarp_error_sum": 1633520.625,
+          "warp_error_sum": 3709703.25
+        }
+      },
+      "warp_coverage": 0.4945831298828125,
+      "runtime_seconds": 1.839123667916283,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_009_009-cam_00-0061-unidepth-v1-base.npz",
+        "base_depth_sha256": "7a3f127d4144c23b86e6e0ccfc03feea29795467f6e187f4b71609db9ed954ee",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_009_009/left_visibility_truth.npz",
+        "visibility_sha256": "ba9edf6415e814ead0a8d56e7293ae4ff60d70599081c3b4e53df79cc8acea2f"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_009_009-left-0072/synthesized.png",
+        "synthesized_sha256": "83b6fa6043854fdcca644615cb81a757cda314e14ec190cbe3a868d9db74c229",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_009_009-left-0072/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "70946498a4d439ac00391b2acd6486c57563747f535b374ec3d916a97741de3a"
+      }
+    },
+    {
+      "scene": "ai_009_009",
+      "camera": "cam_00",
+      "source_frame": 61,
+      "side": "right",
+      "target_frame": 54,
+      "yaw_deg": 15.100144915517724,
+      "seed": 2026081813,
+      "geometry_gate": {
+        "compared_points": 4096,
+        "median_px": 5.684341886080802e-14,
+        "p99_px": 1.2710574864626038e-13,
+        "maximum_px": 1.797546735911271e-13
+      },
+      "regions": {
+        "occlusion_hidden": {
+          "pixels": 81025,
+          "genwarp_rgb_mae_0_255": 35.25614547729492,
+          "warp_rgb_mae_0_255": 75.20992279052734,
+          "relative_improvement_over_warp": 0.5312301333496992,
+          "genwarp_error_sum": 2856629.25,
+          "warp_error_sum": 6093884.0
+        },
+        "outside_source_fov": {
+          "pixels": 88114,
+          "genwarp_rgb_mae_0_255": 55.369022369384766,
+          "warp_rgb_mae_0_255": 140.89620971679688,
+          "relative_improvement_over_warp": 0.6070226269345557,
+          "genwarp_error_sum": 4878786.0,
+          "warp_error_sum": 12414929.0
+        }
+      },
+      "warp_coverage": 0.443145751953125,
+      "runtime_seconds": 1.7994764409959316,
+      "inputs": {
+        "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_009_009-cam_00-0061-unidepth-v1-base.npz",
+        "base_depth_sha256": "7a3f127d4144c23b86e6e0ccfc03feea29795467f6e187f4b71609db9ed954ee",
+        "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_009_009/right_visibility_truth.npz",
+        "visibility_sha256": "3ba11d8221acccf636bfb1aca7e30e882d8d6333d76769f45f7d35335887ef8c"
+      },
+      "artifacts": {
+        "synthesized": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_009_009-right-0054/synthesized.png",
+        "synthesized_sha256": "f51be38257822418f01846e461c9b5da2397e6fb169c5c9f2eb475308c3cdce9",
+        "comparison": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_rgb_v1_linux5080/ai_009_009-right-0054/comparison_source_warp_synth_truth.png",
+        "comparison_sha256": "71722b1c66570ba503c31450a933a29bded502e0a066833bf1a8c781019ccd67"
+      }
+    }
+  ],
+  "aggregate": {
+    "occlusion_hidden": {
+      "pixels": 613663,
+      "genwarp_rgb_mae_0_255": 44.22135815993469,
+      "warp_rgb_mae_0_255": 96.21875809687076,
+      "relative_improvement_over_warp": 0.5404081383443582,
+      "mae_gate_pass": false,
+      "improvement_gate_pass": true
+    },
+    "outside_source_fov": {
+      "pixels": 1012673,
+      "genwarp_rgb_mae_0_255": 60.51393363064667,
+      "warp_rgb_mae_0_255": 107.55642656242439,
+      "relative_improvement_over_warp": 0.4373750080333402,
+      "mae_gate_pass": false,
+      "improvement_gate_pass": true
+    }
+  },
+  "runtime": {
+    "total_seconds_including_model_load": 44.387628350872546,
+    "peak_allocated_gib": 4.627772331237793,
+    "peak_reserved_gib": 5.044921875
+  },
+  "gates": {
+    "frozen": {
+      "regions": [
+        "occlusion_hidden",
+        "outside_source_fov"
+      ],
+      "relative_improvement_over_warp_minimum": 0.15,
+      "mae_0_255_maximum": 35.0,
+      "all_targets_each_region_nonempty": true,
+      "all_outputs_finite": true
+    },
+    "result": "failed"
+  },
+  "quality_boundary": "Validation RGB only. Target RGB and visibility masks are evaluator-only. If either frozen RGB gate fails, stop without generated-depth inference, held-out test, P01, or Gaussian Spawn."
+}

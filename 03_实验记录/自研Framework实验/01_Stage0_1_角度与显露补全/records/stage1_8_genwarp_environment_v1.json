@@ -1,9 +1,9 @@
 {
   "schema_version": "stage1.8-genwarp-environment-v1",
   "created_at": "2026-08-17",
-  "status": "ready_paused_before_gpu_smoke",
+  "status": "superseded_by_passed_single_val_gpu_smoke",
   "producer_machine_id": "linux5080",
-  "gpu_work_started": false,
+  "gpu_work_started": true,
   "held_out_test_read": false,
   "p01_read": false,
   "source": {
@@ -20,6 +20,7 @@
     "diffusers": "0.29.2",
     "transformers": "4.41.2",
     "accelerate": "0.31.0",
+    "h5py": "3.14.0",
     "cuda_nvcc": "12.8.93",
     "static_import": "passed"
   },
@@ -80,6 +81,6 @@
     ],
     "byte_and_sha256_validation": "passed"
   },
-  "next_resume_point": "before any GPU command run nvidia-smi; if GPU1 has sufficient free memory prefer GPU1; load multi2 and run exactly one qualified val endpoint finite-output/direction/peak-memory smoke",
-  "pause_reason": "user requested pause after download and resume tomorrow"
+  "next_resume_point": "freeze and run the 14-qualified-val RGB evaluation with the passed camera adapter; do not read held-out test or P01",
+  "superseding_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_genwarp_val_smoke_v1.json"
 }

@@ -1,0 +1,35 @@
+{
+  "schema_version": "stage1.8-genwarp-val-smoke-preflight-v1",
+  "created_at": "2026-08-18T13:24:00+0800",
+  "status": "failed_gate_definition_too_broad",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "target": {
+    "split": "val",
+    "scene": "ai_024_013",
+    "source_frame": 35,
+    "side": "right",
+    "target_frame": 22,
+    "yaw_deg": 14.981570181181127
+  },
+  "observations": {
+    "model_load": "passed",
+    "twenty_step_inference": "passed_without_oom",
+    "geometry_projection_gate": "passed",
+    "synthesized_finite_before_failure": true,
+    "warped_finite_before_failure": true,
+    "mask_finite_before_failure": true,
+    "failure": "The initial implementation required every auxiliary correspondence value to be finite; GenWarp emitted non-finite correspondence outside valid warp support."
+  },
+  "diagnosis_after_retry": {
+    "retry1_status": "failed_visible_correspondence_finite_gate",
+    "full_precision_projected_points_above_float16_max": 26,
+    "maximum_absolute_projected_coordinate_px": 5179747.7,
+    "root_cause": "Official half-precision execution also performs projective geometry in float16. Very distant off-screen points overflow before soft splatting, while the official invalid predicate checks depth only."
+  },
+  "resolution": "Keep official weights and diffusion network in float16, but run only projective geometry and soft splatting in float32; retain the strict visible-correspondence finite gate and rerun in a new output directory without overwriting.",
+  "output_directory": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_genwarp_val_smoke_v1_linux5080",
+  "output_directory_state": "created_empty_before the preflight exception",
+  "held_out_test_read": false,
+  "p01_read": false
+}

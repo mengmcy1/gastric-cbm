@@ -1,0 +1,26 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-smoke-v1-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_oom_vanilla_spatial_attention",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "checkpoint": {
+    "bytes": 10437386907,
+    "sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "strict_load_passed": true,
+    "redundant_openclip_download_avoided": true
+  },
+  "failure": {
+    "stage": "first UNet spatial attention before a generated frame",
+    "type": "torch.OutOfMemoryError",
+    "requested_bytes_approx": 3274912563,
+    "process_memory_gib_at_failure": 12.90,
+    "free_gpu_memory_gib_at_failure": 2.30,
+    "cause": "The minimal environment omitted optional xFormers, so official CrossAttention materialized the full attention matrix."
+  },
+  "model_loaded": true,
+  "generated_output_written": false,
+  "held_out_test_read": false,
+  "p01_read": false,
+  "resolution": "Use PyTorch 2.7 native scaled_dot_product_attention for the same unmasked spatial attention instead of downloading an older xFormers wheel whose Blackwell support is uncertain. Keep temporal relative-position attention unchanged. Canonical retry is v2."
+}

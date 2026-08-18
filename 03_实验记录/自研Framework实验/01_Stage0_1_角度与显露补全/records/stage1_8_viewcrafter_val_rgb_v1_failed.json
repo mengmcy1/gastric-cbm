@@ -1,0 +1,22 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-rgb-v1-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_geometry_audit_float32_outlier_before_completion",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "completed_generation_artifact_directories": 11,
+  "failed_target": {
+    "scene": "ai_003_010",
+    "side": "right",
+    "geometry": {
+      "compared_points": 1311,
+      "median_px": 0.0000891595801911009,
+      "p99_px": 0.008010502177143676,
+      "maximum_px": 0.24504548609507376
+    }
+  },
+  "quality_record_written": false,
+  "held_out_test_read": false,
+  "p01_read": false,
+  "resolution": "The outlier projects to approximately (-9151, 14999) px at target z=0.014 m and cannot affect the target raster. PyTorch3D internally fixes parts of Transform3d to float32, so a float64 camera is not a valid remedy. Preserve the all-positive-depth p99 gate, scope the 0.1 px maximum gate to canonical points inside the target raster, retain the all-positive-depth maximum as a diagnostic, then rerun all 14 endpoints from scratch under a versioned v2 protocol."
+}

@@ -1,6 +1,6 @@
 # schema_version: 1.1-artifact-tree-snapshot
 # producer_machine_id: linux5080
-# captured_at: 2026-08-17T17:30:30+08:00
+# captured_at: 2026-08-18T16:23:56+08:00
 # scan_roots: ["03_实验记录/SHARP浅3D实验", "03_实验记录/自研Framework实验", "03_实验记录/InfiniSplat复现实验"]
 # D=directory F=file L=symlink O=other; paths are repository-relative
   [D] InfiniSplat复现实验/
@@ -1958,7 +1958,7 @@
       [F] Stage1_4_HiddenLayerProvider候选与双真值协议.md (7590 bytes)
       [F] Stage1_6_自研可训练OcclusionHiddenProvider协议.md (20421 bytes)
       [F] Stage1_7_完整LDI候选协议.md (4166 bytes)
-      [F] Stage1_8_目标视角条件化与OutsideFOV协议.md (10955 bytes)
+      [F] Stage1_8_目标视角条件化与OutsideFOV协议.md (23807 bytes)
       [D] configs/
         [F] p01_matrix_candidate_true_arc_v1.json (1516 bytes)
         [F] p01_matrix_smoke_legacy_ang30_v1.json (1311 bytes)
@@ -1985,12 +1985,17 @@
         [F] stage1_6_hlp_train_03_triplets_preflight_v1.json (37458 bytes)
         [F] stage1_6_hlp_train_03_triplets_v1.json (23977 bytes)
         [F] stage1_8_depth_scale_diagnostic_v1.json (569 bytes)
+        [F] stage1_8_genwarp_val_rgb_v1.json (2053 bytes)
+        [F] stage1_8_genwarp_val_smoke_v1.json (3229 bytes)
         [F] stage1_8_target_view_candidate_v1.json (1594 bytes)
         [F] stage1_8_target_view_oracle_smoke_v1.json (2032 bytes)
         [F] stage1_8_target_view_oracle_smoke_v2.json (2340 bytes)
         [F] stage1_8_target_view_oracle_smoke_v3.json (2527 bytes)
         [F] stage1_8_target_view_single_overfit_v1.json (1349 bytes)
         [F] stage1_8_target_view_single_overfit_v2.json (1751 bytes)
+        [F] stage1_8_viewcrafter_val_rgb_v1.json (2766 bytes)
+        [F] stage1_8_viewcrafter_val_rgb_v2.json (3045 bytes)
+        [F] stage1_8_viewcrafter_val_smoke_v1.json (3117 bytes)
       [D] inputs/
         [F] p01_ang30_observed_reprojection_v1.json (4812 bytes)
         [F] p01_ang30_static_inpaint_ab_v1.json (3307 bytes)
@@ -6075,6 +6080,58 @@
               [F] val-ai_053_003-left-0008-target.png (221571 bytes)
               [F] val-ai_053_003-right-0062-prediction.png (224509 bytes)
               [F] val-ai_053_003-right-0062-target.png (201143 bytes)
+            [D] stage1_8_genwarp_val_rgb_v1_linux5080/
+              [D] ai_003_010-left-0045/
+                [F] comparison_source_warp_synth_truth.png (1128844 bytes)
+                [F] synthesized.png (280405 bytes)
+              [D] ai_003_010-right-0016/
+                [F] comparison_source_warp_synth_truth.png (948830 bytes)
+                [F] synthesized.png (209986 bytes)
+              [D] ai_004_003-right-0099/
+                [F] comparison_source_warp_synth_truth.png (977936 bytes)
+                [F] synthesized.png (297928 bytes)
+              [D] ai_009_009-left-0072/
+                [F] comparison_source_warp_synth_truth.png (1368002 bytes)
+                [F] synthesized.png (305742 bytes)
+              [D] ai_009_009-right-0054/
+                [F] comparison_source_warp_synth_truth.png (1314818 bytes)
+                [F] synthesized.png (354319 bytes)
+              [D] ai_015_001-left-0043/
+                [F] comparison_source_warp_synth_truth.png (1006504 bytes)
+                [F] synthesized.png (288098 bytes)
+              [D] ai_015_001-right-0026/
+                [F] comparison_source_warp_synth_truth.png (1230116 bytes)
+                [F] synthesized.png (324323 bytes)
+              [D] ai_024_012-left-0081/
+                [F] comparison_source_warp_synth_truth.png (1074027 bytes)
+                [F] synthesized.png (254925 bytes)
+              [D] ai_024_012-right-0098/
+                [F] comparison_source_warp_synth_truth.png (990018 bytes)
+                [F] synthesized.png (284157 bytes)
+              [D] ai_024_013-right-0022/
+                [F] comparison_source_warp_synth_truth.png (1058408 bytes)
+                [F] synthesized.png (318861 bytes)
+              [D] ai_031_004-left-0072/
+                [F] comparison_source_warp_synth_truth.png (1250509 bytes)
+                [F] synthesized.png (446968 bytes)
+              [D] ai_031_004-right-0052/
+                [F] comparison_source_warp_synth_truth.png (1238197 bytes)
+                [F] synthesized.png (352624 bytes)
+              [D] ai_053_003-left-0008/
+                [F] comparison_source_warp_synth_truth.png (1177225 bytes)
+                [F] synthesized.png (330746 bytes)
+              [D] ai_053_003-right-0062/
+                [F] comparison_source_warp_synth_truth.png (1166161 bytes)
+                [F] synthesized.png (320127 bytes)
+            [D] stage1_8_genwarp_val_smoke_v1_linux5080/
+            [D] stage1_8_genwarp_val_smoke_v1_retry1_linux5080/
+            [D] stage1_8_genwarp_val_smoke_v1_retry2_linux5080/
+              [F] comparison_source_warp_synth_truth.png (1059558 bytes)
+              [F] source.png (276280 bytes)
+              [F] synthesized.png (319846 bytes)
+              [F] target_truth_val_only.png (278902 bytes)
+              [F] warp_valid.png (4308 bytes)
+              [F] warped.png (170875 bytes)
             [D] stage1_8_oracle_masks_v1_linux5080/
               [D] ai_024_010/
                 [F] left_visibility_truth.npz (5142240 bytes)
@@ -6375,8 +6432,111 @@
                 [F] left_visibility_truth.png (19532 bytes)
                 [F] right_visibility_truth.npz (3980976 bytes)
                 [F] right_visibility_truth.png (9636 bytes)
+            [D] stage1_8_viewcrafter_val_geometry_preflight_v1_linux5080/
+            [D] stage1_8_viewcrafter_val_geometry_preflight_v2_linux5080/
+              [F] source.png (171454 bytes)
+            [D] stage1_8_viewcrafter_val_render_preflight_v1_linux5080/
+              [F] source.png (171454 bytes)
+            [D] stage1_8_viewcrafter_val_render_preflight_v2_linux5080/
+            [D] stage1_8_viewcrafter_val_render_preflight_v3_linux5080/
+              [F] source.png (171454 bytes)
+            [D] stage1_8_viewcrafter_val_render_preflight_v4_linux5080/
+              [F] conditioning.mp4 (517303 bytes)
+              [F] rendered_target.png (155829 bytes)
+              [F] source.png (171454 bytes)
+              [F] target_truth_val_only.png (176063 bytes)
+            [D] stage1_8_viewcrafter_val_rgb_v1_linux5080/
+              [D] ai_003_010-left-0045/
+                [F] comparison_source_render_generated_truth.png (742790 bytes)
+                [F] generated_target.png (193548 bytes)
+              [D] ai_004_003-right-0099/
+                [F] comparison_source_render_generated_truth.png (636062 bytes)
+                [F] generated_target.png (200486 bytes)
+              [D] ai_015_001-left-0043/
+                [F] comparison_source_render_generated_truth.png (675198 bytes)
+                [F] generated_target.png (209250 bytes)
+              [D] ai_015_001-right-0026/
+                [F] comparison_source_render_generated_truth.png (753604 bytes)
+                [F] generated_target.png (200847 bytes)
+              [D] ai_024_012-left-0081/
+                [F] comparison_source_render_generated_truth.png (775978 bytes)
+                [F] generated_target.png (215236 bytes)
+              [D] ai_024_012-right-0098/
+                [F] comparison_source_render_generated_truth.png (674612 bytes)
+                [F] generated_target.png (208824 bytes)
+              [D] ai_024_013-right-0022/
+                [F] comparison_source_render_generated_truth.png (697902 bytes)
+                [F] generated_target.png (188250 bytes)
+              [D] ai_031_004-left-0072/
+                [F] comparison_source_render_generated_truth.png (784086 bytes)
+                [F] generated_target.png (249086 bytes)
+              [D] ai_031_004-right-0052/
+                [F] comparison_source_render_generated_truth.png (773814 bytes)
+                [F] generated_target.png (226005 bytes)
+              [D] ai_053_003-left-0008/
+                [F] comparison_source_render_generated_truth.png (717808 bytes)
+                [F] generated_target.png (192690 bytes)
+              [D] ai_053_003-right-0062/
+                [F] comparison_source_render_generated_truth.png (755400 bytes)
+                [F] generated_target.png (189719 bytes)
+            [D] stage1_8_viewcrafter_val_rgb_v2_linux5080/
+            [D] stage1_8_viewcrafter_val_rgb_v2_retry1_linux5080/
+              [D] ai_003_010-left-0045/
+                [F] comparison_source_render_generated_truth.png (742790 bytes)
+                [F] generated_target.png (193548 bytes)
+              [D] ai_003_010-right-0016/
+                [F] comparison_source_render_generated_truth.png (711831 bytes)
+                [F] generated_target.png (199298 bytes)
+              [D] ai_004_003-right-0099/
+                [F] comparison_source_render_generated_truth.png (636062 bytes)
+                [F] generated_target.png (200486 bytes)
+              [D] ai_009_009-left-0072/
+                [F] comparison_source_render_generated_truth.png (1023006 bytes)
+                [F] generated_target.png (232053 bytes)
+              [D] ai_009_009-right-0054/
+                [F] comparison_source_render_generated_truth.png (892661 bytes)
+                [F] generated_target.png (233622 bytes)
+              [D] ai_015_001-left-0043/
+                [F] comparison_source_render_generated_truth.png (675198 bytes)
+                [F] generated_target.png (209250 bytes)
+              [D] ai_015_001-right-0026/
+                [F] comparison_source_render_generated_truth.png (753604 bytes)
+                [F] generated_target.png (200847 bytes)
+              [D] ai_024_012-left-0081/
+                [F] comparison_source_render_generated_truth.png (775978 bytes)
+                [F] generated_target.png (215236 bytes)
+              [D] ai_024_012-right-0098/
+                [F] comparison_source_render_generated_truth.png (674612 bytes)
+                [F] generated_target.png (208824 bytes)
+              [D] ai_024_013-right-0022/
+                [F] comparison_source_render_generated_truth.png (697902 bytes)
+                [F] generated_target.png (188250 bytes)
+              [D] ai_031_004-left-0072/
+                [F] comparison_source_render_generated_truth.png (784086 bytes)
+                [F] generated_target.png (249086 bytes)
+              [D] ai_031_004-right-0052/
+                [F] comparison_source_render_generated_truth.png (773814 bytes)
+                [F] generated_target.png (226005 bytes)
+              [D] ai_053_003-left-0008/
+                [F] comparison_source_render_generated_truth.png (717808 bytes)
+                [F] generated_target.png (192690 bytes)
+              [D] ai_053_003-right-0062/
+                [F] comparison_source_render_generated_truth.png (755400 bytes)
+                [F] generated_target.png (189719 bytes)
+            [D] stage1_8_viewcrafter_val_smoke_v1_linux5080/
+              [F] source.png (171454 bytes)
+            [D] stage1_8_viewcrafter_val_smoke_v2_linux5080/
+              [F] source.png (171454 bytes)
+            [D] stage1_8_viewcrafter_val_smoke_v3_linux5080/
+              [F] comparison_source_render_generated_truth.png (688621 bytes)
+              [F] conditioning.mp4 (517303 bytes)
+              [F] generated.mp4 (746723 bytes)
+              [F] generated_target.png (178661 bytes)
+              [F] rendered_target.png (155829 bytes)
+              [F] source.png (171454 bytes)
+              [F] target_truth_val_only.png (176063 bytes)
       [D] records/
-        [F] README.md (19447 bytes)
+        [F] README.md (24029 bytes)
         [F] artifact_manifest.json (4508 bytes)
         [F] clb_gs_syn_01.json (3081 bytes)
         [F] clb_gs_syn_01_v1_failed.json (1476 bytes)
@@ -6458,7 +6618,11 @@
         [F] stage1_7_official_ldi_true_arc_v4.json (4595 bytes)
         [F] stage1_7_official_ldi_true_arc_v4_manual_review.json (1879 bytes)
         [F] stage1_8_depth_scale_diagnostic_v1.json (9052 bytes)
-        [F] stage1_8_genwarp_environment_v1.json (3205 bytes)
+        [F] stage1_8_download_and_storage_audit_v1.json (9770 bytes)
+        [F] stage1_8_genwarp_environment_v1.json (3235 bytes)
+        [F] stage1_8_genwarp_val_rgb_v1.json (38818 bytes)
+        [F] stage1_8_genwarp_val_smoke_preflight_v1_failed.json (1850 bytes)
+        [F] stage1_8_genwarp_val_smoke_v1.json (7604 bytes)
         [F] stage1_8_pretrained_backbone_audit_v1.json (3206 bytes)
         [F] stage1_8_target_view_candidate_v1.json (45390 bytes)
         [F] stage1_8_target_view_oracle_smoke_v3.json (11848 bytes)
@@ -6471,9 +6635,25 @@
         [F] stage1_8_target_view_visibility_v1.json (9338 bytes)
         [F] stage1_8_target_view_visibility_v2.json (9341 bytes)
         [F] stage1_8_target_view_visibility_v3.json (9358 bytes)
+        [F] stage1_8_viewcrafter_audit_v1.json (2774 bytes)
+        [F] stage1_8_viewcrafter_environment_v1.json (2683 bytes)
+        [F] stage1_8_viewcrafter_val_geometry_preflight_v1_failed.json (678 bytes)
+        [F] stage1_8_viewcrafter_val_geometry_preflight_v2.json (4597 bytes)
+        [F] stage1_8_viewcrafter_val_geometry_preflight_v3.json (1306 bytes)
+        [F] stage1_8_viewcrafter_val_render_preflight_v1_failed.json (686 bytes)
+        [F] stage1_8_viewcrafter_val_render_preflight_v2_failed.json (705 bytes)
+        [F] stage1_8_viewcrafter_val_render_preflight_v3_failed.json (686 bytes)
+        [F] stage1_8_viewcrafter_val_render_preflight_v4.json (6270 bytes)
+        [F] stage1_8_viewcrafter_val_rgb_v1_failed.json (1098 bytes)
+        [F] stage1_8_viewcrafter_val_rgb_v2.json (45547 bytes)
+        [F] stage1_8_viewcrafter_val_rgb_v2_gpu1_failed.json (905 bytes)
+        [F] stage1_8_viewcrafter_val_smoke_v1_failed.json (1201 bytes)
+        [F] stage1_8_viewcrafter_val_smoke_v2_failed.json (807 bytes)
+        [F] stage1_8_viewcrafter_val_smoke_v3.json (8116 bytes)
         [F] stage1_matrix_metrics.csv (1066 bytes)
         [F] stage1_matrix_summary.json (1639 bytes)
       [D] scripts/
+        [F] download_viewcrafter_checkpoint.py (2711 bytes)
         [F] flash3d_rasterizer_cuda128_cstdint.patch (223 bytes)
         [F] flash3d_xformers_compat.py (5496 bytes)
         [F] mat_pytorch29_custom_ops_loader.patch (1056 bytes)
@@ -6497,11 +6677,15 @@
         [F] stage1_6_train_small_candidate.py (26414 bytes)
         [F] stage1_7_run_official_ldi_true_arc.py (15000 bytes)
         [F] stage1_8_depth_scale_diagnostic.py (6325 bytes)
+        [F] stage1_8_genwarp_val_rgb.py (14449 bytes)
+        [F] stage1_8_genwarp_val_smoke.py (16823 bytes)
         [F] stage1_8_qualify_target_training_pool.py (5224 bytes)
         [F] stage1_8_target_view_common.py (9477 bytes)
         [F] stage1_8_target_view_oracle_smoke.py (6698 bytes)
         [F] stage1_8_target_view_single_overfit.py (11226 bytes)
         [F] stage1_8_train_target_view_candidate.py (14435 bytes)
+        [F] stage1_8_viewcrafter_val_rgb.py (18131 bytes)
+        [F] stage1_8_viewcrafter_val_smoke.py (25772 bytes)
         [F] stage1_build_supplement_gaussians.py (11227 bytes)
         [F] stage1_clb_synthetic_smoke.py (14737 bytes)
         [F] stage1_clb_to_gaussian_smoke.py (14063 bytes)
@@ -6529,4 +6713,4 @@
         [F] stage1_summarize_matrix.py (5422 bytes)
         [F] stage1_summarize_observed_reprojection.py (5628 bytes)
         [F] stage1_validate_clb.py (5994 bytes)
-      [F] 实验进度与结果讨论.md (119522 bytes)
+      [F] 实验进度与结果讨论.md (129102 bytes)

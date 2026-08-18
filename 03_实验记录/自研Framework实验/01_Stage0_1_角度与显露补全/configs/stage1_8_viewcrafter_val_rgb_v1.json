@@ -1,0 +1,55 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-rgb-v1",
+  "status": "frozen",
+  "expected_validation_targets": 14,
+  "inputs": {
+    "triplet_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+    "triplet_config_sha256": "0f06c55948b11d36ea1876840d0d8f44d4bdab01ff6f88efa325c3b15d78c85b",
+    "qualification_pool": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_target_view_training_pool_v1.json",
+    "qualification_pool_sha256": "c6205580b8b93d4a3dc3a810ad645ce241e752b8410ed249aa8f1c8190babb9d",
+    "base_depth_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_6_hlp_train_03_frozen_base_depth_v1.json",
+    "base_depth_record_sha256": "66e042281f3870e53adbb4c65a26f428b2fa73a8df7dcb90325248d222e87490",
+    "passed_smoke_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_8_viewcrafter_val_smoke_v3.json",
+    "passed_smoke_record_sha256": "6aa34a134396ef03c0683607a2dbf49abba484eb317293efc6501868c91cb6f7"
+  },
+  "adapter": {
+    "input_size_hw": [320, 512],
+    "crop_policy": "center_crop_source_to_8_5_then_bilinear_resize",
+    "video_frames": 25,
+    "camera_interpolation": "scipy_slerp_rotation_plus_linear_translation_with_exact_endpoints",
+    "point_radius_ndc": 0.01,
+    "points_per_pixel": 10,
+    "spatial_attention_backend": "torch_sdpa",
+    "official_output_clamp": [-1.0, 1.0]
+  },
+  "model": {
+    "source_commit": "97cdb8634b28708cbd50912d57c52f23c5ffbf09",
+    "checkpoint_revision": "8db619bda8cd745ac8df3918095f959517ecd318",
+    "checkpoint_bytes": 10437386907,
+    "checkpoint_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "config": "configs/inference_pvd_512.yaml",
+    "ddim_steps": 50,
+    "ddim_eta": 1.0,
+    "unconditional_guidance_scale": 7.5,
+    "frame_stride": 10,
+    "text_input": true,
+    "prompt": "Rotating view of a scene",
+    "timestep_spacing": "uniform_trailing",
+    "guidance_rescale": 0.7,
+    "perframe_ae": true,
+    "seed_base": 2026081800
+  },
+  "geometry_gates": {
+    "p99_px_maximum": 0.05,
+    "maximum_px_maximum": 0.1,
+    "minimum_compared_points": 1000
+  },
+  "rgb_gates": {
+    "regions": ["occlusion_hidden", "outside_source_fov"],
+    "relative_improvement_over_warp_minimum": 0.15,
+    "mae_0_255_maximum": 35.0,
+    "all_targets_each_region_nonempty": true,
+    "all_outputs_finite": true
+  },
+  "quality_boundary": "Validation RGB only. Target RGB and visibility masks are evaluator-only. If either frozen RGB gate fails, stop without generated-depth inference, held-out test, P01, Gaussian Spawn, or further pretrained-model downloads."
+}

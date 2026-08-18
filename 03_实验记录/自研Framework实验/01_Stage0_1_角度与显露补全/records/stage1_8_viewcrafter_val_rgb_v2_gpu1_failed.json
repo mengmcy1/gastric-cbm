@@ -1,0 +1,20 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-rgb-v2-attempt-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_gpu_memory_before_first_target",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_viewcrafter_val_rgb_v2.json",
+  "geometry_preflight": "pass_14_of_14",
+  "completed_generation_artifact_directories": 0,
+  "failure": {
+    "type": "torch.OutOfMemoryError",
+    "requested_mib": 250.0,
+    "free_mib_at_failure": 192.31,
+    "existing_process_mib": 288.0,
+    "task_process_total_gib_reported": 15.01,
+    "pytorch_allocated_gib": 14.09,
+    "pytorch_reserved_unallocated_mib": 510.71
+  },
+  "decision": "Do not terminate the existing cross-GPU process. Recheck GPU availability and rerun the same frozen v2 protocol from scratch on another sufficiently free GPU."
+}

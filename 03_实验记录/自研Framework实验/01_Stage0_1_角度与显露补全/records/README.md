@@ -1,6 +1,6 @@
 # 自研 Framework 可同步记录
 
-状态：**Stage 1.8-2首个64-train/14-val目标条件候选已正式不通过；support分离通过但RGB/深度质量未过门。下一步为深度尺度上限与冻结预训练生成先验审计（2026-08-17）。**
+状态：**Stage 1.8小型联合候选与GenWarp multi2均已在独立val正式不通过；ViewCrafter后备协议审计完成，禁用目标帧泄漏的官方eval，下一步只做真实相机单val冒烟（2026-08-18）。**
 
 本目录用于保存从本地大型 `outputs/` 提升出来、可以提交 Git 的小型正式证据。不要在这里保存 PLY、MP4、逐帧图像、Depth、Alpha、NPY、模型或日志。
 
@@ -99,6 +99,23 @@
 - `stage1_8_depth_scale_diagnostic_v1.json`：14个val目标的不可部署逐目标正尺度oracle诊断；两类深度AbsRel对齐后仍为0.441/0.365，均未过0.30，证明全局尺度不是充分修复。
 - `stage1_8_pretrained_backbone_audit_v1.json`：显式相机条件预训练骨干审计；冻结GenWarp `multi2`为首个16GB可运行性候选，最小权重约8.43GB。只允许先做单val目标冒烟，未读取held-out test/P01。
 - `stage1_8_genwarp_environment_v1.json`：`linux5080`隔离环境与权重就绪记录；GenWarp及splatting冻结commit、PyTorch/CUDA兼容版本、两处最小扩展补丁、8个权重文件共8,429,409,786字节及SHA256全部登记。状态暂停在GPU冒烟前。
+- `stage1_8_genwarp_val_smoke_preflight_v1_failed.json`：保留GenWarp首端点两次预检的correspondence有限性失败及根因；14.98°运动下26个离屏投影超过float16上限，未放宽数值门，改为仅让projective warp使用float32。
+- `stage1_8_genwarp_val_smoke_v1.json`：首个合格val端点canonical冒烟；相机投影p99误差`2.62e-13 px`，20步生成含加载35.80秒，峰值reserved 5.04 GiB，四类输出全部有限。只通过适配/显存门，不代表生成质量通过。
+- `stage1_8_genwarp_val_rgb_v1.json`：8个val场景、14个合格端点的冻结RGB评价。相对warp两类改善54.04%/43.74%，但绝对MAE 44.22/60.51均未过≤35；仅5/14、7/14端点分别过绝对门，状态`failed_rgb_gate`。按协议未运行生成深度、held-out test或P01。
+- `stage1_8_viewcrafter_audit_v1.json`：后备512视频扩散候选审计。禁用会读取目标帧的官方eval；冻结源RGB+BaseDepth+真实相机25帧适配，不下载DUSt3R权重。只允许先跑一个val端点的16GB/有限性/相机冒烟。
+- `stage1_8_viewcrafter_environment_v1.json`：`linux5080`独立`viewcrafter2`环境记录。现代PyTorch/CUDA与官方PyTorch3D已面向`sm_120`编译、静态导入通过；checkpoint曾完成字节数/SHA复核并用于正式评价，路线失败后已删除，环境转为人工清理项。
+- `stage1_8_viewcrafter_val_geometry_preflight_v1_failed.json`：首轮CPU相机预检在数据读取前被配置`status=frozen`拒绝；未加载模型或运行GPU。只按既有加载器契约改为`status=pass`后由v2 supersede。
+- `stage1_8_viewcrafter_val_geometry_preflight_v2.json`：首个val端点真实相机适配canonical CPU预检。320×512中心8:5裁剪、25帧Slerp+线性平移，最终相机对canonical OpenCV投影的p99/最大误差为0.00155/0.00236 px，严格通过0.05/0.1 px门；未加载扩散模型。
+- `stage1_8_viewcrafter_val_render_preflight_v1_failed.json` / `v2_failed.json` / `v3_failed.json`：依次保留官方扩散模块懒导入、Python局部名称遮蔽、PyTorch inference tensor原地更新的兼容失败；前两次未渲染，v3已渲染但未写产物，三次均未加载扩散模型。
+- `stage1_8_viewcrafter_val_render_preflight_v4.json`：canonical 25帧PyTorch3D条件视频预检。全部有限，峰值reserved 1.879 GiB，最终帧精确黑背景占26.81%，与真实源点云在目标视角的显露缺口相符；扩散模型仍未加载。
+- `stage1_8_download_and_storage_audit_v1.json`：从ViewCrafter单目标到14-val/深度/P01及下一训练路线决策的下载与空间审计。冻结结论为只需完成一个10.44GB ViewCrafter checkpoint；DUSt3R、重复OpenCLIP、1024版和未选候选均不下载。GenWarp质量失败后已逐文件移除4个大权重，释放8,427,337,711字节；两个废弃Conda环境因安全规则列为人工清理项。
+- `stage1_8_viewcrafter_val_smoke_v1_failed.json`：checkpoint严格加载通过，但未装xFormers时官方普通空间attention在首轮需额外3.05 GiB并OOM；无生成结果。后续用PyTorch 2.7原生SDPA，不新增下载。
+- `stage1_8_viewcrafter_val_smoke_v2_failed.json`：SDPA后50步已完整跑完且未OOM，但薄适配器遗漏官方返回前`clamp[-1,1]`而误触范围门；未写生成产物，由v3 supersede。
+- `stage1_8_viewcrafter_val_smoke_v3.json`：canonical单val技术冒烟通过。50步含加载84.95秒，峰值allocated/reserved 14.20/14.59 GiB，投影与有限值门全部通过；严格checkpoint提供OpenCLIP参数，空间attention使用数值等价的PyTorch SDPA。只证明16GB可运行，不代表14-val质量通过。
+- `stage1_8_viewcrafter_val_rgb_v1_failed.json`：14-val首轮在第12端点被极端离屏近相机点的float32绝对投影误差中断；已确认该点不可能影响目标画幅，未形成质量结论。
+- `stage1_8_viewcrafter_val_geometry_preflight_v3.json`：版本化v2几何口径的14端点CPU预检；保留所有正深度点p99门，最大值门限定目标画幅内点，14/14通过，最坏p99/max为0.00801/0.000170 px。
+- `stage1_8_viewcrafter_val_rgb_v2_gpu1_failed.json`：GPU1已有跨卡进程占288 MiB，首目标生成还需250 MiB时OOM；没有终止既有进程、没有改模型或质量门。
+- `stage1_8_viewcrafter_val_rgb_v2.json`：GPU2完成14个冻结val端点的canonical RGB评价。两类相对点渲染改善49.96%/41.56%，但绝对MAE 49.04/59.35均未过≤35，且各仅2/14端点过绝对门；正式`failed_rgb_gate`并短路生成深度、test、P01与Gaussian Spawn。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 

@@ -1,0 +1,71 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-smoke-v1",
+  "status": "pass",
+  "purpose": "Leakage-safe one-validation-endpoint ViewCrafter 512 adapter and 16 GiB smoke.",
+  "held_out_test_scenes": ["ai_001_010", "ai_005_001", "ai_008_005"],
+  "triplets": [
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "scene_triplet_rank": 1,
+      "source_frame": 35,
+      "left_frame": 32,
+      "right_frame": 22,
+      "left_yaw_deg": -15.118613734576403,
+      "right_yaw_deg": 14.981570181181127,
+      "left_translation_m": 3.5813301488904306,
+      "right_translation_m": 3.3431691518774858,
+      "angle_error_sum_deg": 0.13704355339527652
+    }
+  ],
+  "selected_target": {
+    "side": "right",
+    "target_frame": 22,
+    "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+    "visibility_arrays_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81"
+  },
+  "frozen_base_depth": {
+    "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+    "arrays_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+    "array_key": "base_depth_z_float32"
+  },
+  "adapter": {
+    "input_size_hw": [320, 512],
+    "crop_policy": "center_crop_source_to_8_5_then_bilinear_resize",
+    "video_frames": 25,
+    "camera_interpolation": "scipy_slerp_rotation_plus_linear_translation_with_exact_endpoints",
+    "source_camera_convention": "OpenCV right/down/forward",
+    "pytorch3d_camera_convention": "left/up/forward",
+    "point_radius_ndc": 0.01,
+    "points_per_pixel": 10
+  },
+  "model": {
+    "source_commit": "97cdb8634b28708cbd50912d57c52f23c5ffbf09",
+    "checkpoint_revision": "8db619bda8cd745ac8df3918095f959517ecd318",
+    "checkpoint_bytes": 10437386907,
+    "checkpoint_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "config": "configs/inference_pvd_512.yaml",
+    "ddim_steps": 50,
+    "ddim_eta": 1.0,
+    "unconditional_guidance_scale": 7.5,
+    "frame_stride": 10,
+    "text_input": true,
+    "prompt": "Rotating view of a scene",
+    "timestep_spacing": "uniform_trailing",
+    "guidance_rescale": 0.7,
+    "perframe_ae": true,
+    "seed": 20260818
+  },
+  "gates": {
+    "geometry_projection_p99_px_max": 0.05,
+    "geometry_projection_max_px_max": 0.1,
+    "minimum_compared_geometry_points": 1000,
+    "peak_reserved_gib_max": 15.5,
+    "required_outputs_finite": true,
+    "generated_range": [-1.0, 1.0],
+    "minimum_generated_std": 0.01
+  },
+  "quality_boundary": "This smoke gates exact camera adaptation, finite output and 16 GiB execution only. Target truth is evaluator-only; held-out test and P01 remain unread. A pass does not establish RGB quality or authorize the 14-target matrix automatically."
+}

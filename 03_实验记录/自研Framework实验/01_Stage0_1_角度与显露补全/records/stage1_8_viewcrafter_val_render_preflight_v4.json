@@ -1,0 +1,177 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-smoke-v1",
+  "created_at": "2026-08-18T14:48:58+0800",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "inputs": {
+    "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_viewcrafter_val_smoke_v1.json",
+      "config_sha256": "86591eef5fc53b10433c05d936438bca08f15b5777f8ba875691e56338d91807",
+      "config_hash_correction": "Post-run correction changed only the unused checkpoint content SHA256 from an unverified remote identifier to the official LFS SHA256; camera/render inputs and values are unchanged.",
+    "dataset_root": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_v1_linux5080",
+    "camera_parameters": "源码/ml-hypersim/contrib/mikeroberts3000/metadata_camera_parameters.csv",
+    "camera_parameters_sha256": "0b40e0884ba2458e7bdcdbb27de46a4ec6eacbfbbb4ef0d70188d78098cebdc9",
+    "base_depth": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+    "base_depth_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+    "visibility": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+    "visibility_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81",
+    "target_rgb_model_input": false,
+    "target_depth_model_input": false,
+    "held_out_test_read": false,
+    "p01_read": false
+  },
+  "target": {
+    "split": "val",
+    "scene": "ai_024_013",
+    "camera": "cam_00",
+    "source_frame": 35,
+    "side": "right",
+    "target_frame": 22,
+    "yaw_deg": 14.981570181181127
+  },
+  "adapter": {
+    "original_shape_hw": [
+      768,
+      1024
+    ],
+    "crop_xywh": [
+      0,
+      64,
+      1024,
+      640
+    ],
+    "output_shape_hw": [
+      320,
+      512
+    ],
+    "frames": 25,
+    "source_intrinsics_after_crop_resize": [
+      [
+        441.9902123266876,
+        0.0,
+        255.75000000000003
+      ],
+      [
+        0.0,
+        441.99021232668747,
+        195.14263440918242
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "target_intrinsics_after_crop_resize": [
+      [
+        441.9902123266876,
+        0.0,
+        255.75000000000003
+      ],
+      [
+        0.0,
+        441.99021232668747,
+        195.14263440918242
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "relative_target_w2c_cv": [
+      [
+        0.9637090973784129,
+        -0.04216226322223428,
+        -0.2636040955487294,
+        -0.8531810637176802
+      ],
+      [
+        0.04604361460753012,
+        0.998902747544747,
+        0.008560753554948177,
+        0.15917373805628365
+      ],
+      [
+        0.26295391456290934,
+        -0.020387361465730426,
+        0.9645929682039508,
+        -3.2285485549534556
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "coordinate_conversion": "OpenCV RDF point cloud plus official ViewCrafter/PyTorch3D RDF-to-LUF camera-column conversion",
+    "geometry_gate": {
+      "compared_points": 2560,
+      "median_px": 7.151589149496075e-05,
+      "p99_px": 0.0015458552797778004,
+      "maximum_px": 0.0023531962958207903
+    }
+  },
+  "quality_boundary": "This smoke gates exact camera adaptation, finite output and 16 GiB execution only. Target truth is evaluator-only; held-out test and P01 remain unread. A pass does not establish RGB quality or authorize the 14-target matrix automatically.",
+  "status": "pass_render_preflight",
+  "model_loaded": false,
+  "gpu_inference_run": false,
+  "runtime": {
+    "peak_allocated_bytes": 1913656320,
+    "peak_reserved_bytes": 2017460224,
+    "peak_allocated_gib": 1.782231330871582,
+    "peak_reserved_gib": 1.87890625
+  },
+  "outputs": {
+    "renderings_shape": [
+      25,
+      320,
+      512,
+      3
+    ],
+    "renderings_all_finite": true,
+    "renderings_minimum": 0.0,
+    "renderings_maximum": 1.0,
+    "renderings_mean": 0.5426314473152161,
+    "renderings_std": 0.2546725571155548,
+    "final_frame_exact_black_pixels": 43933,
+    "final_frame_exact_black_fraction": 0.268145751953125
+  },
+  "artifacts": {
+    "conditioning": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_viewcrafter_val_render_preflight_v4_linux5080/conditioning.mp4",
+      "bytes": 517303,
+      "sha256": "7b3d0b36b2e6a1dbec9202b34dd232c3d711a0c78277570aed7d112dcac2d403"
+    },
+    "rendered_target": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_viewcrafter_val_render_preflight_v4_linux5080/rendered_target.png",
+      "bytes": 155829,
+      "sha256": "030953ba64af241ca1cd843e40bae80d29a1284c52a91c7448f89b3d5779eb16"
+    },
+    "source": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_viewcrafter_val_render_preflight_v4_linux5080/source.png",
+      "bytes": 171454,
+      "sha256": "bdb16fa2f73a0d52f6988f06e3e57d0d4d73fbcbbb7f1e142dc1e68cfd2ccb32"
+    },
+    "target_truth_val_only": {
+      "path": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_viewcrafter_val_render_preflight_v4_linux5080/target_truth_val_only.png",
+      "bytes": 176063,
+      "sha256": "3c7f31694bbc6a3630ae4d6e1e05deaaa37bbd67d36e16bf80d4f92b6bc749d7"
+    }
+  },
+  "gates": {
+    "frozen": {
+      "geometry_projection_p99_px_max": 0.05,
+      "geometry_projection_max_px_max": 0.1,
+      "minimum_compared_geometry_points": 1000,
+      "peak_reserved_gib_max": 15.5,
+      "required_outputs_finite": true,
+      "generated_range": [
+        -1.0,
+        1.0
+      ],
+      "minimum_generated_std": 0.01
+    },
+    "result": "pass_geometry_and_render_only"
+  }
+}

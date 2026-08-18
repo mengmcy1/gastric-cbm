@@ -1,0 +1,77 @@
+{
+  "schema_version": "stage1.8-genwarp-val-smoke-v1",
+  "status": "pass",
+  "purpose": "Freeze one qualified validation endpoint for a leakage-safe GenWarp multi2 adapter and 16 GiB smoke test.",
+  "held_out_test_scenes": [
+    "ai_001_010",
+    "ai_005_001",
+    "ai_008_005"
+  ],
+  "triplets": [
+    {
+      "split": "val",
+      "scene": "ai_024_013",
+      "camera": "cam_00",
+      "scene_type": "Art gallery",
+      "scene_triplet_rank": 1,
+      "source_frame": 35,
+      "left_frame": 32,
+      "right_frame": 22,
+      "left_yaw_deg": -15.118613734576403,
+      "right_yaw_deg": 14.981570181181127,
+      "left_translation_m": 3.5813301488904306,
+      "right_translation_m": 3.3431691518774858,
+      "angle_error_sum_deg": 0.13704355339527652
+    }
+  ],
+  "selected_target": {
+    "side": "right",
+    "target_frame": 22,
+    "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/12_TargetConditionedProvider/stage1_8_training_visibility_v1_linux5080/ai_024_013/right_visibility_truth.npz",
+    "visibility_arrays_sha256": "69c1e87d9279d7fd6464c9d1e9b0ee1da92a814f2289e4182cc3b2dce2282e81"
+  },
+  "frozen_base_depth": {
+    "arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/10_TrainableProvider/HLP-TRAIN-03_frozen_base_depth_v1_linux5080/ai_024_013-cam_00-0035-unidepth-v1-base.npz",
+    "arrays_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
+    "array_key": "base_depth_z_float32"
+  },
+  "adapter": {
+    "input_size_hw": [512, 512],
+    "crop_policy": "center_square_then_bilinear_resize",
+    "source_camera_convention": "OpenCV right/down/forward",
+    "genwarp_camera_convention": "OpenGL right/up/back",
+    "opencv_to_opengl_left_multiply": [
+      [1.0, 0.0, 0.0, 0.0],
+      [0.0, -1.0, 0.0, 0.0],
+      [0.0, 0.0, -1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ],
+    "near_m": 0.01,
+    "far_m": 100.0
+  },
+  "model": {
+    "source_commit": "22c03b6ae349013b7099801f4815cf1d0fd09c35",
+    "checkpoint_name": "multi2",
+    "half_precision_weights": true,
+    "num_inference_steps": 20,
+    "guidance_scale": 3.5,
+    "seed": 20260818
+  },
+  "runtime_compatibility_patch": {
+    "file": "源码/GenWarp/genwarp/GenWarp.py",
+    "scope": "forward_warper geometry only",
+    "change": "Run projective geometry and soft splatting in float32 while retaining float16 network weights.",
+    "reason": "The selected 14.98 degree endpoint has 26 projected coordinates above the float16 finite maximum; official half-precision geometry turns them into Inf and contaminates correspondence."
+  },
+  "gates": {
+    "geometry_projection_p99_px_max": 0.05,
+    "geometry_projection_max_px_max": 0.1,
+    "minimum_compared_geometry_points": 1000,
+    "peak_reserved_gib_max": 15.5,
+    "required_image_outputs_finite": true,
+    "correspondence_visible_region_finite": true,
+    "synthesized_range": [0.0, 1.0],
+    "minimum_synthesized_std": 0.01
+  },
+  "quality_boundary": "This smoke gates adapter geometry, executable compatibility and memory only. It does not establish GenWarp quality, does not tune on validation RGB, and does not read held-out test or P01."
+}

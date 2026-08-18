@@ -1,0 +1,13 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-render-preflight-v2-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_before_gpu_setup",
+  "producer_machine_id": "linux5080",
+  "failure": "Using an import torch.utils.checkpoint statement inside main made torch a local binding under Python import semantics, so earlier torch.device access raised UnboundLocalError.",
+  "model_loaded": false,
+  "gpu_render_run": false,
+  "gpu_diffusion_run": false,
+  "held_out_test_read": false,
+  "p01_read": false,
+  "resolution": "Use from torch.utils import checkpoint as _torch_checkpoint, which exposes the lazy submodule without shadowing the module-level torch name. Canonical render preflight is v3."
+}

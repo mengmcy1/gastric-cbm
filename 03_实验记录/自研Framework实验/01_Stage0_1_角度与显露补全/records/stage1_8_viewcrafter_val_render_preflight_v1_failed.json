@@ -1,0 +1,14 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-render-preflight-v1-failed",
+  "created_at": "2026-08-18",
+  "status": "failed_before_render",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "failure": "The official lvdm.common accessed torch.utils.checkpoint before that lazy PyTorch 2.7 submodule had been imported.",
+  "model_loaded": false,
+  "gpu_render_run": false,
+  "gpu_diffusion_run": false,
+  "held_out_test_read": false,
+  "p01_read": false,
+  "resolution": "Delay importing official diffusion utilities until after the render-only branch and explicitly import torch.utils.checkpoint before the official lvdm modules. Canonical render preflight is v2."
+}

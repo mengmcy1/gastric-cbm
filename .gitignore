@@ -71,3 +71,6 @@ SHARP真实图片测试/输出结果/
 # Stage 1.8 GenWarp 外部候选：源码、隔离兼容补丁与约 8.43 GB 权重只保留本机；
 # 冻结 commit、版本、文件字节数和 SHA256 写入正式 records，不 vendor 到主仓库。
 源码/GenWarp/
+# Stage 1.8 ViewCrafter后备候选：先本地审计，不vendor源码或后续大权重。
+源码/ViewCrafter/
+源码/pytorch3d/

@@ -1,0 +1,161 @@
+{
+  "schema_version": "stage1.8-download-and-storage-audit-v1",
+  "created_at": "2026-08-18",
+  "status": "audit_complete_public_pretrained_routes_closed_and_unused_weights_removed",
+  "producer_machine_id": "linux5080",
+  "scope": "Assets required from the current ViewCrafter smoke through a possible 14-val run, generated-depth gate, P01 handoff and the first post-ViewCrafter training-data decision.",
+  "required_downloads": [
+    {
+      "asset": "Drexubery/ViewCrafter_25_512/model.ckpt",
+      "revision": "8db619bda8cd745ac8df3918095f959517ecd318",
+      "expected_bytes": 10437386907,
+      "expected_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+      "local_path": "源码/ViewCrafter/checkpoints/model.ckpt",
+      "state_at_audit": "downloaded_and_verified_against_official_LFS_metadata",
+      "partial_bytes_at_audit": 5122724702,
+      "final_bytes": 10437386907,
+      "final_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+      "official_lfs_pointer_size": 136,
+      "official_git_blob_id": "59fd20f32a3fc647beed03939787dcbffc5890b4",
+      "final_disposition": "deleted_after_frozen_14_val_rgb_gate_failed",
+      "bytes_reclaimed": 10437386907
+    }
+  ],
+  "already_local_no_download_needed": [
+    {
+      "asset": "ViewCrafter and PyTorch3D source plus viewcrafter2 runtime",
+      "purpose": "one-target smoke and 14-val generation"
+    },
+    {
+      "asset": "HLP-TRAIN-03 50-scene targeted Hypersim files",
+      "files": 650,
+      "bytes_on_disk": 704458752,
+      "purpose": "frozen 64-train/14-val target pool and first post-ViewCrafter model-design iteration"
+    },
+    {
+      "asset": "frozen UniDepth v1 ViT-L BaseDepth weight",
+      "bytes": 1388239045,
+      "sha256": "da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60",
+      "purpose": "source BaseDepth and generated-RGB deployment-depth gate"
+    },
+    {
+      "asset": "14-val visibility truth, frozen BaseDepth arrays, target RGB-D and P01 inputs",
+      "purpose": "quality evaluation and conditional P01 handoff"
+    },
+    {
+      "asset": "imageio-ffmpeg bundled executable and all minimal Python dependencies",
+      "purpose": "video encoding and inference; static imports pass"
+    },
+    {
+      "asset": "PyTorch 2.7 native scaled_dot_product_attention",
+      "purpose": "memory-efficient ViewCrafter spatial attention without an additional xFormers wheel download"
+    }
+  ],
+  "explicitly_not_downloaded": [
+    {
+      "asset": "ViewCrafter DUSt3R checkpoint",
+      "bytes_avoided": 2285005731,
+      "reason": "The frozen adapter uses the existing RGB-only BaseDepth and calibrated source/target cameras; DUSt3R would change two variables and official eval would leak target frames."
+    },
+    {
+      "asset": "OpenCLIP ViT-H-14 LAION bootstrap weights",
+      "reason": "The official ViewCrafter checkpoint is loaded strictly and contains the text/image encoder parameters. The adapter instantiates OpenCLIP with pretrained=None and then loads the official checkpoint, avoiding a redundant network download."
+    },
+    {
+      "asset": "xFormers wheel",
+      "reason": "The first full run proved vanilla attention OOM. The official dependency is optional and its historical wheel has uncertain RTX 5080 support; PyTorch 2.7 native SDPA provides the same unmasked spatial attention contract without another download."
+    },
+    {
+      "asset": "ViewCrafter 1024 model or other ViewCrafter variants",
+      "reason": "The frozen 16 GiB protocol uses only the official 320x512/25-frame checkpoint."
+    },
+    {
+      "asset": "Stable Virtual Camera, MetaView, Qwen-Image-Edit and Depth Anything 3 weights",
+      "reason": "They are not selected next-stage candidates; some are gated or have much larger stacks. Downloading them before a new frozen protocol would consume space without an executable decision."
+    },
+    {
+      "asset": "full Hypersim or new RealEstate10K/CO3D training corpora",
+      "reason": "No post-ViewCrafter multiview architecture/data contract is frozen. The first design iteration can use the existing targeted 50-scene Hypersim pool; any scale-up must be separately selected and range-fetched rather than pre-downloading terabytes."
+    }
+  ],
+  "download_horizon_conclusion": "The only network asset required by the frozen public-pretrained decision tree was downloaded and verified. ViewCrafter then failed the 14-val absolute RGB gates, so generated-depth, held-out test, P01 and Gaussian Spawn were short-circuited. No additional model or dataset download is justified until a trainable multiview-prior protocol is frozen.",
+  "hash_correction_audit": {
+    "previous_identifier": "0864b08b5b990a9307ea657bff9112e749130be8fe0666f97c3aae64a48f7a49",
+    "previous_identifier_problem": "It was recorded during the initial remote audit without proving it was the content digest.",
+    "official_lfs_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "verification": "Hugging Face model_info(files_metadata=True) at the frozen revision reports the same size and LFS SHA256 as the completed local file.",
+    "redownload_required": false
+  },
+  "cleanup_completed": {
+    "reason": "GenWarp passed execution but formally failed both frozen validation RGB quality gates and is no longer a candidate.",
+    "files_removed": [
+      "/home/mcy/2Dto3D/源码/GenWarp/checkpoints/multi2/denoising_unet.pth",
+      "/home/mcy/2Dto3D/源码/GenWarp/checkpoints/multi2/reference_unet.pth",
+      "/home/mcy/2Dto3D/源码/GenWarp/checkpoints/image_encoder/pytorch_model.bin",
+      "/home/mcy/2Dto3D/源码/GenWarp/checkpoints/sd-vae-ft-mse/diffusion_pytorch_model.safetensors"
+    ],
+    "bytes_reclaimed": 8427337711,
+    "gib_reclaimed": 7.848569854162633,
+    "recovery": "Redownload from the official assets using the hashes recorded in stage1_8_genwarp_environment_v1.json.",
+    "preserved": "GenWarp source/configs, small checkpoint configs, formal hashes, scripts, records and all evaluation artifacts."
+  },
+  "viewcrafter_cleanup_completed": {
+    "reason": "ViewCrafter passed the technical smoke but formally failed both frozen 14-val absolute RGB quality gates and is no longer an active candidate.",
+    "file_removed": "/home/mcy/2Dto3D/源码/ViewCrafter/checkpoints/model.ckpt",
+    "verified_bytes_before_removal": 10437386907,
+    "verified_sha256_before_removal": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "bytes_reclaimed": 10437386907,
+    "gib_reclaimed": 9.720573115162551,
+    "recovery": "Redownload with scripts/download_viewcrafter_checkpoint.py using the frozen revision and content hash.",
+    "preserved": "ViewCrafter source, adapter/configs, formal hashes, all records, and 14-val visual evidence."
+  },
+  "retained_large_assets_after_second_pass": [
+    {
+      "path": "/home/mcy/2Dto3D/源码/SHARP_APPLE注释/checkpoints/sharp_2572gikvuh.pt",
+      "bytes": 2809738232,
+      "reason": "Canonical SHARP benchmark and P01 baseline; not obsolete."
+    },
+    {
+      "path": "/home/mcy/2Dto3D/03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/huggingface/hub/models--lpiccinelli--unidepth-v1-vitl14/blobs/da8f7910dbcf1d14d2d9f9699d791a740fad8c41ba2ab0ae5729dcff20efbb60",
+      "bytes": 1388239045,
+      "reason": "Frozen RGB-only BaseDepthProvider used by the current trainable framework and likely next multiview-prior protocol."
+    },
+    {
+      "path": "/home/mcy/2Dto3D/03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/realestate10k/RealEstate10K.tar.gz",
+      "bytes": 752332631,
+      "reason": "Official metadata/source manifest remains relevant to future multiview-data selection and HLP-APP reproducibility; not proven obsolete."
+    },
+    {
+      "path": "/home/mcy/2Dto3D/03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/flash3d/model_re10k_v2.pth",
+      "bytes": 690161102,
+      "reason": "Frozen geometry/reference baseline and repository regression asset; retained for controlled comparisons, not an active completion candidate."
+    }
+  ],
+  "second_pass_conclusion": "A repository-wide scan of files larger than 100 MB found no additional model/data file that is both definitively obsolete and safe to remove. The remaining 110 MB InfiniSplat PLY is evaluation evidence under outputs, and the ViewCrafter 110 MB git pack is source history rather than a model download.",
+  "manual_environment_cleanup_pending": [
+    {
+      "conda_environment": "genwarp",
+      "path": "/home/mcy/miniconda3/envs/genwarp",
+      "bytes_on_disk_at_final_audit": 8470115559,
+      "reason": "GenWarp quality route is closed."
+    },
+    {
+      "conda_environment": "viewcrafter",
+      "path": "/home/mcy/miniconda3/envs/viewcrafter",
+      "bytes_on_disk_at_final_audit": 7341253498,
+      "reason": "Failed cloned environment; canonical environment is viewcrafter2."
+    },
+    {
+      "conda_environment": "viewcrafter2",
+      "path": "/home/mcy/miniconda3/envs/viewcrafter2",
+      "bytes_on_disk_at_final_audit": 10419391053,
+      "reason": "Canonical runtime for a public-pretrained route that is now formally closed; all reproducibility versions and rebuild instructions are recorded."
+    }
+  ],
+  "manual_cleanup_boundary": "Repository safety policy forbids recursive directory/environment deletion by the agent. All three environments are now safe cleanup candidates and require manual conda removal. Combined audited size is 26,230,760,110 bytes (24.43 GiB).",
+  "disk": {
+    "available_human_readable_after_all_weight_cleanup": "97 GiB",
+    "estimated_additional_bytes_to_finish_viewcrafter_checkpoint": 0,
+    "capacity_sufficient": true
+  }
+}

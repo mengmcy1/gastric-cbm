@@ -1,0 +1,53 @@
+{
+  "schema_version": "stage1.8-viewcrafter-environment-v1",
+  "created_at": "2026-08-18",
+  "status": "route_closed_checkpoint_deleted_environment_manual_cleanup_pending",
+  "producer_machine_id": "linux5080",
+  "environment": {
+    "path": "/home/mcy/miniconda3/envs/viewcrafter2",
+    "python": "3.10",
+    "torch": "2.7.1+cu128",
+    "torchvision": "0.22.1+cu128",
+    "pytorch3d": "0.7.9",
+    "pytorch_lightning": "1.9.3",
+    "cuda_nvcc": "12.8.93",
+    "target_cuda_arch": "sm_120"
+  },
+  "official_sources": {
+    "viewcrafter_commit": "97cdb8634b28708cbd50912d57c52f23c5ffbf09",
+    "pytorch3d_commit": "2bce7110d5621ef2a349a72ac3aacbfba8bfb461"
+  },
+  "installation_audit": {
+    "failed_cloned_environment": "/home/mcy/miniconda3/envs/viewcrafter",
+    "failed_cloned_environment_reason": "The cloned GenWarp environment contained a mixed/broken pip installation and was not reused.",
+    "clean_environment": "/home/mcy/miniconda3/envs/viewcrafter2",
+    "pytorch3d_attempt_1": "failed: CUDA cusparse.h was absent before installing CUDA development libraries",
+    "pytorch3d_attempt_2": "failed: cuda_runtime_api.h existed only under targets/x86_64-linux/include, outside the default extension include path",
+    "pytorch3d_attempt_3": "passed after adding targets/x86_64-linux/include to CPATH and targets/x86_64-linux/lib to LIBRARY_PATH, with environment bin first in PATH",
+    "pytorch3d_wheel_sha256": "c3e21ad006636b53f2a17df367377f49c85689604799fd5eea38627046f3481a",
+    "import_check": {
+      "torch": true,
+      "pytorch3d": true,
+      "pytorch_lightning": true,
+      "open_clip": true,
+      "cuda_available": true
+    }
+  },
+  "checkpoint": {
+    "repository": "Drexubery/ViewCrafter_25_512",
+    "revision": "8db619bda8cd745ac8df3918095f959517ecd318",
+    "file": "model.ckpt",
+    "expected_bytes": 10437386907,
+    "expected_sha256": "e15528ca4fade935222ba159356708294bf788c38e22b366597701372ed7f8df",
+    "downloaded_and_used": true,
+    "bytes_validated": true,
+    "sha256_validated": true,
+    "official_metadata_source": "Hugging Face model_info(files_metadata=True) at the frozen revision",
+    "git_blob_id": "59fd20f32a3fc647beed03939787dcbffc5890b4",
+    "lfs_pointer_size": 136,
+    "retained_locally": false,
+    "deleted_after_result": "frozen_14_val_failed_both_absolute_rgb_gates",
+    "bytes_reclaimed": 10437386907
+  },
+  "protocol_boundary": "The single-target 50-step technical smoke passed, then the frozen 14-target RGB evaluation failed both absolute MAE gates. Generated-depth evaluation, held-out test, P01 and Gaussian Spawn were not run. Do not restore this checkpoint or download DUSt3R without a new reviewed protocol."
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "stage1.8-viewcrafter-val-geometry-preflight-v3",
+  "created_at": "2026-08-18",
+  "status": "pass_14_of_14",
+  "producer_machine_id": "linux5080",
+  "config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_8_viewcrafter_val_rgb_v2.json",
+  "targets_evaluated": 14,
+  "targets_passed": 14,
+  "gate_semantics": {
+    "all_positive_depth_p99_px_maximum": 0.05,
+    "target_raster_maximum_px_maximum": 0.1,
+    "minimum_all_positive_depth_points": 1000,
+    "minimum_target_raster_points": 100,
+    "all_positive_depth_maximum": "diagnostic_only"
+  },
+  "aggregate": {
+    "worst_all_positive_depth_p99_px": 0.008010502177143676,
+    "worst_target_raster_maximum_px": 0.00017009963861048277,
+    "worst_all_positive_depth_maximum_px_diagnostic": 0.24504548609507376
+  },
+  "outlier_explanation": "The diagnostic maximum comes from ai_003_010/right at an extreme offscreen projection near (-9151, 14999) px and target z=0.014 m. It cannot contribute to target-raster pixels. That endpoint still has 1311 positive-depth samples, 222 target-raster samples, p99 0.0080105 px, and target-raster maximum 0.0001701 px.",
+  "decision": "Geometry adapter is accepted for all 14 validation endpoints under v2. Proceed to a fresh full RGB validation run."
+}
