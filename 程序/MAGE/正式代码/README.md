@@ -108,3 +108,94 @@ mg1_real_efficientnet_b0_seed42.log \
   结果/MAGE/MG1灰度局部教师_20260817/正式验证集筛选/logs/\
 mg1_patch_shuffle_efficientnet_b0_seed42.log
 ```
+
+MG1正式配对未建立患者级空间排列增益，因此不能直接进入MG2。MG1b作为新的预注册问题，
+用癌图bbox监督7x7空间attention，并强制分类特征只能经attention加权池化进入分类头；非癌图
+仍参与分类，但不伪造空间目标。先执行自测和CPU debug，再检查GPU运行正式seed42：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/train_mage_mg1b_attention_teacher.py --self-test
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/train_mage_mg1b_attention_teacher.py \
+  --debug --device cpu --run-name mg1b_attention_manual_smoke
+
+CUDA_DEVICE=<空闲GPU物理编号> bash \
+  程序/MAGE/正式代码/run_mage_mg1b.sh
+
+tail -F 结果/MAGE/MG1b注意力池化教师_20260818/正式验证集筛选/logs/\
+mg1b_attention_efficientnet_b0_seed42.log
+```
+
+正式产品必须同时通过患者/图像AUC、normalized AiB、PGA和病灶大小分层PGA门槛。失败时
+脚本只保存`mg1b_best_diagnostic_ineligible.pth`并返回非零状态，不允许该权重进入MG2。
+
+MG1b通过后，按病灶大小分层导出只读注意力QC三联图；该步骤不重新选择checkpoint：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/export_mage_mg1b_attention_qc.py
+```
+
+MG2全图学生蒸馏（适配协议2026-08-18冻结）：教师固定为MG1b正式产品（SHA256
+`f2cd3b13...af48f9`），学生为同架构attention-pooling全图彩色EfficientNet-B0，
+A/B/C三组仅损失不同。顺序：单元测试→教师缓存（B/C共用同一份）→CPU debug验收
+→一个完整校准epoch（batch 32、74个固定批次、2350次有放回抽样）冻结beta→
+A/B/C矩阵→八门槛汇总。beta校准只看train，不看val：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/test_mage_mg2_backfill.py
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/test_mage_mg2_beta_and_gates.py
+
+CUDA_VISIBLE_DEVICES=<空闲GPU物理编号> PYTHONUNBUFFERED=1 \
+  /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/build_mage_mg2_teacher_cache.py --device cuda
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/train_mage_mg2_student.py --arm A --debug --device cpu
+
+CUDA_VISIBLE_DEVICES=<空闲GPU物理编号> PYTHONUNBUFFERED=1 \
+  /home/mcy/miniconda3/envs/gastric-cbm/bin/python -u \
+  程序/MAGE/正式代码/train_mage_mg2_student.py --device cuda \
+  --calibrate-beta 结果/MAGE/MG2全图学生蒸馏_20260818/beta_calibration_seed42.json
+```
+
+校准JSON保存每批SHA、抽样审计（重复数/唯一图/标签与患者分布）、校准设备与全部
+SHA绑定，自身SHA写入同名`.sha256` sidecar。正式校准已完成并冻结：
+`结果/MAGE/MG2全图学生蒸馏_20260818/beta_calibration_seed42.json`（SHA256
+`47179b62...03ac7f`，beta=0.19362648121926898，74批/2350次有放回抽样，cuda），
+禁止修改或重新生成；正式教师缓存`teacher_cache_mg1b_v3.pt`亦已构建。正式C组训练
+会逐字符核验该校准JSON的SHA并重算beta（容差1e-12），任一不符即拒绝启动。
+
+随后用矩阵启动器按A→B→C顺序正式运行（完整产物幂等跳过，失败保留现场；三组全部
+成功后自动调用`summarize_mage_mg2.py`执行八门槛判定，汇总已存在时幂等跳过；
+`MG2_MATRIX_DRY_RUN=1`只打印计划不执行）：
+
+```bash
+CUDA_DEVICE=<空闲GPU物理编号> bash \
+  程序/MAGE/正式代码/run_mage_mg2_matrix.sh
+
+tail -F 结果/MAGE/MG2全图学生蒸馏_20260818/正式验证集筛选/logs/\
+mg2_arma_efficientnet_b0_seed42.log
+```
+
+汇总器自动读取冻结beta校准JSON并交叉校验SHA绑定与arm C config，逐组重算
+checkpoint SHA，并核验三组seed/超参/增强/架构/教师与清单SHA完全一致；
+M0-F参照患者AUC直接读自其正式config（正式模式读取失败即终止，仅debug允许回退
+常量0.9133并显式警告）。单独执行判定时：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/MAGE/正式代码/summarize_mage_mg2.py
+```
+
+缓存与学生训练都会校验教师checkpoint与manifest的SHA256绑定及逐图对齐；正式输出
+目录`结果/MAGE/MG2全图学生蒸馏_20260818/正式验证集筛选/`已存在正式产物时拒绝覆盖，
+debug产物只写入独立的`debug/`子目录。C组beta只能来自`--beta-calibration-json`
+（正式模式禁止手工`--beta`）；A/B组不接受校准文件。单独运行单组时把启动器替换为
+`train_mage_mg2_student.py --arm A|B|C --device cuda`（C组加
+`--beta-calibration-json <校准JSON>`）。
