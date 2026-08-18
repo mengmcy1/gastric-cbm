@@ -1,0 +1,44 @@
+{
+  "schema_version": "stage1.9-core-source-feature-smoke-v11",
+  "created_at": "2026-08-18",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "runtime": {
+    "python": "3.10.20",
+    "torch": "2.9.0+cu128",
+    "numpy": "1.26.4",
+    "environment": "/home/mcy/miniconda3/envs/flash3d",
+    "device": "cpu"
+  },
+  "implementation": {
+    "model": "adaptive3dgs.models.SourceFeatureTargetViewNet",
+    "source_encoder": "three-level trainable multiscale convolutional pyramid",
+    "target_projection": "z-buffer winner target-to-source normalized grid plus differentiable grid_sample",
+    "outside_fov_conditioning": "global source descriptor broadcast to every target pixel",
+    "outputs": [
+      "target_rgb",
+      "target_depth_z",
+      "occlusion_support",
+      "outside_support",
+      "geometry_confidence",
+      "appearance_confidence"
+    ]
+  },
+  "tests": {
+    "runner": "python -m unittest discover -s 源码/Adaptive3DGS/tests -v",
+    "passed": 39,
+    "failed": 0,
+    "new_contracts": {
+      "identity_feature_grid_reproduces_source_pixels": true,
+      "uncovered_target_output_changes_with_complete_source_image": true,
+      "legacy_target_view_and_core_tests_preserved": true
+    }
+  },
+  "inputs": {
+    "qualified_pool": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_9_qualified_directed_pairs_v1.json",
+    "qualified_pool_sha256": "7c5df62065bb2ec39c6eddf3484f28e9a5d980ca6148bbf4ae3d710970ffddc5",
+    "visibility_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_9_directed_visibility_pool_v1.json",
+    "visibility_record_sha256": "90e7f28074edecf91191fb2bba4da817df43a26c5ccfe9206c7a680536869f73"
+  },
+  "quality_boundary": "CPU schema, shape, gradient-path and conditioning tests only. No training or target-view quality claim is made. The next required gate is a fresh single-train-endpoint overfit."
+}

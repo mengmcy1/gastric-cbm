@@ -1,0 +1,35 @@
+{
+  "schema_version": "stage1.9-bidirectional-pair-pool-audit-v1",
+  "status": "failed",
+  "producer_machine_id": "linux5080",
+  "inputs": {
+    "triplets": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_6_hlp_train_03_triplets_v1.json",
+    "sha256": "0f06c55948b11d36ea1876840d0d8f44d4bdab01ff6f88efa325c3b15d78c85b",
+    "dataset_root": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/hypersim/HLP-TRAIN-03_v1_linux5080"
+  },
+  "counts": {
+    "scenes": 50,
+    "pairs": 200,
+    "train": 160,
+    "val": 40
+  },
+  "ranges": {
+    "absolute_yaw_deg_minimum": 6.5113985039569835,
+    "absolute_yaw_deg_maximum": 20.216874934672795,
+    "translation_m_minimum": 0.1954852180164366,
+    "translation_m_maximum": 12.00061533279751
+  },
+  "gates": {
+    "expected_pairs": true,
+    "expected_train_pairs": true,
+    "expected_val_pairs": true,
+    "unique_directed_pairs": true,
+    "all_required_files_local": true,
+    "yaw_absolute_12_to_18_deg": false,
+    "translation_at_least_0_1_m": true,
+    "held_out_test_excluded": true
+  },
+  "missing_files": [],
+  "download_required": false,
+  "next_gate": "Generate frozen RGB-only BaseDepth for the 100 endpoint frames, then create source-relative three-region visibility truth and qualify directed pairs before any model training."
+}

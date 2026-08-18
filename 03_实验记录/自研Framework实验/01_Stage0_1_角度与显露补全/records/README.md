@@ -116,6 +116,12 @@
 - `stage1_8_viewcrafter_val_geometry_preflight_v3.json`：版本化v2几何口径的14端点CPU预检；保留所有正深度点p99门，最大值门限定目标画幅内点，14/14通过，最坏p99/max为0.00801/0.000170 px。
 - `stage1_8_viewcrafter_val_rgb_v2_gpu1_failed.json`：GPU1已有跨卡进程占288 MiB，首目标生成还需250 MiB时OOM；没有终止既有进程、没有改模型或质量门。
 - `stage1_8_viewcrafter_val_rgb_v2.json`：GPU2完成14个冻结val端点的canonical RGB评价。两类相对点渲染改善49.96%/41.56%，但绝对MAE 49.04/59.35均未过≤35，且各仅2/14端点过绝对门；正式`failed_rgb_gate`并短路生成深度、test、P01与Gaussian Spawn。
+- `stage1_9_bidirectional_pair_pool_v1.json`：HLP-TRAIN-03零下载反向对首审失败现场；200对文件与泄漏门通过，但5个train反向对的真实yaw超出12°–18°，未假定逆变换后yaw严格对称。
+- `stage1_9_bidirectional_pair_pool_v2.json`：canonical有向对入口；仅拒绝5个越界对后冻结155 train / 40 val共195对，50场景、唯一键、本地文件、yaw、平移和held-out隔离8/8门通过。
+- `stage1_9_endpoint_source_rgb_v1.json`：95个新增端点源的RGB-only证据，75 train / 20 val；输出NPZ只含`source_rgb_uint8`，所有195对的145个唯一源均已由新旧证据覆盖。
+- `stage1_9_endpoint_frozen_base_depth_v1.json`：GPU1上的95/95 UniDepth v1端点源BaseDepth，全部有限且为正，峰值约2.13 GiB、总耗时37.45秒；未向模型输入真值深度或真值内参。
+- `stage1_9_directed_visibility_pool_v1.json`：195个有向目标的源相对三分区资格审计；160个严格合格，含128 train / 32 val、35 / 9场景，规模、分类完整性和held-out隔离门全部通过。
+- `stage1_9_core_source_feature_smoke_v11.json`：`SourceFeatureTargetViewNet`与可微目标→源特征采样网格的CPU契约；新旧核心39/39测试通过，恒等grid精确回归且无warp洞区对完整源图上下文敏感。只证明实现，不代表质量。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 

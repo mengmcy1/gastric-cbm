@@ -30,6 +30,27 @@ def forward_splat_source_to_target(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Nearest-pixel z-buffer splat of source RGB-D into the requested target camera."""
 
+    warped_rgb, warped_depth, warped_valid, _ = forward_splat_source_to_target_with_grid(
+        source_rgb_float32,
+        source_depth_z_float32,
+        source_intrinsics_3x3_float64,
+        source_world_to_camera_4x4_float64,
+        target_intrinsics_3x3_float64,
+        target_world_to_camera_4x4_float64,
+    )
+    return warped_rgb, warped_depth, warped_valid
+
+
+def forward_splat_source_to_target_with_grid(
+    source_rgb_float32: np.ndarray,
+    source_depth_z_float32: np.ndarray,
+    source_intrinsics_3x3_float64: np.ndarray,
+    source_world_to_camera_4x4_float64: np.ndarray,
+    target_intrinsics_3x3_float64: np.ndarray,
+    target_world_to_camera_4x4_float64: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Forward splat RGB-D and return the z-winner target-to-source grid."""
+
     rgb = np.asarray(source_rgb_float32, dtype=np.float32)
     depth = np.asarray(source_depth_z_float32, dtype=np.float32)
     if rgb.ndim != 3 or rgb.shape[2] != 3 or depth.shape != rgb.shape[:2]:
@@ -63,13 +84,19 @@ def forward_splat_source_to_target(
     warped_rgb = np.zeros((height * width, 3), dtype=np.float32)
     warped_depth = np.zeros(height * width, dtype=np.float32)
     warped_valid = np.zeros(height * width, dtype=np.uint8)
+    source_grid = np.full((height * width, 2), -2.0, dtype=np.float32)
     warped_rgb[chosen_target] = rgb.reshape(-1, 3)[chosen_source]
     warped_depth[chosen_target] = target_z[chosen_source].astype(np.float32)
     warped_valid[chosen_target] = 1
+    source_x = chosen_source % width
+    source_y = chosen_source // width
+    source_grid[chosen_target, 0] = 2.0 * source_x / max(width - 1, 1) - 1.0
+    source_grid[chosen_target, 1] = 2.0 * source_y / max(height - 1, 1) - 1.0
     return (
         warped_rgb.reshape(height, width, 3),
         warped_depth.reshape(height, width),
         warped_valid.reshape(height, width),
+        source_grid.reshape(height, width, 2),
     )
 
 

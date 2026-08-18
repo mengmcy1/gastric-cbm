@@ -14,6 +14,7 @@ from .target_view import (
     TargetViewUNet,
     compute_target_view_loss,
 )
+from .source_feature_target_view import SourceFeatureTargetViewNet
 
 __all__ = [
     "HiddenGeometryLoss",
@@ -25,5 +26,6 @@ __all__ = [
     "TargetViewLoss",
     "TargetViewOutput",
     "TargetViewUNet",
+    "SourceFeatureTargetViewNet",
     "compute_target_view_loss",
 ]

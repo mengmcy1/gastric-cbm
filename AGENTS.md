@@ -183,7 +183,7 @@
 
 当前实验执行进一步拆分为两个并行分支，但评价口径必须独立记录：
 
-1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型和Stage 1.7官方完整LDI均已正式不通过。Stage 1.8显式目标视角条件化协议与三分区RGB-D evaluator oracle校准已通过；当前进入目标相机条件接口和单端点过拟合，`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价。候选通过独立几何/外观门前不接P01、不进入Stage 2。
+1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型、Stage 1.7官方完整LDI及Stage 1.8 GenWarp/ViewCrafter公开生成先验均已正式不通过。Stage 1.9已转向部署单图、训练多视图监督的`SourceFeatureTargetViewNet`；零下载资格池已冻结128 train / 32 val、35 / 9场景，95个新增端点源BaseDepth通过，新模型核心39/39 CPU测试通过。下一步是单train端点过拟合。`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价；候选通过独立几何/外观门前不接P01、不进入Stage 2。
 2. **InfiniSplat 对照复现分支（已暂停）**：官方 RGB 单图 PLY、官方演示视频和 P01 受控总范围5°视频均已跑通，包装层未发现复现 Bug；但官方岩洞示例与 P01 都出现不可接受的模糊和显露空洞，P01 受控5°仍未通过用户质量门。当前不继续调整原版 InfiniSplat 的轨迹、焦距、背景或高斯数；只保留其表面对齐采样和隐式高斯解码作为未来表示层候选。论文作者报告的 SOTA 仍属作者公开结论，不是本地统一评价结论。
 
 InfiniSplat 必须使用独立 `infinisplat` 环境，不得安装到或污染 `sharp` 的 Python 包。当前已验证环境为 Python 3.10.20、PyTorch 2.9.0+cu128、torchvision 0.24.0+cu128、xformers 0.0.33.post1 和 gsplat 1.5.3；Windows 下 gsplat 1.5.3 需要已记录的 MSVC 兼容补丁，并且当前编译时只共用 `sharp` 环境中已有的 CUDA Toolkit 12.8 工具链，不共用 `sharp` 的 Python、PyTorch、gsplat 包或编译二进制。RGB 权重为 3,142,241,921 bytes，文件 SHA256 为 `D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D`；`2A1B61FC...` 是 Hugging Face Xet 存储对象哈希，不是下载文件 SHA256。源码、权重、运行日志和大型输出按外部模型复现方式管理，权重和大型输出只保留本地。
@@ -257,7 +257,7 @@ Framework 中的材质感知模块暂不作为当前主链路或近期实验变�
 
 下一步：
 
-1. 自研主分支已停止 MAT、Flash3D、source-only 三头模型与官方 3D Photo LDI 的继续调参。Stage 1.8三分区evaluator已完成oracle校准；下一步实现首个显式目标视角条件化 Provider并做单端点过拟合。`OcclusionHiddenProvider`负责中心视锥内遮挡后内容，`OutsideFOVProvider`负责中心视锥外内容；两类先在独立多视图真值上分别过门，再接P01 `true_arc` 30°。
+1. 自研主分支已停止 MAT、Flash3D、source-only 三头模型、官方 3D Photo LDI、GenWarp与ViewCrafter的继续调参。Stage 1.9先复用HLP-TRAIN-03建立195个严格有向视图对和95个新增端点源BaseDepth，再实现源图多尺度特征、特征级目标投影和全局上下文条件化Provider；按1端点→8/2场景→40/10场景推进。`OcclusionHiddenProvider`与`OutsideFOVProvider`两类先在独立多视图真值上分别过门，再接P01 `true_arc` 30°。
 2. InfiniSplat 对照分支保持暂停，不继续优化原版。只有需要建立失败曲线、出现新官方权重，或自研显式补全成立后要复用其表面对齐解码器时才重启。
 3. 自研 Framework 继续按“角度协议 → 显露补全 → 补充高斯 → 双端点一致性 → 细结构 → 自研基础表示 → Gate 与压缩 → 移动端”推进；第一轮不修改 SHARP 官方源码，通过适配器调用冻结 SHARP 基线。
 4. 可复用的自研模型与核心库放 `源码/Adaptive3DGS/`；Stage 0+1 的正式实验脚本、配置和清单保存在 `03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/`，大型输出、模型权重和运行日志仅本地保留，不上传 GitHub。

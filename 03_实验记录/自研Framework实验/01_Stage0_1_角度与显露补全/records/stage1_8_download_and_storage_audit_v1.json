@@ -132,27 +132,30 @@
     }
   ],
   "second_pass_conclusion": "A repository-wide scan of files larger than 100 MB found no additional model/data file that is both definitively obsolete and safe to remove. The remaining 110 MB InfiniSplat PLY is evaluation evidence under outputs, and the ViewCrafter 110 MB git pack is source history rather than a model download.",
-  "manual_environment_cleanup_pending": [
+  "environment_cleanup_completed_by_user": [
     {
       "conda_environment": "genwarp",
       "path": "/home/mcy/miniconda3/envs/genwarp",
       "bytes_on_disk_at_final_audit": 8470115559,
-      "reason": "GenWarp quality route is closed."
+      "reason": "GenWarp quality route is closed.",
+      "verified_state": "removed"
     },
     {
       "conda_environment": "viewcrafter",
       "path": "/home/mcy/miniconda3/envs/viewcrafter",
       "bytes_on_disk_at_final_audit": 7341253498,
-      "reason": "Failed cloned environment; canonical environment is viewcrafter2."
+      "reason": "Failed cloned environment; canonical environment was viewcrafter2.",
+      "verified_state": "removed"
     },
     {
       "conda_environment": "viewcrafter2",
       "path": "/home/mcy/miniconda3/envs/viewcrafter2",
       "bytes_on_disk_at_final_audit": 10419391053,
-      "reason": "Canonical runtime for a public-pretrained route that is now formally closed; all reproducibility versions and rebuild instructions are recorded."
+      "reason": "Canonical runtime for a public-pretrained route that is now formally closed; all reproducibility versions and rebuild instructions are recorded.",
+      "verified_state": "removed"
     }
   ],
-  "manual_cleanup_boundary": "Repository safety policy forbids recursive directory/environment deletion by the agent. All three environments are now safe cleanup candidates and require manual conda removal. Combined audited size is 26,230,760,110 bytes (24.43 GiB).",
+  "environment_cleanup_verification": "The user removed all three environments. The agent verified all three paths absent on 2026-08-18. Their previously audited combined size was 26,230,760,110 bytes (24.43 GiB).",
   "disk": {
     "available_human_readable_after_all_weight_cleanup": "97 GiB",
     "estimated_additional_bytes_to_finish_viewcrafter_checkpoint": 0,
