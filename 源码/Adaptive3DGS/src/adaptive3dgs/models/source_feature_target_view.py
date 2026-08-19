@@ -38,6 +38,25 @@ class SourceFeatureTargetViewNet(nn.Module):
         self.geometry_confidence_head = nn.Conv2d(base_channels, 1, 1)
         self.appearance_confidence_head = nn.Conv2d(base_channels, 1, 1)
 
+    def _source_context(
+        self, source_rgb: torch.Tensor, target_to_source_grid: torch.Tensor,
+        warp_valid: torch.Tensor, height: int, width: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        source1 = self.source1(source_rgb)
+        source2 = self.source2(F.avg_pool2d(source1, 2))
+        source3 = self.source3(F.avg_pool2d(source2, 2))
+        source_pyramid = self.source_projection(torch.cat((
+            source1,
+            F.interpolate(source2, size=(height, width), mode="bilinear", align_corners=False),
+            F.interpolate(source3, size=(height, width), mode="bilinear", align_corners=False),
+        ), dim=1))
+        warped_features = F.grid_sample(
+            source_pyramid, target_to_source_grid, mode="bilinear", padding_mode="zeros", align_corners=True
+        ) * warp_valid
+        global_context = self.global_projection(F.adaptive_avg_pool2d(source3, 1).flatten(1))
+        global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
+        return warped_features, global_context
+
     def forward(
         self,
         source_rgb: torch.Tensor,
@@ -67,19 +86,9 @@ class SourceFeatureTargetViewNet(nn.Module):
         if not (source_depth_scale > 0).all():
             raise ValueError("source_depth_scale must be positive")
 
-        source1 = self.source1(source_rgb)
-        source2 = self.source2(F.avg_pool2d(source1, 2))
-        source3 = self.source3(F.avg_pool2d(source2, 2))
-        source_pyramid = self.source_projection(torch.cat((
-            source1,
-            F.interpolate(source2, size=(height, width), mode="bilinear", align_corners=False),
-            F.interpolate(source3, size=(height, width), mode="bilinear", align_corners=False),
-        ), dim=1))
-        warped_features = F.grid_sample(
-            source_pyramid, target_to_source_grid, mode="bilinear", padding_mode="zeros", align_corners=True
-        ) * warp_valid
-        global_context = self.global_projection(F.adaptive_avg_pool2d(source3, 1).flatten(1))
-        global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
+        warped_features, global_context = self._source_context(
+            source_rgb, target_to_source_grid, warp_valid, height, width
+        )
         normalized_depth = torch.where(
             warp_valid > 0.5,
             torch.log(warped_depth_z.clamp_min(1e-6) / source_depth_scale),
@@ -106,3 +115,55 @@ class SourceFeatureTargetViewNet(nn.Module):
             geometry_confidence=torch.sigmoid(self.geometry_confidence_head(features)),
             appearance_confidence=torch.sigmoid(self.appearance_confidence_head(features)),
         )
+
+
+class FrozenResNetSourceFeatureTargetViewNet(SourceFeatureTargetViewNet):
+    """Use a caller-supplied frozen ImageNet ResNet-50 as the source encoder."""
+
+    def __init__(self, backbone: nn.Module, base_channels: int = 16) -> None:
+        super().__init__(base_channels=base_channels)
+        required = ("conv1", "bn1", "relu", "maxpool", "layer1", "layer2", "layer3", "layer4")
+        if any(not hasattr(backbone, name) for name in required):
+            raise ValueError("backbone must expose the standard ResNet stem and layer1-layer4")
+        self.source1 = nn.Identity()
+        self.source2 = nn.Identity()
+        self.source3 = nn.Identity()
+        self.backbone = backbone
+        for parameter in self.backbone.parameters():
+            parameter.requires_grad_(False)
+        self.backbone.eval()
+        self.resnet_projection1 = nn.Conv2d(256, base_channels, 1)
+        self.resnet_projection2 = nn.Conv2d(512, base_channels, 1)
+        self.resnet_projection3 = nn.Conv2d(1024, base_channels, 1)
+        self.source_projection = nn.Conv2d(base_channels * 3, base_channels, 1)
+        self.global_projection = nn.Sequential(nn.Linear(2048, base_channels), nn.SiLU())
+        self.register_buffer("imagenet_mean", torch.tensor([0.485, 0.456, 0.406])[None, :, None, None])
+        self.register_buffer("imagenet_std", torch.tensor([0.229, 0.224, 0.225])[None, :, None, None])
+
+    def train(self, mode: bool = True) -> "FrozenResNetSourceFeatureTargetViewNet":
+        super().train(mode)
+        self.backbone.eval()
+        return self
+
+    def _source_context(
+        self, source_rgb: torch.Tensor, target_to_source_grid: torch.Tensor,
+        warp_valid: torch.Tensor, height: int, width: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        with torch.no_grad():
+            value = (source_rgb - self.imagenet_mean) / self.imagenet_std
+            value = self.backbone.maxpool(self.backbone.relu(self.backbone.bn1(self.backbone.conv1(value))))
+            feature1 = self.backbone.layer1(value)
+            feature2 = self.backbone.layer2(feature1)
+            feature3 = self.backbone.layer3(feature2)
+            feature4 = self.backbone.layer4(feature3)
+        source_pyramid = self.source_projection(torch.cat((
+            F.interpolate(self.resnet_projection1(feature1), size=(height, width), mode="bilinear", align_corners=False),
+            F.interpolate(self.resnet_projection2(feature2), size=(height, width), mode="bilinear", align_corners=False),
+            F.interpolate(self.resnet_projection3(feature3), size=(height, width), mode="bilinear", align_corners=False),
+        ), dim=1))
+        warped_features = F.grid_sample(
+            source_pyramid, target_to_source_grid, mode="bilinear", padding_mode="zeros", align_corners=True
+        ) * warp_valid
+        global_context = self.global_projection(F.adaptive_avg_pool2d(feature4, 1).flatten(1))
+        global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
+        return warped_features, global_context

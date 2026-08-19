@@ -183,7 +183,7 @@
 
 当前实验执行进一步拆分为两个并行分支，但评价口径必须独立记录：
 
-1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型、Stage 1.7官方完整LDI及Stage 1.8 GenWarp/ViewCrafter公开生成先验均已正式不通过。Stage 1.9已转向部署单图、训练多视图监督的`SourceFeatureTargetViewNet`；零下载资格池已冻结128 train / 32 val、35 / 9场景，95个新增端点源BaseDepth通过，新模型核心39/39 CPU测试通过。下一步是单train端点过拟合。`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价；候选通过独立几何/外观门前不接P01、不进入Stage 2。
+1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型、Stage 1.7官方完整LDI及Stage 1.8 GenWarp/ViewCrafter公开生成先验均已正式不通过。Stage 1.9已转向部署单图、训练多视图监督的`SourceFeatureTargetViewNet`；零下载资格池已冻结128 train / 32 val、35 / 9场景，新模型核心与单端点门通过，但8/2场景从头卷积v1和冻结ResNet v2均正式失败。v2证明预训练语义有效，但无warp洞区仍缺位置相关源特征。下一步先实现源平面代理特征CPU契约，再复用同一31/6小池；不扩40/10、不增加训练步数。`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价；候选通过独立几何/外观门前不接P01、不进入Stage 2。
 2. **InfiniSplat 对照复现分支（已暂停）**：官方 RGB 单图 PLY、官方演示视频和 P01 受控总范围5°视频均已跑通，包装层未发现复现 Bug；但官方岩洞示例与 P01 都出现不可接受的模糊和显露空洞，P01 受控5°仍未通过用户质量门。当前不继续调整原版 InfiniSplat 的轨迹、焦距、背景或高斯数；只保留其表面对齐采样和隐式高斯解码作为未来表示层候选。论文作者报告的 SOTA 仍属作者公开结论，不是本地统一评价结论。
 
 InfiniSplat 必须使用独立 `infinisplat` 环境，不得安装到或污染 `sharp` 的 Python 包。当前已验证环境为 Python 3.10.20、PyTorch 2.9.0+cu128、torchvision 0.24.0+cu128、xformers 0.0.33.post1 和 gsplat 1.5.3；Windows 下 gsplat 1.5.3 需要已记录的 MSVC 兼容补丁，并且当前编译时只共用 `sharp` 环境中已有的 CUDA Toolkit 12.8 工具链，不共用 `sharp` 的 Python、PyTorch、gsplat 包或编译二进制。RGB 权重为 3,142,241,921 bytes，文件 SHA256 为 `D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D`；`2A1B61FC...` 是 Hugging Face Xet 存储对象哈希，不是下载文件 SHA256。源码、权重、运行日志和大型输出按外部模型复现方式管理，权重和大型输出只保留本地。
@@ -425,6 +425,7 @@ SHARP Benchmark v1 已定稿（2026-08-05，见 `03_实验记录/SHARP浅3D实�
 
 - 认证优先使用 Windows 凭据管理器（Git Credential Manager），不得把令牌写入 remote URL、脚本或文档。
 - 如果推送认证失败，应引导用户重新完成 GitHub 认证，不得输出或保存用户令牌。
+- GitHub 的 SSH 远程连接不可用时，改用本节记录的 HTTPS 仓库地址；切换后必须复核 remote URL 不含明文令牌。
 - 发现大文件已进入远程历史时，先报告影响和拟执行方案，并获得用户确认。
 - 历史清理和强制推送属于破坏性操作；未经明确确认不得执行。
 - 历史改写后，其他本地副本需要重新 `git fetch` 并同步。

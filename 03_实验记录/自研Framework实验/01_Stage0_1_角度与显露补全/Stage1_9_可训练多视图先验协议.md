@@ -1,6 +1,6 @@
 # Stage 1.9 可训练多视图先验协议
 
-> 状态：**Stage 1.9-0/1与新模型CPU契约已通过：资格池冻结128 train / 32 val、35 / 9场景；`SourceFeatureTargetViewNet`核心39/39测试通过。下一步是单train端点过拟合。**
+> 状态：**Stage 1.9-0/1/2已通过；Stage 1.9-3 v1/v2小候选均未通过。冻结ResNet v2有效改善深度与总体score，但遮挡RGB 38.66、视野外深度0.417仍失败且视觉涂抹。下一步设计洞区空间化源特征代理投影；不扩40/10、不加训练步数。**
 
 ## 1. 阶段问题
 
@@ -78,3 +78,34 @@ Stage 1.9-0至1.9-4原则上全部复用本地资产：HLP-TRAIN-03三帧数据�
 - 新旧核心共39/39 CPU测试通过。专门测试确认在warp全空时，只改变完整源图也会改变目标输出，证明洞区确实接入源图上下文。
 
 正式记录为`records/stage1_9_core_source_feature_smoke_v11.json`。这只证明接口、形状和条件路径正确，不代表质量；下一步为新模型准备单端点输入并从头过拟合。
+
+## 9. Stage 1.9-2 单端点过拟合（2026-08-19）
+
+- 使用`ai_024_010/cam_00`的中心16帧→左端22帧（真实yaw -14.9683°）作为唯一训练目标；同源右端90帧只用于目标相机敏感性控制；
+- 新定向加载器只从冻结证据包白名单读取`source_rgb_uint8`，深度输入只来自冻结RGB-only UniDepth；目标RGB-D和三分区真值仅用于loss/evaluator，未读取held-out test；
+- 384×512输入中，遮挡后/视锥外分别有5,595/26,039个监督像素，point warp覆盖57.73%，所有输入有限且哈希链通过；
+- GPU1从头训练2,000步耗时179.36秒，峰值CUDA allocated 859,270,144字节；遮挡后RGB MAE由27.39降至2.19（约92.0%），视锥外由47.69降至3.99（约91.6%），深度AbsRel为0.00356/0.00243；
+- 双support正样本均值0.988/0.996、负样本均值0.023/0.011；同源不同目标相机输出平均差0.2184，有限值与全部12项门均通过；
+- 完整核心回归39/39通过。但视觉预览仍比目标明显更软，画框纹理、天花板格栅和窗格细节不足；这一级只证明新结构可优化且确实依赖目标相机，不证明跨场景泛化或最终画质。
+
+正式配置与记录为`configs/stage1_9_source_feature_single_overfit_v1.json`和`records/stage1_9_source_feature_single_overfit_v1.json`。下一步按冻结阶梯进入Stage 1.9-3，仅选8个train场景与2个val场景建立小候选；必须同时报告point-warp相对改善、绝对RGB-D、双support分离和视觉清晰度，失败则不扩全量。
+
+## 10. Stage 1.9-3 从头卷积小候选（2026-08-19）
+
+- 冻结8 train / 2 val独立场景，纳入全部严格合格定向对共31/6个目标；缩放后train遮挡后/视锥外为372,895/1,845,581像素，val为41,706/614,772像素；
+- GPU1训练2,000 updates耗时754.21秒，峰值CUDA allocated 1,440,031,744字节；最佳checkpoint出现在400 updates，之后验证selection score总体恶化，排除“只需继续加步数”；
+- val遮挡后RGB MAE由warp 90.99降至40.87、视锥外由143.33降至29.50，两类相对改善与support分离均通过；但遮挡后RGB未过≤35，深度AbsRel 0.392/0.509均未过≤0.30，正式状态`failed`；
+- train最佳深度AbsRel也只有0.238/0.495，说明不只是val过拟合；视野外深度在400 updates后明显恶化；
+- 视觉预览显示浴室结构和画廊内容被压成低频色块、波纹与涂抹，明显不可接受。当前从头三级卷积在无warp区主要依赖广播全局向量，不能稳定保留空间细节。
+
+正式小池、配置与结果为`records/stage1_9_small_candidate_pool_v1.json`、`configs/stage1_9_source_feature_small_candidate_v1.json`和`records/stage1_9_source_feature_small_candidate_v1.json`。按短路门不扩40/10。协议原定的冻结ImageNet ResNet-50尚未实际接入；本地官方V2权重大小102,540,417字节、SHA256 `11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca`，torchvision严格加载通过。下一轮只替换源图encoder并保持小池、优化预算、loss和质量门不变。
+
+## 11. Stage 1.9-3 冻结ResNet小候选v2（2026-08-19）
+
+- v2唯一结构变量为将随机源encoder替换为冻结ImageNet ResNet-50 layer1–4；31/6小池、目标decoder、2,000 updates、loss、384×512、checkpoint选择和全部门不变；
+- CPU契约确认backbone始终`eval`、参数无梯度、投影层有梯度，完整回归39/39通过；GPU1训练576.46秒，峰值CUDA allocated 1,378,062,848字节，最佳checkpoint为800 updates；
+- 相对v1，val selection score由1.197降至1.008；遮挡RGB 40.87→38.66，遮挡深度0.392→0.269并通过；视野外RGB为32.45并通过，但深度0.417仍未过0.30；遮挡RGB仍未过35，正式状态`failed`；
+- train深度已达0.136/0.219而val为0.269/0.417，说明预训练语义和尺度学习有效，但跨场景洞区泛化仍不足；
+- 视觉仍有大面积涂抹和波纹。进一步覆盖审计显示val遮挡区63.5%虽有warp，但其覆盖部分RGB MAE仍为45.41，直接增加skip并不能使遮挡门达到35；视野外仅12.9%有warp，更不能靠残差路径解决。
+
+正式配置与记录为`configs/stage1_9_source_feature_small_candidate_v2.json`和`records/stage1_9_source_feature_small_candidate_v2.json`。下一步不解冻ResNet、不增加步数；先冻结一个空间化洞区特征设计：按目标射线与源深度尺度构造源平面代理采样坐标，使无z-winner像素获得位置相关的源特征，并与真实z-winner特征分支显式区分。该设计需先过恒等相机、有限值、越界坐标和信息泄漏CPU门，再复用同一小池做v3。

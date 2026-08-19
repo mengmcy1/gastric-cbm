@@ -1,0 +1,62 @@
+{
+  "schema_version": "stage1.9-source-feature-small-candidate-v2",
+  "status": "frozen_before_run",
+  "supersedes": "configs/stage1_9_source_feature_small_candidate_v1.json",
+  "v1_result": "Failed: validation occlusion RGB MAE 40.87 and novel-region depth AbsRel 0.392/0.509 missed frozen gates; previews showed severe low-frequency smearing.",
+  "only_change_from_v1": "Replace the randomly initialized three-level source encoder with a frozen ImageNet ResNet-50 V2 layer1-layer4 encoder. Keep pool, decoder, optimization, loss, resolution, checkpoint selection and all gates unchanged.",
+  "selection": {
+    "train_scenes": [
+      "ai_024_010", "ai_004_001", "ai_002_009", "ai_009_001",
+      "ai_011_005", "ai_023_009", "ai_032_003", "ai_002_004"
+    ],
+    "validation_scenes": ["ai_024_013", "ai_004_003"],
+    "policy": "Use every strictly qualified directed pair in each frozen scene. Validation scenes are independent scenes with scene types represented in train."
+  },
+  "expected_train_scenes": 8,
+  "expected_validation_scenes": 2,
+  "expected_train_targets": 31,
+  "expected_validation_targets": 6,
+  "input_size_hw": [384, 512],
+  "architecture": {
+    "name": "FrozenResNetSourceFeatureTargetViewNet",
+    "base_channels": 16,
+    "source_encoder": "torchvision ResNet-50 V2 ImageNet weights, frozen layer1-layer4",
+    "source_encoder_weights_sha256": "11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca",
+    "inputs": [
+      "complete_source_rgb", "target_to_source_winner_grid", "warped_source_rgb",
+      "warped_frozen_base_depth", "warp_coverage", "target_rays_in_source", "target_origin_in_source"
+    ],
+    "outputs": [
+      "target_rgb", "target_depth_z", "occlusion_support", "outside_support",
+      "geometry_confidence", "appearance_confidence"
+    ]
+  },
+  "optimization": {
+    "optimizer_updates": 2000,
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.00001,
+    "depth_weight": 1.0,
+    "support_weight": 0.5,
+    "confidence_weight": 0.05,
+    "validation_interval_updates": 100,
+    "seed": 20260819
+  },
+  "checkpoint_selection": {
+    "score": "Mean over occlusion/outside of rgb_mae/255 + depth_abs_rel + (1-positive_support) + negative_support.",
+    "uses_training_metrics": false,
+    "uses_held_out_test": false
+  },
+  "gates": {
+    "validation_novel_rgb_relative_improvement_over_warp_minimum": 0.15,
+    "validation_novel_rgb_mae_0_255_maximum": 35.0,
+    "validation_novel_depth_abs_rel_maximum": 0.30,
+    "validation_branch_support_separation_minimum": 0.10,
+    "train_novel_rgb_relative_improvement_over_warp_minimum": 0.40
+  },
+  "visual_reporting": {
+    "required": true,
+    "note": "Save every validation prediction and target preview; numerical pass does not override obvious blur or false structure."
+  },
+  "leakage_boundary": "Target RGB-D and masks are label/evaluation only. Validation selects checkpoints only. Held-out HLP-GEO/HLP-APP, P01 and Gaussian Spawn are not read."
+}

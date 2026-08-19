@@ -122,6 +122,10 @@
 - `stage1_9_endpoint_frozen_base_depth_v1.json`：GPU1上的95/95 UniDepth v1端点源BaseDepth，全部有限且为正，峰值约2.13 GiB、总耗时37.45秒；未向模型输入真值深度或真值内参。
 - `stage1_9_directed_visibility_pool_v1.json`：195个有向目标的源相对三分区资格审计；160个严格合格，含128 train / 32 val、35 / 9场景，规模、分类完整性和held-out隔离门全部通过。
 - `stage1_9_core_source_feature_smoke_v11.json`：`SourceFeatureTargetViewNet`与可微目标→源特征采样网格的CPU契约；新旧核心39/39测试通过，恒等grid精确回归且无warp洞区对完整源图上下文敏感。只证明实现，不代表质量。
+- `stage1_9_source_feature_single_overfit_v1.json`：Stage 1.9-2单train有向端点门禁。GPU1训练2,000步后遮挡后/视锥外RGB MAE为2.19/3.99、深度AbsRel为0.00356/0.00243，目标相机控制与全部12项门通过；视觉仍明显偏软，只证明单样本可优化，不代表val或最终画质。
+- `stage1_9_small_candidate_pool_v1.json`：Stage 1.9-3小池冻结记录；8 train / 2 val独立场景、31/6个严格合格定向目标，双方向、样本数和新显露非空8/8门通过。
+- `stage1_9_source_feature_small_candidate_v1.json`：从头卷积源特征小候选正式失败。最佳400 updates的val遮挡后/视锥外RGB MAE为40.87/29.50、深度AbsRel为0.392/0.509；相对改善和support分离通过，但遮挡RGB与双深度门失败，视觉存在严重低频涂抹，不扩40/10。
+- `stage1_9_source_feature_small_candidate_v2.json`：冻结ImageNet ResNet-50单变量消融仍失败。val score由v1的1.197改善到1.008，遮挡深度0.269通过；但遮挡RGB 38.66和视野外深度0.417仍失败，视觉涂抹未解决。证明预训练语义有效但无warp洞区缺少空间源特征。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 
