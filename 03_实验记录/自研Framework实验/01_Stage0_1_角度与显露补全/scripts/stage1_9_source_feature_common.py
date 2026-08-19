@@ -22,6 +22,7 @@ from adaptive3dgs.datasets.hypersim import (
 from adaptive3dgs.target_view import (
     forward_splat_source_to_target_with_grid,
     scale_intrinsics,
+    source_plane_proxy_grid,
     target_camera_conditioning_in_source,
 )
 from stage1_8_target_view_common import _resize, portable, sha256, target_metrics
@@ -45,6 +46,8 @@ class PreparedDirectedSample:
     rays_in_source: torch.Tensor
     origin_in_source: torch.Tensor
     source_depth_scale: torch.Tensor
+    source_plane_proxy_grid: torch.Tensor
+    source_plane_proxy_valid: torch.Tensor
     target_rgb: torch.Tensor
     target_depth: torch.Tensor
     observed: torch.Tensor
@@ -67,6 +70,9 @@ class PreparedDirectedSample:
             self.origin_in_source,
             self.source_depth_scale,
         )
+
+    def spatial_inputs(self) -> tuple[torch.Tensor, ...]:
+        return self.inputs() + (self.source_plane_proxy_grid, self.source_plane_proxy_valid)
 
 
 def _load_records(paths: tuple[Path, ...], required_key: str) -> dict[tuple[str, str, int], dict]:
@@ -214,6 +220,9 @@ def prepare_directed_samples(
         if not valid_base.any():
             raise RuntimeError(f"no valid frozen BaseDepth: {source_key}")
         depth_scale = float(np.median(resized_base[valid_base]))
+        proxy_grid, proxy_valid = source_plane_proxy_grid(
+            rays, origin, depth_scale, resized_k, (target_width, target_height)
+        )
         result.append(PreparedDirectedSample(
             split=str(pair["split"]), scene=scene, camera=camera,
             source_role=str(pair["source_role"]), target_role=str(pair["target_role"]),
@@ -224,6 +233,8 @@ def prepare_directed_samples(
             warp_valid=_map_tensor(warp_valid.astype(np.float32), device),
             rays_in_source=_image_tensor(rays, device), origin_in_source=_image_tensor(origin, device),
             source_depth_scale=torch.tensor([[[[depth_scale]]]], dtype=torch.float32, device=device),
+            source_plane_proxy_grid=torch.from_numpy(proxy_grid)[None].float().to(device),
+            source_plane_proxy_valid=_map_tensor(proxy_valid.astype(np.float32), device),
             target_rgb=_image_tensor(resized_target_rgb, device), target_depth=_map_tensor(target_depth, device),
             observed=_map_tensor(observed.astype(np.float32), device).bool(),
             occluded=_map_tensor(occluded.astype(np.float32), device).bool(),

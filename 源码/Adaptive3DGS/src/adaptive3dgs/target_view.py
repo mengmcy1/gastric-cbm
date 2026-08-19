@@ -119,3 +119,45 @@ def target_camera_conditioning_in_source(
     directions /= np.linalg.norm(directions, axis=2, keepdims=True).clip(1e-12)
     origin = np.broadcast_to(source_from_target[:3, 3], (height, width, 3)).copy()
     return directions.astype(np.float32), origin.astype(np.float32)
+
+
+def source_plane_proxy_grid(
+    target_rays_in_source: np.ndarray,
+    target_origin_in_source: np.ndarray,
+    source_plane_depth_z: float,
+    source_intrinsics_3x3_float64: np.ndarray,
+    source_wh: tuple[int, int],
+) -> tuple[np.ndarray, np.ndarray]:
+    """Intersect target rays with a source-camera Z plane and return a bounded source sampling grid."""
+
+    rays = np.asarray(target_rays_in_source, dtype=np.float64)
+    origin = np.asarray(target_origin_in_source, dtype=np.float64)
+    if rays.ndim != 3 or rays.shape[2] != 3 or origin.shape != rays.shape:
+        raise ValidationError("target rays and origins must share HxWx3")
+    width, height = source_wh
+    if rays.shape[:2] != (height, width) or min(width, height) <= 0:
+        raise ValidationError("target conditioning shape must match source image size")
+    if not np.isfinite(source_plane_depth_z) or source_plane_depth_z <= 0:
+        raise ValidationError("source plane depth must be finite and positive")
+    intrinsics = np.asarray(source_intrinsics_3x3_float64, dtype=np.float64)
+    if intrinsics.shape != (3, 3) or not np.isfinite(intrinsics).all():
+        raise ValidationError("source intrinsics must be finite 3x3")
+    denominator = rays[:, :, 2]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        distance = (source_plane_depth_z - origin[:, :, 2]) / denominator
+        points = origin + rays * distance[:, :, None]
+        projected = points @ intrinsics.T
+        pixel_x = projected[:, :, 0] / projected[:, :, 2]
+        pixel_y = projected[:, :, 1] / projected[:, :, 2]
+    valid = np.isfinite(points).all(axis=2) & np.isfinite(pixel_x) & np.isfinite(pixel_y)
+    valid &= np.abs(denominator) > 1e-8
+    valid &= distance > 0
+    valid &= points[:, :, 2] > 0
+    grid = np.full((height, width, 2), -2.0, dtype=np.float32)
+    normalized_x = 2.0 * pixel_x / max(width - 1, 1) - 1.0
+    normalized_y = 2.0 * pixel_y / max(height - 1, 1) - 1.0
+    grid[:, :, 0][valid] = np.clip(normalized_x[valid], -2.0, 2.0).astype(np.float32)
+    grid[:, :, 1][valid] = np.clip(normalized_y[valid], -2.0, 2.0).astype(np.float32)
+    if not np.isfinite(grid).all():
+        raise ValidationError("source plane proxy grid must be finite")
+    return grid, valid.astype(np.uint8)

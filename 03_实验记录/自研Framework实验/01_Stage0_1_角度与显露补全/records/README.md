@@ -126,6 +126,11 @@
 - `stage1_9_small_candidate_pool_v1.json`：Stage 1.9-3小池冻结记录；8 train / 2 val独立场景、31/6个严格合格定向目标，双方向、样本数和新显露非空8/8门通过。
 - `stage1_9_source_feature_small_candidate_v1.json`：从头卷积源特征小候选正式失败。最佳400 updates的val遮挡后/视锥外RGB MAE为40.87/29.50、深度AbsRel为0.392/0.509；相对改善和support分离通过，但遮挡RGB与双深度门失败，视觉存在严重低频涂抹，不扩40/10。
 - `stage1_9_source_feature_small_candidate_v2.json`：冻结ImageNet ResNet-50单变量消融仍失败。val score由v1的1.197改善到1.008，遮挡深度0.269通过；但遮挡RGB 38.66和视野外深度0.417仍失败，视觉涂抹未解决。证明预训练语义有效但无warp洞区缺少空间源特征。
+- `stage1_9_spatial_proxy_core_smoke_v1.json`：源平面代理特征CPU契约。恒等相机、反向交点、有限值、冻结backbone梯度、31/6全池和无目标标签泄漏8项门通过，核心41/41；只证明实现，不代表质量。
+- `stage1_9_source_feature_small_candidate_v3_gpu1_failed.json`：v3首轮在第1次反向被CUDA border-grid无确定性实现中止，未形成质量结果；固定网格裁边+zero-padding等价修复后由retry1取代。
+- `stage1_9_source_feature_small_candidate_v3.json`：空间代理canonical retry1仍失败。val score 0.9998、RGB 37.77/32.11、深度0.283/0.427；改善很小且视觉新增水平拉丝，代理分支正式否决。
+- `stage1_9_source_feature_small_candidate_v4.json`：无代理冻结ResNet的base channels 16→32容量消融仍失败。val RGB 39.42/31.21、深度0.263/0.417、score 1.014，未优于base16 v2且视觉仍涂抹；Stage 1.9联合确定性RGB-D U-Net正式收口。
+- `stage1_9_source_feature_small_candidate_closure_v1.json`：Stage 1.9 v1–v4机器可读收口汇总。四个候选均未同时通过遮挡后RGB与视野外深度门；v3数值score最低但因水平虚假结构不可接受。结论是不扩展数据池、不读test/P01、不启动Gaussian Spawn，下一阶段拆分几何与生成式外观。
 
 运行时没有可靠记录项目 Git commit，因此 manifest 中保持 `null`，没有用后来的提交号代替。大型输出继续由 `.gitignore` 排除；需要在 `linux5080` 复核时按 manifest 选择性复制并校验。
 

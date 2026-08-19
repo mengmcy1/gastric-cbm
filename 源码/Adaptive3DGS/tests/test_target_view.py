@@ -7,6 +7,7 @@ from adaptive3dgs.models import SourceFeatureTargetViewNet, TargetViewUNet, comp
 from adaptive3dgs.target_view import (
     forward_splat_source_to_target,
     forward_splat_source_to_target_with_grid,
+    source_plane_proxy_grid,
     target_camera_conditioning_in_source,
 )
 
@@ -41,6 +42,24 @@ class TargetViewTests(unittest.TestCase):
         )[0].permute(1, 2, 0).numpy()
         np.testing.assert_allclose(sampled, rgb, atol=1e-6)
         self.assertTrue(valid.all())
+
+    def test_identity_source_plane_proxy_grid_is_pixel_identity(self):
+        height, width = 3, 4
+        k = np.array([[10.0, 0, 1.5], [0, 10.0, 1.0], [0, 0, 1]], dtype=np.float64)
+        rays, origin = target_camera_conditioning_in_source(height, width, k, np.eye(4), np.eye(4))
+        grid, valid = source_plane_proxy_grid(rays, origin, 2.0, k, (width, height))
+        yy, xx = np.meshgrid(np.arange(height), np.arange(width), indexing="ij")
+        expected = np.stack((2 * xx / (width - 1) - 1, 2 * yy / (height - 1) - 1), axis=-1)
+        np.testing.assert_allclose(grid, expected, atol=1e-6)
+        self.assertTrue(valid.all())
+
+    def test_source_plane_proxy_grid_marks_backward_intersections_invalid(self):
+        rays = np.zeros((2, 3, 3), dtype=np.float32); rays[:, :, 2] = -1
+        origin = np.zeros_like(rays)
+        k = np.array([[10.0, 0, 1.0], [0, 10.0, 0.5], [0, 0, 1]], dtype=np.float64)
+        grid, valid = source_plane_proxy_grid(rays, origin, 2.0, k, (3, 2))
+        self.assertFalse(valid.any())
+        self.assertTrue(np.isfinite(grid).all())
 
     def test_model_outputs_two_independent_support_heads(self):
         model = TargetViewUNet(base_channels=8)

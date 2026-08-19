@@ -183,7 +183,7 @@
 
 当前实验执行进一步拆分为两个并行分支，但评价口径必须独立记录：
 
-1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型、Stage 1.7官方完整LDI及Stage 1.8 GenWarp/ViewCrafter公开生成先验均已正式不通过。Stage 1.9已转向部署单图、训练多视图监督的`SourceFeatureTargetViewNet`；零下载资格池已冻结128 train / 32 val、35 / 9场景，新模型核心与单端点门通过，但8/2场景从头卷积v1和冻结ResNet v2均正式失败。v2证明预训练语义有效，但无warp洞区仍缺位置相关源特征。下一步先实现源平面代理特征CPU契约，再复用同一31/6小池；不扩40/10、不增加训练步数。`OcclusionHiddenProvider`与`OutsideFOVProvider`必须分区评价；候选通过独立几何/外观门前不接P01、不进入Stage 2。
+1. **自研 Framework 主分支**：Stage 1.4 Flash3D、Stage 1.6 source-only三头模型、Stage 1.7官方完整LDI、Stage 1.8公开生成先验及Stage 1.9联合RGB-D U-Net均已正式不通过。Stage 1.9单端点可学习，但8/2场景v1–v4全部失败；冻结ResNet有效，空间代理引入拉丝，容量16→32无改善。下一步拆为独立几何路线与生成式外观路线，先各自在31/6小池设门再融合。不扩40/10、不读test/P01、不接Gaussian Spawn。`OcclusionHiddenProvider`与`OutsideFOVProvider`必须继续分区评价；候选通过独立几何/外观门前不进入Stage 2。
 2. **InfiniSplat 对照复现分支（已暂停）**：官方 RGB 单图 PLY、官方演示视频和 P01 受控总范围5°视频均已跑通，包装层未发现复现 Bug；但官方岩洞示例与 P01 都出现不可接受的模糊和显露空洞，P01 受控5°仍未通过用户质量门。当前不继续调整原版 InfiniSplat 的轨迹、焦距、背景或高斯数；只保留其表面对齐采样和隐式高斯解码作为未来表示层候选。论文作者报告的 SOTA 仍属作者公开结论，不是本地统一评价结论。
 
 InfiniSplat 必须使用独立 `infinisplat` 环境，不得安装到或污染 `sharp` 的 Python 包。当前已验证环境为 Python 3.10.20、PyTorch 2.9.0+cu128、torchvision 0.24.0+cu128、xformers 0.0.33.post1 和 gsplat 1.5.3；Windows 下 gsplat 1.5.3 需要已记录的 MSVC 兼容补丁，并且当前编译时只共用 `sharp` 环境中已有的 CUDA Toolkit 12.8 工具链，不共用 `sharp` 的 Python、PyTorch、gsplat 包或编译二进制。RGB 权重为 3,142,241,921 bytes，文件 SHA256 为 `D68A8C99109F06A264567766BD52D8D9BA81E51D044D0A966C3336160EA7007D`；`2A1B61FC...` 是 Hugging Face Xet 存储对象哈希，不是下载文件 SHA256。源码、权重、运行日志和大型输出按外部模型复现方式管理，权重和大型输出只保留本地。

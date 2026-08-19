@@ -41,7 +41,9 @@ class SourceFeatureTargetViewNet(nn.Module):
     def _source_context(
         self, source_rgb: torch.Tensor, target_to_source_grid: torch.Tensor,
         warp_valid: torch.Tensor, height: int, width: int,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
+        source_plane_proxy_grid: torch.Tensor | None = None,
+        source_plane_proxy_valid: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, tuple[torch.Tensor, ...]]:
         source1 = self.source1(source_rgb)
         source2 = self.source2(F.avg_pool2d(source1, 2))
         source3 = self.source3(F.avg_pool2d(source2, 2))
@@ -55,7 +57,7 @@ class SourceFeatureTargetViewNet(nn.Module):
         ) * warp_valid
         global_context = self.global_projection(F.adaptive_avg_pool2d(source3, 1).flatten(1))
         global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
-        return warped_features, global_context
+        return warped_features, global_context, ()
 
     def forward(
         self,
@@ -67,6 +69,8 @@ class SourceFeatureTargetViewNet(nn.Module):
         target_rays_in_source: torch.Tensor,
         target_origin_in_source: torch.Tensor,
         source_depth_scale: torch.Tensor,
+        source_plane_proxy_grid: torch.Tensor | None = None,
+        source_plane_proxy_valid: torch.Tensor | None = None,
     ) -> TargetViewOutput:
         batch, _, height, width = warped_rgb.shape
         if source_rgb.shape != (batch, 3, height, width):
@@ -85,9 +89,19 @@ class SourceFeatureTargetViewNet(nn.Module):
             raise ValueError("grid and depth scale must be finite")
         if not (source_depth_scale > 0).all():
             raise ValueError("source_depth_scale must be positive")
+        if (source_plane_proxy_grid is None) != (source_plane_proxy_valid is None):
+            raise ValueError("source plane proxy grid and valid mask must be provided together")
+        if source_plane_proxy_grid is not None:
+            if source_plane_proxy_grid.shape != (batch, height, width, 2):
+                raise ValueError("source plane proxy grid must have shape [B,H,W,2]")
+            if source_plane_proxy_valid.shape != one:
+                raise ValueError("source plane proxy valid mask must have shape [B,1,H,W]")
+            if not torch.isfinite(source_plane_proxy_grid).all() or not torch.isfinite(source_plane_proxy_valid).all():
+                raise ValueError("source plane proxy inputs must be finite")
 
-        warped_features, global_context = self._source_context(
-            source_rgb, target_to_source_grid, warp_valid, height, width
+        warped_features, global_context, additional_context = self._source_context(
+            source_rgb, target_to_source_grid, warp_valid, height, width,
+            source_plane_proxy_grid, source_plane_proxy_valid,
         )
         normalized_depth = torch.where(
             warp_valid > 0.5,
@@ -95,7 +109,7 @@ class SourceFeatureTargetViewNet(nn.Module):
             torch.zeros_like(warped_depth_z),
         )
         value = torch.cat((warped_rgb, normalized_depth, warp_valid, target_rays_in_source,
-                           target_origin_in_source, warped_features, global_context), dim=1)
+                           target_origin_in_source, warped_features, global_context, *additional_context), dim=1)
         enc1 = self.enc1(value)
         enc2 = self.enc2(F.avg_pool2d(enc1, 2))
         enc3 = self.enc3(F.avg_pool2d(enc2, 2))
@@ -148,6 +162,17 @@ class FrozenResNetSourceFeatureTargetViewNet(SourceFeatureTargetViewNet):
     def _source_context(
         self, source_rgb: torch.Tensor, target_to_source_grid: torch.Tensor,
         warp_valid: torch.Tensor, height: int, width: int,
+        source_plane_proxy_grid: torch.Tensor | None = None,
+        source_plane_proxy_valid: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, tuple[torch.Tensor, ...]]:
+        source_pyramid, global_context = self._resnet_context_maps(source_rgb, height, width)
+        warped_features = F.grid_sample(
+            source_pyramid, target_to_source_grid, mode="bilinear", padding_mode="zeros", align_corners=True
+        ) * warp_valid
+        return warped_features, global_context, ()
+
+    def _resnet_context_maps(
+        self, source_rgb: torch.Tensor, height: int, width: int,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         with torch.no_grad():
             value = (source_rgb - self.imagenet_mean) / self.imagenet_std
@@ -161,9 +186,39 @@ class FrozenResNetSourceFeatureTargetViewNet(SourceFeatureTargetViewNet):
             F.interpolate(self.resnet_projection2(feature2), size=(height, width), mode="bilinear", align_corners=False),
             F.interpolate(self.resnet_projection3(feature3), size=(height, width), mode="bilinear", align_corners=False),
         ), dim=1))
+        global_context = self.global_projection(F.adaptive_avg_pool2d(feature4, 1).flatten(1))
+        global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
+        return source_pyramid, global_context
+
+
+class FrozenResNetSpatialProxyTargetViewNet(FrozenResNetSourceFeatureTargetViewNet):
+    """Add a position-aware source-plane feature branch for pixels without a z-winner."""
+
+    def __init__(self, backbone: nn.Module, base_channels: int = 16) -> None:
+        super().__init__(backbone=backbone, base_channels=base_channels)
+        # Base target inputs(11), z-winner/global features(2C), proxy features(C), proxy valid/in-FOV(2).
+        self.enc1 = ConvBlock(13 + 3 * base_channels, base_channels)
+
+    def _source_context(
+        self, source_rgb: torch.Tensor, target_to_source_grid: torch.Tensor,
+        warp_valid: torch.Tensor, height: int, width: int,
+        source_plane_proxy_grid: torch.Tensor | None = None,
+        source_plane_proxy_valid: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, tuple[torch.Tensor, ...]]:
+        if source_plane_proxy_grid is None or source_plane_proxy_valid is None:
+            raise ValueError("spatial proxy model requires source plane grid and valid mask")
+        source_pyramid, global_context = self._resnet_context_maps(source_rgb, height, width)
         warped_features = F.grid_sample(
             source_pyramid, target_to_source_grid, mode="bilinear", padding_mode="zeros", align_corners=True
         ) * warp_valid
-        global_context = self.global_projection(F.adaptive_avg_pool2d(feature4, 1).flatten(1))
-        global_context = global_context[:, :, None, None].expand(-1, -1, height, width)
-        return warped_features, global_context
+        proxy_in_fov = (
+            (source_plane_proxy_grid[..., 0].abs() <= 1)
+            & (source_plane_proxy_grid[..., 1].abs() <= 1)
+        )[:, None].to(source_rgb.dtype) * source_plane_proxy_valid
+        # Clamping a fixed grid before zero-padded sampling is equivalent to border sampling,
+        # while retaining CUDA deterministic backward support for the trainable feature map.
+        bounded_proxy_grid = source_plane_proxy_grid.clamp(-1, 1)
+        proxy_features = F.grid_sample(
+            source_pyramid, bounded_proxy_grid, mode="bilinear", padding_mode="zeros", align_corners=True
+        ) * source_plane_proxy_valid
+        return warped_features, global_context, (proxy_features, source_plane_proxy_valid, proxy_in_fov)

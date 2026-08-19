@@ -1,0 +1,23 @@
+{
+  "schema_version": "stage1.9-source-feature-small-candidate-v3-technical-failure-v1",
+  "status": "failed_deterministic_backward",
+  "producer_machine_id": "linux5080",
+  "physical_gpu_index": 1,
+  "date": "2026-08-19",
+  "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_9_source_feature_small_candidate_v3.json",
+  "training_config_sha256": "5bd39e6cbe040abd6e4140f09d324baf7534dcd4eab35e767e57ca7f62407432",
+  "failure": {
+    "stage": "first optimizer update backward",
+    "error": "grid_sampler_2d_backward_cuda does not have a deterministic implementation when padding_mode=border",
+    "quality_result_produced": false,
+    "runner_record_produced": false,
+    "output_directory_created_empty": true,
+    "failed_output_directory": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_linux5080"
+  },
+  "resolution": {
+    "semantic_change": false,
+    "change": "Clamp fixed proxy grid to [-1,1] and use deterministic zero-padded bilinear sampling, which is equivalent to nearest-border sampling for out-of-range coordinates.",
+    "retry_run_id": "stage1_9_source_feature_small_candidate_v3_retry1_linux5080"
+  },
+  "quality_boundary": "Technical failure before training; not a model quality result and does not supersede the pending retry1."
+}

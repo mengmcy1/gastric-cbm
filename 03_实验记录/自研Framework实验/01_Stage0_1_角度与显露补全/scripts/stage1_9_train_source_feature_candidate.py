@@ -17,6 +17,7 @@ import torch
 
 from adaptive3dgs.models import (
     FrozenResNetSourceFeatureTargetViewNet,
+    FrozenResNetSpatialProxyTargetViewNet,
     SourceFeatureTargetViewNet,
     compute_target_view_loss,
 )
@@ -24,6 +25,11 @@ from stage1_9_source_feature_common import portable, prepare_directed_samples, s
 
 
 REGIONS = ("occlusion_hidden", "outside_source_fov")
+
+
+def run_model(model, sample):
+    inputs = sample.spatial_inputs() if isinstance(model, FrozenResNetSpatialProxyTargetViewNet) else sample.inputs()
+    return model(*inputs)
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,7 +59,7 @@ def aggregate(model: SourceFeatureTargetViewNet, samples) -> dict[str, object]:
     model.eval()
     with torch.no_grad():
         for sample in samples:
-            output = model(*sample.inputs()); metrics = target_metrics(output, sample)
+            output = run_model(model, sample); metrics = target_metrics(output, sample)
             coverage += metrics["warp_coverage"]
             finite &= all(torch.isfinite(value).all() for value in (
                 output.rgb, output.depth_z, output.occlusion_support_probability,
@@ -147,7 +153,18 @@ def main() -> int:
             "occlusion_hidden": sum(int(s.occluded.sum()) for s in validation),
             "outside_source_fov": sum(int(s.outside.sum()) for s in validation),
         },
-        "all_inputs_finite": all(all(torch.isfinite(v).all() for v in s.inputs()) for s in samples),
+        "source_plane_proxy": {
+            "valid_fraction": float(torch.stack([s.source_plane_proxy_valid.mean() for s in samples]).mean()),
+            "in_source_fov_fraction": float(torch.stack([
+                (
+                    (s.source_plane_proxy_grid[..., 0].abs() <= 1)
+                    & (s.source_plane_proxy_grid[..., 1].abs() <= 1)
+                    & (s.source_plane_proxy_valid[:, 0] > 0.5)
+                ).float().mean() for s in samples
+            ]).mean()),
+            "derived_from_target_labels": False,
+        },
+        "all_inputs_finite": all(all(torch.isfinite(v).all() for v in s.spatial_inputs()) for s in samples),
     }
     if args.prepare_only:
         print(json.dumps(preparation, indent=2)); return 0
@@ -170,6 +187,16 @@ def main() -> int:
         model = FrozenResNetSourceFeatureTargetViewNet(
             backbone, base_channels=int(config["architecture"]["base_channels"])
         )
+    elif architecture_name == "FrozenResNetSpatialProxyTargetViewNet":
+        if args.backbone_weights is None:
+            raise RuntimeError("frozen ResNet architecture requires --backbone-weights")
+        from torchvision.models import resnet50
+        backbone = resnet50(weights=None)
+        state = torch.load(args.backbone_weights, map_location="cpu", weights_only=True)
+        backbone.load_state_dict(state, strict=True)
+        model = FrozenResNetSpatialProxyTargetViewNet(
+            backbone, base_channels=int(config["architecture"]["base_channels"])
+        )
     else:
         raise RuntimeError(f"unsupported architecture: {architecture_name}")
     model = model.to(device)
@@ -189,7 +216,7 @@ def main() -> int:
         indices = order[cursor:cursor + opt["batch_size"]]; cursor += opt["batch_size"]
         model.train(); optimizer.zero_grad(set_to_none=True); losses = []
         for index in indices:
-            sample = train[index]; output = model(*sample.inputs())
+            sample = train[index]; output = run_model(model, sample)
             loss = compute_target_view_loss(
                 output, sample.target_rgb, sample.target_depth, sample.observed, sample.occluded, sample.outside,
                 depth_weight=opt["depth_weight"], support_weight=opt["support_weight"],
@@ -234,7 +261,7 @@ def main() -> int:
     predictions = []
     with torch.no_grad():
         for sample in validation:
-            output = model(*sample.inputs())
+            output = run_model(model, sample)
             prefix = f"val-{sample.scene}-{sample.source_frame:04d}-to-{sample.target_frame:04d}"
             pred_path, target_path = args.output_dir / f"{prefix}-prediction.png", args.output_dir / f"{prefix}-target.png"
             save_rgb(pred_path, output.rgb); save_rgb(target_path, sample.target_rgb)
@@ -247,7 +274,7 @@ def main() -> int:
                 "target_preview_sha256": sha256(target_path),
             })
     record = {
-        "schema_version": "stage1.9-source-feature-small-candidate-v1",
+        "schema_version": config["schema_version"],
         "status": "pass_candidate_frozen" if passed else "failed", "producer_machine_id": "linux5080",
         "physical_gpu_index": args.physical_gpu_index, "visible_cuda_devices": visible,
         "inputs": {

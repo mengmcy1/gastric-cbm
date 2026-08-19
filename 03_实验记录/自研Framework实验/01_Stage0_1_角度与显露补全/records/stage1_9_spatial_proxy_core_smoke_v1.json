@@ -1,0 +1,46 @@
+{
+  "schema_version": "stage1.9-spatial-proxy-core-smoke-v1",
+  "status": "pass",
+  "producer_machine_id": "linux5080",
+  "date": "2026-08-19",
+  "inputs": {
+    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_9_source_feature_small_candidate_v3.json",
+    "training_config_sha256": "5bd39e6cbe040abd6e4140f09d324baf7534dcd4eab35e767e57ca7f62407432",
+    "backbone_weights": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/models/torch_hub/hub/checkpoints/resnet50-11ad3fa6.pth",
+    "backbone_weights_sha256": "11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca",
+    "source_truth_depth_as_model_input": false,
+    "target_rgb_depth_as_model_input": false,
+    "truth_masks_as_model_input": false,
+    "held_out_test_used": false,
+    "p01_used": false
+  },
+  "implementation": {
+    "geometry": "Intersect every explicit target ray in source coordinates with the source-camera Z plane at median frozen RGB-only BaseDepth.",
+    "sampling": "Clamp fixed normalized proxy coordinates to [-1,1], then bilinearly sample the frozen-ResNet feature map with zero padding; this is border-equivalent and supports deterministic CUDA backward.",
+    "branch_identity": ["z_winner_feature", "source_plane_proxy_feature", "proxy_valid", "proxy_in_source_fov", "global_source_context"],
+    "geometry_source_sha256": "307ac41908649b1356b299a32da863bccc65666a9f222d5ec6b96ffca651927d",
+    "model_source_sha256": "152c937b433dd8fd3719b9d3cd047cf271ef5bf0c711c596814d301f07da7929",
+    "loader_source_sha256": "05d64188dbf4f157f971648cf3edd5c345612faeb4a9129784de3b207d8f5d0f"
+  },
+  "pool_preflight": {
+    "train_scenes": 8,
+    "validation_scenes": 2,
+    "train_targets": 31,
+    "validation_targets": 6,
+    "proxy_valid_fraction": 1.0,
+    "proxy_in_source_fov_fraction": 0.6942970752716064,
+    "all_inputs_finite": true,
+    "derived_from_target_labels": false
+  },
+  "gates": {
+    "identity_camera_proxy_is_pixel_identity": true,
+    "backward_intersections_invalid": true,
+    "all_proxy_values_finite": true,
+    "frozen_backbone_has_no_gradient": true,
+    "proxy_projection_has_gradient": true,
+    "all_pool_inputs_finite": true,
+    "core_tests_41_of_41_pass": true,
+    "no_target_label_leakage": true
+  },
+  "quality_boundary": "CPU geometry, frozen-backbone and information-flow contract only; no validation, held-out test, P01 or Gaussian quality conclusion."
+}

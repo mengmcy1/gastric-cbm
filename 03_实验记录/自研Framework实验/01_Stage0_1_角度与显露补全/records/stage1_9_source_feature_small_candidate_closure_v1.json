@@ -1,0 +1,91 @@
+{
+  "schema_version": "stage1.9-source-feature-small-candidate-closure-v1",
+  "status": "closed_failed",
+  "producer_machine_id": "linux5080",
+  "scope": {
+    "train_targets": 31,
+    "validation_targets": 6,
+    "held_out_test_used": false,
+    "p01_used": false,
+    "gaussian_spawn_started": false
+  },
+  "acceptance_thresholds": {
+    "validation_occlusion_hidden_rgb_mae_0_255_max": 35.0,
+    "validation_outside_source_fov_rgb_mae_0_255_max": 35.0,
+    "validation_occlusion_hidden_depth_abs_rel_max": 0.3,
+    "validation_outside_source_fov_depth_abs_rel_max": 0.3
+  },
+  "candidates": [
+    {
+      "candidate": "v1",
+      "change": "raw_rgbd_unet",
+      "status": "failed",
+      "best_update": 400,
+      "selection_score": 1.1971022227517572,
+      "validation": {
+        "occlusion_hidden_rgb_mae_0_255": 40.87265658462064,
+        "outside_source_fov_rgb_mae_0_255": 29.500831534153544,
+        "occlusion_hidden_depth_abs_rel": 0.3921885691557789,
+        "outside_source_fov_depth_abs_rel": 0.508549706259564
+      }
+    },
+    {
+      "candidate": "v2",
+      "change": "frozen_resnet50_source_features",
+      "status": "failed",
+      "best_update": 800,
+      "selection_score": 1.008184085311083,
+      "validation": {
+        "occlusion_hidden_rgb_mae_0_255": 38.66205962208577,
+        "outside_source_fov_rgb_mae_0_255": 32.4469159106804,
+        "occlusion_hidden_depth_abs_rel": 0.26925579437359237,
+        "outside_source_fov_depth_abs_rel": 0.4171405774859542
+      }
+    },
+    {
+      "candidate": "v3",
+      "change": "frozen_resnet50_plus_source_plane_spatial_proxy",
+      "status": "failed_visual_rejection",
+      "best_update": 600,
+      "selection_score": 0.9997604020226959,
+      "validation": {
+        "occlusion_hidden_rgb_mae_0_255": 37.766201201716825,
+        "outside_source_fov_rgb_mae_0_255": 32.114556460976765,
+        "occlusion_hidden_depth_abs_rel": 0.2828747120494323,
+        "outside_source_fov_depth_abs_rel": 0.42706783397893483
+      },
+      "visual_issue": "source-plane proxy border features produced horizontal false structures"
+    },
+    {
+      "candidate": "v4",
+      "change": "v2_width_16_to_32",
+      "status": "failed",
+      "best_update": 400,
+      "selection_score": 1.0143945036851565,
+      "validation": {
+        "occlusion_hidden_rgb_mae_0_255": 39.417377510888514,
+        "outside_source_fov_rgb_mae_0_255": 31.21395141559517,
+        "occlusion_hidden_depth_abs_rel": 0.26279132387396337,
+        "outside_source_fov_depth_abs_rel": 0.4168881706187473
+      }
+    }
+  ],
+  "conclusion": {
+    "all_candidates_passed": false,
+    "best_numeric_score_candidate": "v3",
+    "acceptable_candidate": null,
+    "failed_common_gates": [
+      "validation_occlusion_hidden_rgb_absolute",
+      "validation_outside_source_fov_depth"
+    ],
+    "diagnosis": "A deterministic joint RGB-D L1 U-Net averages ambiguous unseen content into blur; a fixed source-plane proxy adds false boundary structure; doubling width does not remove the bottleneck.",
+    "decision": "Close Stage 1.9 without expanding the pool, reading held-out test/P01, or starting Gaussian Spawn.",
+    "next_stage": "Stage 1.10 separates target-view geometry/support/confidence prediction from generative appearance completion."
+  },
+  "source_records": [
+    "stage1_9_source_feature_small_candidate_v1.json",
+    "stage1_9_source_feature_small_candidate_v2.json",
+    "stage1_9_source_feature_small_candidate_v3.json",
+    "stage1_9_source_feature_small_candidate_v4.json"
+  ]
+}

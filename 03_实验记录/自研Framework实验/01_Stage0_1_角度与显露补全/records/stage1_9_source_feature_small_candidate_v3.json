@@ -1,12 +1,12 @@
 {
-  "schema_version": "stage1.9-source-feature-small-candidate-v2",
+  "schema_version": "stage1.9-source-feature-small-candidate-v3",
   "status": "failed",
   "producer_machine_id": "linux5080",
   "physical_gpu_index": 1,
   "visible_cuda_devices": "1",
   "inputs": {
-    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_9_source_feature_small_candidate_v2.json",
-    "training_config_sha256": "95e3d28aee5a36f1c9550236ffa578736950006e980a4bcdde44f3b294e1eeaa",
+    "training_config": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/configs/stage1_9_source_feature_small_candidate_v3.json",
+    "training_config_sha256": "5bd39e6cbe040abd6e4140f09d324baf7534dcd4eab35e767e57ca7f62407432",
     "pool_record": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/records/stage1_9_small_candidate_pool_v1.json",
     "pool_record_sha256": "8a69a8f39d4b9dc97fa91885e9709970e76a9c64edec25b2b475ff94eb2e673f",
     "rgb_records": [
@@ -40,7 +40,9 @@
       "warped_frozen_base_depth",
       "warp_coverage",
       "target_rays_in_source",
-      "target_origin_in_source"
+      "target_origin_in_source",
+      "source_plane_proxy_grid",
+      "source_plane_proxy_valid"
     ],
     "source_truth_depth_as_model_input": false,
     "target_rgb_depth_as_model_input": false,
@@ -60,6 +62,11 @@
     "validation_region_pixels": {
       "occlusion_hidden": 41706,
       "outside_source_fov": 614772
+    },
+    "source_plane_proxy": {
+      "valid_fraction": 1.0,
+      "in_source_fov_fraction": 0.6942970752716064,
+      "derived_from_target_labels": false
     },
     "all_inputs_finite": true
   },
@@ -103,26 +110,26 @@
     "regions": {
       "occlusion_hidden": {
         "pixels": 372895,
-        "rgb_mae_0_255": 47.25840743831653,
-        "depth_abs_rel": 0.46877601017552867,
-        "branch_positive_support_mean": 0.5159376018659915,
-        "branch_negative_support_mean": 0.5172092612180775,
-        "geometry_confidence_mean": 0.4953169001428476,
-        "appearance_confidence_mean": 0.537505357661947,
-        "support_separation": -0.001271659352086063
+        "rgb_mae_0_255": 47.208678008406515,
+        "depth_abs_rel": 0.43987116732871034,
+        "branch_positive_support_mean": 0.5060636677778321,
+        "branch_negative_support_mean": 0.5045562218560952,
+        "geometry_confidence_mean": 0.4966446540775718,
+        "appearance_confidence_mean": 0.5427607821493361,
+        "support_separation": 0.0015074459217369052
       },
       "outside_source_fov": {
         "pixels": 1845581,
-        "rgb_mae_0_255": 41.73861019005311,
-        "depth_abs_rel": 0.7681252122617704,
-        "branch_positive_support_mean": 0.4911420971781044,
-        "branch_negative_support_mean": 0.5209890530149951,
-        "geometry_confidence_mean": 0.5108980582904922,
-        "appearance_confidence_mean": 0.5317715228681722,
-        "support_separation": -0.029846955836890676
+        "rgb_mae_0_255": 43.45365860302155,
+        "depth_abs_rel": 0.7031746818303498,
+        "branch_positive_support_mean": 0.4841869694415508,
+        "branch_negative_support_mean": 0.4863031496002832,
+        "geometry_confidence_mean": 0.49034718073102795,
+        "appearance_confidence_mean": 0.5338354853011549,
+        "support_separation": -0.0021161801587323836
       }
     },
-    "selection_score": 1.8085138749471963,
+    "selection_score": 1.7495965791714163,
     "all_outputs_finite": true
   },
   "initial_validation": {
@@ -131,55 +138,55 @@
     "regions": {
       "occlusion_hidden": {
         "pixels": 41706,
-        "rgb_mae_0_255": 53.189378157957606,
-        "depth_abs_rel": 0.5269880464584291,
-        "branch_positive_support_mean": 0.48919907841946314,
-        "branch_negative_support_mean": 0.5190676310114087,
-        "geometry_confidence_mean": 0.4707201543275569,
-        "appearance_confidence_mean": 0.5454081182416289,
-        "support_separation": -0.029868552591945596
+        "rgb_mae_0_255": 52.696171744598196,
+        "depth_abs_rel": 0.5169898302823596,
+        "branch_positive_support_mean": 0.480742458929914,
+        "branch_negative_support_mean": 0.5072241747461623,
+        "geometry_confidence_mean": 0.47263583274806414,
+        "appearance_confidence_mean": 0.5663620321357793,
+        "support_separation": -0.026481715816248308
       },
       "outside_source_fov": {
         "pixels": 614772,
-        "rgb_mae_0_255": 44.58980889106392,
-        "depth_abs_rel": 0.4090575139808183,
-        "branch_positive_support_mean": 0.49043935280090034,
-        "branch_negative_support_mean": 0.5245262526928424,
-        "geometry_confidence_mean": 0.5157262014216727,
-        "appearance_confidence_mean": 0.5273209743755195,
-        "support_separation": -0.034086899891942024
+        "rgb_mae_0_255": 45.339141471829635,
+        "depth_abs_rel": 0.4118991607414576,
+        "branch_positive_support_mean": 0.47922192477391035,
+        "branch_negative_support_mean": 0.4899905739265103,
+        "geometry_confidence_mean": 0.4936042225527612,
+        "appearance_confidence_mean": 0.5345225990107302,
+        "support_separation": -0.010768649152599952
       }
     },
-    "selection_score": 1.6917244026361196,
+    "selection_score": 1.6752957823422694,
     "all_outputs_finite": true
   },
-  "best_update": 800,
+  "best_update": 600,
   "best_train": {
     "samples": 31,
     "mean_warp_coverage": 0.47428386345986395,
     "regions": {
       "occlusion_hidden": {
         "pixels": 372895,
-        "rgb_mae_0_255": 35.712299714363176,
-        "depth_abs_rel": 0.13555469544679272,
-        "branch_positive_support_mean": 0.796582832717843,
-        "branch_negative_support_mean": 0.1728724704162758,
-        "geometry_confidence_mean": 0.5169541891896189,
-        "appearance_confidence_mean": 0.32496352220131786,
-        "support_separation": 0.6237103623015672
+        "rgb_mae_0_255": 37.102618347391186,
+        "depth_abs_rel": 0.14070529574934562,
+        "branch_positive_support_mean": 0.7926868182968753,
+        "branch_negative_support_mean": 0.15276447536083662,
+        "geometry_confidence_mean": 0.5100510462144909,
+        "appearance_confidence_mean": 0.30397335915910817,
+        "support_separation": 0.6399223429360387
       },
       "outside_source_fov": {
         "pixels": 1845581,
-        "rgb_mae_0_255": 35.16394116988921,
-        "depth_abs_rel": 0.21918118974479886,
-        "branch_positive_support_mean": 0.9242039156502228,
-        "branch_negative_support_mean": 0.06505102694311618,
-        "geometry_confidence_mean": 0.40130430531274175,
-        "appearance_confidence_mean": 0.2938120375741842,
-        "support_separation": 0.8591528887071066
+        "rgb_mae_0_255": 34.484984598498244,
+        "depth_abs_rel": 0.2921486093540527,
+        "branch_positive_support_mean": 0.9109648530935146,
+        "branch_negative_support_mean": 0.0793298202672905,
+        "geometry_confidence_mean": 0.3656095920185704,
+        "appearance_confidence_mean": 0.31341622135109354,
+        "support_separation": 0.8316350328262241
       }
     },
-    "selection_score": 0.5749093384331302,
+    "selection_score": 0.6210161135840764,
     "all_outputs_finite": true
   },
   "best_validation": {
@@ -188,26 +195,26 @@
     "regions": {
       "occlusion_hidden": {
         "pixels": 41706,
-        "rgb_mae_0_255": 38.66205962208577,
-        "depth_abs_rel": 0.26925579437359237,
-        "branch_positive_support_mean": 0.4429089146921379,
-        "branch_negative_support_mean": 0.171602998598599,
-        "geometry_confidence_mean": 0.5577321638036208,
-        "appearance_confidence_mean": 0.3120614730683824,
-        "support_separation": 0.2713059160935389
+        "rgb_mae_0_255": 37.766201201716825,
+        "depth_abs_rel": 0.2828747120494323,
+        "branch_positive_support_mean": 0.47633516493932304,
+        "branch_negative_support_mean": 0.1956475494995864,
+        "geometry_confidence_mean": 0.5089634666938848,
+        "appearance_confidence_mean": 0.2600159704305054,
+        "support_separation": 0.28068761543973664
       },
       "outside_source_fov": {
         "pixels": 614772,
-        "rgb_mae_0_255": 32.4469159106804,
-        "depth_abs_rel": 0.4171405774859542,
-        "branch_positive_support_mean": 0.8004547661763249,
-        "branch_negative_support_mean": 0.12287375345300852,
-        "geometry_confidence_mean": 0.44095721444049707,
-        "appearance_confidence_mean": 0.3092714438673091,
-        "support_separation": 0.6775810127233164
+        "rgb_mae_0_255": 32.114556460976765,
+        "depth_abs_rel": 0.42706783397893483,
+        "branch_positive_support_mean": 0.787330055360937,
+        "branch_negative_support_mean": 0.08355374190517444,
+        "geometry_confidence_mean": 0.3895652497591349,
+        "appearance_confidence_mean": 0.32653085981831426,
+        "support_separation": 0.7037763134557626
       }
     },
-    "selection_score": 1.008184085311083,
+    "selection_score": 0.9997604020226959,
     "all_outputs_finite": true
   },
   "gates": {
@@ -235,28 +242,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 133721,
-            "rgb_mae_0_255": 28.076318740844727,
-            "depth_abs_rel": 0.2127058207988739,
-            "geometry_confidence_mean": 0.5385680198669434,
-            "appearance_confidence_mean": 0.3618132770061493
+            "rgb_mae_0_255": 25.35580825805664,
+            "depth_abs_rel": 0.2742566764354706,
+            "geometry_confidence_mean": 0.4775179624557495,
+            "appearance_confidence_mean": 0.29493382573127747
           },
           "occlusion_hidden": {
             "pixels": 7351,
-            "rgb_mae_0_255": 37.4501953125,
-            "depth_abs_rel": 0.19178301095962524,
-            "geometry_confidence_mean": 0.5251570343971252,
-            "appearance_confidence_mean": 0.3784808814525604,
-            "branch_positive_support_mean": 0.4250504672527313,
-            "branch_negative_support_mean": 0.2678947150707245
+            "rgb_mae_0_255": 36.31718444824219,
+            "depth_abs_rel": 0.2891303300857544,
+            "geometry_confidence_mean": 0.48068559169769287,
+            "appearance_confidence_mean": 0.29880043864250183,
+            "branch_positive_support_mean": 0.5464070439338684,
+            "branch_negative_support_mean": 0.26775628328323364
           },
           "outside_source_fov": {
             "pixels": 53572,
-            "rgb_mae_0_255": 32.77608108520508,
-            "depth_abs_rel": 0.44845688343048096,
-            "geometry_confidence_mean": 0.45418068766593933,
-            "appearance_confidence_mean": 0.30872783064842224,
-            "branch_positive_support_mean": 0.9292227029800415,
-            "branch_negative_support_mean": 0.050964225083589554
+            "rgb_mae_0_255": 32.25657653808594,
+            "depth_abs_rel": 0.4031229019165039,
+            "geometry_confidence_mean": 0.3632914423942566,
+            "appearance_confidence_mean": 0.3116427958011627,
+            "branch_positive_support_mean": 0.9010044932365417,
+            "branch_negative_support_mean": 0.05538837984204292
           }
         }
       },
@@ -270,9 +277,9 @@
       "base_arrays_sha256": "58ba1cfd10cfe2400d99b15aae7be81d33782c093f258f6d4375560c85c08c59",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_024_013-cam_00-0035-to-0022-visibility.npz",
       "visibility_arrays_sha256": "a67bc4af797d78eba5f000d4263d609ea6f41bf8f615256c28a959d664714383",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0035-to-0022-prediction.png",
-      "prediction_sha256": "5eb2659ed6177154b3db52566e4767d8899f6a4bee4a727cf4bc2f3d55960a2a",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0035-to-0022-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0035-to-0022-prediction.png",
+      "prediction_sha256": "299c765a8803467c2147b7b0025b4db3f94f06024372f607585cb086dcef4996",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0035-to-0022-target.png",
       "target_preview_sha256": "6fbe43b0ef1abd4d8887c4fbcec00cd9c5aaaa202e5eb5f9dc9e2f60e7e81c28"
     },
     {
@@ -286,28 +293,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 108222,
-            "rgb_mae_0_255": 37.449275970458984,
-            "depth_abs_rel": 0.21219922602176666,
-            "geometry_confidence_mean": 0.5057235360145569,
-            "appearance_confidence_mean": 0.34066200256347656
+            "rgb_mae_0_255": 37.79325866699219,
+            "depth_abs_rel": 0.24347412586212158,
+            "geometry_confidence_mean": 0.44794559478759766,
+            "appearance_confidence_mean": 0.32049253582954407
           },
           "occlusion_hidden": {
             "pixels": 3010,
-            "rgb_mae_0_255": 31.24469757080078,
-            "depth_abs_rel": 0.24785658717155457,
-            "geometry_confidence_mean": 0.513590395450592,
-            "appearance_confidence_mean": 0.33032649755477905,
-            "branch_positive_support_mean": 0.305582731962204,
-            "branch_negative_support_mean": 0.18788903951644897
+            "rgb_mae_0_255": 34.065162658691406,
+            "depth_abs_rel": 0.30796700716018677,
+            "geometry_confidence_mean": 0.4089662730693817,
+            "appearance_confidence_mean": 0.270885705947876,
+            "branch_positive_support_mean": 0.39893871545791626,
+            "branch_negative_support_mean": 0.22365181148052216
           },
           "outside_source_fov": {
             "pixels": 84578,
-            "rgb_mae_0_255": 38.587364196777344,
-            "depth_abs_rel": 0.30889731645584106,
-            "geometry_confidence_mean": 0.44928494095802307,
-            "appearance_confidence_mean": 0.3491022288799286,
-            "branch_positive_support_mean": 0.8955172896385193,
-            "branch_negative_support_mean": 0.2724512219429016
+            "rgb_mae_0_255": 39.135986328125,
+            "depth_abs_rel": 0.3443072736263275,
+            "geometry_confidence_mean": 0.3847409188747406,
+            "appearance_confidence_mean": 0.36318594217300415,
+            "branch_positive_support_mean": 0.8333126902580261,
+            "branch_negative_support_mean": 0.25849783420562744
           }
         }
       },
@@ -321,9 +328,9 @@
       "base_arrays_sha256": "4033540e95efabd99a68f894648e97cff441a16830aa399e173d1da6e6cf4dc3",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_024_013-cam_00-0032-to-0035-visibility.npz",
       "visibility_arrays_sha256": "c1b85ac6ad0ba2ee9e15b7373bc5e2eefd4170ed2a37dc82af4bc325449f7542",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0032-to-0035-prediction.png",
-      "prediction_sha256": "f3cdad15accc12bd30c959ae7dfb29f999e36cd4c3aa707d253a7d72fe4ed666",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0032-to-0035-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0032-to-0035-prediction.png",
+      "prediction_sha256": "6e32225bcd2dc3aa2c3bd854b8ae127a2266fd2e0e925d4f82182c33fffe6c49",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0032-to-0035-target.png",
       "target_preview_sha256": "db3e290ceb19f7c2fdac8e2ba24104f921bd2fe77587a2bb72cbae9a0eea658f"
     },
     {
@@ -337,28 +344,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 94145,
-            "rgb_mae_0_255": 28.887142181396484,
-            "depth_abs_rel": 0.1874883770942688,
-            "geometry_confidence_mean": 0.5290860533714294,
-            "appearance_confidence_mean": 0.34139731526374817
+            "rgb_mae_0_255": 34.594146728515625,
+            "depth_abs_rel": 0.14265242218971252,
+            "geometry_confidence_mean": 0.45265793800354004,
+            "appearance_confidence_mean": 0.29216232895851135
           },
           "occlusion_hidden": {
             "pixels": 4306,
-            "rgb_mae_0_255": 41.17376708984375,
-            "depth_abs_rel": 0.25217708945274353,
-            "geometry_confidence_mean": 0.5284503698348999,
-            "appearance_confidence_mean": 0.3386198580265045,
-            "branch_positive_support_mean": 0.42436841130256653,
-            "branch_negative_support_mean": 0.21860401332378387
+            "rgb_mae_0_255": 48.12787628173828,
+            "depth_abs_rel": 0.14794310927391052,
+            "geometry_confidence_mean": 0.44648775458335876,
+            "appearance_confidence_mean": 0.2924731373786926,
+            "branch_positive_support_mean": 0.38360095024108887,
+            "branch_negative_support_mean": 0.249881312251091
           },
           "outside_source_fov": {
             "pixels": 96675,
-            "rgb_mae_0_255": 39.76626205444336,
-            "depth_abs_rel": 0.5423526167869568,
-            "geometry_confidence_mean": 0.45315128564834595,
-            "appearance_confidence_mean": 0.3572772145271301,
-            "branch_positive_support_mean": 0.9006099104881287,
-            "branch_negative_support_mean": 0.05902424827218056
+            "rgb_mae_0_255": 40.45283889770508,
+            "depth_abs_rel": 0.552882969379425,
+            "geometry_confidence_mean": 0.3801446557044983,
+            "appearance_confidence_mean": 0.37027525901794434,
+            "branch_positive_support_mean": 0.825135350227356,
+            "branch_negative_support_mean": 0.09041374921798706
           }
         }
       },
@@ -372,9 +379,9 @@
       "base_arrays_sha256": "c375f04c29fe6dc58f1b00823097a24b90d55cabad5ebd3c071b518c0dfa5fa5",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_024_013-cam_00-0022-to-0035-visibility.npz",
       "visibility_arrays_sha256": "0efd166dc6402cdbbe5e4f44902db517ca495d280d7d27fe8c0717e36122e34c",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0022-to-0035-prediction.png",
-      "prediction_sha256": "dfd51e7c1121841de75d2e3336c3ab44290887ccdad1b2e47e9e5fbe485bf593",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_024_013-0022-to-0035-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0022-to-0035-prediction.png",
+      "prediction_sha256": "97e9bf4b59f8218a13cfffa2e7643f843aec30593a29d6c42b0c3b3ac50f42c4",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_024_013-0022-to-0035-target.png",
       "target_preview_sha256": "db3e290ceb19f7c2fdac8e2ba24104f921bd2fe77587a2bb72cbae9a0eea658f"
     },
     {
@@ -388,28 +395,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 84333,
-            "rgb_mae_0_255": 30.913532257080078,
-            "depth_abs_rel": 0.19138547778129578,
-            "geometry_confidence_mean": 0.5878873467445374,
-            "appearance_confidence_mean": 0.2538387179374695
+            "rgb_mae_0_255": 30.438364028930664,
+            "depth_abs_rel": 0.17301717400550842,
+            "geometry_confidence_mean": 0.5408247113227844,
+            "appearance_confidence_mean": 0.2179531753063202
           },
           "occlusion_hidden": {
             "pixels": 12494,
-            "rgb_mae_0_255": 48.747432708740234,
-            "depth_abs_rel": 0.24093995988368988,
-            "geometry_confidence_mean": 0.5677809119224548,
-            "appearance_confidence_mean": 0.25827744603157043,
-            "branch_positive_support_mean": 0.5724044442176819,
-            "branch_negative_support_mean": 0.14318042993545532
+            "rgb_mae_0_255": 48.999267578125,
+            "depth_abs_rel": 0.3029095530509949,
+            "geometry_confidence_mean": 0.5401331186294556,
+            "appearance_confidence_mean": 0.2282559722661972,
+            "branch_positive_support_mean": 0.4804764688014984,
+            "branch_negative_support_mean": 0.16889171302318573
           },
           "outside_source_fov": {
             "pixels": 97546,
-            "rgb_mae_0_255": 30.012191772460938,
-            "depth_abs_rel": 0.6047018766403198,
-            "geometry_confidence_mean": 0.4248814284801483,
-            "appearance_confidence_mean": 0.2952667474746704,
-            "branch_positive_support_mean": 0.7187820076942444,
-            "branch_negative_support_mean": 0.071852907538414
+            "rgb_mae_0_255": 28.018095016479492,
+            "depth_abs_rel": 0.6548976302146912,
+            "geometry_confidence_mean": 0.4090500771999359,
+            "appearance_confidence_mean": 0.2907150089740753,
+            "branch_positive_support_mean": 0.7354689836502075,
+            "branch_negative_support_mean": 0.02026563324034214
           }
         }
       },
@@ -423,9 +430,9 @@
       "base_arrays_sha256": "80c03b03cbda5d795bef0042f1160cbbc390e8dd651f4242f34e1a7bb76e7950",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_004_003-cam_00-0066-to-0099-visibility.npz",
       "visibility_arrays_sha256": "926efafa5977dabccb61518208fb55d2b5360be13715b811e8c34fa5faa91423",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0066-to-0099-prediction.png",
-      "prediction_sha256": "31b564e36ae75ce5efff8e55a5dc04b67511c3e78fbe44f696431c0cfa89cfa5",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0066-to-0099-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0066-to-0099-prediction.png",
+      "prediction_sha256": "70ceff1ca6416a5a01b4e2ba19d2b2c79e5b68726fc558ca9b48f85f50f44a27",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0066-to-0099-target.png",
       "target_preview_sha256": "7173b07f77d15184fca154d7664105509cd3e7605dd062bff613ac62126b1390"
     },
     {
@@ -439,28 +446,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 10480,
-            "rgb_mae_0_255": 39.19770812988281,
-            "depth_abs_rel": 0.14122647047042847,
-            "geometry_confidence_mean": 0.6029654741287231,
-            "appearance_confidence_mean": 0.3330400884151459
+            "rgb_mae_0_255": 36.3189697265625,
+            "depth_abs_rel": 0.18903283774852753,
+            "geometry_confidence_mean": 0.5320515632629395,
+            "appearance_confidence_mean": 0.2683615982532501
           },
           "occlusion_hidden": {
             "pixels": 1028,
-            "rgb_mae_0_255": 52.197181701660156,
-            "depth_abs_rel": 0.4429474472999573,
-            "geometry_confidence_mean": 0.6023472547531128,
-            "appearance_confidence_mean": 0.309283971786499,
-            "branch_positive_support_mean": 0.35425713658332825,
-            "branch_negative_support_mean": 0.11724907159805298
+            "rgb_mae_0_255": 56.505035400390625,
+            "depth_abs_rel": 0.37936627864837646,
+            "geometry_confidence_mean": 0.5473760962486267,
+            "appearance_confidence_mean": 0.2390795201063156,
+            "branch_positive_support_mean": 0.7346444129943848,
+            "branch_negative_support_mean": 0.21820180118083954
           },
           "outside_source_fov": {
             "pixels": 184734,
-            "rgb_mae_0_255": 29.781356811523438,
-            "depth_abs_rel": 0.3452218472957611,
-            "geometry_confidence_mean": 0.46426644921302795,
-            "appearance_confidence_mean": 0.2940407991409302,
-            "branch_positive_support_mean": 0.6707865595817566,
-            "branch_negative_support_mean": 0.16825056076049805
+            "rgb_mae_0_255": 29.975406646728516,
+            "depth_abs_rel": 0.39741504192352295,
+            "geometry_confidence_mean": 0.41264984011650085,
+            "appearance_confidence_mean": 0.327221542596817,
+            "branch_positive_support_mean": 0.6982063055038452,
+            "branch_negative_support_mean": 0.0606800802052021
           }
         }
       },
@@ -474,9 +481,9 @@
       "base_arrays_sha256": "0d3bfbe036cdf90a260c7a81bb7b99fe75bf4a5a81d2a9ce3025d4268c875f67",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_004_003-cam_00-0026-to-0066-visibility.npz",
       "visibility_arrays_sha256": "ce19af0fb555c2cc9471dba49cc6c147b86143d9994c1702c5ae141f524e37a6",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0026-to-0066-prediction.png",
-      "prediction_sha256": "a70f4c067c0c387e49a93ce6ad2199e4cb47d8119da0c9bf192cbfab8646777c",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0026-to-0066-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0026-to-0066-prediction.png",
+      "prediction_sha256": "6c6556ebbb4167a1c29925e2dffcf4db8bf75cbf1235503688928db7281fb10b",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0026-to-0066-target.png",
       "target_preview_sha256": "5721cb4ab74a463f0c75669f97bbf44dfaf6ea2477897a6b19c20936cb11f2c2"
     },
     {
@@ -490,28 +497,28 @@
         "regions": {
           "observed_from_source": {
             "pixels": 83139,
-            "rgb_mae_0_255": 34.04520797729492,
-            "depth_abs_rel": 0.1405906230211258,
-            "geometry_confidence_mean": 0.5861920714378357,
-            "appearance_confidence_mean": 0.2911238372325897
+            "rgb_mae_0_255": 32.07078170776367,
+            "depth_abs_rel": 0.15462568402290344,
+            "geometry_confidence_mean": 0.5182421207427979,
+            "appearance_confidence_mean": 0.2836747169494629
           },
           "occlusion_hidden": {
             "pixels": 13517,
-            "rgb_mae_0_255": 29.821229934692383,
-            "depth_abs_rel": 0.33455711603164673,
-            "geometry_confidence_mean": 0.5819239616394043,
-            "appearance_confidence_mean": 0.3133373260498047,
-            "branch_positive_support_mean": 0.3761545717716217,
-            "branch_negative_support_mean": 0.13104219734668732
+            "rgb_mae_0_255": 24.269495010375977,
+            "depth_abs_rel": 0.291012167930603,
+            "geometry_confidence_mean": 0.5347799062728882,
+            "appearance_confidence_mean": 0.25711214542388916,
+            "branch_positive_support_mean": 0.46153122186660767,
+            "branch_negative_support_mean": 0.1559351086616516
           },
           "outside_source_fov": {
             "pixels": 97667,
-            "rgb_mae_0_255": 27.17736053466797,
-            "depth_abs_rel": 0.31846269965171814,
-            "geometry_confidence_mean": 0.38638922572135925,
-            "appearance_confidence_mean": 0.2703542709350586,
-            "branch_positive_support_mean": 0.8751977682113647,
-            "branch_negative_support_mean": 0.06111558899283409
+            "rgb_mae_0_255": 25.84014320373535,
+            "depth_abs_rel": 0.2158738374710083,
+            "geometry_confidence_mean": 0.354355126619339,
+            "appearance_confidence_mean": 0.2941195070743561,
+            "branch_positive_support_mean": 0.8681077361106873,
+            "branch_negative_support_mean": 0.0471884086728096
           }
         }
       },
@@ -525,21 +532,21 @@
       "base_arrays_sha256": "d508e9b80014d929189714f07d2d6fb2e57ba5b124a3850095b30ce4a9a9647c",
       "visibility_arrays": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_directed_visibility_v1_linux5080/ai_004_003-cam_00-0099-to-0066-visibility.npz",
       "visibility_arrays_sha256": "64a32fc6d96815f8adda5b6cd95420d1ebbc86c2c3884664badf8cc1ba152fed",
-      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0099-to-0066-prediction.png",
-      "prediction_sha256": "ef637b8a96321cceed94d9c40b6bb7d86668a929d05bbeb8717ac18f70b7f676",
-      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/val-ai_004_003-0099-to-0066-target.png",
+      "prediction": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0099-to-0066-prediction.png",
+      "prediction_sha256": "51d51566b76c6ba2d3490581ff95625a9d6a8421bc9bdc8e1f2da95e8e7622ac",
+      "target_preview": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/val-ai_004_003-0099-to-0066-target.png",
       "target_preview_sha256": "5721cb4ab74a463f0c75669f97bbf44dfaf6ea2477897a6b19c20936cb11f2c2"
     }
   ],
   "artifacts": {
-    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/best_model.pt",
-    "checkpoint_sha256": "a6754f009abb3dac994ce261cdc83ada47e66cf486b3d6268e2ae4beb6e75721",
-    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v2_linux5080/history.json",
-    "history_sha256": "7b55994203c87fd9ca5e3196467cc767313076af765dbfc22b5d344f6445e456"
+    "checkpoint": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/best_model.pt",
+    "checkpoint_sha256": "9906a3584ab32f3119c66a8cb821cc8d5124da9b6af1b79d89bd549a467c2274",
+    "history": "03_实验记录/自研Framework实验/01_Stage0_1_角度与显露补全/outputs/02_Stage1_true_arc/13_TrainableMultiviewPrior/stage1_9_source_feature_small_candidate_v3_retry1_linux5080/history.json",
+    "history_sha256": "51d246a672b580f26372e37f73a333b6e5b59f29996065c84758fa3ee371420c"
   },
   "runtime": {
-    "seconds": 576.4641546511557,
-    "peak_cuda_memory_bytes": 1378062848
+    "seconds": 891.99021648895,
+    "peak_cuda_memory_bytes": 1492595200
   },
   "quality_boundary": "8-train-scene/2-validation-scene short-circuit only; held-out test, P01 and Gaussian quality excluded"
 }

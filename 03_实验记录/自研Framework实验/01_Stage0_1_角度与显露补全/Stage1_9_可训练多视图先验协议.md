@@ -1,6 +1,6 @@
 # Stage 1.9 可训练多视图先验协议
 
-> 状态：**Stage 1.9-0/1/2已通过；Stage 1.9-3 v1/v2小候选均未通过。冻结ResNet v2有效改善深度与总体score，但遮挡RGB 38.66、视野外深度0.417仍失败且视觉涂抹。下一步设计洞区空间化源特征代理投影；不扩40/10、不加训练步数。**
+> 状态：**Stage 1.9正式收口：单端点可学习，但8/2场景v1–v4全部未通过。冻结ResNet有效，空间代理引入拉丝，base channels 16→32也无改善。停止联合RGB-D确定性L1 U-Net，不扩40/10；下一阶段拆分几何与生成式外观。**
 
 ## 1. 阶段问题
 
@@ -109,3 +109,24 @@ Stage 1.9-0至1.9-4原则上全部复用本地资产：HLP-TRAIN-03三帧数据�
 - 视觉仍有大面积涂抹和波纹。进一步覆盖审计显示val遮挡区63.5%虽有warp，但其覆盖部分RGB MAE仍为45.41，直接增加skip并不能使遮挡门达到35；视野外仅12.9%有warp，更不能靠残差路径解决。
 
 正式配置与记录为`configs/stage1_9_source_feature_small_candidate_v2.json`和`records/stage1_9_source_feature_small_candidate_v2.json`。下一步不解冻ResNet、不增加步数；先冻结一个空间化洞区特征设计：按目标射线与源深度尺度构造源平面代理采样坐标，使无z-winner像素获得位置相关的源特征，并与真实z-winner特征分支显式区分。该设计需先过恒等相机、有限值、越界坐标和信息泄漏CPU门，再复用同一小池做v3。
+
+## 12. Stage 1.9-3 空间代理小候选v3（2026-08-19）
+
+- 代理网格只由目标射线、源相机、源内参和冻结RGB-only BaseDepth中位尺度构造；31/6池全部正向相交、69.43%坐标位于源视野内，目标标签未参与；核心41/41测试通过；
+- 首轮GPU1在第1次反向被`grid_sample(border)`无确定性CUDA实现中止，未形成质量结果；失败记录保留。随后将固定网格先裁到`[-1,1]`再用zero-padding bilinear，语义等价且确定性反向通过，canonical为`retry1`；
+- `retry1`在GPU1与既有视频任务安全共享，2,000 updates耗时891.99秒，峰值CUDA allocated 1,492,595,200字节，最佳点600 updates；
+- 相比v2，val score 1.0082→0.9998、遮挡RGB 38.66→37.77、视野外RGB 32.45→32.11，仅有小幅改善；遮挡深度0.283通过，视野外深度0.427仍失败；
+- 视觉仍不可接受，典型浴室目标右侧出现由边界代理采样造成的水平拉丝，主体结构仍是低频涂抹。因此空间代理分支正式否决，不继续调平面深度或边界模式；
+- v2后验硬warp保真诊断也未通过：遮挡/视野外RGB MAE由38.66/32.45恶化至43.69/33.83，说明错误BaseDepth覆盖不能直接当可靠skip。
+
+正式CPU、技术失败和质量记录为`records/stage1_9_spatial_proxy_core_smoke_v1.json`、`records/stage1_9_source_feature_small_candidate_v3_gpu1_failed.json`和`records/stage1_9_source_feature_small_candidate_v3.json`。下一单变量回到v2无代理结构，只将`base_channels=16→32`，检验小decoder容量是否导致低频平均；小池、2,000 updates、loss、门槛与冻结ResNet保持不变。若视觉仍涂抹或双门失败，则停止这类确定性L1 U-Net，转向显式几何/生成外观拆分与更大训练数据协议。
+
+## 13. Stage 1.9-3 容量候选v4与阶段收口（2026-08-19）
+
+- v4回到v2无空间代理结构，唯一变化为`base_channels=16→32`；数据、冻结ResNet、2,000 updates、loss、分辨率、checkpoint选择和门槛不变；
+- GPU1仍被既有视频任务占用，按资源检查改用空闲物理GPU0。训练耗时752.68秒，峰值CUDA allocated 2,079,175,168字节，最佳点400 updates；
+- val遮挡/视野外RGB为39.42/31.21，深度为0.263/0.417，score 1.014；遮挡RGB与视野外深度仍失败，且score和遮挡RGB均未优于base16 v2；
+- train遮挡RGB也为39.95、视野外35.34，说明加宽并未换来更强的有效拟合；视觉继续呈现大面积涂抹与波纹，结构不可接受；
+- 因此容量瓶颈解释被否定。Stage 1.9结论为：目标相机、双support和预训练源语义存在泛化信号，但一个联合预测RGB-D、以确定性L1/log-depth训练的小U-Net会对不可唯一确定的新显露内容做低频平均，无法满足30°视觉质量。
+
+正式配置与记录为`configs/stage1_9_source_feature_small_candidate_v4.json`和`records/stage1_9_source_feature_small_candidate_v4.json`。按短路规则不扩40/10、不读test/P01、不接Gaussian Spawn。下一阶段必须把问题拆为：一条只负责目标深度、显露类型与置信度的几何路线；一条负责视觉合理、多解外观的生成式路线。二者先在同一31/6小池分别设门，再讨论融合。
