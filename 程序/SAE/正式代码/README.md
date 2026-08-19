@@ -1,5 +1,12 @@
 # 正式代码
 
+> 归档边界：本目录的`sae_discovery.py`、`efficientnet_sae_discovery.py`等旧脚本用于复现
+> 既有ResNet50和EfficientNet-B0 SAE结果，并提供新路线可复用的实现参考。2026-08-19启动的
+> C-long文献重构路线正式入口为`clong_sae_discovery.py`（矩阵`run_clong_sae_matrix.sh`，
+> 汇总`summarize_clong_sae_matrix.py`，测试`test_clong_sae.py`），协议见根目录
+> `SAE实验进度与结果讨论.md`（S2-S3已于2026-08-19冻结预注册）。不得用旧命令生成或覆盖
+> C-long正式结果。
+
 `sae_discovery.py` 使用冻结的 ResNet50 提取 GAP 2048 维整图特征，按患者平衡训练
 ReLU + L1 稀疏自编码器，并保存重构指标、feature 患者级统计、Top 图片和 encoder
 激活方向概念热图。分类贡献仍由 decoder 方向与 ResNet50 分类头共同计算。
