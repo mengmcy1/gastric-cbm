@@ -121,3 +121,27 @@ python 程序/SAE/正式代码/mcbm_cbl_train.py \
   --concept-catalog 结果/SAE概念标注/去偏重训练_v1/resnet50/v1/concept_catalog.csv \
   --annotations 结果/SAE概念标注/去偏重训练_v1/resnet50/v1/annotations_consensus.csv
 ```
+
+## C-long S2b结构重构
+
+`clong_s2b_discovery.py`不覆盖上一轮pooled SAE，它在独立目录中执行
+2026-08-20冻结的S2b协议：
+
+- S4-B：pooled `1280 -> 10240 -> 1280` BatchTopK，目标mean L0=1024；
+- S4-C：共享patch字典 `49 x 1280 -> 10240 -> 49 x 1280` Top-K，每位置K=128；
+- S4-D：同一patch字典的BatchTopK，目标每位置mean L0=128；
+- S4-N：pooled逐样本归一化Top-K，仅用于mean/norm旁路诊断。
+
+patch正式评价会从重构后的7x7特征图重算attention、pooled表示和分类
+概率；固定原attention只是诊断口径。BatchTopK冻结checkpoint后仅用train
+估计全局阈值，val不重新估计。完整seed42矩阵由以下脚本串行执行：
+
+```bash
+CUDA_DEVICE=<启动前核实的空闲GPU> bash \
+  程序/SAE/正式代码/run_clong_s2b_matrix.sh
+```
+
+脚本固定顺序为S4-B、`gamma_pool` train-only校准、S4-C、S4-D、S4-N，
+全部成功后才调用`summarize_clong_s2b.py`判定门槛和选择唯一patch臂。
+`test_clong_s2b.py`覆盖稀疏预算、阈值并列、完整替换、空间指标、
+正式预算锁和决胜链。

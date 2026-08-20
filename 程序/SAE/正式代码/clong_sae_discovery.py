@@ -149,6 +149,47 @@ EXPECTED_COUNTS = {
     "val": {"images": 497, "patients": 260},
 }
 
+# 正式训练预算（S2预注册冻结）：非debug运行必须逐项等于，汇总器二次核验。
+FORMAL_BUDGET = {
+    "learning_rate": 1e-4,
+    "epochs": 1000,
+    "patience": 50,
+    "warmup_fraction": 0.05,
+    "image_batch_size": 32,
+    "sae_batch_size": 32,
+    "pruning_ce_tolerance": 0.01,
+    "pruning_min_active_patients": 5,
+}
+
+
+def formal_experiment_specs(seed: int) -> dict[str, dict]:
+    """返回指定SAE seed下17个预注册名称与参数的唯一映射。"""
+    labels = (("2e-4", 2e-4), ("5e-4", 5e-4), ("1e-3", 1e-3))
+    specs = {
+        f"clong_w{width}_l{label}_seed{seed}": {
+            "activation_mode": "relu_l1", "hidden_dim": width,
+            "lambda_l1": value, "margin_loss_weight": FORMAL_GAMMA,
+            "top_k": None,
+        }
+        for width in FORMAL_WIDTHS
+        for label, value in labels
+    }
+    specs[f"clong_w10240_l5e-4_gamma0_seed{seed}"] = {
+        "activation_mode": "relu_l1", "hidden_dim": 10240,
+        "lambda_l1": 5e-4, "margin_loss_weight": 0.0, "top_k": None,
+    }
+    specs[f"clong_w10240_topk1024_seed{seed}"] = {
+        "activation_mode": "topk", "hidden_dim": TOPK_WIDTH,
+        "lambda_l1": 0.0, "margin_loss_weight": FORMAL_GAMMA,
+        "top_k": TOPK_K,
+    }
+    return specs
+
+
+def formal_experiment_names(seed: int) -> set[str]:
+    """返回指定SAE seed下预注册的17个正式实验名。"""
+    return set(formal_experiment_specs(seed))
+
 
 def parse_args() -> argparse.Namespace:
     """解析宽度、稀疏机制、训练和debug参数。"""
@@ -205,7 +246,30 @@ def validate_formal_args(args: argparse.Namespace) -> None:
     if args.margin_loss_weight < 0:
         raise ValueError("margin_loss_weight不能为负数")
     if args.debug:
+        if args.experiment in formal_experiment_names(args.seed):
+            raise ValueError("debug运行禁止使用17个正式实验名")
         return
+    specs = formal_experiment_specs(args.seed)
+    if args.experiment not in specs:
+        raise ValueError("正式运行的experiment必须是预注册的17个名称之一")
+    expected_spec = specs[args.experiment]
+    for field in ("activation_mode", "hidden_dim", "top_k"):
+        if getattr(args, field) != expected_spec[field]:
+            raise ValueError(
+                f"正式实验名{args.experiment}绑定{field}={expected_spec[field]}，"
+                f"当前{getattr(args, field)}"
+            )
+    for field in ("lambda_l1", "margin_loss_weight"):
+        if not _close(float(getattr(args, field)), float(expected_spec[field])):
+            raise ValueError(
+                f"正式实验名{args.experiment}绑定{field}={expected_spec[field]}，"
+                f"当前{getattr(args, field)}"
+            )
+    for field, expected in FORMAL_BUDGET.items():
+        if not _close(float(getattr(args, field)), float(expected)):
+            raise ValueError(
+                f"正式运行{field}必须等于冻结预算{expected}，当前{getattr(args, field)}"
+            )
     if args.activation_mode == "topk":
         if args.hidden_dim != TOPK_WIDTH or args.top_k != TOPK_K:
             raise ValueError("正式Top-K备选固定为 hidden=10240, K=1024")
@@ -259,6 +323,11 @@ def verify_s0_lineage() -> dict:
             config.get("teacher_checkpoint_sha256") == TEACHER_CHECKPOINT_SHA256
         ),
         "teacher_cache_sha256": config.get("teacher_cache_sha256") == TEACHER_CACHE_SHA256,
+        "v3_audit_sha256": config.get("v3_audit_sha256") == V3_AUDIT_SHA256,
+        "beta_calibration_json_sha256": (
+            config.get("training", {}).get("beta_calibration_json_sha256")
+            == BETA_JSON_SHA256
+        ),
         "architecture": (
             config.get("architecture", {}).get("pooling")
             == "attention-weighted sum only; no GAP bypass"
@@ -452,10 +521,30 @@ def verify_recompute_against_official(
     return result
 
 
+CACHE_FILE_KINDS = ("pooled_features.npy", "attention_maps.npy", "metadata.csv")
+
+
+def cache_file_shas(cache: Path) -> dict:
+    """返回六类缓存文件的SHA-256，用于把缓存内容本身纳入血缘。"""
+    result = {}
+    for split in ("train", "val"):
+        for kind in CACHE_FILE_KINDS:
+            name = f"{split}_{kind}"
+            path = cache / name
+            if not path.is_file():
+                raise FileNotFoundError(f"缓存文件缺失: {path}")
+            result[name] = file_sha256(path)
+    return result
+
+
 def reuse_feature_cache(
-    source: Path, target: Path,
+    source: Path, target: Path, frame: pd.DataFrame,
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, pd.DataFrame]]:
-    """校验缓存血缘后复用attention-pooled特征，避免矩阵内重复跑Encoder。"""
+    """校验缓存血缘与六个文件本体SHA后复用attention-pooled特征。
+
+    除来源字段外，逐文件核验SHA、shape和metadata行顺序（relative_path与
+    图像sha256必须与当前清单该split完全一致）；任一不符拒绝复用。
+    """
     lineage_path = source / "cache_config.json"
     if not lineage_path.is_file():
         raise FileNotFoundError(f"缓存缺少血缘记录: {lineage_path}")
@@ -470,21 +559,44 @@ def reuse_feature_cache(
             raise ValueError(f"复用特征缓存的{key}与S0冻结值不一致")
     if not lineage.get("recompute_self_test", {}).get("passed"):
         raise ValueError("源缓存未通过复算自测，拒绝复用")
+    recorded_files = lineage.get("files")
+    if not recorded_files:
+        raise ValueError("源缓存缺少文件SHA记录，拒绝复用")
     features, attentions, metadata = {}, {}, {}
+    # 第一遍：全部核验通过前不复制任何文件，避免失败时留下部分拷贝。
     for split in ("train", "val"):
-        for name in (f"{split}_pooled_features.npy", f"{split}_attention_maps.npy"):
-            shutil.copy2(source / name, target / name)
-        feature_path = source / f"{split}_pooled_features.npy"
-        attention_path = source / f"{split}_attention_maps.npy"
-        metadata_path = source / f"{split}_metadata.csv"
-        features[split] = np.load(feature_path).astype(np.float32, copy=False)
-        attentions[split] = np.load(attention_path).astype(np.float32, copy=False)
-        metadata[split] = pd.read_csv(
-            metadata_path, encoding="utf-8-sig", dtype={"patient_id": str},
-            float_precision="round_trip",
+        split_frame = frame.loc[frame.split.eq(split)].reset_index(drop=True)
+        for kind in CACHE_FILE_KINDS:
+            name = f"{split}_{kind}"
+            source_file = source / name
+            if not source_file.is_file():
+                raise FileNotFoundError(f"源缓存文件缺失: {source_file}")
+            if recorded_files.get(name) != file_sha256(source_file):
+                raise ValueError(f"缓存文件SHA与血缘记录不一致: {name}")
+        feature_array = np.load(source / f"{split}_pooled_features.npy")
+        attention_array = np.load(source / f"{split}_attention_maps.npy")
+        split_metadata = pd.read_csv(
+            source / f"{split}_metadata.csv", encoding="utf-8-sig",
+            dtype={"patient_id": str}, float_precision="round_trip",
         )
-        shutil.copy2(metadata_path, target / metadata_path.name)
-    print(f"复用冻结特征缓存: {source}")
+        expected_images = int(lineage["counts"][split]["images"])
+        if feature_array.shape != (expected_images, INPUT_DIM):
+            raise ValueError(f"{split}特征shape {feature_array.shape}不符合血缘记录")
+        if attention_array.shape != (expected_images, GRID_SIZE * GRID_SIZE):
+            raise ValueError(f"{split}attention shape {attention_array.shape}不符合血缘记录")
+        if split_metadata["relative_path"].tolist() != split_frame["relative_path"].tolist():
+            raise ValueError(f"{split}缓存metadata行顺序与当前清单不一致")
+        if (split_metadata["sha256"].astype(str).tolist()
+                != split_frame["sha256"].astype(str).tolist()):
+            raise ValueError(f"{split}缓存metadata图像sha256与当前清单不一致")
+        features[split] = feature_array.astype(np.float32, copy=False)
+        attentions[split] = attention_array.astype(np.float32, copy=False)
+        metadata[split] = split_metadata
+    for split in ("train", "val"):
+        for kind in CACHE_FILE_KINDS:
+            name = f"{split}_{kind}"
+            shutil.copy2(source / name, target / name)
+    print(f"复用冻结特征缓存（六个文件SHA、shape与行顺序均核验通过）: {source}")
     return features, attentions, metadata
 
 
@@ -502,6 +614,104 @@ def annotate_frozen_thresholds(metadata: dict[str, pd.DataFrame]) -> None:
                 frame.label.eq(0) & predicted.eq(1), frame.label.eq(1) & predicted.eq(0),
             ], ["TP", "TN", "FP", "FN"], default="",
         )
+
+
+def _safe_ratio(numerator: float, denominator: float) -> float | None:
+    """分母为0时返回None而不是静默产生NaN。"""
+    return float(numerator / denominator) if denominator > 0 else None
+
+
+def confusion_at_threshold(
+    labels: np.ndarray, probabilities: np.ndarray, threshold: float,
+) -> dict:
+    """在冻结阈值下计算Sens/Spec/Acc/F1与混淆矩阵。
+
+    参数:
+        labels (np.ndarray): 0/1标签，shape [N]。
+        probabilities (np.ndarray): 癌概率，shape [N]。
+        threshold (float): S0冻结阈值。
+    返回:
+        dict: 阈值、TP/TN/FP/FN和四项指标；分母为0的指标为None。
+    """
+    predicted = probabilities >= threshold
+    tp = int(((labels == 1) & predicted).sum())
+    fn = int(((labels == 1) & ~predicted).sum())
+    tn = int(((labels == 0) & ~predicted).sum())
+    fp = int(((labels == 0) & predicted).sum())
+    return {
+        "threshold": float(threshold),
+        "tp": tp, "tn": tn, "fp": fp, "fn": fn,
+        "sensitivity": _safe_ratio(tp, tp + fn),
+        "specificity": _safe_ratio(tn, tn + fp),
+        "accuracy": _safe_ratio(tp + tn, tp + tn + fp + fn),
+        "f1": _safe_ratio(2 * tp, 2 * tp + fp + fn),
+    }
+
+
+def extended_fidelity_metrics(
+    features: np.ndarray, reconstructed: np.ndarray, activations: np.ndarray,
+    metadata: pd.DataFrame, weight: np.ndarray, bias: np.ndarray,
+) -> dict:
+    """补齐S3要求的margin、阈值、患者偏移和Feature密度指标。
+
+    参数:
+        features/reconstructed (np.ndarray): 原始与SAE重构表示，shape [N,1280]。
+        activations (np.ndarray): SAE激活，shape [N,H]。
+        metadata (pd.DataFrame): 含patient_id与label的[N]行元数据。
+        weight/bias (np.ndarray): 冻结分类头参数，shape [2,1280]/[2]。
+    返回:
+        dict: margin MSE/MAE/Pearson、冻结图像与患者阈值下原始/重构的
+        阈值指标、患者概率最大偏移及患者、Feature激活密度直方图。
+    """
+    original_logits = features @ weight.T + bias
+    reconstructed_logits = reconstructed @ weight.T + bias
+    original_margin = original_logits[:, 1] - original_logits[:, 0]
+    reconstructed_margin = reconstructed_logits[:, 1] - reconstructed_logits[:, 0]
+    original_prob = torch.softmax(torch.from_numpy(original_logits), dim=1)[:, 1].numpy()
+    reconstructed_prob = torch.softmax(
+        torch.from_numpy(reconstructed_logits), dim=1
+    )[:, 1].numpy()
+    labels = metadata.label.to_numpy(int)
+    frame = metadata[["patient_id", "label"]].copy()
+    frame["original"] = original_prob
+    frame["reconstructed"] = reconstructed_prob
+    patients = frame.groupby("patient_id", as_index=False).agg(
+        label=("label", "first"), original=("original", "mean"),
+        reconstructed=("reconstructed", "mean"),
+    )
+    patient_deviation = np.abs(patients.original - patients.reconstructed)
+    max_index = int(patient_deviation.argmax())
+    density = (activations > ACTIVE_EPS).mean(axis=0)
+    histogram_counts, histogram_edges = np.histogram(
+        density, bins=[0.0, 1e-6, 1e-4, 1e-3, 1e-2, 0.1, 0.5, 1.0],
+    )
+    return {
+        "margin_mse": float(np.square(original_margin - reconstructed_margin).mean()),
+        "margin_mae": float(np.abs(original_margin - reconstructed_margin).mean()),
+        "margin_pearson": float(np.corrcoef(original_margin, reconstructed_margin)[0, 1]),
+        "image_threshold_original": confusion_at_threshold(
+            labels, original_prob, FROZEN_IMAGE_THRESHOLD,
+        ),
+        "image_threshold_reconstructed": confusion_at_threshold(
+            labels, reconstructed_prob, FROZEN_IMAGE_THRESHOLD,
+        ),
+        "patient_threshold_original": confusion_at_threshold(
+            patients.label.to_numpy(int), patients.original.to_numpy(),
+            FROZEN_PATIENT_THRESHOLD,
+        ),
+        "patient_threshold_reconstructed": confusion_at_threshold(
+            patients.label.to_numpy(int), patients.reconstructed.to_numpy(),
+            FROZEN_PATIENT_THRESHOLD,
+        ),
+        "patient_probability_max_deviation": float(patient_deviation.max()),
+        "patient_probability_max_deviation_patient": str(
+            patients.patient_id.iloc[max_index]
+        ),
+        "feature_density_histogram": {
+            "bin_edges": [float(edge) for edge in histogram_edges],
+            "counts": [int(count) for count in histogram_counts],
+        },
+    }
 
 
 def duplicate_decoder_rate_nondead(
@@ -764,6 +974,9 @@ def main() -> None:
         raise ValueError("非self-test运行必须提供 --seed、--hidden-dim 和 --experiment")
     validate_formal_args(args)
     seed_everything(args.seed)
+    if args.debug:
+        # debug一律强制写入正式根目录下的debug/子目录，与正式矩阵实验名隔离。
+        args.output_root = OUTPUT_ROOT / "debug"
     lineage = verify_s0_lineage()
     if args.device == "auto":
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -784,9 +997,11 @@ def main() -> None:
     capture = ActivationCapture(model.features[8])
     if args.feature_cache_from:
         split_features, split_attentions, split_metadata = reuse_feature_cache(
-            args.feature_cache_from.resolve(), cache,
+            args.feature_cache_from.resolve(), cache, frame,
         )
-        recompute_result = {"reused_cache": True, "passed": True}
+        recompute_result = {
+            "reused_cache": True, "passed": True, "cache_file_sha_verified": True,
+        }
     else:
         split_features, split_attentions, split_metadata = extract_features(
             model, capture, frame, args, device, cache,
@@ -810,6 +1025,7 @@ def main() -> None:
             split: {"images": int(len(part)), "patients": int(part.patient_id.nunique())}
             for split, part in split_metadata.items()
         },
+        "files": cache_file_shas(cache),
         "recompute_self_test": recompute_result,
     }
     (cache / "cache_config.json").write_text(
@@ -848,6 +1064,10 @@ def main() -> None:
                 ((current_activations > ACTIVE_EPS).sum(0) == 0).sum()
             ),
         })
+        current_metrics.update(extended_fidelity_metrics(
+            split_features[split], reconstructed, current_activations,
+            split_metadata[split], classifier_weight, classifier_bias,
+        ))
         metrics["splits"][split] = current_metrics
 
     kept, active_counts, curve, pruning = run_pruning_strict(

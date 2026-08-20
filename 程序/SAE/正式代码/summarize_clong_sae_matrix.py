@@ -24,6 +24,7 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -105,6 +106,12 @@ def check_run_integrity(spec: dict) -> dict:
         raise ValueError(f"{spec['name']} 的缓存复算自测未通过")
     if config.get("feature_layer") != csd.FEATURE_LAYER_DESCRIPTION:
         raise ValueError(f"{spec['name']} 的特征层描述与预注册不一致")
+    for field, expected in csd.FORMAL_BUDGET.items():
+        if not csd._close(float(config.get(field, float("nan"))), float(expected)):
+            raise ValueError(
+                f"{spec['name']} 的训练预算{field}={config.get(field)}，"
+                f"与冻结值{expected}不一致"
+            )
     return config
 
 
@@ -180,6 +187,19 @@ def pareto_frontier(candidates: pd.DataFrame) -> pd.DataFrame:
     return candidates.loc[keep]
 
 
+def json_scalar(value):
+    """把numpy/pandas标量转成标准JSON值，NaN统一为None。"""
+    if value is None or pd.isna(value):
+        return None
+    if isinstance(value, (np.floating, float)):
+        return float(value)
+    if isinstance(value, (np.integer, int)):
+        return int(value)
+    if isinstance(value, (np.bool_, bool)):
+        return bool(value)
+    return value
+
+
 def select_unique_config(frontier: pd.DataFrame) -> pd.Series:
     """按冻结决胜链从前沿候选中选出唯一正式配置。"""
     ordered = frontier.sort_values(
@@ -246,15 +266,14 @@ def main() -> None:
         summary["status"] = "formal_config_selected"
         summary["pareto_frontier"] = frontier["name"].tolist()
         summary["selected_config"] = {
-            key: (float(value) if isinstance(value, float) else
-                  int(value) if isinstance(value, (int,)) else value)
-            for key, value in selected.to_dict().items()
+            key: json_scalar(value) for key, value in selected.to_dict().items()
         }
         summary["next_step"] = (
             "按S5对选中配置运行SAE seed202/503复现，报告3/3、2/3或1/3稳定性"
         )
     SUMMARY_JSON.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps(summary, ensure_ascii=False, indent=2, allow_nan=False),
+        encoding="utf-8",
     )
     print(f"矩阵汇总完成: {SUMMARY_JSON}")
     print(f"状态: {summary['status']}；L1合格 {len(l1_passed)}/15；Top-K角色={topk_role}")

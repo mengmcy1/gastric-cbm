@@ -55,18 +55,24 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 
 ## 当前状态
 
-更新时间：2026-08-19
+更新时间：2026-08-20
 
 | 项目 | 状态 | 当前结论或阻塞项 |
 | --- | --- | --- |
-| 文献调研 | 首轮完成 | 已独立精读InterPLM、ProtoMIL和M-CBM；两份ProtoMIL为同一论文的预印本与正式版 |
+| 文献调研 | 两轮完成 | 首轮：已独立精读InterPLM、ProtoMIL和M-CBM；两份ProtoMIL为同一论文的预印本与正式版。第二轮（2026-08-20）：针对正式矩阵失败模式（train/val cosine差距）定向调研，详见"第二轮文献调研"节 |
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2-S3已预注册，2026-08-19冻结 | 同轮比较0.4x/1x/2x/4x/8x五档字典；Linear-ReLU+L1加`gamma=0.1` margin保真；lambda网格{2e-4,5e-4,1e-3}、训练预算、checkpoint规则、四项成功门槛、Pareto选择顺序、剪枝规则与Top-K备选均已冻结 |
 | 复现口径 | 已明确 | 只有一个C-long seed42；复现为同一冻结特征上的SAE seed42/202/503 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
-| 新路线代码 | 已实现，debug验收中 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；9项单元测试通过 |
+| 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
+| 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
+| S2b结构重构 | 已正式预注册，2026-08-20冻结 | 文献驱动比较pooled BatchTopK与patch级Top-K/BatchTopK；逐样本归一化仅作固定诊断，不参与产品选择；宽度/K、损失、阈值估计、门槛、选择、复现与停止规则均已冻结；test/internal test/external继续锁定 |
+| S2b代码 | 已实现并完成debug验收 | 独立核心模块、正式入口、四臂矩阵脚本、自动汇总器和18项回归测试已落盘；CPU debug的B/C/D/N四臂均端到端跑通；启动器和汇总器已支持将BatchTopK阈值不可实现记为正式协议失败，不阻断独立实验臂 |
+| S2b正式矩阵 | 已完成（2026-08-20），`no_patch_product_stop_s2b` | B/C/D/N四臂与自动汇总全部完成；S4-B因train正预激活数不足而协议失败；S4-C/D均通过8项门槛中的6项，同时未达到患者预测一致率`>=0.95`和pooled cosine`>=0.90`；无唯一patch正式产品，按预注册停止，不进入SAE seed202/503复现，不追加K/宽度/归一化/门槛调参 |
+| S2b失败诊断 | v1已完成，v2口径修正待运行 | v1确认17位翻转患者主要集中在冻结阈值附近，且完整替换的翻转主要由内容重构驱动；审阅发现v1分层使用的是patch cosine，而正式失败门槛为pooled cosine。诊断脚本已补入逐图pooled cosine分层、最差30图和完整翻转四象限，将输出到新v2目录，不覆盖v1 |
+| S2c Matryoshka patch SAE | 预注册草案，待用户审阅，未冻结 | 单一seed42模型在同一字典中联合学习`K={64,128,256,512,1024}`五层嵌套粒度；不启用归一化旁路、BatchTopK或新宽度扫描；训练后选择通过八项门槛的最小K，通过后才进入SAE seed202/503复现和医学生概念命名 |
 
 ## 第一轮文献结论
 
@@ -559,8 +565,510 @@ a_intervened = Decoder(h_intervened) + residual
 再以elastic-net稀疏分类器预测癌/非癌。最终同时报告任务性能、概念预测AUC、NCC95、泄漏
 对照和随机概念基线。
 
-概念标注必须class-agnostic：同一概念的正负例同时覆盖癌与非癌，不能让“是否被标注”本身
+概念标注必须class-agnostic：同一概念的正负例同时覆盖癌与非癌，不能让"是否被标注"本身
 泄露疾病标签。
+
+## 第二轮文献调研：泛化差距与Patch级SAE（2026-08-20）
+
+针对正式矩阵暴露的问题（Top-K train cosine 0.9979 / val 0.8814，泛化不足），定向核查了
+本地文献与公开文献。核心结论：**文献中没有人在"几千个整图pooled向量"上训练SAE并讨论
+其泛化差距——所有先例都在位置/patch/token级向量上训练，样本量比本项目大2~6个数量级，
+泛化问题在源头就被规避了。**
+
+### 问题一：train/val重构差距，文献有没有直接解答
+
+没有直接讨论，但有三个间接答案：
+
+1. **字典学习样本复杂度**：字典参数量应与独立训练样本数匹配。本项目pooled方案为
+   2600万参数对2350个向量，远超出正常范围；这解释了为何8×宽度下val cosine仍只有
+   0.857——不是宽度不够，是样本不够。
+2. **PathAI（Le et al., NeurIPS 2024 workshop，病理基础模型PLUTO的SAE）**：训练数据
+   多样性越高，死亡Feature和超稀疏Feature（<0.1%样本激活）越少，且Feature能跨染色
+   类型泛化。这同时支持"增加训练视图"（翻转扩增的方向）和"改用patch级训练"两条路。
+3. **Gallifant et al.（EMNLP 2025，SAE特征分类与迁移）**：SAE特征在下游数据有限时
+   仍稳健，但其前提是SAE本身在大规模token上预训练；不适用于"小样本从头训练SAE"。
+
+翻转扩增没有任何SAE文献先例，属于我们自己的启发式修补，只能作为低成本验证，
+不能作为主路线的依据。
+
+### 问题二：Patch级/位置级SAE的文献先例
+
+全部关键先例都在位置级训练，且与本项目设计高度对应：
+
+| 文献 | 训练对象 | 样本量级 | 与本项目对应点 |
+| --- | --- | --- | --- |
+| SAE-V（Stevens et al. 2025，OSU） | ViT残差流逐patch向量 | ImageNet-1K×196 patches | 逐位置编码；训练前均值归一化；残差保留干预（x'=e+x̂'）与我们S6一致；证明patch级SAE可支持分类与分割的因果编辑 |
+| InterPLM（本地） | 蛋白质逐氨基酸位置向量 | 5M序列×数百残基 | 位置级分解天然给出可定位Feature |
+| ProtoMIL（本地） | CONCH patch嵌入512维 | 数十万WSI patch | 4×扩维、ReLU+L1 λ=3e-4；发现的伪概念（墨水、马克笔、失焦）正好对应本项目的器械/反光担忧 |
+| PathAI（Le et al.） | PLUTO patch CLS嵌入384维 | 110万patch | 8×扩维、死亡神经元重采样；HDBSCAN对decoder方向聚类得到概念家族——对应我们的重复概念家族分析 |
+| SAE-Rad（Abdulaal et al. 2024） | 胸片ViT潜变量 | MIMIC-CXR规模 | 医学影像SAE能产生有意义概念的首例 |
+| CytoSAE（Dasdelen et al. 2025） | 细胞图像嵌入 | 血液细胞图像集 | 小器官尺度医学概念发现可行 |
+
+### 对本项目设计的具体启示
+
+1. Patch SAE（49个位置向量/图，2350×49≈11.5万向量）是文献唯一支持的方向；
+   pooled整图SAE在小样本下没有成功先例，本轮失败与此一致。
+2. 训练前对位置向量做均值中心化（SAE-V/Anthropic惯例）；是否做单位范数归一化需在
+   预注册中写死，因为它改变重构目标的语义。
+3. patch级重构cosine预计会显著高于pooled级（正常黏膜背景占主导，易重构），因此
+   分类保真必须继续通过pooled重构+冻结分类头的margin来把关，不能用patch级cosine
+   替代分类门槛——与用户方案中的三项损失设计一致。
+4. 位置向量间强相关（感受野重叠），11.5万不是独立样本数；val患者级隔离仍是主要
+   泛化检验，文档与预注册中不得夸大为"样本量提升49倍"。
+5. ProtoMIL/PathAI均在SAE中发现采集伪迹概念（染色、模糊、墨水）；本项目若发现
+   器械/反光/气泡Feature属于预期行为，正是审计目标而非失败。
+6. 超稀疏Feature和decoder方向聚类（HDBSCAN）两套分析可直接沿用PathAI做法。
+
+### 结论
+
+文献明确支持"停止pooled级参数扫描，转向patch级SAE"的判断。P1（翻转扩增）无文献
+先例，最多作为一次低成本对照；Patch SAE应作为下一阶段主路线，其损失设计、归一化
+口径、门槛语义和位置权重公式必须在新的预注册中先行冻结。
+
+### 第三轮：用户文献分析的逐条核验（2026-08-20）
+
+用户提交了含5个新引用的文献分析与S4四组矩阵草案。逐条核验结果：
+
+**引用真实性：5篇全部真实存在，无虚构。**
+
+1. PatchSAE（ICLR 2025，CLIP ViT）：摘要确认"提取patch级空间归因的可解释概念"属实。
+   注意：论文主题是CLIP适配机制，摘要未直接出现"不同数据域共有/特有概念"和"两个图像
+   共同激活Feature"的表述，引用该具体结论前需读全文确认。
+2. BatchTopK（arXiv 2412.06410，Bussmann/Leask/Nanda）：描述全部属实——batch级
+   top-k、可变每样本激活数、同平均稀疏度下重构优于Top-K、推理时用全局阈值θ（训练集
+   batch上最小正激活的均值）+JumpReLU消除batch依赖。但有两处原文限定用户未提：
+   ① 仅在GPT-2/Gemma-2上验证，未做视觉实验；② 论文明确说未评估可解释性；
+   ③ 它改善的是分布内的重构-稀疏Pareto前沿，并未证明能改善train→val泛化差距。
+3. Gated SAE（arXiv 2404.16014）：描述属实（分离"是否激活"与"激活幅度"，解决L1收缩）。
+4. Matryoshka SAE：注意有两篇同名工作。用户描述的CLIP实验对应Zaigrajew/Baniecki/
+   Biecek《Interpreting CLIP with Hierarchical Sparse Autoencoders》（ICML 2025，
+   arXiv 2502.20578），"重构-稀疏Pareto前沿最优"表述属实；另一篇Bussmann/Leask
+   （arXiv 2503.17547）是GPT-2上的层级Feature研究，引用时需区分。
+5. Gao et al.（arXiv 2406.04093）归一化断言：原文逐字确认——"We subtract the mean
+   over the d_model dimension and normalize all inputs to unit norm, prior to passing
+   to the autoencoder (or computing reconstruction errors)"，即逐样本减维度均值+单位
+   范数归一化+归一化空间算重构误差，用户描述准确。
+
+**我们实现与经典Top-K的差异：属实。** `SparseAutoencoder`只用数据集级`feature_center`
+（decoder_bias）做中心化，无逐样本单位范数归一化（efficientnet_sae_discovery.py:267-292）。
+
+**归一化假设的实证预检（用现有缓存，只读）**：
+
+```text
+train norm = 12.23±3.72（q05=8.47, q95=18.10）
+val   norm = 11.73±2.54（q05=8.49, q95=16.29）
+KS检验 p=0.045，分布高度重叠
+norm→标签 AUC：train 0.565 / val 0.528（弱信号）
+维度均值→标签 AUC：train 0.340 / val 0.383
+```
+
+2026-08-20更正：此前把维度均值定性为"弱反向"有误。AUC低于0.5表示预测方向相反，
+反转后等价于train 0.660 / val 0.617，属于中等标签信号；模长AUC 0.565/0.528仍属弱信号。
+因此，"保存mean/norm→重构后原样还原"会形成一条携带标签信息、但未经SAE解释的
+旁路。S2b正式候选不启用逐样本归一化；归一化只进入固定诊断臂S4-N，不参与正式产品
+选择。
+
+train/val模长分布只有有限差异，"模长分布不同导致cosine差距"最多解释一小部分；差距
+主体更可能是患者级方向泛化。归一化诊断仍有价值，但不能把它预设为弥合差距的主办法。
+
+**S4矩阵草案评估**：方向合理（S4-C/D为主候选正确），三点需收紧：
+
+1. S4-B（pooled+BatchTopK）预期收益不确定：BatchTopK改善的是分布内Pareto，不是
+   泛化；可能train/val cosine同时上升但差距依旧。保留为低成本对照可以，不要期待它
+   单独解决问题。
+2. BatchTopK的全局阈值θ估计协议（用多少train batch、是否只含train）必须在预注册
+   写死；val评估时逐样本L0可变，门槛用val mean L0不变。
+3. 归一化最终决定为：所有正式候选保持原始特征尺度；增加唯一固定诊断臂S4-N，不参与
+   选择。S4-A历史基线保持不动，以维持可比性并避免mean/norm旁路污染正式结论。
+
+## S2b：结构重构正式预注册（2026-08-20冻结）
+
+说明：既有`S4`编号已经用于"原型展示与临床命名"，获得正式SAE产品前不能启动。为避免
+重号，本轮结构修复正式编号为`S2b`；`S4-A/B/C/D/N`仅保留为实验臂简称，不代表覆盖
+既有S4阶段。
+
+### 研究问题与实验臂
+
+本轮只回答三个问题：固定逐样本K是否限制重构、pooled表示的小样本是否是主要瓶颈、
+逐样本归一化改善中有多少来自未解释标量旁路。冻结五臂如下：
+
+| 实验臂 | SAE输入 | 稀疏机制 | 宽度/预算 | 正式角色 |
+| --- | --- | --- | --- | --- |
+| S4-A | pooled `1280`维 | Top-K | `10240/K=1024` | 已完成历史基线，只读引用，不重跑 |
+| S4-B | pooled `1280`维 | BatchTopK | `10240/目标mean K=1024` | pooled结构对照；单独判断能否形成pooled产品 |
+| S4-C | `7x7x1280`空间特征 | 逐位置Top-K | 共享字典`10240/K=128` | patch正式主候选 |
+| S4-D | `7x7x1280`空间特征 | BatchTopK | 共享字典`10240/目标每位置mean K=128` | patch正式主候选增强版 |
+| S4-N | pooled逐样本减维度均值并单位范数化 | Top-K | `10240/K=1024` | 唯一固定机制诊断，不参与产品选择与跨seed复现 |
+
+`K=128`取自Top-K文献常见的低密度工作区，并把每个局部位置的预算限制为输入维度的10%；
+本轮不扫描其他宽度、K、位置权重或归一化方式。S4-B不预设能解决患者级泛化，它只检验
+可变激活预算在同平均稀疏度下是否优于S4-A。
+
+### 数据、缓存与隔离
+
+- 解释对象仍为S0冻结C-long `features[8]`输出；模型、attention head和分类头全程
+  `eval()`且冻结；
+- 使用同一manifest、train/val患者划分和S0六项SHA；test、internal test、external
+  均不读取；
+- pooled缓存沿用正式缓存；patch缓存新增`[N,49,1280]`空间特征、原始`[N,49]`
+  attention、标签外元数据和病灶框；缓存config记录源checkpoint、manifest、代码、行顺序
+  与全部数组SHA；
+- patch缓存必须自测：由原始空间特征经过冻结attention head重新得到的attention、pooled
+  向量和癌概率，与C-long正式val预测逐位一致（浮点容差`1e-4`），否则拒绝训练；
+- patch字典在49个位置间共享，不拼接坐标。位置只用于回填热图和框内外评价，不能成为
+  SAE输入，以免Feature退化为固定位置检测器；
+- 第一轮不加入翻转或光度多视图。翻转扩增缺乏本任务直接证据，避免与表示层级同时变化。
+
+### Patch训练目标
+
+对每张图的原始空间特征`F_p`和冻结原始注意力`a_p`，定义位置权重：
+
+```text
+w_p = 0.5 + 0.5 * 49 * a_p
+```
+
+因为`sum(a_p)=1`，49个位置的`w_p`均值严格为1：低注意力区域仍保留0.5底座，高注意力
+区域获得更高权重，但不会改变整项损失的平均尺度。该权重只用于train/val重构损失，
+不得作为正式评价旁路。
+
+```text
+L_patch  = mean_p [ w_p * MSE(F_hat_p, F_p) ]
+a_hat    = softmax(frozen_attention_head(F_hat))
+z_hat    = sum_p a_hat_p * F_hat_p
+L_pool   = MSE(z_hat, z_original)
+L_margin = ((margin(z_hat) - margin(z_original)) / train_margin_std)^2
+
+L_total = L_patch + gamma_pool * L_pool + 0.1 * L_margin
+```
+
+`gamma_margin=0.1`沿用S2-S3冻结值。`gamma_pool`不看val：固定使用S4-C的seed42初始化、
+batch 32和患者类别平衡采样的一个完整train校准epoch（74批），记录初始化时`L_patch`
+和`L_pool`中位数，并按
+`gamma_pool = 0.25 * median(L_patch) / median(L_pool)`冻结，使pooled项初始约为patch项
+的25%。校准JSON绑定S0、缓存、样本顺序、每批SHA和两项中位数；正式C/D必须从该JSON
+读取同一个`gamma_pool`，禁止手工传值。若分母小于`1e-8`则快速失败。
+
+S4-B沿用pooled目标`MSE + 0.1 * normalized margin MSE`；S4-N沿用相同目标，但只在
+归一化方向空间训练和计算重构误差。
+
+### BatchTopK训练与冻结推理阈值
+
+- S4-B训练时在每个`B x H`预激活矩阵中保留最大的`B*K`项；
+- S4-D以位置向量为基本单元，在每个图像batch的`(B*49) x H`预激活中保留最大的
+  `B*49*K`项，使复杂图像/位置可获得更多Feature；
+- S4-B/D不使用BatchTopK原文的死亡Feature辅助损失（`top-k_aux=512`、
+  `alpha=1/32`），与本项目既有Top-K实现保持一致；上一轮宽度10240的Top-K死亡率为0，
+  当前没有引入该额外机制的实证必要。若正式运行的死亡率超过`0.10`，按本轮
+  停止规则处理，不得事后追加辅助损失；
+- 训练采样仍以患者和类别平衡的图像为单位；同一被抽中图像的49个位置全部进入；
+- val checkpoint选择使用固定行顺序、batch 32和固定batch边界的BatchTopK val总损失，
+  不根据AUC、cosine或最终阈值结果选epoch；
+- checkpoint冻结后，只用train、确定性DataLoader、每图一次、无有放回平衡采样估计
+  全局推理阈值`theta`。实现使用分块Top-K归并求全体正预激活的目标分位数，不得一次
+  物化patch组约十亿个预激活；
+- 阈值选择目标为train实际mean L0最接近K；比较规则固定为`activation >= theta`；
+- 保存checkpoint SHA、manifest/cache SHA、样本顺序SHA、目标K、实际train mean L0、
+  `theta`、向量数、正激活数和并列计数；val只使用冻结`theta`，不得重新估计；
+- 若全train正预激活总数少于目标总激活数，或求得`theta <= 0`，该运行快速失败；不得用
+  零激活填满K；
+- 若并列导致train mean L0相对目标K偏差超过1%，该BatchTopK运行判为协议失败，不进入
+  正式门槛与产品选择。1%是实现有效性门槛，不是模型效果门槛。
+
+### 训练预算与checkpoint
+
+- seed42结构选择；Adam、学习率`1e-4`、图像batch 32、最多1000 epoch、patience 50、
+  前5% epoch线性warmup，与S2-S3一致；
+- decoder梯度正交投影、单位范数、患者类别平衡和冻结margin标准化保持不变；
+- S4-B/C/D使用各自val总损失选择checkpoint，不扫描学习率、权重衰减、宽度、K或损失
+  系数；
+- S4-A只读引用既有结果；S4-N固定跑一次seed42，不参与任何checkpoint跨组选择。
+
+### 正式评价与旁路诊断
+
+Patch组正式评价必须走完整替换：
+
+```text
+重构7x7x1280特征
+  -> 冻结attention head重新计算attention
+  -> 重新汇聚1280维向量
+  -> 冻结分类头
+```
+
+不得复用原始attention。另行计算"固定原始attention"诊断口径，两者之差用于区分内容
+重构误差和attention漂移，不参与checkpoint选择。
+
+共同报告患者/图像AUC、冻结阈值Sens/Spec/Acc/F1/CM、患者一致率、pooled cosine、
+recovered CE、margin MSE/MAE/Pearson、最大患者概率偏移、死亡率和非死亡decoder重复率。
+
+Patch组额外报告：
+
+- 每位置mean L0、每图激活过的唯一Feature数；
+- 每个Feature覆盖的图片数、患者数和空间位置数；
+- 原始attention最高/最低四分位位置的L0与重构误差；
+- 癌图病灶框内、框外与边界环的激活分布；
+- patch cosine的均值及按患者、标签、来源、病灶大小分层；
+- 重构attention相对原attention的KL、cosine、normalized AiB和PGA变化；
+- Top激活patch、完整图位置热图及器械/反光/气泡人工QC。
+
+pooled与patch的L0单位不同，禁止放入同一Pareto前沿直接比较。S4-B若通过原S3六项硬
+门槛，可形成独立的pooled候选；patch正式产品只在S4-C/D之间选择。
+
+### 归一化诊断S4-N
+
+S4-N保存逐样本维度均值和单位范数并还原，仅用于量化经典Top-K归一化带来的收益和
+旁路贡献。固定报告：
+
+1. mean、norm各自的train单变量AUC和val单变量AUC；
+2. 仅用train拟合`mean+norm`逻辑回归；同时冻结`0.5`参考阈值和train上满足
+   `Sensitivity >= 0.90`的最高阈值，在val评价AUC及两套阈值指标；
+3. 仅标量模型、归一化方向SAE使用train中位标量还原、归一化方向SAE使用真实标量还原
+   三种结果；
+4. 完整重构收益中方向部分与真实标量旁路分别贡献多少；
+5. 所有拟合只用train，val只评价；不读取其他数据，不进入产品选择或复现。
+
+### 硬门槛、选择和停止规则
+
+S4-B沿用S3六项硬门槛。S4-C/D使用完整替换口径，必须同时满足：
+
+1. val患者AUC相对原C-long下降不超过`0.01`；
+2. 冻结患者阈值下一致率不低于`0.95`；
+3. 重构pooled向量mean cosine不低于`0.90`；
+4. recovered CE不低于`0.95`；
+5. train死亡率和非死亡decoder重复率均不超过`0.10`；
+6. 重构attention的normalized AiB与PGA相对原C-long各自下降不超过`0.05`。
+
+patch mean cosine、attention KL/cosine只作分层诊断，不增加未经先验支持的事后硬门槛。
+若C/D仅一个通过，选择该组；若均通过，依次按完整替换患者AUC下降更小、患者一致率更高、
+pooled cosine更高、每位置mean L0更低、每图唯一Feature数更低选择唯一patch配置。若仍
+完全相同，优先结构更简单的S4-C。
+
+唯一patch配置随后固定结构和全部超参数，仅更换SAE随机种子202/503在同一冻结C-long
+特征上重训。3/3通过为稳定产品，2/3为有限复现，1/3或0/3不形成正式产品。若seed42的
+C/D均失败，本轮停止，不追加宽度、K、归一化、cosine损失或多视图超参数；回到
+Matryoshka/Gated、解释层选择或数据规模设计另立新协议。
+
+若最终得到patch产品，既有`S4：原型展示与临床命名`不能原样照搬pooled激活口径；进入
+旧S4前须先冻结图像级聚合方式（如患者/图像内patch最大值或attention加权值）、Top patch
+选择和空间图口径。该适配只能改变展示与汇总，不能重新训练或选择S2b产品。
+
+## S2b实现与debug验收（2026-08-20）
+
+本轮新增独立实现，不覆盖S2-S3的pooled SAE代码与结果：
+
+- `clong_s2b_core.py`：逐向量Top-K、BatchTopK、分块Top-K归并阈值、
+  patch完整替换与AiB/nAiB/PGA核心逻辑；
+- `clong_s2b_discovery.py`：S0血缘校验、空间缓存、`gamma_pool`校准、
+  B/C/D/N共享训练harness、train-only BatchTopK阈值和正式评价；
+- `summarize_clong_s2b.py`：pooled与patch分开门槛，C/D五级决胜链；
+- `run_clong_s2b_matrix.sh`：固定B→gamma校准→C→D→N→汇总顺序；
+- `test_clong_s2b.py`：18项回归测试，包含BatchTopK协议失败的结构化记录与续跑回归。
+
+已完成的debug验收：
+
+1. S0六项SHA正常通过，空间缓存产出`[N,49,1280]`、pooled和attention；
+2. CPU与正式GPU数值路径不同，debug-only复算容差显式记为`2e-3`；
+   正式运行强制`--device cuda`且仍使用`1e-4`，两者不共用放宽口径；
+3. `gamma_pool`debug校准、C完整替换、B/D全train阈值、N标量旁路均跑通；
+4. 微型B/D的冻结阈值实际mean L0均精确等于目标4.0，并列数均为1；
+5. 重构attention、完整替换分类指标、固定原attention诊断、patch覆盖统计和
+   标准JSON均已成功落盘；test/internal test/external未读取。
+
+这些debug数值只验证工程链路，不作为模型结论。
+
+## S2b正式矩阵结果（2026-08-20）
+
+正式seed42矩阵已按B→gamma校准→C→D→N→汇总的预注册顺序完成，
+`test/internal test/external`均未读取。汇总状态为
+`no_patch_product_stop_s2b`，未选出唯一patch正式产品。
+
+| 实验臂 | 状态 | 原始→重构患者AUC | AUC下降 | 患者一致率 | pooled cosine | recovered CE | 死亡/重复率 | 空间门槛 |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| S4-B pooled+BatchTopK | 协议失败 | 未进入正式评价 | - | - | - | - | - | train正预激活`2,158,956 < 2,406,400`，无法合法冻结K=1024 |
+| S4-C patch+Top-K | 6/8门槛通过 | `0.91014→0.90921` | `0.00093` | `0.93462` | `0.88939` | `0.98600` | `0/0` | nAiB与PGA均通过 |
+| S4-D patch+BatchTopK | 6/8门槛通过 | `0.91014→0.91207` | `-0.00193` | `0.93462` | `0.88211` | `1.01447` | `0/0` | nAiB与PGA均通过 |
+| S4-N 归一化 | 诊断完成 | 不参与产品选择 | - | - | - | - | - | mean+norm联合val图像AUC`0.7104`、患者AUC`0.7723` |
+
+S4-C/D均说明patch字典可以保持分类AUC、交叉熵和空间注意力，且没有死亡或
+重复Feature问题；但两者均在同两项失败：患者预测一致率为`0.9346 < 0.95`，
+pooled cosine为`0.8894/0.8821 < 0.90`。BatchTopK没有修复方向保真，反而略低于逐位置
+Top-K。因此不将“AUC没降”解读为SAE已合格，也不用放宽已冻结的保真门槛换取产品。
+
+S4-N进一步证实mean/norm标量组合含有显著标签信息，逐样本归一化后再原样回填
+会形成一条未经SAE解释的旁路；这支持了“归一化只做诊断、不进正式产品”的预注册决策。
+按停止规则，本轮不进入SAE seed202/503复现，不追加K、宽度、归一化、cosine或多视图
+超参数；若继续SAE，须回到Matryoshka/Gated、解释层选择或数据规模设计另立新协议。
+
+### S2b失败诊断口径审阅（2026-08-20）
+
+v1诊断脚本对S4-C/D正式checkpoint和config SHA做了逐项校验，并以`1e-6`
+容差复现正式患者一致率和pooled cosine。已经能确认：
+
+1. C/D均翻转17/260位患者，仅9人重叠；翻转者的原始患者概率距冻结阈值
+   中位数为`0.029/0.034`，未翻转者为`0.264`；两臂各有15/17人在阈值
+   `+-0.10`内，说明一致率门槛主要受边界病例影响，但不因此放宽冻结门槛；
+2. 在完整替换后翻转的17人中，C/D均有13人在固定原注意力时仍翻转，
+   4人仅在重算注意力时翻转；因此影响主要来自特征内容重构，注意力漂移是较小的
+   独立贡献。同时v1尚未单列“固定注意力翻转、重算后被纠正”的反向情况；
+3. v1的分层结论实际使用每图49个位置的平均patch cosine（约`0.81/0.80`），
+   不是触发正式失败的pooled cosine（`0.889/0.882`）。因此“正式cosine短板在
+   所有亚组弥散”在v2运行前仍是待验证命题，不将patch cosine的分层结果冒充为正式
+   pooled门槛的分层证据。
+
+`analyze_s2b_failure.py`已补入逐图pooled cosine、同pool/patch分层、pooled最差30图、
+完整翻转四象限和attention KL与pooled cosine的相关性。v2只读train/val并输出新目录，
+不改写v1，不参与S2b产品选择。
+
+## S2c：Matryoshka patch SAE预注册草案（待用户审阅，未冻结）
+
+### 研究问题与实验定位
+
+S2b说明单一`K=128`的patch Top-K能保持AUC、recovered CE和空间注意力，但
+在患者阈值一致性和pooled方向保真上仍略有不足。S2c只回答一个新问题：
+在不改变解释层、字典宽度和数据的前提下，同时学习从粗到细的嵌套Top-K重构，
+能否让少量Feature表示主要概念，并在较大K下补回S2b丢失的特征方向细节？
+
+本轮不将Matryoshka预设为必然有效。S2b诊断只是与“单一K下的弥散细节损失”假设
+相容，不是Matryoshka必然通过的证据。
+
+### 冻结输入、结构与数据边界
+
+- 解释对象与S2b相同：C-long seed42 `features[8]`的`7x7x1280`patch特征；
+- 复用S2b已逐位校验的正式空间缓存、manifest、C-long checkpoint和全部SHA；
+- train/val患者、图像、顺序、预处理和标签不变；`test/internal test/external`全程锁定；
+- 共享字典为`1280 -> 10240 -> 1280`，49个位置不拼接坐标，不扫描新宽度；
+- 嵌套粒度冻结为`K={64,128,256,512,1024}`，同一正预激活排序下保证
+  `TopK64 subset TopK128 subset ... subset TopK1024`；
+- 不启用逐样本mean/norm归一化、BatchTopK、死亡Feature辅助损失、位置坐标或
+  多视图损失。
+
+`K=128`与S4-C形成直接结构对照；`64`用于观察更粗概念；`256/512/1024`用于
+逐步补回方向细节。文献对CLIP使用更长的K-list直至接近隐层宽度；本项目为保留临床
+概念稀疏性而截断在`1024`，这是面向本医学任务的显式适配，不声称完全复刻论文。
+
+### 损失、校准和checkpoint规则
+
+对每个粒度`K_i`分别计算：
+
+```text
+L_i = L_patch_weighted_MSE
+    + gamma_pool * L_recomputed_attention_pool_MSE
+    + 0.1 * L_normalized_margin_MSE
+L_total = mean(L_64, L_128, L_256, L_512, L_1024)
+```
+
+- 五层使用统一权重`1/5`（Matryoshka uniform weighting），本轮不同时比较reverse weighting；
+  理由是当前瓶颈为保真，而非进一步强调最小K的稀疏性；
+- patch位置权重、冻结注意力头重算、margin定义与S2b一致；
+- `gamma_margin=0.1`继续冻结；`gamma_pool`不直接复用S2b数值，而是在同一train-only
+  74批、seed42固定初始化上，按五层联合损失重新校准并绑定JSON/SHA；
+- 预计算实现必须对一次排序结果构造嵌套mask，不得分别重复排序导致嵌套性漂移；
+- 预激活为正的数量少于某个K时，该层真实L0可低于K，不用0填充假装激活；
+  必须逐K报告train/val mean L0和正激活不足比例；
+- 训练预算暂沿用`Adam lr=1e-4, batch=32, max=1000, patience=50, warmup=5%`；
+  checkpoint只按五层加权val总损失选择，训练中不按单一K的AUC/cosine选轮次。
+
+### 评价、K选择和成功门槛
+
+训练结束后仅用冻结val，按`64 -> 128 -> 256 -> 512 -> 1024`顺序对每个K独立执行
+完整替换评价：重构7x7x1280特征、重算冻结注意力、重新汇聚、再进入冻结分类头。
+每个K继续使用S2b冻结的八项硬门槛：
+
+1. 患者AUC下降`<=0.01`；
+2. 冻结患者阈值下一致率`>=0.95`；
+3. pooled cosine`>=0.90`；
+4. recovered CE`>=0.95`；
+5. 选定K下train死亡Feature率`<=0.10`；
+6. 非死亡decoder绝对cosine`>=0.95`的重复Feature率`<=0.10`；
+7. normalized AiB下降`<=0.05`；
+8. PGA下降`<=0.05`。
+
+正式产品K定义为“同时通过八项门槛的最小K”，不再用AUC或图像观感从通过者中
+二次挑选。若所有K均失败，S2c无正式产品，不放宽门槛、不追加K-list、
+reverse weighting或Gated SAE到同一实验中。
+
+诊断指标额外报告但不参与checkpoint/K选择：患者/图像概率MAE、患者最大概率偏移及ID、
+阈值`+-0.05/+-0.10`内患者的一致率、逐K注意力KL/cosine、每位置L0、每图唯一Feature数、
+概念覆盖的图像/患者/位置数，以及标签/来源/分辨率/画中画/病灶大小分层。
+
+### 复现、停止与医学生交付
+
+- seed42存在合格K：冻结唯一K和checkpoint，在同一冻结空间特征上仅重训SAE seed202/503；
+- 3个SAE seed均通过：进入概念稳定性对齐、原型图、逐图多概念热图和医学生命名；
+- 复现只有2/3或1/3通过：如实报告，不把单seed结果包装成稳定产品；
+- seed42无合格K：停止S2c，Gated SAE如需尝试必须新建独立协议。
+
+最终医学生交付不只提供技术指标，而必须包含：通俗阅读指南、模型保真表、癌侧富集/非癌侧
+富集/两类共有/疑似伪特征四类概念表、每概念多患者原型图、逐图多色概念热图、
+Feature置零后的概率/margin变化，以及供医学生填写“病灶/正常结构/反光/气泡/器械/无法判断”
+的人工审核表。癌与非癌共有Feature不自动删除，需结合空间位置和置零干预判断其临床含义。
+
+## S2-S3正式矩阵结果（2026-08-20）
+
+正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
+
+```text
+结果/SAE/CLong文献重构_20260819/clong_sae_matrix_summary_seed42.json
+状态：no_formal_product；L1合格 0/15；Top-K角色=fallback_candidate（未过门槛）
+```
+
+### 逐组核心指标（val，汇总自`clong_sae_matrix_seed42.csv`）
+
+| 配置 | cosine | 患者AUC下降 | 患者一致率 | recovered CE | mean L0 | 死亡率 | 非死亡重复率 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| w512/l2e-4 | 0.7771 | -0.0005 | 0.9346 | 0.9739 | 215.3 | 0 | 0 |
+| w512/l5e-4 | 0.7047 | 0.0043 | 0.9154 | 0.9353 | 97.5 | 0 | 0 |
+| w512/l1e-3 | 0.6415 | 0.0055 | 0.8923 | 0.9167 | 44.0 | 0 | 0 |
+| w1280/l2e-4 | 0.8249 | 0.0005 | 0.9462 | 0.9911 | 415.6 | 0 | 0 |
+| w1280/l5e-4 | 0.7337 | 0.0053 | 0.9308 | 0.9541 | 158.5 | 0 | 0 |
+| w1280/l1e-3 | 0.6554 | 0.0114 | 0.9231 | 0.8993 | 70.8 | 0 | 0 |
+| w2560/l2e-4 | 0.8478 | -0.0009 | 0.9538 | 1.0071 | 565.2 | 0 | 0 |
+| w2560/l5e-4 | 0.7576 | -0.0033 | 0.9500 | 1.0032 | 237.2 | 0 | 0 |
+| w2560/l1e-3 | 0.6695 | -0.0032 | 0.9385 | 0.9773 | 109.7 | 0 | 0 |
+| w5120/l2e-4 | 0.8567 | -0.0061 | 0.9462 | 1.0225 | 643.1 | 0 | 0 |
+| w5120/l5e-4 | 0.7758 | -0.0051 | 0.9308 | 1.0068 | 307.6 | 0 | 0 |
+| w5120/l1e-3 | 0.6778 | -0.0022 | 0.9346 | 0.9671 | 132.0 | 0.0021 | 0 |
+| w10240/l2e-4 | 0.8574 | -0.0035 | 0.9423 | 0.9983 | 681.7 | 0 | 0 |
+| w10240/l5e-4 | 0.7901 | -0.0044 | 0.9308 | 1.0043 | 385.7 | 0 | 0 |
+| w10240/l1e-3 | 0.6941 | 0.0105 | 0.9308 | 0.8967 | 177.5 | 0.0185 | 0 |
+| w10240/l5e-4/gamma0（诊断） | 0.7872 | 0.0098 | 0.9192 | 0.8744 | 374.4 | 0 | 0 |
+| w10240/topk1024（备选） | 0.8814 | -0.0039 | 0.9577 | 1.0147 | 952.5 | 0 | 0 |
+
+参考：原始C-long val患者AUC = 0.9101；六项硬门槛为 AUC下降≤0.01、一致率≥0.95、
+cosine≥0.90、recovered CE≥0.95、死亡率≤10%、非死亡重复率≤10%。
+
+### 门槛分析
+
+- **唯一全面卡点是cosine**：17组无一达到0.90。最高为Top-K的0.8814，L1最高为
+  w5120/l2e-4的0.8567与w10240/l2e-4的0.8574。宽度从0.4×增至8×，cosine仅从0.78升至
+  0.86，边际收益明显递减，8×并不能解决保真瓶颈。
+- 患者AUC下降门槛几乎全过，且10组为负值（重构后患者AUC反而高于原模型，最高
+  w5120/l2e-4达0.9162），说明margin保真按设计保住了分类相关信息。
+- 一致率≥0.95仅3组通过（w2560/l2e-4、w2560/l5e-4、Top-K）；recovered CE≥0.95有12组
+  通过；死亡率与非死亡重复率全部通过（绝大多数为0）。
+- Top-K备选仅cosine一项不合格（其余五项全过），是全部候选中最接近放行的配置，
+  但按预注册不得因此放宽门槛或追加K值网格。
+
+### 无margin诊断组结论
+
+w10240/l5e-4/gamma0相对同宽度同lambda的margin组：一致率0.9192对0.9308、
+recovered CE 0.8744对1.0043、AUC下降0.0098对-0.0044，cosine基本持平
+（0.7872对0.7901）。证实gamma=0.1 margin项的作用主要是保分类方向而非全向量保真，
+与旧路线教训一致。
+
+### 解释
+
+margin保真目标确实把"分类相关方向"保住了（重构患者AUC普遍不降反升），但
+attention-pooled 1280维向量中分类无关的成分在当前宽度×稀疏度下无法被重构到
+cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容易、全向量高保真难。
+按2026-08-19冻结的停止规则，本阶段无正式产品，回到表示对象或SAE结构设计，
+**不追加超参数、不事后放宽门槛**。
+
+### 审计备注
+
+- 汇总CSV与单组`metrics.json`抽查一致（Top-K组逐位核对）；
+- internal test/external全程未读取；
+- 特征缓存六文件SHA复用核验全部通过，17组共用同一份S0冻结特征；
+- 门槛、预算与选择规则自冻结起未做任何修改。
 
 ## 下一步
 
@@ -575,5 +1083,22 @@ a_intervened = Decoder(h_intervened) + residual
 5. ~~实现分项日志与校验~~：feature+margin+L1分项日志、S0六项SHA运行时校验、
    同一缓存三seed复用和癌/非癌联合统计字段已实现；9项单元测试与debug冒烟通过
    （debug输出在`结果/SAE/CLong文献重构_20260819/debug/`，不进正式矩阵）；
-6. 待用户启动正式17组矩阵：`run_clong_sae_matrix.sh`；全部成功后自动执行
-   `summarize_clong_sae_matrix.py`输出唯一正式配置或停止结论。
+6. ~~启动正式17组矩阵~~：已于2026-08-20完成，17/17组跑通，汇总器自动执行，
+   结论为no_formal_product（L1合格0/15，Top-K备选未过cosine门槛）；结果与门槛分析
+   见"S2-S3正式矩阵结果"节；
+7. ~~审阅并冻结S2b结构重构协议~~：已于2026-08-20正式冻结，明确S4-A/B/C/D/N五臂、
+   patch完整替换评价、BatchTopK全train阈值、归一化旁路诊断、损失校准、硬门槛、
+   唯一配置选择、复现与停止规则；BatchTopK死亡Feature辅助损失明确不启用；
+8. ~~实现与debug验收S2b~~：空间特征缓存、完整替换复算、
+   Top-K/BatchTopK共享harness、分块阈值、归一化诊断、汇总器和启动器已实现；
+   18项测试及B/C/D/N四臂CPU debug均通过，未读取test/internal test/external；
+9. ~~seed42按S4-B→S4-C→S4-D→S4-N固定顺序运行~~：已于2026-08-20完成；
+   B协议失败，C/D均仅通过6/8门槛，汇总为`no_patch_product_stop_s2b`；
+   按停止规则不进入SAE seed202/503复现。旧`S4：原型展示与临床命名`继续等待后续新协议产品；
+10. 若继续SAE，先起草新协议比较Matryoshka/Gated SAE、更合适的解释层或更大的训练患者规模，
+    不在S2b上临时扫描K/宽度/门槛。
+11. 运行S2b失败诊断v2：使用新目录输出逐图pooled cosine分层和完整翻转四象限，
+    核对后再将“正式cosine是否弥散”的结论升级为正式诊断结果；
+12. 审阅并冻结S2c Matryoshka patch SAE草案：重点确认`K={64,128,256,512,1024}`、
+    uniform weighting、五层联合`gamma_pool`校准和“八门槛中最小合格K”选择规则；
+    冻结前不实现代码或启动训练。
