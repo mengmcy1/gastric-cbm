@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Build the locked MG0a train/val lineage and patient-level OOF folds.
+"""构建冻结的MG0a训练/验证数据血缘和患者级OOF分折。
 
-The script reads the frozen Y0-F mapping, excludes its original test split, and
-assigns every train patient to exactly one of five stratified holdout folds.
-It does not train YOLO, create ROI predictions, or read internal/external data.
+本脚本读取冻结的Y0-F清单，排除原始测试集，并将每位训练患者分配到
+五个分层留出折之一；不训练YOLO、不生成ROI，也不读取内外部测试数据。
 """
 
 from __future__ import annotations
@@ -33,7 +32,7 @@ FOLD_SEED = 42
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the frozen mapping, isolated output directory and self-test flag."""
+    """解析冻结清单、独立输出目录和自测开关。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -42,7 +41,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def file_sha256(path: Path) -> str:
-    """Return the SHA-256 digest of one file without loading it all into memory."""
+    """以流式读取方式计算单个文件的SHA-256。"""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -51,22 +50,14 @@ def file_sha256(path: Path) -> str:
 
 
 def dataframe_sha256(frame: pd.DataFrame, columns: list[str]) -> str:
-    """Hash selected columns after stable row sorting for lineage checks."""
+    """稳定排序指定列后计算哈希，用于数据血缘校验。"""
     stable = frame[columns].astype(str).replace("<NA>", "")
     stable = stable.sort_values(columns).reset_index(drop=True)
     return hashlib.sha256(stable.to_csv(index=False).encode("utf-8")).hexdigest()
 
 
 def validate_source(frame: pd.DataFrame) -> None:
-    """Validate the immutable Y0-F queue before excluding its test split.
-
-    Args:
-        frame: Full 3348-row Y0-F mapping with normalized bbox metadata.
-
-    Raises:
-        ValueError: If counts, patient isolation, labels, duplicates or cancer
-            bbox supervision disagree with the frozen protocol.
-    """
+    """校验Y0-F队列的规模、患者隔离、标签、重复项和癌图框监督。"""
     required = {
         "image_relpath", "yolo_image_relpath", "patient_id", "label", "split",
         "source", "center", "size_group", "sha256", "bbox_valid",
@@ -102,15 +93,7 @@ def validate_source(frame: pd.DataFrame) -> None:
 
 
 def assign_patient_folds(frame: pd.DataFrame) -> pd.DataFrame:
-    """Assign each train patient to one stratified OOF holdout fold.
-
-    Args:
-        frame: Y0-F train/val rows. Each patient has one split and one label.
-
-    Returns:
-        A copy with integer ``oof_fold`` for train rows and nullable values for
-        val rows. All images from one patient receive the same fold.
-    """
+    """按标签分层，将每位训练患者分配到一个OOF留出折。"""
     train_patients = (
         frame.loc[frame.split.eq("train"), ["patient_id", "label"]]
         .drop_duplicates()
@@ -137,7 +120,7 @@ def assign_patient_folds(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def annotate_protocol(frame: pd.DataFrame) -> pd.DataFrame:
-    """Add future ROI provenance fields without fabricating predictions."""
+    """预留后续ROI来源字段，但不伪造任何预测结果。"""
     output = frame.copy()
     train = output.split.eq("train")
     cancer = output.label.eq(1)
@@ -154,7 +137,7 @@ def annotate_protocol(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def fold_summary(frame: pd.DataFrame) -> pd.DataFrame:
-    """Summarize holdout image and patient counts by fold and label."""
+    """按折和标签汇总留出图像数与患者数。"""
     train = frame.loc[frame.split.eq("train")].copy()
     return (
         train.groupby(["oof_fold", "label"], as_index=False)
@@ -164,7 +147,7 @@ def fold_summary(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def run_self_test() -> None:
-    """Exercise patient grouping and deterministic five-fold assignment."""
+    """自测患者分组和确定性五折分配。"""
     rows = []
     for label in (0, 1):
         for patient in range(10):
@@ -183,7 +166,7 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Build the MG0a manifest and machine-readable audit products."""
+    """构建MG0a清单及机器可读的审计产物。"""
     args = parse_args()
     if args.self_test:
         run_self_test()

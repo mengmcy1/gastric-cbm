@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-"""Build MG0b independent-axis dynamic teacher ROI v3 candidates.
+"""构建MG0b独立轴动态教师ROI v3候选。
 
-V2 forced every crop to follow one fixed aspect rule. A long source box could
-therefore pull substantial unrelated context into its short axis. V3 expands
-normalized width and height independently: each axis keeps a 20% per-side
-margin until a 0.85 cap, while an already larger source extent is never
-shrunk. The resulting rectangular ROI is resized to 224x224 by the downstream
-teacher dataset, matching the usual ROIAlign-style fixed-size representation.
+V2强制所有裁图遵循固定形状规则，长条来源框会在短轴带入大量无关背景。
+V3分别扩展宽和高：每个方向尽量保留20%边距，并以0.85为上限，但不缩小
+已经更大的来源框。下游教师数据集再将矩形ROI统一调整到固定输入尺寸。
 
-The script writes a primary independent-axis manifest and a size-matched
-sensitivity manifest. It only reads the frozen MG0b train/validation queue;
-internal test and external data remain locked.
+本脚本输出独立轴主清单和尺寸匹配敏感性清单，只读取冻结的MG0b训练/验证
+队列，内部测试集和外部数据保持锁定。
 """
 
 from __future__ import annotations
@@ -58,7 +54,7 @@ GEOMETRY_GROUPS = {
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the frozen input manifest, output directory and self-test mode."""
+    """解析冻结输入清单、输出目录和自测模式。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-manifest", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -69,7 +65,7 @@ def parse_args() -> argparse.Namespace:
 def dynamic_target_extent(
     source_extent: float, margin: float = MARGIN, axis_cap: float = AXIS_CAP
 ) -> float:
-    """Expand one normalized axis without shrinking its source extent."""
+    """扩展一个归一化方向，同时不缩小来源范围。"""
     if not np.isfinite(source_extent) or not 0.0 < source_extent <= 1.0:
         raise ValueError(f"无效源框轴长: {source_extent}")
     expanded = source_extent * (1.0 + 2.0 * margin)
@@ -79,7 +75,7 @@ def dynamic_target_extent(
 def place_rectangular_crop(
     source_box: np.ndarray, target_width: float, target_height: float
 ) -> np.ndarray:
-    """Place an in-frame rectangular crop that completely contains source_box."""
+    """在图像内放置完整包含来源框的矩形裁剪框。"""
     source_box = np.asarray(source_box, dtype=float)
     x1, y1, x2, y2 = source_box
     source_width, source_height = x2 - x1, y2 - y1
@@ -102,7 +98,7 @@ def place_rectangular_crop(
 
 
 def source_coverage(frame: pd.DataFrame) -> pd.Series:
-    """Return the fraction of each source box covered by its candidate crop."""
+    """计算候选裁剪框对每个来源框的覆盖比例。"""
     intersection_width = np.maximum(
         0.0,
         np.minimum(frame.source_box_x2, frame.base_crop_x2)
@@ -121,7 +117,7 @@ def source_coverage(frame: pd.DataFrame) -> pd.Series:
 
 
 def update_crop_fields(record: dict, crop: np.ndarray, variant: str) -> None:
-    """Write crop geometry and source-relative tightness fields into a record."""
+    """将裁剪几何和相对来源框的紧致度写入记录。"""
     width, height = float(crop[2] - crop[0]), float(crop[3] - crop[1])
     source_width = float(record["source_box_x2"] - record["source_box_x1"])
     source_height = float(record["source_box_y2"] - record["source_box_y1"])
@@ -146,7 +142,7 @@ def update_crop_fields(record: dict, crop: np.ndarray, variant: str) -> None:
 
 
 def preserve_legacy_fields(record: dict) -> None:
-    """Keep the original pixel-square crop fields for lineage and comparison."""
+    """保留原像素正方形裁剪字段，用于血缘追踪和对照。"""
     for column in (
         "base_crop_x1", "base_crop_y1", "base_crop_x2", "base_crop_y2",
         "base_center_x", "base_center_y", "base_width", "base_height",
@@ -156,7 +152,7 @@ def preserve_legacy_fields(record: dict) -> None:
 
 
 def validate_manifest(frame: pd.DataFrame, name: str) -> pd.DataFrame:
-    """Validate coverage, unique queue membership and locked-data boundaries."""
+    """校验覆盖率、队列唯一性和锁定数据边界。"""
     boxes = frame[[
         "base_crop_x1", "base_crop_y1", "base_crop_x2", "base_crop_y2"
     ]].to_numpy(dtype=float)
@@ -175,7 +171,7 @@ def validate_manifest(frame: pd.DataFrame, name: str) -> pd.DataFrame:
 
 
 def build_independent_axis_manifest(frame: pd.DataFrame) -> pd.DataFrame:
-    """Build primary v3 crops by expanding width and height independently."""
+    """分别扩展宽和高，构建v3主裁剪清单。"""
     records = []
     for row in frame.itertuples(index=False):
         record = row._asdict()
@@ -206,11 +202,12 @@ def build_independent_axis_manifest(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_dimension_pools(frame: pd.DataFrame) -> dict[tuple[str, str], np.ndarray]:
-    """Fit paired width-height donor pools using train cancer crops only."""
+    """只使用训练癌图裁剪框建立宽高配对供体池。"""
     cancer = frame.loc[frame.split.eq("train") & frame.label.eq(1)]
     pools: dict[tuple[str, str], np.ndarray] = {}
 
     def paired_dimensions(subset: pd.DataFrame) -> np.ndarray:
+        """按稳定顺序整理同组癌图尺寸，供非癌ROI尺寸匹配使用。"""
         values = subset[["base_width", "base_height"]].to_numpy(dtype=float)
         order = np.lexsort((values[:, 0] / values[:, 1], values[:, 0] * values[:, 1]))
         return values[order]
@@ -226,7 +223,7 @@ def build_dimension_pools(frame: pd.DataFrame) -> dict[tuple[str, str], np.ndarr
 def resolve_dimension_pool(
     pools: dict[tuple[str, str], np.ndarray], source: str, size_group: str
 ) -> tuple[np.ndarray, str]:
-    """Resolve source-size, source-only, then global train-cancer donor pool."""
+    """依次按来源加尺寸、仅来源、全局训练癌图选择供体池。"""
     for key, level in (
         ((source, size_group), "source_size"),
         ((source, "*"), "source"),
@@ -238,7 +235,7 @@ def resolve_dimension_pool(
 
 
 def choose_paired_dimensions(pool: np.ndarray, quantile: float) -> tuple[float, float]:
-    """Choose one deterministic observed width-height pair from a donor pool."""
+    """从供体池中确定性选择一组真实出现过的宽高。"""
     if not len(pool):
         raise ValueError("尺寸匹配池为空")
     index = min(int(np.floor(quantile * len(pool))), len(pool) - 1)
@@ -246,7 +243,7 @@ def choose_paired_dimensions(pool: np.ndarray, quantile: float) -> tuple[float, 
 
 
 def build_size_matched_manifest(dynamic: pd.DataFrame) -> pd.DataFrame:
-    """Match non-cancer width-height pairs while retaining every source box."""
+    """为非癌图匹配宽高，同时确保完整保留来源框。"""
     pools = build_dimension_pools(dynamic)
     records = []
     for row in dynamic.itertuples(index=False):
@@ -282,7 +279,7 @@ def build_size_matched_manifest(dynamic: pd.DataFrame) -> pd.DataFrame:
 
 
 def geometry_audit(frame: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
-    """Fit geometry-only controls on train and evaluate once on validation."""
+    """在训练集拟合纯几何对照，并在验证集评估一次。"""
     train = frame.loc[frame.split.eq("train")]
     val = frame.loc[frame.split.eq("val")].copy()
     predictions = val[["relative_path", "patient_id", "label", "roi_source"]].copy()
@@ -307,7 +304,7 @@ def geometry_audit(frame: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
 
 
 def candidate_summary(frame: pd.DataFrame) -> pd.DataFrame:
-    """Summarize crop dimensions, tightness and coverage by split and label."""
+    """按数据划分和标签汇总裁剪尺寸、紧致度和覆盖率。"""
     audit = frame.copy()
     audit["source_coverage"] = source_coverage(audit)
     audit["full_frame"] = audit.base_width.ge(1.0 - 1e-12) & audit.base_height.ge(
@@ -334,7 +331,7 @@ def candidate_summary(frame: pd.DataFrame) -> pd.DataFrame:
 def save_candidate(
     frame: pd.DataFrame, output_dir: Path, manifest_name: str
 ) -> tuple[Path, dict, pd.DataFrame, list[str]]:
-    """Persist one candidate manifest, geometry audit, summary and QC sheets."""
+    """保存一套候选清单、几何审计、统计汇总和质控图。"""
     output_dir.mkdir()
     manifest_path = output_dir / manifest_name
     frame.to_csv(manifest_path, index=False, encoding="utf-8-sig")
@@ -349,7 +346,7 @@ def save_candidate(
 
 
 def run_self_test() -> None:
-    """Exercise independent scaling, long-box tightness and source containment."""
+    """自测独立缩放、长条框紧致度和来源框完整包含。"""
     expected = {0.20: 0.28, 0.50: 0.70, 0.70: 0.85, 0.80: 0.85, 0.90: 0.90}
     for source_extent, target_extent in expected.items():
         assert abs(dynamic_target_extent(source_extent) - target_extent) < 1e-12
@@ -366,7 +363,7 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Build both v3 candidates and save lineage, audits and visual QC."""
+    """构建两套v3候选，并保存血缘、审计和可视化质控。"""
     args = parse_args()
     if args.self_test:
         run_self_test()

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Train one MG0b cross-fitted YOLO and predict its unseen holdout fold.
+"""训练一个MG0b交叉拟合YOLO，并预测该模型未见过的留出折。
 
-Each detector sees only the current fold's fit/monitor patients. Its holdout
-patients are used once after training to save low-threshold Top-1 candidates for
-later MAGE teacher inputs. Project val, test and external data are not loaded.
+每个检测器只接触当前折的拟合和监控患者；训练结束后仅对留出患者预测一次，
+保存低阈值Top-1候选供MAGE教师使用，不读取项目验证、测试或外部数据。
 """
 
 from __future__ import annotations
@@ -43,15 +42,13 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "结果/MAGE/MG0b_OOF_YOLO_20260817"
 IMAGE_SIZE = 640
 N_FOLDS = 5
 BASE_SEED = 42
-# Ultralytics' asynchronous batch plotting can receive end-to-end boxes with
-# reversed display coordinates under the locked Pillow version. Plotting is a
-# diagnostic side effect, so MG0b disables it without changing optimization,
-# validation metrics or checkpoint selection.
+# 在当前锁定的Pillow版本中，Ultralytics异步批次绘图可能收到坐标方向颠倒的框。
+# 绘图只属于诊断副作用，因此MG0b将其关闭；这不会改变优化、验证指标或权重选择。
 MAGE_TRAIN_ARGS = {**FROZEN_TRAIN_ARGS, "plots": False}
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse outer fold, selected CUDA device, output, debug and resume mode."""
+    """解析外层折、CUDA设备、输出目录、调试和续训模式。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fold", type=int, choices=range(N_FOLDS), required=True)
     parser.add_argument("--device", required=True, help="nvidia-smi检查后选定的可见CUDA编号。")
@@ -63,12 +60,12 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_name(fold: int, debug: bool) -> str:
-    """Return a fold-explicit name that keeps debug products isolated."""
+    """生成包含折号的运行名称，并隔离调试产物。"""
     return f"mg0b_oof_yolo26s_fold{fold}{'_debug' if debug else ''}"
 
 
 def load_fold_mapping(fold: int) -> tuple[Path, pd.DataFrame]:
-    """Load one MG0b fold and verify fit/monitor/holdout patient isolation."""
+    """加载一个MG0b折，并校验拟合/监控/留出患者互斥。"""
     fold_root = DATA_ROOT / f"fold_{fold}"
     mapping_path = fold_root / "fold_mapping.csv"
     config_path = DATA_ROOT / "mg0b_data_views_config.json"
@@ -93,7 +90,7 @@ def load_fold_mapping(fold: int) -> tuple[Path, pd.DataFrame]:
 
 
 def verify_args_yaml(path: Path, fold: int, debug: bool, data_yaml: Path) -> dict:
-    """Verify persisted Ultralytics settings against the frozen Y3-F protocol."""
+    """将Ultralytics保存的设置与冻结Y3-F协议逐项核对。"""
     values = yaml.safe_load(path.read_text(encoding="utf-8"))
     expected = {
         **MAGE_TRAIN_ARGS,
@@ -118,7 +115,7 @@ def verify_args_yaml(path: Path, fold: int, debug: bool, data_yaml: Path) -> dic
 
 
 def verify_training_products(run_dir: Path, debug: bool) -> dict:
-    """Require checkpoints and a valid one-to-100 epoch training history."""
+    """确认权重文件存在，且训练历史包含有效的1至100轮记录。"""
     required = [
         run_dir / "args.yaml", run_dir / "results.csv",
         run_dir / "weights/best.pt", run_dir / "weights/last.pt",
@@ -143,7 +140,7 @@ def verify_training_products(run_dir: Path, debug: bool) -> dict:
 def predict_holdout(
     run_dir: Path, fold_root: Path, mapping: pd.DataFrame, device: str
 ) -> tuple[Path, dict]:
-    """Save Top-1 predictions for patients unseen by the current detector."""
+    """保存当前检测器未见患者的Top-1预测。"""
     holdout = mapping.loc[mapping.oof_role.eq("holdout")].copy().reset_index(drop=True)
     model = YOLO(str(run_dir / "weights/best.pt"))
     behavior = assert_locked_library_behavior(model)
@@ -174,7 +171,7 @@ def predict_holdout(
 
 
 def run_self_test() -> None:
-    """Check naming and require all five prepared fold views."""
+    """自测运行命名，并确认五个折的数据视图均已准备。"""
     assert run_name(2, False) == "mg0b_oof_yolo26s_fold2"
     assert run_name(2, True).endswith("_debug")
     for fold in range(N_FOLDS):
@@ -183,7 +180,7 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Train/resume one detector, predict holdout and freeze its provenance."""
+    """训练或续训一个检测器，预测留出折并冻结产物血缘。"""
     args = parse_args()
     if args.self_test:
         run_self_test()

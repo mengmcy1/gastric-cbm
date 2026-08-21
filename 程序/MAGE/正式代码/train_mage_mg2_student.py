@@ -1,38 +1,15 @@
 #!/usr/bin/env python3
-"""Train the preregistered MG2 full-image student with MAGE-like distillation.
+"""使用MAGE式蒸馏训练预注册的MG2全图学生模型。
 
-MG2 distills the frozen MG1b attention-pooling teacher (grayscale ROI input)
-into an EfficientNet-B0 student that reads the full-color 224x224 WLI image.
-The student reuses the MG1b architecture exactly: ``features[8] -> 1x1 Conv ->
-spatial softmax over 7x7 -> attention-weighted sum -> dropout + Linear``, with
-no GAP bypass. One entry point runs three arms that share architecture,
-ImageNet initialization, data order, sampler, augmentation and budget, and
-differ only in the loss:
+MG2把冻结MG1b灰度局部教师的判断与空间关注迁移到读取完整彩色胃镜图的
+EfficientNet-B0学生。A/B/C三组共用模型结构、初始化、数据顺序、采样器、
+增强和训练预算，只改变损失：A组只用分类CE；B组增加教师分类结果蒸馏；
+C组再增加癌图注意力蒸馏，正式beta只能从绑定SHA和训练配置的冻结JSON读取。
 
-- ``--arm A``: CE only (label_smoothing=0.1);
-- ``--arm B``: ``alpha*CE + (1-alpha)*tau^2*KL(teacher_soft||student_soft)``
-  on all samples, ``alpha=0.25``, ``tau=4``;
-- ``--arm C``: B + ``beta * mean_cancer KL(backfilled_teacher_attention ||
-  student_attention)``. Formal arm C reads ``beta`` only from the frozen
-  calibration JSON (``--beta-calibration-json``) after enforcing its SHA/seed/
-  batch-size binding; manual ``--beta`` is accepted only in debug mode.
-
-Coordinate backfill is the core geometry step: the teacher 7x7 attention is
-defined on the crop rectangle; each teacher cell's mass is distributed onto
-the student full-image 7x7 grid in proportion to the rectangle-intersection
-area with the actual (post-flip) ``base_crop_box``, then renormalized to sum
-1; mass outside the crop is zero. Training applies a synchronized horizontal
-flip (p=0.5) to the full image together with ``lesion_bbox`` and
-``base_crop_box`` before cropping the teacher ROI, so the backfill always uses
-the flip state that was actually applied. Teacher logits/attention for both
-flip states of every train/val image come from the SHA-bound cache built by
-``build_mage_mg2_teacher_cache.py``; arm A never reads the cache.
-
-Only manifest split=train and split=val are read; test/internal test/external
-never enter any stage and the config records all three flags as false.
-Checkpoint selection: highest val patient AUC, then highest val image AUC,
-then lowest val loss. Debug mode (``--debug``) subsamples patients per class
-and writes only into the dedicated debug directory.
+教师注意力先由局部裁图坐标回填到学生完整图，再与实际水平翻转保持同步。
+B/C组读取预计算且绑定SHA的教师缓存，A组不读取教师缓存。本脚本只使用
+train和val，不读取任何测试或外部数据；权重依次按患者AUC、图像AUC和
+验证损失选择，调试产物写入独立目录。
 """
 
 from __future__ import annotations
@@ -126,7 +103,7 @@ P6_PHOTOMETRIC = {
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the frozen MG2 arm selection, optimization and output parameters."""
+    """解析冻结的MG2实验组、优化参数和输出参数。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arm", choices=("A", "B", "C"), default=None,
                         help="损失臂：A仅CE；B加logit KD；C再加癌侧attention KD")
@@ -163,7 +140,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def seed_worker(worker_id: int) -> None:
-    """Seed numpy and python ``random`` in each DataLoader worker.
+    """为每个DataLoader工作进程设置numpy和Python随机种子。
 
     参数:
         worker_id (int): PyTorch分配的worker编号；实际种子取自
@@ -179,7 +156,7 @@ def seed_worker(worker_id: int) -> None:
 
 
 def flip_box_horizontal(box: np.ndarray) -> np.ndarray:
-    """Mirror one normalized ``[x1,y1,x2,y2]`` box under a horizontal flip.
+    """对归一化矩形框执行水平翻转。
 
     参数:
         box (np.ndarray): shape ``(4,)``，归一化到 ``[0,1]`` 的矩形。
@@ -195,7 +172,7 @@ def backfill_attention_to_full(
     crop_box: np.ndarray,
     grid_size: int = GRID_SIZE,
 ) -> np.ndarray:
-    """Distribute crop-defined teacher attention onto the full-image grid.
+    """将裁图坐标中的教师注意力分配到完整图网格。
 
     每个教师cell视为crop矩形内的均匀面积密度，按教师cell矩形与学生完整图
     cell矩形的相交面积占教师cell面积的比例分摊质量；crop外目标质量为0；
@@ -250,7 +227,7 @@ def backfill_attention_to_full(
 
 
 def build_student_photometric():
-    """Build the student-only P6 photometric augmentation (PIL in, PIL out).
+    """构建仅用于学生分支的P6光度增强，输入和输出均为PIL图像。
 
     参数: 无。
     返回:
@@ -291,7 +268,7 @@ def build_student_photometric():
 
 
 def teacher_roi_tensor(image: Image.Image, crop_box: np.ndarray) -> torch.Tensor:
-    """Crop the (possibly flipped) full image to the v3 ROI as a luma tensor.
+    """从可能已翻转的完整图裁出v3 ROI，并转换为灰度张量。
 
     参数:
         image (PIL.Image): RGB完整图，尺寸任意。
@@ -316,7 +293,7 @@ def teacher_roi_tensor(image: Image.Image, crop_box: np.ndarray) -> torch.Tensor
 def load_frozen_teacher(
     checkpoint_path: Path, device: torch.device
 ) -> tuple[AttentionPoolingTeacher, str]:
-    """Load the frozen MG1b teacher after verifying its SHA256 binding.
+    """校验SHA256绑定后加载冻结的MG1b教师。
 
     参数:
         checkpoint_path (Path): 教师checkpoint路径，只读，禁止修改。
@@ -350,7 +327,7 @@ def validate_teacher_cache(
     manifest_sha256: str,
     debug: bool,
 ) -> None:
-    """Verify SHA binding and per-image alignment of one teacher cache.
+    """校验教师缓存的SHA绑定和逐图对齐关系。
 
     参数:
         cache (dict): torch.load读出的缓存对象，必须含format/SHA/order/entries。
@@ -398,7 +375,7 @@ def validate_teacher_cache(
 def load_teacher_cache(
     cache_path: Path, frame: pd.DataFrame, manifest_sha256: str, debug: bool
 ) -> dict:
-    """Load one teacher cache from disk and run the full binding validation.
+    """从磁盘加载教师缓存并执行完整绑定校验。
 
     参数:
         cache_path (Path): 缓存 ``.pt`` 路径；不存在即失败（快速失败原则）。
@@ -418,7 +395,7 @@ def load_teacher_cache(
 
 
 class MG2StudentDataset(Dataset):
-    """Serve full-color student inputs plus optional cached teacher targets.
+    """提供全彩图学生输入和按实验组启用的教师缓存目标。
 
     训练态：以 ``stable_uniform(sha256, epoch, seed, "flip")`` 决定同步水平
     翻转，先翻转完整图并同步变换 ``lesion_bbox`` 与 ``base_crop_box``；学生
@@ -443,6 +420,7 @@ class MG2StudentDataset(Dataset):
         cache: dict | None,
         force_grayscale: bool = False,
     ):
+        """绑定学生数据、教师缓存和可复现的数据增强状态。"""
         self.frame = frame.reset_index(drop=True)
         self.training = training
         self.seed = seed
@@ -452,14 +430,15 @@ class MG2StudentDataset(Dataset):
         self.photometric = build_student_photometric() if training else None
 
     def __len__(self) -> int:
+        """返回当前数据划分的样本数。"""
         return len(self.frame)
 
     def set_epoch(self, epoch: int) -> None:
-        """Set the epoch used by deterministic synchronized horizontal flips."""
+        """设置确定性同步水平翻转使用的轮次。"""
         self.epoch = epoch
 
     def __getitem__(self, index: int) -> dict:
-        """Return one sample; see class docstring for branch semantics.
+        """读取一个样本，并按实验组返回学生输入与相应监督信息。
 
         返回dict的关键键：
             image (Tensor [3,224,224]) 学生输入；label (long)；row_index (int)；
@@ -546,7 +525,7 @@ def compute_mg2_losses(
     beta: float,
     label_smoothing: float,
 ) -> dict[str, torch.Tensor]:
-    """Compute the frozen per-arm MG2 loss and its raw components.
+    """计算各MG2实验组的冻结损失组合及其原始分量。
 
     参数:
         arm (str): ``"A"``/``"B"``/``"C"``，唯一改变损失组合方式的开关。
@@ -598,7 +577,7 @@ def compute_mg2_losses(
 
 
 def lesion_fraction_tercile_bounds(train: pd.DataFrame) -> tuple[float, float]:
-    """Freeze lesion-area-fraction tertiles from train cancer images only.
+    """只使用训练癌图冻结病灶面积占比三分位边界。
 
     参数:
         train (pd.DataFrame): split=train清单行，使用全图归一化
@@ -617,7 +596,7 @@ def lesion_fraction_tercile_bounds(train: pd.DataFrame) -> tuple[float, float]:
 
 
 def lesion_fraction_group(area: float, bounds: tuple[float, float]) -> str:
-    """Assign one full-image lesion area fraction to frozen train tertiles."""
+    """按冻结边界为完整图病灶面积占比分组。"""
     if area <= bounds[0]:
         return "small"
     if area <= bounds[1]:
@@ -628,7 +607,7 @@ def lesion_fraction_group(area: float, bounds: tuple[float, float]) -> str:
 def summarize_student_spatial(
     predictions: pd.DataFrame, bounds: tuple[float, float]
 ) -> dict:
-    """Summarize full-image AiB/normalized AiB/PGA and crop inside/outside mass.
+    """汇总完整图AiB、归一化AiB、PGA及裁图内外注意力质量。
 
     参数:
         predictions (pd.DataFrame): val图像级预测，癌图须含aib/pga/
@@ -676,7 +655,7 @@ def summarize_student_spatial(
 def subgroup_auc_report(
     predictions: pd.DataFrame, fields: tuple[str, ...] = ("source", "size_group")
 ) -> list[dict]:
-    """Report per-subgroup image/patient AUC for manifest metadata fields.
+    """按清单元数据分组报告图像级和患者级AUC。
 
     参数:
         predictions (pd.DataFrame): val图像级预测，含label与cancer_probability。
@@ -716,7 +695,7 @@ def evaluate(
     device: torch.device,
     bounds: tuple[float, float],
 ) -> tuple[pd.DataFrame, dict]:
-    """Evaluate the student on val and return predictions plus frozen metrics.
+    """在验证集评估学生，并返回预测和冻结口径指标。
 
     参数:
         model (AttentionPoolingTeacher): 学生模型（与教师同架构）。
@@ -827,7 +806,7 @@ def evaluate_color_stability(
     device: torch.device,
     seed: int,
 ) -> tuple[pd.Series, dict]:
-    """Run the descriptive luma-grayscale val copy and compare probabilities.
+    """运行灰度验证副本并比较概率，用于描述颜色稳定性。
 
     参数:
         model (AttentionPoolingTeacher): 已加载最佳权重的学生。
@@ -884,7 +863,7 @@ def train_epoch(
     stage: str,
     beta: float,
 ) -> dict:
-    """Train one epoch of one stage and return mean loss components.
+    """训练当前阶段的一个轮次，并返回各项平均损失。
 
     参数:
         arm (str): ``"A"``/``"B"``/``"C"``。
@@ -924,7 +903,7 @@ def train_epoch(
 
 
 def selection_key(metrics: dict) -> tuple:
-    """Return the frozen MG2 checkpoint ordering tuple.
+    """返回冻结的MG2权重排序键。
 
     参数:
         metrics (dict): evaluate返回的val指标。
@@ -937,7 +916,7 @@ def selection_key(metrics: dict) -> tuple:
 
 
 def prepare_output_dir(output_dir: Path, overwrite: bool) -> None:
-    """Refuse to overwrite existing formal products; creation happens at save.
+    """拒绝覆盖现有正式产物，并将目录创建延迟到保存阶段。
 
     参数:
         output_dir (Path): 本arm输出目录。
@@ -962,7 +941,7 @@ def prepare_output_dir(output_dir: Path, overwrite: bool) -> None:
 
 
 def expected_calibration_batches(train_images: int, batch_size: int) -> int:
-    """Return the frozen batch count of one complete calibration epoch.
+    """计算一个完整校准轮次对应的冻结批次数。
 
     参数:
         train_images (int): 当前train图片数（正式2350，debug为子集）。
@@ -977,7 +956,7 @@ def expected_calibration_batches(train_images: int, batch_size: int) -> int:
 def verify_calibration_epoch(
     batch_records: list[dict], train_images: int, batch_size: int
 ) -> None:
-    """Verify the calibration covered exactly one complete sampling epoch.
+    """校验校准过程恰好覆盖一个完整采样轮次。
 
     参数:
         batch_records (list[dict]): 逐批记录，每条含 ``sha256`` 样本列表。
@@ -1001,7 +980,7 @@ def verify_calibration_epoch(
 def calibration_sampling_audit(
     batch_records: list[dict], train: pd.DataFrame
 ) -> dict:
-    """Build the with-replacement sampling audit fields for the calibration JSON.
+    """为校准JSON构建有放回采样审计字段。
 
     参数:
         batch_records (list[dict]): 逐批样本SHA记录（已经过epoch完整性校验）。
@@ -1037,7 +1016,7 @@ def calibration_sampling_audit(
 
 
 def calibrate_beta(args: argparse.Namespace) -> None:
-    """Freeze beta from one complete calibration epoch before any val metric.
+    """在查看任何验证指标前，用一个完整校准轮次冻结beta。
 
     用冻结教师缓存、seed42、固定epoch=1翻转状态和患者/类别平衡有放回
     采样器，运行一个完整校准epoch（正式口径74批、2350次有放回抽样）；
@@ -1159,7 +1138,7 @@ def calibrate_beta(args: argparse.Namespace) -> None:
 
 
 def verify_frozen_calibration(payload: dict, self_sha256: str) -> None:
-    """Enforce the frozen-formal binding of the beta calibration JSON.
+    """强制校验beta校准JSON的正式冻结绑定。
 
     参数:
         payload (dict): 已通过基础字段校验的校准payload。
@@ -1206,7 +1185,7 @@ def load_beta_calibration(
     batch_size: int,
     debug: bool,
 ) -> dict:
-    """Load the frozen beta calibration JSON and enforce the SHA binding.
+    """加载冻结的beta校准JSON并强制执行SHA绑定。
 
     参数:
         calibration_path (Path): 校准JSON路径；缺失即快速失败。
@@ -1262,7 +1241,7 @@ def load_beta_calibration(
 def resolve_beta_binding(
     args: argparse.Namespace, manifest_sha256: str, cache_path: Path | None
 ) -> tuple[float, dict | None]:
-    """Resolve the only allowed beta source for each arm (frozen defense).
+    """按冻结防线确定各实验组唯一允许的beta来源。
 
     参数:
         args (argparse.Namespace): 命令行参数；``--beta``仅debug占位合法。
@@ -1297,15 +1276,25 @@ def resolve_beta_binding(
 
 
 def resolve_teacher_cache_path(args: argparse.Namespace) -> Path:
-    """Resolve the teacher cache path with explicit debug/formal separation."""
+    """在调试与正式模式严格隔离的前提下确定教师缓存路径。"""
     if args.teacher_cache is not None:
         return args.teacher_cache.resolve()
     return (DEFAULT_DEBUG_TEACHER_CACHE if args.debug else DEFAULT_TEACHER_CACHE).resolve()
 
 
 def main() -> None:
-    """Run one formal MG2 arm or the pre-val beta calibration step."""
+    """运行一个正式MG2实验组，或执行验证前beta校准。
+
+    调度顺序:
+        校准模式直接进入``calibrate_beta``；训练模式为
+        ``load_manifest`` -> cache/beta绑定 -> ``MG2StudentDataset`` ->
+        A/B两阶段``train_epoch/evaluate`` -> ``selection_key`` ->
+        最佳checkpoint复算、颜色稳定性诊断与产物导出。
+    输入为v3 train/val清单；B/C另读冻结教师缓存，C再读冻结
+    beta JSON。输出为单个arm的最佳学生、val预测、训练历史和config。
+    """
     args = parse_args()
+    # 0) beta校准是独立入口，只读train，不构建val指标。
     if args.calibrate_beta is not None:
         if args.debug:
             args.num_workers = 0
@@ -1315,6 +1304,7 @@ def main() -> None:
         raise ValueError("训练模式必须显式指定 --arm A|B|C")
     if args.seed != 42 and not args.debug:
         raise ValueError("MG2预注册只允许正式seed42")
+    # 1) 加载冻结train/val队列，并仅用train癌图计算病灶面积分层边界。
     seed_everything(args.seed)
     manifest_sha = file_sha256(args.manifest.resolve())
     frame, _ = load_manifest(
@@ -1327,6 +1317,7 @@ def main() -> None:
     val = frame.loc[frame.split.eq("val")].reset_index(drop=True)
     bounds = lesion_fraction_tercile_bounds(train)
 
+    # 2) arm A不读教师；arm B/C锁定同一教师cache；只有arm C允许绑定beta。
     cache = None
     cache_path = None
     if args.arm in ("B", "C"):
@@ -1353,6 +1344,7 @@ def main() -> None:
             args.device == "auto" and torch.cuda.is_available()
         ) else "cpu"
     )
+    # 3) Dataset准备全图学生输入，并按实验组附带对应的教师监督。
     train_dataset = MG2StudentDataset(train, True, args.seed, cache)
     val_dataset = MG2StudentDataset(val, False, args.seed, cache)
     generator = torch.Generator().manual_seed(args.seed)
@@ -1379,6 +1371,7 @@ def main() -> None:
         f"病灶面积三分位={bounds}; beta={beta}"
     )
 
+    # 4) stage A稳定新attention/classifier；stage B从A最佳权重解冻features[5:]。
     history = []
     best = {"key": None, "state": None, "stage": None, "epoch": None, "metrics": None}
     best_stage_a_state = None
@@ -1441,6 +1434,7 @@ def main() -> None:
                 print(f"stageB early stop: 连续{args.patience}轮无冻结排序改善")
                 break
 
+    # 5) 恢复全阶段最佳状态并复算val；灰度副本只做颜色依赖诊断。
     model.load_state_dict(best["state"], strict=True)
     final_predictions, final_metrics = evaluate(model, val_dataset, val_loader, device, bounds)
     if abs(final_metrics["val_patient_auc"] - best["metrics"]["val_patient_auc"]) > 1e-12:
@@ -1463,6 +1457,7 @@ def main() -> None:
     }
     patient_predictions = patient_mean(final_predictions, "cancer_probability")
 
+    # 6) 所有复算通过后才落盘checkpoint、预测、history和完整血缘config。
     output_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = output_dir / f"mg2_arm{args.arm.lower()}_best_student.pth"
     torch.save({

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Build and audit the locked MG0b teacher-ROI manifest.
+"""构建并审计冻结的MG0b教师ROI清单。
 
-Train cancer images use GT boxes; train non-cancer images use patient-level
-OOF YOLO Top-1 boxes. Validation cancer images use GT boxes and validation
-non-cancer images use the frozen Y3-F seed-42 Top-1 predictions. Missing
-candidates receive a deterministic source/size-matched fallback centered on
-valid image content. Internal test and external data are never loaded.
+训练癌图使用真值框，训练非癌图使用患者级OOF YOLO Top-1框；验证癌图使用
+真值框，验证非癌图使用冻结的Y3-F seed42 Top-1预测。缺失候选采用按来源和
+尺寸匹配的确定性回退框。本脚本不读取内部测试集或外部数据。
 """
 
 from __future__ import annotations
@@ -53,7 +51,7 @@ GEOMETRY_FEATURES = [
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse frozen inputs, output location and self-test mode."""
+    """解析冻结输入、输出位置和自测模式。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--g0-manifest", type=Path, default=G0_MANIFEST)
     parser.add_argument("--oof-root", type=Path, default=OOF_ROOT)
@@ -65,7 +63,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def file_sha256(path: Path) -> str:
-    """Return the SHA-256 digest of one file."""
+    """计算单个文件的SHA-256。"""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -74,7 +72,7 @@ def file_sha256(path: Path) -> str:
 
 
 def normalized_square_box(box: np.ndarray, width: int, height: int, margin: float) -> np.ndarray:
-    """Expand a normalized box, make it square in pixels and clamp it in-frame."""
+    """扩展归一化框，将其像素范围正方形化并限制在图像内。"""
     scale = np.array([width, height, width, height], dtype=float)
     x1, y1, x2, y2 = np.asarray(box, dtype=float) * scale
     if not np.all(np.isfinite([x1, y1, x2, y2])) or x2 <= x1 or y2 <= y1:
@@ -89,7 +87,7 @@ def normalized_square_box(box: np.ndarray, width: int, height: int, margin: floa
 
 
 def content_center(image_path: Path) -> tuple[float, float]:
-    """Return the center of the non-black content bounds in normalized coordinates."""
+    """返回非黑色有效内容区域的归一化中心。"""
     with Image.open(image_path) as image:
         gray = np.asarray(image.convert("L"))
     ys, xs = np.where(gray > 8)
@@ -101,7 +99,7 @@ def content_center(image_path: Path) -> tuple[float, float]:
 
 
 def centered_box(cx: float, cy: float, width: float, height: float) -> np.ndarray:
-    """Place one normalized box at a center while keeping it inside the image."""
+    """以指定中心放置归一化框，并确保框位于图像内。"""
     width, height = min(max(width, 1e-4), 1.0), min(max(height, 1e-4), 1.0)
     cx = min(max(cx, width / 2.0), 1.0 - width / 2.0)
     cy = min(max(cy, height / 2.0), 1.0 - height / 2.0)
@@ -110,7 +108,7 @@ def centered_box(cx: float, cy: float, width: float, height: float) -> np.ndarra
 
 
 def validate_g0(frame: pd.DataFrame) -> None:
-    """Validate the immutable train/val queue and reject locked-data contamination."""
+    """校验不可变训练/验证队列，并阻止锁定数据混入。"""
     expected = {("train", 0): 1169, ("train", 1): 1181,
                 ("val", 0): 257, ("val", 1): 240}
     if len(frame) != 2847 or frame.groupby(["split", "label"]).size().to_dict() != expected:
@@ -127,7 +125,7 @@ def validate_g0(frame: pd.DataFrame) -> None:
 
 
 def load_oof_predictions(oof_root: Path) -> tuple[pd.DataFrame, dict[str, str]]:
-    """Merge five formal OOF holdout predictions and verify unique coverage."""
+    """合并五折正式OOF留出预测，并校验唯一完整覆盖。"""
     frames, hashes = [], {}
     for fold in range(N_FOLDS):
         run = oof_root / f"mg0b_oof_yolo26s_fold{fold}"
@@ -156,7 +154,7 @@ def load_oof_predictions(oof_root: Path) -> tuple[pd.DataFrame, dict[str, str]]:
 
 
 def merge_predictions(g0: pd.DataFrame, oof: pd.DataFrame, y3f_path: Path) -> pd.DataFrame:
-    """Attach role-correct Top-1 predictions to the frozen train/val manifest."""
+    """按数据角色将正确来源的Top-1预测合入冻结清单。"""
     prediction_columns = [
         "relative_path", "top1_confidence", "candidate_count_at_0p001",
         "top1_x1", "top1_y1", "top1_x2", "top1_y2", "prediction_provenance",
@@ -184,7 +182,7 @@ def merge_predictions(g0: pd.DataFrame, oof: pd.DataFrame, y3f_path: Path) -> pd
 
 
 def fallback_size_pool(frame: pd.DataFrame) -> dict[tuple[str, str], tuple[float, float]]:
-    """Build deterministic raw lesion-size medians from train cancer GT boxes."""
+    """由训练癌图真值框构建确定性的病灶尺寸中位数池。"""
     cancer = frame.loc[frame.split.eq("train") & frame.label.eq(1)].copy()
     cancer["raw_width"] = cancer.bbox_x2_norm - cancer.bbox_x1_norm
     cancer["raw_height"] = cancer.bbox_y2_norm - cancer.bbox_y1_norm
@@ -204,7 +202,7 @@ def fallback_size_pool(frame: pd.DataFrame) -> dict[tuple[str, str], tuple[float
 def choose_fallback_size(
     pools: dict[tuple[str, str], tuple[float, float]], source: str, size_group: str
 ) -> tuple[float, float, str]:
-    """Resolve source+size, source-only, then global fallback dimensions."""
+    """依次按来源加尺寸、仅来源、全局范围确定回退框尺寸。"""
     for key, level in (((source, size_group), "source_size"),
                        ((source, "*"), "source"), (("*", "*"), "global")):
         if key in pools:
@@ -213,7 +211,7 @@ def choose_fallback_size(
 
 
 def assign_teacher_boxes(frame: pd.DataFrame) -> pd.DataFrame:
-    """Assign GT, predicted or deterministic fallback source and base crop boxes."""
+    """为每张图分配真值框、预测框或确定性回退框。"""
     pools = fallback_size_pool(frame)
     records = []
     for row in frame.itertuples(index=False):
@@ -268,7 +266,7 @@ def assign_teacher_boxes(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def patient_mean_auc(frame: pd.DataFrame, probability_column: str) -> float:
-    """Return patient-level AUC after mean aggregation of image probabilities."""
+    """按患者平均聚合图像概率后计算患者级AUC。"""
     patient = frame.groupby("patient_id", as_index=False).agg(
         label=("label", "first"), probability=(probability_column, "mean")
     )
@@ -276,7 +274,7 @@ def patient_mean_auc(frame: pd.DataFrame, probability_column: str) -> float:
 
 
 def geometry_only_audit(frame: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
-    """Fit geometry-only LR on train and evaluate image/patient AUC on val."""
+    """在训练集拟合纯几何逻辑回归，并在验证集评估图像/患者AUC。"""
     train = frame.loc[frame.split.eq("train")].copy()
     val = frame.loc[frame.split.eq("val")].copy()
     model = make_pipeline(
@@ -299,7 +297,7 @@ def geometry_only_audit(frame: pd.DataFrame) -> tuple[dict, pd.DataFrame]:
 
 
 def describe_group(frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """Return grouped image/patient counts and ROI geometry summaries."""
+    """按指定字段汇总图像数、患者数和ROI几何统计。"""
     return (
         frame.groupby(columns, dropna=False)
         .agg(
@@ -314,7 +312,7 @@ def describe_group(frame: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
 
 
 def crop_image(image: Image.Image, box: np.ndarray) -> Image.Image:
-    """Crop one normalized box and return a 224-square luma RGB teacher view."""
+    """按归一化框裁图，并生成224尺寸的三通道灰度教师视图。"""
     width, height = image.size
     pixels = (box * np.array([width, height, width, height])).round().astype(int)
     pixels[[0, 2]] = np.clip(pixels[[0, 2]], 0, width)
@@ -323,7 +321,7 @@ def crop_image(image: Image.Image, box: np.ndarray) -> Image.Image:
 
 
 def fit_panel(image: Image.Image, size: int) -> Image.Image:
-    """Letterbox an image into a square white QC panel without distortion."""
+    """不改变比例地将图像放入白色正方形质控画布。"""
     panel = Image.new("RGB", (size, size), "white")
     fitted = image.copy()
     fitted.thumbnail((size, size), Image.Resampling.LANCZOS)
@@ -332,7 +330,7 @@ def fit_panel(image: Image.Image, size: int) -> Image.Image:
 
 
 def qc_triptych(row: pd.Series) -> Image.Image:
-    """Render original, annotated source/base boxes and clean grayscale crop."""
+    """绘制原图、来源框/裁剪框标注图和灰度裁图三联图。"""
     with Image.open(PROJECT_ROOT / row.image_relpath) as handle:
         original = handle.convert("RGB")
     annotated = original.copy()
@@ -359,7 +357,7 @@ def qc_triptych(row: pd.Series) -> Image.Image:
 
 
 def save_qc_sheet(frame: pd.DataFrame, path: Path, title: str) -> None:
-    """Save vertically stacked triptychs for one deterministic QC stratum."""
+    """保存一个确定性质控分层的纵向三联图集合。"""
     if frame.empty:
         return
     triptychs = [qc_triptych(row) for _, row in frame.iterrows()]
@@ -374,7 +372,7 @@ def save_qc_sheet(frame: pd.DataFrame, path: Path, title: str) -> None:
 
 
 def stratified_qc(frame: pd.DataFrame, output_dir: Path) -> list[str]:
-    """Create deterministic QC sheets for GT, confidence bands and fallback ROIs."""
+    """为真值框、置信度分层和回退ROI生成确定性质控图。"""
     rng = np.random.default_rng(QC_SEED)
     qc_dir = output_dir / "qc"
     qc_dir.mkdir()
@@ -407,7 +405,7 @@ def stratified_qc(frame: pd.DataFrame, output_dir: Path) -> list[str]:
 
 
 def run_self_test() -> None:
-    """Exercise square clamping, deterministic placement and geometry audit."""
+    """自测正方形框约束、确定性放置和几何审计。"""
     square = normalized_square_box(np.array([0.1, 0.2, 0.3, 0.4]), 800, 600, 0.2)
     assert np.all((square >= 0) & (square <= 1))
     pixels = square * np.array([800, 600, 800, 600])
@@ -430,7 +428,7 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Build the formal teacher manifest, audits, geometry baseline and QC sheets."""
+    """构建正式教师清单、审计、几何基线和质控图。"""
     args = parse_args()
     if args.self_test:
         run_self_test()

@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""Summarize MG2-L and select the attention-first SAE handoff product.
+"""汇总MG2-L，并选择注意力优先的SAE交接产物。
 
-MG2-L compares A-long (CE) with C-long (CE + logit KD + attention KD) under
-the same extended stage-B budget.  It does not revise the original MG2 gate
-decision.  A candidate can enter SAE only when spatial alignment improves and
-classification remains inside the frozen safety envelope.  If both original
-MG2-C and C-long are eligible, selection is lexicographic by normalized AiB,
-then PGA, then patient AUC.
+MG2-L在相同延长训练预算下比较A-long与C-long，不修改原MG2门槛结论。
+候选模型只有在空间对齐改善且分类性能保持在冻结安全范围内时才能进入SAE。
+若原MG2-C和C-long都合格，则依次按归一化AiB、PGA和患者AUC选择。
 """
 
 from __future__ import annotations
@@ -46,7 +43,7 @@ MIN_STRATUM_IMAGES = 15
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse result roots and the machine-readable output path."""
+    """解析结果根目录和机器可读输出路径。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-root", type=Path, default=DEFAULT_RUN_ROOT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
@@ -55,13 +52,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_dir(root: Path, arm: str, long_run: bool) -> Path:
-    """Return the frozen result directory for one original or long arm."""
+    """返回一个原始或延长训练实验组的冻结结果目录。"""
     prefix = "mg2l" if long_run else "mg2"
     return root / f"{prefix}_arm{arm.lower()}_efficientnet_b0_seed42"
 
 
 def metric_view(config: dict) -> dict:
-    """Extract metrics needed by the attention-first safety gates."""
+    """提取注意力优先安全门槛所需指标。"""
     metrics = config["metrics"]
     return {
         "patient_auc": float(metrics["val_patient_auc"]),
@@ -74,7 +71,7 @@ def metric_view(config: dict) -> dict:
 
 
 def verify_pair(configs: dict, calibration: dict) -> None:
-    """Validate the A-long/C-long product lineage and equal training budget."""
+    """校验A-long/C-long产物血缘和相同训练预算。"""
     for arm, config in configs.items():
         if int(config.get("seed", -1)) != 42 or bool(config.get("debug")):
             raise ValueError(f"{arm}-long的seed/debug标记不符合正式协议")
@@ -118,7 +115,7 @@ def verify_pair(configs: dict, calibration: dict) -> None:
 
 
 def attention_sae_gates(control: dict, candidate: dict, m0f_auc: float) -> dict:
-    """Evaluate the frozen five attention-first SAE handoff requirements."""
+    """评估五条冻结的注意力优先SAE交接要求。"""
     a, c = metric_view(control), metric_view(candidate)
     a_spatial, c_spatial = a["spatial"], c["spatial"]
     naib_gain = float(c_spatial["mean_normalized_aib"]) - float(
@@ -164,7 +161,7 @@ def attention_sae_gates(control: dict, candidate: dict, m0f_auc: float) -> dict:
 
 
 def main() -> None:
-    """Validate both experiments, evaluate gates and freeze one SAE product."""
+    """校验两组实验、评估门槛并冻结一个SAE产物。"""
     args = parse_args()
     run_root = args.run_root.resolve()
     long_configs = {

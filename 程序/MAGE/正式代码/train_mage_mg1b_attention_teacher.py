@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
-"""Train the preregistered MG1b bbox-supervised attention-pooling teacher.
+"""训练预注册的MG1b框监督注意力汇聚教师模型。
 
-The input is the frozen independent-axis dynamic ROI v3 luma crop. EfficientNet-
-B0 produces a 7x7 feature map; a learned spatial softmax attention map is both
-supervised by cancer bounding boxes and used as the only pooling path into the
-classifier. Non-cancer images receive classification supervision only.
-
-Only train and validation rows are read. A checkpoint can enter MG2 only when
-all frozen classification and spatial gates pass. Otherwise the best diagnostic
-state is retained under an explicitly ineligible filename.
+输入为冻结的独立轴动态ROI v3灰度裁图。EfficientNet-B0负责提取视觉特征，
+注意力头同时接受癌图病灶框监督并作为分类前唯一的特征汇聚路径；非癌图只接受
+分类监督。脚本只读取训练和验证队列，满足全部冻结门槛的权重才可进入MG2。
 """
 
 from __future__ import annotations
@@ -65,7 +60,7 @@ NORMALIZED_AIB_MAX_BBOX_AREA = 0.99
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the frozen MG1b optimization and output parameters."""
+    """解析冻结的MG1b优化参数和输出参数。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--v3-audit", type=Path, default=DEFAULT_V3_AUDIT)
@@ -88,7 +83,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def bbox_in_crop(row: pd.Series) -> np.ndarray:
-    """Convert the original normalized lesion bbox into v3 crop-relative coordinates."""
+    """将原图归一化病灶框换算为v3裁图内的相对坐标。"""
     crop = np.array([
         row.base_crop_x1, row.base_crop_y1, row.base_crop_x2, row.base_crop_y2
     ], dtype=np.float64)
@@ -109,7 +104,7 @@ def bbox_in_crop(row: pd.Series) -> np.ndarray:
 
 
 def cell_overlap_map(bbox: np.ndarray, grid_size: int = GRID_SIZE) -> np.ndarray:
-    """Return each grid cell's fractional area covered by one normalized bbox."""
+    """计算病灶框覆盖每个网格单元的面积比例。"""
     overlap = np.zeros((grid_size, grid_size), dtype=np.float32)
     x1, y1, x2, y2 = map(float, bbox)
     cell = 1.0 / grid_size
@@ -124,7 +119,7 @@ def cell_overlap_map(bbox: np.ndarray, grid_size: int = GRID_SIZE) -> np.ndarray
 
 
 def target_distribution(overlap: np.ndarray) -> np.ndarray:
-    """Normalize positive grid overlap into the bbox supervision distribution."""
+    """将网格重叠面积归一化为病灶框空间监督分布。"""
     total = float(overlap.sum())
     if total <= 0:
         raise ValueError("bbox与7x7网格没有相交面积")
@@ -132,7 +127,7 @@ def target_distribution(overlap: np.ndarray) -> np.ndarray:
 
 
 def lesion_tercile_bounds(train: pd.DataFrame) -> tuple[float, float]:
-    """Freeze lesion-area tertiles using train cancer images only."""
+    """只使用训练癌图冻结病灶面积三分位边界。"""
     areas = []
     for _, row in train.loc[train.label.eq(1)].iterrows():
         bbox = bbox_in_crop(row)
@@ -142,7 +137,7 @@ def lesion_tercile_bounds(train: pd.DataFrame) -> tuple[float, float]:
 
 
 def lesion_group(area: float, bounds: tuple[float, float]) -> str:
-    """Assign a crop-relative lesion area to frozen train tertiles."""
+    """按冻结边界为裁图内病灶面积分组。"""
     if area <= bounds[0]:
         return "small"
     if area <= bounds[1]:
@@ -151,22 +146,25 @@ def lesion_group(area: float, bounds: tuple[float, float]) -> str:
 
 
 class MG1bDataset(Dataset):
-    """Return luma ROI, label and synchronized 7x7 bbox supervision metadata."""
+    """读取灰度ROI，并同步准备分类标签和病灶框空间监督。"""
 
     def __init__(self, frame: pd.DataFrame, training: bool, seed: int):
+        """保存数据清单，并初始化可复现的数据增强状态。"""
         self.frame = frame.reset_index(drop=True)
         self.training = training
         self.seed = seed
         self.epoch = 0
 
     def __len__(self) -> int:
+        """返回当前数据划分的样本数。"""
         return len(self.frame)
 
     def set_epoch(self, epoch: int) -> None:
-        """Set the epoch used by deterministic horizontal flips."""
+        """设置确定性水平翻转所使用的轮次。"""
         self.epoch = epoch
 
     def __getitem__(self, index: int) -> dict:
+        """读取一张ROI，并同步生成分类标签和病灶空间监督。"""
         row = self.frame.iloc[index]
         with Image.open(PROJECT_ROOT / row.image_relpath) as handle:
             image = handle.convert("RGB")
@@ -208,9 +206,10 @@ class MG1bDataset(Dataset):
 
 
 class AttentionPoolingTeacher(nn.Module):
-    """Map [B,3,224,224] to logits [B,2] through supervised 7x7 attention only."""
+    """使用EfficientNet、监督注意力头和分类头完成教师前向计算。"""
 
     def __init__(self, pretrained: bool):
+        """建立EfficientNet特征提取器、注意力头和二分类头。"""
         super().__init__()
         weights = EfficientNet_B0_Weights.IMAGENET1K_V1 if pretrained else None
         base = efficientnet_b0(weights=weights)
@@ -220,6 +219,7 @@ class AttentionPoolingTeacher(nn.Module):
         self.classifier = nn.Sequential(nn.Dropout(p=0.2), nn.Linear(channels, 2))
 
     def forward(self, images: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """按“特征提取 -> 注意力汇聚 -> 分类”完成一次前向计算。"""
         feature = self.features(images)
         attention = torch.softmax(self.attention_head(feature).flatten(1), dim=1)
         attention = attention.view(-1, 1, GRID_SIZE, GRID_SIZE)
@@ -228,7 +228,7 @@ class AttentionPoolingTeacher(nn.Module):
 
 
 def set_stage(model: AttentionPoolingTeacher, stage: str) -> None:
-    """Freeze all parameters, then enable exactly the preregistered MG1b stage."""
+    """先冻结全部参数，再按预注册阶段启用指定模块。"""
     for parameter in model.parameters():
         parameter.requires_grad = False
     if stage == "A":
@@ -243,7 +243,7 @@ def set_stage(model: AttentionPoolingTeacher, stage: str) -> None:
 
 
 def set_train_mode(model: AttentionPoolingTeacher, stage: str) -> None:
-    """Keep frozen BN fixed while enabling active blocks and both heads."""
+    """保持冻结批归一化层不变，并启用当前阶段模块和两个头。"""
     model.eval()
     if stage == "B":
         for block in model.features[5:]:
@@ -260,7 +260,7 @@ def compute_losses(
     has_target: torch.Tensor,
     label_smoothing: float,
 ) -> dict[str, torch.Tensor]:
-    """Compute classification CE and cancer-only bbox distribution KL."""
+    """计算分类交叉熵和仅用于癌图的病灶框分布KL损失。"""
     classification = F.cross_entropy(logits, labels, label_smoothing=label_smoothing)
     if bool(has_target.any()):
         target = targets[has_target].flatten(1)
@@ -288,7 +288,7 @@ def spatial_batch_metrics(
     bbox: torch.Tensor,
     has_target: torch.Tensor,
 ) -> list[dict]:
-    """Compute cancer-image AiB, normalized AiB and peak-grid accuracy values."""
+    """计算癌图AiB、归一化AiB和注意力峰值命中指标。"""
     output = []
     for index in torch.where(has_target)[0].tolist():
         mass = attention[index, 0]
@@ -309,7 +309,7 @@ def spatial_batch_metrics(
 
 
 def summarize_spatial(rows: pd.DataFrame, bounds: tuple[float, float]) -> dict:
-    """Summarize overall and frozen lesion-size-stratified spatial alignment."""
+    """汇总整体及按冻结病灶尺寸分层的空间对齐结果。"""
     cancer = rows.loc[rows.label.eq(1)].copy()
     cancer["lesion_size_group"] = cancer.lesion_area.map(lambda value: lesion_group(value, bounds))
     strata = {}
@@ -350,7 +350,7 @@ def evaluate(
     device: torch.device,
     bounds: tuple[float, float],
 ) -> tuple[pd.DataFrame, dict]:
-    """Return image predictions and preregistered classification/spatial metrics."""
+    """评估模型并返回图像预测、分类指标和空间指标。"""
     model.eval()
     rows = []
     totals = {name: 0.0 for name in ("total", "classification", "spatial_kl", "weighted_spatial")}
@@ -427,7 +427,7 @@ def evaluate(
 
 
 def eligibility(metrics: dict) -> dict:
-    """Apply all frozen MG1b product gates to one validation epoch."""
+    """对一个验证轮次应用全部冻结的MG1b产物门槛。"""
     gates = {
         "patient_auc": metrics["val_patient_auc"] >= PATIENT_AUC_FLOOR,
         "image_auc": metrics["val_image_auc"] >= IMAGE_AUC_FLOOR,
@@ -439,7 +439,7 @@ def eligibility(metrics: dict) -> dict:
 
 
 def selection_key(metrics: dict, eligible: bool) -> tuple:
-    """Rank eligible products first, then use the frozen metric priority order."""
+    """优先选择合格产物，再按冻结的指标优先级排序。"""
     return (
         int(eligible), metrics["val_patient_auc"], metrics["val_image_auc"],
         metrics["spatial"]["mean_normalized_aib"], metrics["spatial"]["pga"],
@@ -454,7 +454,7 @@ def train_epoch(
     device: torch.device,
     stage: str,
 ) -> dict:
-    """Train one epoch and report each loss component on its native scale."""
+    """训练一个轮次，并按原始尺度报告各项损失。"""
     set_train_mode(model, stage)
     totals = {name: 0.0 for name in ("total", "classification", "spatial_kl", "weighted_spatial")}
     seen = 0
@@ -478,7 +478,7 @@ def train_epoch(
 
 
 def run_self_test() -> None:
-    """Check overlap geometry, flip semantics, loss masking and no-GAP model output."""
+    """自测重叠几何、翻转同步、损失掩码和无旁路模型输出。"""
     bbox = np.array([0.2, 0.3, 0.8, 0.9])
     overlap = cell_overlap_map(bbox)
     target = target_distribution(overlap)
@@ -506,13 +506,22 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Train, gate and export one formal MG1b attention teacher experiment."""
+    """训练、筛选并导出一组正式MG1b注意力教师实验。
+
+    调度顺序:
+        ``load_manifest`` -> ``MG1bDataset/DataLoader`` ->
+        ``AttentionPoolingTeacher`` -> stage A/B ``train_epoch`` ->
+        ``evaluate`` -> ``eligibility/selection_key`` -> checkpoint复算与导出。
+    输入来自CLI指定的v3 train/val清单和审计JSON；输出为最佳
+    checkpoint、逐图/逐患者val预测、训练历史和config。
+    """
     args = parse_args()
     if args.self_test:
         run_self_test()
         return
     if args.seed != 42 and not args.debug:
         raise ValueError("MG1b预注册只允许正式seed42")
+    # 1) 冻结数据边界：只读train/val v3 ROI，并用train癌图冻结病灶分层。
     seed_everything(args.seed)
     frame, _ = load_manifest(
         args.manifest.resolve(), args.v3_audit.resolve(), args.debug,
@@ -538,6 +547,7 @@ def main() -> None:
             args.device == "auto" and torch.cuda.is_available()
         ) else "cpu"
     )
+    # 2) Dataset准备教师输入与空间监督；采样器平衡患者与类别。
     train_dataset = MG1bDataset(train, True, args.seed)
     val_dataset = MG1bDataset(val, False, args.seed)
     generator = torch.Generator().manual_seed(args.seed)
@@ -561,6 +571,7 @@ def main() -> None:
         f"val={len(val)}张/{val.patient_id.nunique()}人; 病灶三分位={bounds}"
     )
 
+    # 3) stage A只训attention/classifier；stage B从A阶段最佳状态解冻features[5:]。
     history = []
     best = {"key": None, "state": None, "stage": None, "epoch": None, "metrics": None,
             "eligible": False, "gates": None}
@@ -623,6 +634,7 @@ def main() -> None:
                 print(f"stageB early stop: 连续{args.patience}轮无预注册排序改善")
                 break
 
+    # 4) 重载冻结排序选出的最佳状态，重算一次val防止内存记录与权重不一致。
     model.load_state_dict(best["state"], strict=True)
     final_predictions, final_metrics = evaluate(model, val_dataset, val_loader, device, bounds)
     final_gate = eligibility(final_metrics)
@@ -630,6 +642,7 @@ def main() -> None:
         raise RuntimeError("MG1b最佳checkpoint合格状态复算不一致")
     patient_predictions = patient_mean(final_predictions, "cancer_probability")
 
+    # 5) 只有训练和最佳状态复算成功后才创建正式产物目录。
     output_dir.mkdir(parents=True)
     checkpoint_name = "mg1b_best_teacher.pth" if best["eligible"] else "mg1b_best_diagnostic_ineligible.pth"
     checkpoint_path = output_dir / checkpoint_name

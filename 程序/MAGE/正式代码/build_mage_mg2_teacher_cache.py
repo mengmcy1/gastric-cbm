@@ -1,18 +1,10 @@
 #!/usr/bin/env python3
-"""Build the SHA-bound MG2 teacher cache over train/val x both flip states.
+"""为训练/验证图像的两种翻转状态构建绑定SHA的MG2教师缓存。
 
-The MG2 teacher forward depends only on the image and its horizontal flip
-state, so this script precomputes, for every train/val row of the frozen v3
-manifest and for both flip states, the frozen MG1b teacher's logits [2] and
-spatial-softmax 7x7 attention [49]. The pipeline matches training exactly:
-flip the full image first, transform ``base_crop_box`` accordingly, then crop
-the luma ROI from the flipped image. The cache records the teacher checkpoint
-SHA256 and manifest SHA256; arms B/C must load and validate this single cache
-through ``train_mage_mg2_student.load_teacher_cache``. Arm A never reads it.
-
-Only train/val rows are read. Debug mode builds the cache for the same
-patient-level debug subset used by ``train_mage_mg2_student.py --debug`` and
-writes to the dedicated debug directory.
+MG2教师输出只取决于图像和水平翻转状态，因此本脚本提前计算冻结MG1b教师
+对每张图两种状态的分类输出与注意力。处理顺序与训练一致：先翻转完整图并
+同步变换裁剪框，再提取灰度教师ROI。缓存记录教师权重和清单SHA，B/C组必须
+加载并校验同一缓存，A组不读取缓存。本脚本只读取训练和验证队列。
 """
 
 from __future__ import annotations
@@ -43,7 +35,7 @@ from train_mage_mg2_student import (
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse cache build inputs, output path and debug mode."""
+    """解析缓存构建输入、输出路径和调试模式。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--v3-audit", type=Path, default=DEFAULT_V3_AUDIT)
@@ -64,7 +56,7 @@ def build_entries(
     device: torch.device,
     batch_size: int,
 ) -> dict:
-    """Run the frozen teacher over every row in both flip states.
+    """对每行图像的两种翻转状态运行冻结教师。
 
     参数:
         frame (pd.DataFrame): train+val清单行（debug时为debug子集），
@@ -115,7 +107,7 @@ def build_entries(
 
 
 def main() -> None:
-    """Build, self-validate and save the MG2 teacher cache."""
+    """构建、自校验并保存MG2教师缓存。"""
     args = parse_args()
     manifest_sha = file_sha256(args.manifest.resolve())
     frame, _ = load_manifest(

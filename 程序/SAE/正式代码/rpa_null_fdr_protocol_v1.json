@@ -1,0 +1,95 @@
+{
+  "protocol_name": "rpa_cross_seed_null_fdr_v1",
+  "status": "candidate_freeze_pending_user_confirmation",
+  "eligible_protocol_sha256": "3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91",
+  "eligible_audit_summary_sha256": "2b16886e898c09062ee80b0d0eaa6be068aa3a07def5cb9d5419d3c2f013f5ba",
+  "eligible_feature_csv_sha256": "b354c8491e47fbb0c6646cccf5c0946cfab1bd3cc1d412ffb37c9b2cd2f7c172",
+  "eligible_values": {
+    "top_q": 0.02,
+    "p_min_train": 25,
+    "val_top_q_count": 6,
+    "a_min": 0.00510204081632653
+  },
+  "target_stratification": {
+    "dimensions": ["patient_coverage", "active_position_frequency"],
+    "binning": "seed42_eligible_train_quartile_absolute_cutpoints",
+    "patient_coverage_cutpoints": [
+      0.3853135313531353,
+      0.4603960396039604,
+      0.5932343234323433
+    ],
+    "active_position_frequency_cutpoints": [
+      0.00868114825,
+      0.011580897,
+      0.01865023925
+    ],
+    "boundary_rule": "numpy.searchsorted_side_right",
+    "stratum_count": 16,
+    "minimum_nonempty_target_stratum_size": 32,
+    "small_stratum_policy": "seed_pair_null_stratification_infeasible_no_merging"
+  },
+  "raw_metrics": [
+    "signed_decoder_cosine",
+    "union_positive_patient_spearman",
+    "top_patient_jaccard",
+    "same_image_spatial_similarity"
+  ],
+  "metric_percentile": {
+    "train": "source_row_empirical_midrank_over_all_valid_targets",
+    "val": "frozen_train_source_row_empirical_cdf_less_plus_half_equal",
+    "higher_is_better": true,
+    "undefined_candidate_policy": "candidate_invalid"
+  },
+  "score": {
+    "behavior": "median(U_spearman,U_jaccard,U_spatial)",
+    "edge": "min(U_decoder,U_behavior)",
+    "best_candidate_order": [
+      "edge_score_desc",
+      "signed_decoder_cosine_desc",
+      "target_feature_id_asc"
+    ],
+    "raw_direction_gates": {
+      "signed_decoder_cosine": "greater_than_0",
+      "union_positive_patient_spearman": "greater_than_0",
+      "top_patient_jaccard": "greater_than_0",
+      "same_image_spatial_similarity": "greater_than_0"
+    },
+    "failed_raw_gate_policy": "directed_hypothesis_p_equals_1"
+  },
+  "null": {
+    "type": "exact_conditional_permutation",
+    "permutation_unit": "behavior_tuple_within_target_stratum_relative_to_decoder",
+    "b_null": null,
+    "monte_carlo_used": false,
+    "tail": "P_null(max_candidate_edge_score_greater_or_equal_observed)",
+    "computation": "product_of_stratum_hypergeometric_no_overlap_probabilities",
+    "tie_operator": "greater_or_equal",
+    "empty_or_nonfinite_policy": "directed_hypothesis_p_equals_1"
+  },
+  "fdr": {
+    "method": "Benjamini-Hochberg",
+    "q": 0.05,
+    "family": "both_directions_all_eligible_source_features_within_one_unordered_seed_pair",
+    "sort_tiebreak": [
+      "p_value_asc",
+      "source_seed_asc",
+      "source_feature_id_asc",
+      "target_feature_id_asc"
+    ],
+    "no_rejection_policy": "seed_pair_has_zero_edges"
+  },
+  "post_fdr": {
+    "order": ["BH-FDR", "reciprocal_nearest_neighbour", "one_to_one_assertion"],
+    "edge_requires_both_directions_rejected": true,
+    "rnn_ties": "already_resolved_by_best_candidate_order",
+    "conflict_policy": "conflict_is_implementation_error_no_greedy_resolution"
+  },
+  "val": {
+    "feature_universe": "frozen_train_eligible_feature_ids",
+    "strata": "frozen_train_assignments",
+    "metric_cdf": "frozen_train_source_row_empirical_cdf",
+    "null_survival_function": "frozen_train_exact_conditional_permutation_function",
+    "new_permutation_or_new_null": false,
+    "matching_graph": "recomputed_from_val_behavior_then_train_null_mapping"
+  }
+}

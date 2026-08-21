@@ -12,8 +12,8 @@
 1. AGENTS.md：长期背景、数据边界、目录、文件安全、Git和注释规则；
 2. SAE实验进度与结果讨论.md：当前协议、即时状态、结果、阻塞项和下一步；
 3. MAGE实验进度与结果讨论.md中C-long的模型血缘、注意力QC和外部描述性投影；
-4. 文献/SAE可能相关/、文献/2_M-CBM_DeSantis_ICLR2026.pdf和
-   文献/3_ProtoMIL_Sun_MICCAI2025.pdf；
+4. 先读文献/SAE可能相关/README_文献分级索引.md，再按任务读取对应分级目录，另读
+   文献/2_M-CBM_DeSantis_ICLR2026.pdf和文献/3_ProtoMIL_Sun_MICCAI2025.pdf；
 5. 本轮相关正式代码、冻结manifest、缓存、checkpoint和SHA。数字以正式产物为准。
 
 开始操作前先只读检查git status、目标输出目录和运行状态。GPU任务先运行nvidia-smi，
@@ -59,11 +59,12 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 
 | 项目 | 状态 | 当前结论或阻塞项 |
 | --- | --- | --- |
-| 文献调研 | 两轮完成 | 首轮：已独立精读InterPLM、ProtoMIL和M-CBM；两份ProtoMIL为同一论文的预印本与正式版。第二轮（2026-08-20）：针对正式矩阵失败模式（train/val cosine差距）定向调研，详见"第二轮文献调研"节 |
+| 文献调研 | 四轮完成 | 已覆盖InterPLM、ProtoMIL、M-CBM、PatchSAE、Histoscope及病理SAE等工作；第四轮（2026-08-21）专门核验S2c后Feature复现、家族、癌/非癌共享性、医生盲审、语义反证与因果干预，详见“S2c后正式解释阶段规划”及本地文献核验笔记 |
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
-| 新SAE结构 | S2-S3已预注册，2026-08-19冻结 | 同轮比较0.4x/1x/2x/4x/8x五档字典；Linear-ReLU+L1加`gamma=0.1` margin保真；lambda网格{2e-4,5e-4,1e-3}、训练预算、checkpoint规则、四项成功门槛、Pareto选择顺序、剪枝规则与Top-K备选均已冻结 |
-| 复现口径 | 已明确 | 只有一个C-long seed42；复现为同一冻结特征上的SAE seed42/202/503 |
+| 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
+| RP-SAE新解释范式 | RP-A主体未冻结，eligible子协议已冻结 | seed42正式train-only审计与400次split-half已完成并通过9/9 SHA验收；冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`。其余七类未决项关闭前仍禁止运行43/44/202/503/911 |
+| 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
@@ -72,7 +73,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | S2b代码 | 已实现并完成debug验收 | 独立核心模块、正式入口、四臂矩阵脚本、自动汇总器和18项回归测试已落盘；CPU debug的B/C/D/N四臂均端到端跑通；启动器和汇总器已支持将BatchTopK阈值不可实现记为正式协议失败，不阻断独立实验臂 |
 | S2b正式矩阵 | 已完成（2026-08-20），`no_patch_product_stop_s2b` | B/C/D/N四臂与自动汇总全部完成；S4-B因train正预激活数不足而协议失败；S4-C/D均通过8项门槛中的6项，同时未达到患者预测一致率`>=0.95`和pooled cosine`>=0.90`；无唯一patch正式产品，按预注册停止，不进入SAE seed202/503复现，不追加K/宽度/归一化/门槛调参 |
 | S2b失败诊断 | v2已完成，2026-08-20 | C/D正式指标均以`1e-6`容差复现；两臂各翻转17/260位患者且多数位于冻结阈值附近；完整替换翻转主要由内容重构驱动；正式pooled cosine短板已确认在标签、来源、分辨率和画中画等分层中广泛存在，而非单一亚组崩溃 |
-| S2c Matryoshka patch SAE | 协议冻结、实现与审阅完成，待正式seed42 | 单一模型在同一字典中联合学习`K={64,128,256,512,1024}`五层嵌套粒度；24项S2c测试、18项S2b回归及CPU端到端debug均通过；补齐纯诊断FVU/explained variance、gamma初始化SHA与公式复验、冻结K跨seed交接、Feature覆盖和完整分层；训练后选择通过八项门槛的最小K，通过后才进入SAE seed202/503复现和医学生概念命名 |
+| S2c Matryoshka patch SAE | 已正式结束（2026-08-21），无正式产品 | seed42五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；状态为`no_product_stop_s2c`，不运行原S2c的seed202/503复现，不把任何K交给医生正式命名 |
 
 ## 第一轮文献结论
 
@@ -567,6 +568,114 @@ a_intervened = Decoder(h_intervened) + residual
 
 概念标注必须class-agnostic：同一概念的正负例同时覆盖癌与非癌，不能让"是否被标注"本身
 泄露疾病标签。
+
+## S2c后正式解释阶段规划（2026-08-21确认）
+
+> **历史条件规划：** 本节按“S2c产生正式产品”这一前提起草。S2c现已按预注册失败，本节
+> 已被后文RP-SAE新协议替代，仅保留解释原则和历史决策依据，不代表当前执行路线。
+
+本节只规定S2c成功后的解释流程、证据维度和定阈值原则，不修改S2c训练、八项门槛、
+最小合格K或停止规则。具体跨seed匹配阈值、家族边阈值、富集边界和医生panel数量，
+必须等S2c产生正式产品和三seed分布后，使用train/val只读统计单独预注册；不得查看医生
+命名、干预结果、internal test或external后再调整。
+
+长期原则冻结为：
+
+> 共享不删，重复先组家族，伪特征经临床审核与因果干预后再处理。
+
+同时冻结以下八条解释边界：
+
+1. 癌/非癌共享不能作为删除依据；
+2. Feature相似性只产生family candidate，不自动合并；
+3. 技术Feature family与医学概念family必须区分；
+4. 跨SAE seed对齐先于family构建；
+5. 医生先盲审语义，再揭示类别、来源、空间和贡献；
+6. 伪特征必须同时有视觉一致性、混杂关联和干预证据；
+7. 单Feature与family-level干预并行；
+8. M-CBM概念必须经过独立存在性标注，不能直接把SAE激活当医学真值。
+
+### 后续证据链与进入条件
+
+```text
+S2c正式K
+→ SAE seed42/202/503复现
+→ 跨seed Feature对齐
+→ 技术Feature family候选
+→ 癌/非癌四维共享性审计
+→ 医生两级盲审
+→ 来源与伪特征审计
+→ 单Feature与family残差保留干预
+→ M-CBM候选概念
+```
+
+只有S2c seed42产生正式K并按冻结协议完成SAE seed202/503复现后，才启动本流程。若S2c
+失败，本节不作为继续扫描K、修改`0.90`门槛或追加SAE结构的理由，应另立解释方法协议。
+
+### 跨seed对齐与Feature family分工
+
+跨seed alignment回答seed42 Feature在seed202/503中是否存在近似对应物，是优化随机性
+复现证据；Feature family回答多个不同Feature是否属于同一粗粒度语义家族。两者不能合并
+为一次聚类，也不能把跨seed匹配数量解释为唯一标准概念的数量。
+
+跨seed匹配至少综合带符号decoder方向余弦、患者激活Spearman、Top患者Jaccard和空间响应
+相似性，优先采用互为最近邻。医学家族使用带符号cosine；S2c质量控制中冻结的
+`abs cosine >= 0.95`仍只用于重复率，不能改写，也不能直接用于医学家族合并。
+
+家族构建以Feature为节点、多证据合格关系为边，层次聚类或HDBSCAN只生成候选结构。
+医生最终可判为同一家族、同一粗概念的不同亚型、技术相关但语义不同或无法判断；所有
+原始Feature编号、单Feature统计和family归属必须同时保留。
+
+### 癌/非癌四维共享性审计
+
+每个Feature和候选family分别报告：
+
+1. 标签共享：癌/非癌患者覆盖率、激活均值与中位数、标签AUC及患者bootstrap置信区间；
+2. 语义共享：两类Top图是否呈现同一视觉含义；
+3. 空间共享：两类中是否在病灶、背景或相同解剖位置响应；
+4. 因果共享：两类中干预后margin与癌概率是否呈相同方向变化。
+
+标签类别最终至少包括癌富集、非癌富集、共享高覆盖、共享低覆盖/稀有、混合/不稳定。
+“共享”不能只由AUC接近0.5定义；正式边界在三seed Feature分布完成后冻结。
+
+### 来源、设备与伪特征审计
+
+器械、反光、气泡、黏液、文字、黑边、画中画、分辨率、医院和设备风格分别审计。
+来源关联必须同时报告全体患者、癌患者内部和非癌患者内部结果，或拟合患者级
+`Feature ~ Label + Source`模型，防止把癌/非癌构成差异误判为来源特征。
+
+高风险伪特征必须同时具备：视觉模式一致、在控制标签后仍与来源/伪影相关、且干预后
+模型决策发生稳定变化。只满足其中一项时标为疑似风险，不得直接删除。
+
+### 医生两级盲审与语义反证
+
+Stage 1只审核“Feature是什么”：按患者去重展示高、中、低、零激活样本、跨癌/非癌样本、
+空间响应和近邻困难负例，不显示标签AUC、富集名称、来源和分类贡献。医生记录医学病灶
+形态、正常结构、共享背景、伪特征、单义、疑似多义或无法判断。
+
+Stage 2再审核“模型如何使用Feature”：揭示癌/非癌富集、来源、病灶内外位置、margin和
+干预结果，判断这种使用是否医学合理。近邻困难负例承担主动证伪作用：若医生初始命名为
+“黏膜发红”，应检查外观同样发红但不激活的图，修订真正触发Feature的附加条件。
+
+初筛和深审panel数量属于待定执行参数，只按医生工作量和train/val分布预注册，不把任何
+文献中的样本数直接当作胃镜标准。
+
+### 单Feature与家族级干预
+
+沿用S7残差保留重构，同时对单Feature和整个候选family做多剂量缩放，比较原始、部分抑制
+和完全置零下的margin、癌概率及患者级指标，检查剂量反应是否稳定。随机对照至少匹配
+family成员数、患者激活频率和基线总重构/分类贡献。
+
+单Feature效应小而family效应明显时，只能表述为“与Feature splitting或冗余补偿相容”，
+不能宣称已经证明Feature absorption。最终进入M-CBM的候选需同时满足视觉一致、跨患者、
+跨seed、空间合理、来源风险低或已解释、分类贡献稳定及干预方向合理。
+
+### 文献边界
+
+Histoscope、M-CBM、ProtoMIL、PICASSO和两篇病理SAE工作直接支持专家审核、共享概念、
+困难负例、空间/家族组织和伪影干预；PatchSAE支持patch级空间归因。A is for Absorption、
+Descriptive Collision、Sparse Autoencoders Do Not Find Canonical Units of Analysis以及
+Revising and Falsifying SAE Feature Explanations来自语言模型，当前只作为方法学风险和
+流程设计依据，不作为胃镜Feature已经发生分裂、吸收、命名碰撞或非原子性的实证。
 
 ## 第二轮文献调研：泛化差距与Patch级SAE（2026-08-20）
 
@@ -1067,6 +1176,563 @@ S2c是当前“严格重构型SAE”路线的终点实验，而不是继续扫�
 Feature置零后的概率/margin变化，以及供医学生填写“病灶/正常结构/反光/气泡/器械/无法判断”
 的人工审核表。癌与非癌共有Feature不自动删除，需结合空间位置和置零干预判断其临床含义。
 
+## S2c seed42正式结果（2026-08-21）
+
+正式运行完成1000 epoch，按五层联合val总损失选择的最佳checkpoint为epoch 998。输出：
+
+`结果/SAE/CLong_S2c_Matryoshka_20260821/s2c_clong_seed42/`
+
+状态为`no_product_stop_s2c`，`selected_k=None`。逐K核心结果如下：
+
+| K | 重构患者AUC | AUC下降 | pooled cosine | 冻结阈值一致率 | 翻转患者/260 | recovered CE | 未通过门槛 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 64 | 0.90898 | 0.00116 | 0.92236 | 0.93846 | 16 | 1.00178 | 一致率 |
+| 128 | 0.90906 | 0.00108 | 0.95410 | 0.93077 | 18 | 0.99978 | 一致率 |
+| 256 | 0.90805 | 0.00209 | 0.96926 | 0.94231 | 15 | 0.98724 | 一致率 |
+| 512 | 0.90890 | 0.00124 | 0.97383 | 0.94231 | 15 | 0.98268 | 一致率 |
+| 1024 | 0.90960 | 0.00054 | 0.97526 | 0.94231 | 15 | 0.98604 | 一致率 |
+
+原始C-long患者AUC为0.91014。五个K的AUC下降、pooled cosine、recovered CE、五层并集
+死亡率、非死亡重复率、normalized AiB下降和PGA下降均通过冻结门槛；五层并集死亡率与
+重复率均为0。每个位置的实际L0等于对应K，没有正激活不足。
+
+### 正式判定
+
+Matryoshka结构已经解决S2b的主要方向保真问题：最低K=64的cosine已达到0.92236，明显
+超过冻结下限0.90；增大K后cosine最高达到0.97526，患者AUC下降始终不超过0.0021，空间
+指标也保持稳定。因此本轮不是字典死亡、重复、空间注意力崩坏或AUC明显退化。
+
+唯一失败项是冻结患者阈值一致率。不同K仍有15–18/260位患者跨过原冻结阈值；即使K从
+256增加到1024，一致率仍停在0.94231，没有达到0.95。这说明残余问题主要是阈值附近患者
+对微小概率变化敏感，而不是继续增加K即可稳定解决。冻结协议不允许因此放宽门槛。
+
+结论：**S2c按预注册失败，严格重构型SAE路线正式停止。** 不选择“最接近”的K，不运行
+SAE seed202/503，不启动跨seed Feature family正式流程，也不追加K、不修改0.95/0.90门槛、
+不继续调`gamma_pool`。这些结果可作为结构诊断证据保留，但不能包装成稳定SAE产品交给
+医生正式命名。后续若继续解释研究，必须另立Gated SAE、更合适解释层或概念粒度与重构
+粒度分离等新的预注册问题。
+
+## RP-A预注册草案：残差保留解释探针的技术确认（待确认，未冻结）
+
+状态：**本节是新研究问题的可执行草案，不是S2c修订，也尚未冻结。** 在本节所有`TBD`
+参数、校准函数、实现自测和输出血缘完成审阅前，不得运行seed43/44/202/503/911。
+
+### 研究问题与S2c边界
+
+S2c已经否定“SAE重构可作为C-long表示的严格替代产品”达到冻结标准；该失败结论保持不变。
+RP-SAE改问：在正常预测始终使用原C-long特征的前提下，Matryoshka SAE能否提出跨患者、
+跨独立SAE初始化稳定的稀疏Feature，并通过后续临床反证和残差保留干预显示解释价值。
+
+RP-A只确认技术稳定性，不进行医生命名、正式Feature family合并或正式干预结论。S2c的
+`agreement >= 0.95`保留为历史产品门槛与描述性诊断，不再作为RP-A成功门槛。
+
+### 固定表示与残差定义
+
+解释对象仍为C-long `features[8]`输出的`F in R^(49x1280)`。开发选择暂定：
+
+```text
+SAE结构：S2c同一10240宽Matryoshka patch SAE
+K_coverage：1024（每位置最多1024个正激活Feature）
+N_review：后续临床审核候选数量，不是Top-K；RP-A不冻结具体数量
+```
+
+`K_coverage=1024`只用于新问题中定义高覆盖SAE分量，不是S2c正式产品，也不改变S2c失败。
+每个patch位置`p`定义：
+
+```text
+r_p = F_p - D(h_p)
+F_p = D(h_p) + r_p
+F'_p = F_p + D(h'_p) - D(h_p)
+```
+
+正常预测始终使用原始`F`。只有干预时构造`F'`；正式路径重新计算冻结C-long attention、
+attention pooling、logit和概率，固定原attention只作机制分解诊断。
+
+### 训练损失与gamma_pool血缘
+
+RP-A所有新SAE seed继承S2c正式校准的同一个`gamma_pool`，不逐seed重校准：
+
+```text
+gamma_pool_policy = inherit_s2c_seed42
+gamma_pool_value = 0.5095280077324069
+gamma_pool_source_json = 结果/SAE/CLong_S2c_Matryoshka_20260821/gamma_pool_calibration_seed42.json
+gamma_pool_source_json_sha256 = 3e427764415873cb5a3e6d7f8259350c96a968f48e82bd31c37a030b1dc7f35f
+gamma_pool_source_initial_state_sha256 = 26848587ae80438c92ba64cb0d6eec794a5e90f9f8ff33819f568dca034359db
+per_seed_recalibration = false
+```
+
+训练入口必须从上述JSON读取全精度值并核验协议、manifest、C-long学生、空间缓存和校准JSON
+SHA；禁止CLI手工覆盖。每个新seed仍须保存自己的初始化state SHA，但不得据此重新校准
+`gamma_pool`。这样跨seed实验只改变SAE初始化，不混入seed-specific loss calibration。
+
+### 全部SAE激活分量消融：纯诊断
+
+RP-A对train/val额外报告`all-latent ablation`，令所有latent为0：
+
+```text
+F'_p = F_p + D(0) - D(h_p)
+```
+
+若decoder含bias，则该差分形式会抵消bias对应的实现歧义，但结果不命名为“裸residual-only”。
+它回答“SAE显式激活分量整体承载了多少可干预决策信号”，不是单Feature/family因果效应的
+严格上限，也不假定非线性attention重算后的效应可加。
+
+必须同时报告image/patient的margin与probability变化、AUC、冻结阈值预测变化、attention
+KL/cosine；重算attention为主结果，固定原attention只作内容机制诊断。config固定写入
+`all_latents_zero_diagnostic_only=true`，该结果不参与RP-A PASS/FAIL、Feature匹配、阈值、
+K或seed选择。输出JSON必须把两条路径分别记录为`attention_mode=recomputed`和
+`attention_mode=fixed`，不得共用或覆盖同一个`delta_margin`字段。
+
+### seed角色与顺序
+
+| seed | 角色 | 允许用途 |
+| ---: | --- | --- |
+| 42 | development | 已完成的S2c开发证据和新假设来源，不计确认成功数 |
+| 43、44 | development-calibration | 仅用开发阶段技术统计校准匹配算法与实际稳定性门槛，不进入正式确认、临床结论或正式干预结论 |
+| 202、503 | confirmation | 规则冻结后运行，必须2/2通过RP-A；不得重估阈值 |
+| 911 | held-out SAE initialization replication | 仅在RP-A通过且RP-B/RP-C全部冻结后运行；不是独立数据或新患者验证 |
+
+若202或503任一失败，RP-SAE停止，不运行911。911不得修改匹配阈值、family规则、
+`N_review`、概念名单、医生panel、干预剂量、随机对照或成功标准。
+
+### eligible Feature定义
+
+以下规则及数值必须在运行43/44前冻结：
+
+- 非死亡：train上激活超过`ACTIVE_EPS=1e-8`；
+- 最低患者覆盖`P_min_train=25`，由冻结`q=0.02`与1212位train患者生成；
+- 最低激活位置频率`A_min=0.25/49=0.00510204081632653`；
+- Top患者规则冻结为全split患者的最高`q=0.02`，train取25人、val取6人；
+- decoder按冻结单位范数约定比较；
+- 所有激活统计先按患者聚合，避免多图患者获得更大权重；
+- patch到image、image到patient的聚合不能只写一个笼统函数。必须分别冻结
+  `presence/coverage`、`ranking`和`activation mass`三种用途的公式；候选可包括49位置
+  max、均值、Top-q均值或C-long attention加权，但不得在看到seed43/44后选择；
+- 同一患者多图的聚合方式也须逐用途冻结，并保存分母、缺失图像和并列处理规则。
+
+eligible规则不得在看到43/44低频Feature稳定性后修改，否则`R_feature`分母可被人为改变。
+
+### 激活聚合公式：已冻结（2026-08-21）
+
+本小节已通过正式审计/校准JSON、代码SHA、协议SHA、9/9产物SHA和测试验收；
+后续seed不得重估聚合公式或数值。
+对患者`u`的第`i`张图、
+49位置中的`p`和Feature `j`，令`h_uipj >= 0`为`K_coverage=1024`激活，且：
+
+```text
+z_uipj = 1[h_uipj > ACTIVE_EPS]
+ACTIVE_EPS = 1e-8
+```
+
+三种用途不共用一个万能分数：
+
+| 用途 | patch到image | image到patient | 后续用途 |
+| --- | --- | --- | --- |
+| presence | 任一位置`h>eps` | 任一图present | `P_min`与患者覆盖 |
+| ranking | `max_p h_uipj` | `max_i image_score_uij` | Spearman、Top患者与临床原型 |
+| activation mass | `mean_p h_uipj` | `mean_i image_mass_uij` | `R_activation` |
+
+具体定义为：
+
+```text
+image_presence_uij   = 1[max_p h_uipj > eps]
+patient_presence_uj  = 1[max_i image_presence_uij = 1]
+patient_coverage_j   = sum_u patient_presence_uj
+
+active_frequency_uj  = mean_i mean_p z_uipj
+active_frequency_j   = mean_u active_frequency_uj
+
+image_rank_uij       = max_p h_uipj
+patient_rank_uj      = max_i image_rank_uij
+
+image_mass_uij       = mean_p h_uipj
+patient_mass_uj      = mean_i image_mass_uij
+dataset_mass_j       = sum_u patient_mass_uj
+```
+
+presence使用患者任一图出现，避免只在一张病灶图出现的概念被其他图平均掉；同时用患者平衡
+的`active_frequency_j`识别“很多患者偶尔蹭到一次、但实际位置频率极低”的Feature。ranking
+服务最强局部证据，activation mass服务总体使用量；多图患者在mass中仍只贡献一个患者均值。
+
+Top-patient按`patient_rank_uj`取全split患者的最高`q%`。候选集固定为
+`Q={0.01,0.02,0.05,0.10}`，在seed42完整train全部非死亡Feature上选择满足非零患者支持的
+最大q。正式train-only审计得到`q=0.02`、train人数`ceil(0.02*1212)=25`。
+边界同分值最终以原始稳定`patient_id`升序打破，
+不使用随机数。任何split正激活患者不足Top-q人数时，`top_q_behavior_evaluable=false`，不得
+用零分患者补满；val对应人数为`ceil(0.02*260)=6`。
+
+2026-08-21正式审计同时更正一处早期口径混淆：患者覆盖率的第1百分位为
+`14.39%`（约174人），但这不是最小值；10240个 full-train non-dead Feature的
+实际最小覆盖为`53/1212=4.37%`。由于冻结函数要求候选q对所有基础
+Feature都不混入零激活患者，`q=0.05`不安全而`q=0.02`通过。这是执行
+预先写死的函数所得结果，不是事后改规则。
+
+跨seed患者Spearman只在union-positive患者集合上计算：双方同时为0者排除，单方为0者保留，
+双方为正者保留。Top-q仍以全split患者数为分母，不能改为union-positive人数。ranking是
+ordinal score，只允许用于Spearman、Top-q和原型排序；禁止跨Feature解释绝对幅度，也禁止
+进入activation mass或representation energy。患者图数对max-ranking的共同偏差预计可被
+同患者结构的分层null部分吸收，但不表述为已消除，并须保留ranking与患者图数相关性审计。
+
+### 同图49位置空间复现：拟冻结，待工程产物化
+
+对同一输入图像，比较seed A Feature `j`和seed B Feature `k`的两个原始非负49维激活图；
+不做min-max、softmax、减均值或单位方差标准化，只计算raw-map cosine：
+
+```text
+both nonzero: spatial_image = cosine(h_A[49], h_B[49])
+one zero:     spatial_image = 0
+both zero:    spatial_image = NA
+
+union_active_images_u = 该患者中至少一侧非零的图像
+spatial_patient_u = mean(spatial_image over union_active_images_u)
+spatial_pair = mean(spatial_patient_u over valid patients)
+```
+
+一侧非零而另一侧全零记0，用于惩罚漏响应；两侧都为零不能证明空间复现，故记NA而非1。
+患者内先平均、患者间再平均，防止图多患者获得更大权重。只在双方共同激活图上计算的cosine
+可在未来作为diagnostic候选，但不替代上述主候选。正式输出另存`n_evaluable_patients`、
+`n_union_active_images`、`fraction_one_side_zero`和`fraction_both_active`，用于区分“双方非零
+但位置正交”和“一侧未响应”。最少valid患者数、浮点零判断、均值累积精度及空集合处理仍须
+在运行43/44前冻结。
+
+### seed42 train-only聚合分布审计：输出先冻结
+
+审计只读取seed42正式checkpoint和train空间缓存，不读取val、internal test、external，不训练
+也不改变任何Feature。每个Feature只允许固定输出：
+
+```text
+feature_id
+patient_coverage_count / patient_coverage_fraction
+active_position_frequency
+patient_rank q50/q75/q90/q95/q99/max
+activation_mass total / patient_q50/patient_q90/patient_q99
+positive_patient_count
+top_q_nonzero_count（仅针对预先列明的候选q）
+ranking_score与患者图数的Pearson相关（只作max聚合偏差审计）
+representation_energy（字段预留，公式冻结前不得填充正式值）
+```
+
+总体只输出`patient_coverage`、`active_position_frequency`、patient ranking和activation mass
+分布，以及患者覆盖率超过0.25/0.50/0.75/0.90的Feature比例。审计脚本、候选q列表、输入SHA、
+输出schema和自动选值函数必须在执行前完成审阅；不得先生成更多统计再事后挑选。当前不引入
+“大于Feature自身某分位数才算激活”的显著激活阈值。若presence严重饱和，只能按审计前
+写死的不可识别规则处理，不能在看到43/44后临时更换定义。
+
+### active_frequency_calibration_spec：已冻结（2026-08-21）
+
+基础Feature universe固定为seed42完整train五层激活并集中的非死亡Feature：
+
+```text
+J_full_nondead = {j: Feature j在seed42完整train五层并集激活上为non-dead}
+
+G_A = {0.25/49, 0.5/49, 1/49, 2/49}
+B_split = 400
+Q_low = 0.05
+quantile_impl = numpy.quantile
+quantile_method = lower
+T_J = 0.80
+T_rho = 0.90
+N_E_min = 100
+N_anchor_min = 100
+```
+
+`B_split=400`是预注册计算预算：经验CDF步长为0.0025，5%下尾取非插值的经验观测值；不把
+400次高度重叠的分半解释为独立实验，也不声称分位数具有固定标准误。所有分位数使用
+`numpy.quantile(..., method="lower")`，并记录NumPy版本。
+
+每次按患者在`label x source` stratum内确定性分半，患者全部图随患者移动。禁止Python内置
+`hash()`；UTF-8输入字段使用明确分隔符和十进制split seed，分别计算：
+
+```text
+patient_key_sha = SHA256(
+  "patient_order" | protocol_sha | split_seed | stratum_id | patient_id
+)
+offset_sha = SHA256(
+  "stratum_offset" | protocol_sha | split_seed | stratum_id
+)
+offset = int(offset_sha, 16) mod 2
+half = (zero_based_rank_after_patient_key_sort + offset) mod 2
+```
+
+`stratum_id`和`patient_id`使用manifest稳定原始值的规范化UTF-8序列，不依赖Python隐式类型
+格式化。每个stratum须满足`abs(n_A-n_B)<=1`；每次保存各stratum和全局A/B人数。split seed
+固定为`BASE_SPLIT_SEED + b, b=0,...,399`，其中`BASE_SPLIT_SEED=20260821`；该值写入静态协议JSON并纳入文件SHA，不得修改。
+
+每个half `s`与候选`g`定义：
+
+```text
+E_s(g) = {
+  j in J_full_nondead:
+  positive_patients_j,s >= ceil(0.02 * N_s)
+  AND A_j,s >= g
+}
+```
+
+每次计算`Jaccard(E_1,E_2)`、在`E_1 union E_2`上的
+`Spearman(A_half1,A_half2)`及`min(|E_1|,|E_2|)`。若并集为空、少于2个Feature、任一侧为
+常数或出现NaN/Inf，则该`g`整体FAIL，不能删除该split后继续。
+
+400次后计算：
+
+```text
+J_low   = Q0.05_lower(J)
+rho_low = Q0.05_lower(rho)
+N_low   = Q0.05_lower(min_set_size)
+
+PASS(g) iff J_low >= 0.80 AND rho_low >= 0.90 AND N_low >= 100
+A_min = 按数值升序最小的PASS g
+```
+
+若无候选通过，状态为`active_frequency_calibration_infeasible`，不扩网格、不降低门槛、不换
+分半算法。`N_E_min=100`只是建立100个一一anchor所需的最低必要Feature池，不保证会形成
+100个anchor；开发阶段仍独立要求`N_anchor_3of3>=100`，否则
+`development_calibration_infeasible`。这些阈值是本项目的预注册实际复现/规模门槛，不包装
+为通用SAE标准或100个独立Feature样本。
+
+### eligible工程实现状态（2026-08-21）
+
+已新增静态协议`rpa_eligible_protocol_v1.json`、正式入口
+`clong_rpa_eligible.py`、启动器`run_clong_rpa_eligible.sh`和回归测试
+`test_clong_rpa_eligible.py`。实现分为两个明确阶段：
+
+1. `audit`：从S2c seed42正式checkpoint在K=1024视图上逐图编码，按患者
+   产出presence/ranking/mass/active-frequency四个矩阵，然后通过冻结函数产出
+   `q*`、`P_min_train`和逐Feature审计CSV；
+2. `calibrate`：重验protocol、代码、审计CSV和患者矩阵SHA后，执行400次
+   确定性患者分半，产出1600行原始折结果、四个g候选的下分位数和
+   唯一`A_min`或不可校准状态。
+
+单元测试覆盖SHA域分离、奇数stratum offset、每层人数平衡、Top-q选择、
+`Q0.05 lower`、Spearman并列/常量边界、固定non-dead universe和审计schema。
+CPU真实checkpoint debug已端到端跑通；小样本返回
+`active_frequency_calibration_infeasible`符合门槛定义，不解读为正式结果。
+
+### eligible正式审计与校准结果（2026-08-21）
+
+正式任务已读取2350张train图、1212位train患者和10240个 full-train
+non-dead Feature；未读取val激活、internal test或external。主要结果为：
+
+| 项目 | 正式结果 |
+| --- | ---: |
+| `q*` | 0.02 |
+| `P_min_train=ceil(q*1212)` | 25 |
+| val Top-q固定数`ceil(q*260)` | 6 |
+| full-train non-dead Feature | 10240 |
+| 冻结eligible Feature数 | 9418 |
+| `A_min` | `0.25/49 = 0.00510204081632653` |
+
+四个`g`候选的400次split均可计算且全部通过三项门槛，按预注册选取最小合格值：
+
+| `g` | Jaccard Q0.05 lower | Spearman Q0.05 lower | min eligible Q0.05 lower | PASS |
+| ---: | ---: | ---: | ---: | --- |
+| 0.25/49 | 0.9717 | 0.9779 | 9377 | 是 |
+| 0.5/49 | 0.8837 | 0.9648 | 5676 | 是 |
+| 1/49 | 0.9478 | 0.9975 | 2144 | 是 |
+| 2/49 | 0.9890 | 0.9983 | 1629 | 是 |
+
+正式血缘：
+
+```text
+protocol SHA = 3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91
+code SHA     = 6b6192dbddf58ea6e159dade3f7f8868f96ecd308d5bb12e092cc28ed8faf69c
+S2c checkpoint SHA = 1abf1c2366fed3aa94d70dce7e52df2c1c21001d8ebcded221ae9665ebc1c15f
+audit summary SHA  = 2b16886e898c09062ee80b0d0eaa6be068aa3a07def5cb9d5419d3c2f013f5ba
+feature audit CSV SHA = b354c8491e47fbb0c6646cccf5c0946cfab1bd3cc1d412ffb37c9b2cd2f7c172
+split results CSV SHA = 9ea6733bd09906162227e95de25830aa5bbdcaf6dd84533d61b5f384045125f3
+```
+
+`SHA256SUMS.txt`已对全9个正式产物复验通过。至此eligible子协议正式
+冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。RP-A整体仍因
+null/FDR、energy、bootstrap、spatial数值等七类未决项而未冻结。
+
+### 跨seed边匹配算法
+
+每个seed-pair分别运行，null也必须来自同一跨seed pair，不用同一字典内部pair代替。
+
+1. 对每个eligible Feature，在另一seed的相同分层候选中执行完整搜索；
+2. 第一关为带符号decoder cosine；医学反向方向不按相同Feature处理；
+3. 患者激活Spearman、Top患者Jaccard和同图49位置空间复现分别转换为各自分层null
+   percentile；空间复现只比较两个SAE seed在同一张输入图像、同一49位置上的Feature响应，
+   再按冻结的image到patient公式聚合，不把跨患者7x7绝对位置解释为解剖配准；
+4. 行为组合候选固定为`median(U_spearman, U_jaccard, U_spatial)`，不训练人工权重；
+5. 对组合统计量计算经验p值。每个无序seed-pair内，两个方向全部eligible source Feature
+   的best-candidate p值共同构成一个BH假设族，并按冻结`q_FDR=TBD`校正；
+6. 最终边还必须满足reciprocal nearest neighbour；
+7. 一对Feature只能形成一条一一匹配边，冲突消解规则在实现前冻结。
+
+null必须复现完整candidate search、best-match选择和互为最近邻过程，不能用“搜索最大值”与
+“随机单pair”比较。正式顺序固定为`candidate search -> best-candidate statistic -> empirical p
+-> seed-pair内BH-FDR -> reciprocal nearest neighbour -> 一一冲突消解`，不得在实现时交换
+FDR和RNN的顺序。置换次数`B_null=TBD`、空间相似度公式、分层容差、并列处理和随机种子
+均须预先写死。
+
+### development technical reference
+
+先在train构建`42<->43`、`42<->44`、`43<->44`三组冻结技术匹配图。主technical anchor
+要求同一组三个Feature分别来自42/43/44，且三条seed-pair边全部成立，即严格3-clique；只有
+连通链而缺少一条边不能算3/3 anchor。2/3结果仅作诊断。
+
+confirmation Feature要匹配某个anchor，须至少与三个开发成员中的两个分别通过冻结边规则。
+同一confirmation Feature和同一anchor不得重复计数；多个Feature竞争同一anchor时，采用
+预先冻结的一一分配算法。`202<->503`只作一致性诊断，不增加或替代主成功门槛。
+
+开发报告必须把参考规模作为headline metric，至少包括三个seed的eligible数、三组pair边数、
+`N_anchor_3of3`、anchor数量覆盖、activation覆盖和energy覆盖。运行43/44前冻结最小可用参考
+规模`N_anchor_min=100`；若严格3-clique anchor少于该值，状态为
+`development_calibration_infeasible`并停止当前RP-A设计，不能自动降级为2/3 anchor，也不能
+把“校准不可行”误写成confirmation失败。
+
+### 实用稳定性指标
+
+对于两个普通seed A/B，eligible数为`N_A/N_B`、一一匹配数为`M`：
+
+```text
+R_feature = 2M / (N_A + N_B)
+
+R_activation = 0.5 * (
+    activation_mass_A_matched / activation_mass_A_eligible
+  + activation_mass_B_matched / activation_mass_B_eligible
+)
+
+R_energy = 0.5 * (
+    representation_energy_A_matched / representation_energy_A_eligible
+  + representation_energy_B_matched / representation_energy_B_eligible
+)
+```
+
+`representation_energy`的精确定义在运行43/44前冻结，候选为患者聚合的
+`sum ||h_j d_j||^2`；它只表示SAE分量能量，不是分类贡献。真正分类贡献仅在RP-C用
+残差保留干预的`delta margin`定义。
+
+confirmation相对3-member anchor不强行套用普通pair的对称`R_feature`，至少分别报告：
+
+```text
+R_anchor_recall = 被confirmation复现的eligible 3/3 anchors / 全部eligible 3/3 anchors
+R_confirm_coverage = 匹配到anchor的eligible confirmation Features / eligible confirmation Features
+```
+
+`R_activation`和`R_energy`也分别报告reference-side与confirmation-side覆盖，再按预注册公式
+组合。开发伪确认与正式确认必须使用同名、同方向指标，不能在确认阶段临时改回对称pair公式。
+
+### 校准函数：先冻结算法，再由43/44产生数值
+
+仅用三个普通开发pair直接生成门槛，与confirmation相对3成员anchor的评价对象不同。
+因此草案采用三次leave-one-development-seed-out伪确认：
+
+```text
+用43/44构建2/2 anchor，42作为伪确认seed
+用42/44构建2/2 anchor，43作为伪确认seed
+用42/43构建2/2 anchor，44作为伪确认seed
+```
+
+每个伪确认Feature必须同时匹配2/2 anchor成员。该过程与未来202/503匹配3/3 anchor时采用
+相同的candidate search、行为门控、FDR和一一分配主体，只把“至少2个开发成员”固定为共同
+判据。这样开发门槛与确认评价处于同一统计口径。
+
+患者bootstrap使用同一批有放回抽样患者同时重算三个伪确认折。必须在冻结前决定是每个
+bootstrap从eligible、行为统计、null percentile、匹配边到anchor全部重算，还是固定全train
+匹配图只重算质量覆盖；若固定匹配图，则`R_feature`不会变化，不能伪装成其bootstrap区间。
+当前推荐候选是完整重算matching pipeline，因为它能为结构复现率提供真实抽样不确定性；
+该选择在计算成本评估和小规模基准完成前仍标记为`TBD`。
+
+推荐但尚未冻结的门槛生成候选为：
+
+```text
+R_min^(b) = min(R_fold42^(b), R_fold43^(b), R_fold44^(b))
+T_metric  = Q_0.05({R_min^(b)})
+```
+
+其语义是“开发阶段三次伪确认中最弱一折稳定性的bootstrap分布第5百分位”，即开发期校准
+的稳定性下界，不表述为正式non-inferiority test。Feature边真实性已经由经验p值与BH-FDR
+相对完整搜索null单独控制，不再把null upper重复塞入R指标门槛。RP-A的严格性来自边真实性、
+BH-FDR、实际覆盖门槛、val独立复现和202/503双确认的组合，而不是`Q_0.05`单独提供。最终
+分别产生anchor recall、confirmation coverage、activation和energy门槛，不再笼统记为一个`T_feature`。`Q_0.05`、
+bootstrap次数、是否BCa、患者重复权重、空anchor处理和计算近似均为`TBD`，必须在运行43/44
+前冻结。不能看到开发结果后在最小值、均值、中位数或排除某折之间选择。
+
+### RP-A确认PASS与停止规则
+
+seed202和seed503分别相对冻结的42/43/44 3/3 anchors评价。每个seed必须同时通过：
+
+1. 训练与checkpoint血缘、预算和split一致；
+2. 字典死亡率`<=0.10`、非死亡decoder重复率`<=0.10`，直接继承S2c冻结定义；另须通过
+   finite loss、无NaN/Inf、实际L0合法及checkpoint/SHA一致等工程健康检查；
+3. 正式GPU路径no-op identity硬门槛；
+4. BH-FDR后的Feature边真实性规则；
+5. `R_anchor_recall`和`R_confirm_coverage`分别达到冻结门槛；
+6. reference/confirmation两侧`R_activation`及其组合指标达到冻结门槛；
+7. reference/confirmation两侧`R_energy`及其组合指标达到冻结门槛；
+8. train冻结规则在val独立复现，val不得重估任何阈值。
+
+只有202和503均PASS才进入RP-B/RP-C。1/2通过仍判RP-A失败，不更换seed、不放宽门槛、
+不运行911，也不以子空间诊断改判。
+
+### val独立复现的可执行定义
+
+train冻结Feature universe、eligible集合、3/3 development anchors、strata、null CDF、全部
+匹配阈值、BH-FDR规则和一一分配算法。val不得重新筛eligible、重建开发anchor、重估null或
+重新生成PASS门槛。
+
+val只用val患者重新计算患者依赖行为：激活Spearman、Top-patient Jaccard、同图49位置空间
+复现及其组合统计量；随后按train冻结的null CDF和绝对阈值，依次重新执行经验p值、BH-FDR、
+RNN及冻结的一一分配算法，形成独立val matching graph。最后重新计算confirmation相对固定
+development anchors的anchor recall、confirmation coverage、activation和energy覆盖。
+
+val经验p值只能由冻结的train null empirical CDF映射得到；禁止在val重新做permutation或生成
+新的null，否则视为重新估计校准分布并直接违反协议。
+
+val使用与train完全相同的绝对PASS门槛，不另设`val >= train - delta`容差。任一正式指标在
+val低于冻结门槛，该confirmation seed即失败。
+
+### no-op identity工程硬门槛
+
+令`h'=h`，正式GPU路径必须逐级记录max/mean absolute error及max relative error：
+
+```text
+patch feature -> attention -> pooled vector -> logits -> probability
+```
+
+正式容差不使用单一`T_identity_GPU`，而是分别冻结patch、attention、pooled、logit和
+probability各级的`atol/rtol`。容差生成方法、固定GPU数值路径和self-test输入必须在确认seed
+前写死；CPU仅用于单元测试并使用单独容差。不得只保存PASS布尔值。任一级超差则该seed
+直接失败，禁止解释干预结果。
+
+### 局部子空间稳定性：纯诊断
+
+不比较两个完整10240 decoder张成的整体空间。只有在比较Feature集合和rank均已train-only
+冻结时，才计算principal-angle similarity或projection overlap，例如冻结anchor局部邻域。
+结果必须记录`diagnostic_only=true`。Feature级门槛失败而局部子空间相似时，只能表述为
+“与不同初始化选择不同基底表达相似局部子空间相容”，不得改判RP-A成功。
+
+### train/val职责与后续冻结
+
+- train：eligible、分层null、技术anchor、阈值校准、候选选择与匹配随机对照；
+- val：只验证跨seed技术结构和覆盖门槛，不重估阈值；
+- internal test/external：RP-A开发和确认期间继续锁定；
+- 医生命名、正式family合并、`N_review`、癌/非癌富集边界和RP-C效应门槛均不在RP-A中
+  事后确定。RP-A通过后，才根据已冻结允许的技术分布另立RP-B/RP-C预注册。
+
+### 文献依据与边界
+
+ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Features`直接支持
+同数据不同初始化可学习不同Feature，且其Top-K实验更依赖seed；论文中约30%共享只属于
+特定LLM实验，不作为胃镜门槛。2026预印本`Unstable Features, Reproducible Subspaces`
+支持Feature重现概率和局部子空间诊断，但不是医学影像实证，也不能挽救Feature级失败。
+
+### 冻结前未决项
+
+1. eligible审计/校准正式产物、代码SHA、协议SHA及其自身SHA；
+2. `B_null/q_FDR`、分层容差、并列和一一分配规则；
+3. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
+4. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
+5. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
+6. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
+7. RP-A确认输出、失败保留现场和协议SHA文件格式。
+
+字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
+已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
+随后先运行seed43/44，生成开发校准报告并冻结数值，最后才允许启动seed202/503。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
@@ -1165,12 +1831,23 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
 11. ~~运行S2b失败诊断v2~~：已完成，正式pooled cosine短板确认在标签、来源、分辨率、
     画中画等分层中广泛存在；完整翻转主要由内容重构驱动，结果未改写S2b失败判定；
 12. ~~审阅并冻结S2c Matryoshka patch SAE~~：已于2026-08-20冻结`K={64,128,256,512,1024}`、
-    uniform weighting、五层联train-only `gamma_pool`校准、五层激活并集死亡率口径和
+    uniform weighting、五层联合train-only `gamma_pool`校准、五层激活并集死亡率口径和
     “八门槛中最小合格K”选择规则；
 13. ~~实现并验收S2c完整链路~~：嵌套单排序核心、联合`gamma_pool`校准、五层联合训练、
     逐K完整替换评价、八门槛最小K选择、FVU纯诊断、冻结K跨seed交接和启动器均已实现；
     24项S2c测试、18项S2b回归与CPU端到端debug通过。debug发现“首次建缓存会改变
     SAE初始化随机数顺序”，已改为缓存加载后重新固定seed，并由初始化SHA防线复验；
-14. **当前主线**：正式启动S2c seed42校准与训练。启动前重新检查GPU；长任务由用户运行，
-    使用后台服务并同时提供主日志、阶段日志和服务状态命令。seed42结束后按冻结八门槛决定
-    是否放行SAE seed202/503，不提前启动复现seed。
+14. ~~正式运行S2c seed42~~：已于2026-08-21完成1000 epoch和五个K的完整评价；五个K均
+    只在患者冻结阈值一致率上失败，状态为`no_product_stop_s2c`，按协议不放行seed202/503；
+15. **条件路线，当前不触发**：若未来另立协议并产生通过门槛的稳定SAE产品，再完成
+    SAE seed42/202/503复现，并另行冻结跨seed匹配阈值、
+    Feature family候选边界、共享性分类边界和医生panel数量，再依次执行跨seed对齐、技术
+    家族候选、癌/非癌四维共享性审计、医生两级盲审、来源/伪特征审计及单Feature与家族级
+    残差保留干预。当前S2c已失败，因此本项不启动；不得据此追加K、放宽门槛或继续调S2c；
+16. **下一项决策**：在保留S2c失败结论的前提下，单独讨论是否新建Gated SAE、更合适解释层、
+    概念粒度与重构粒度分离，或直接转向不要求严格可逆重构的概念发现协议。任何新方向均需
+    重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
+17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
+    9/9产物SHA验收通过，eligible子协议已冻结；随后继续关闭
+    null/FDR、energy、bootstrap、spatial数值和GPU identity等七类未决项。任何新seed均未
+    启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。

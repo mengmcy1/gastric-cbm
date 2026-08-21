@@ -166,3 +166,25 @@ CUDA_DEVICE=<启动前核实的空闲GPU> bash \
 explained variance只作诊断，不参与checkpoint、K选择或成败判定。seed42没有
 合格K时正式停止；seed202/503只有在seed42选出唯一K后才能运行，并且只能复现该
 冻结K，不得重新选择其他K。
+
+## RP-A eligible train-only校准
+
+`clong_rpa_eligible.py`仅读取S2c seed42字典与train空间缓存，不训练
+SAE、不读val/test/external。`audit`阶段生成患者聚合矩阵、逐Feature
+审计CSV和`q* -> P_min`血缘；`calibrate`阶段复用这些SHA绑定产物
+执行400次label×source患者分半，冻结`A_min`。
+
+长时正式任务应在启动前检查GPU，并由服务器后台调用：
+
+```bash
+CUDA_DEVICE=<启动前核实的GPU> bash \
+  程序/SAE/正式代码/run_clong_rpa_eligible.sh
+```
+
+静态方法定义在`rpa_eligible_protocol_v1.json`；正式产物保存在
+`结果/SAE/RP_A_Eligible校准_20260821/`。若`audit`已完成而后半阶段中断，
+仅可以`STAGE=calibrate`复用已校验SHA的聚合缓存。
+
+2026-08-21正式train-only任务已完成，`SHA256SUMS.txt` 9/9通过。冻结结果为
+`q=0.02`、`P_min_train=25`、`val Top-q=6`、
+`A_min=0.25/49=0.00510204081632653`。上述值不得在后续seed重估。

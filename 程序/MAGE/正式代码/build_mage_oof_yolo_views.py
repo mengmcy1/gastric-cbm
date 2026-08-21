@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Build five patient-disjoint YOLO views for MG0b OOF ROI generation.
+"""构建五个患者互斥的YOLO数据视图，用于生成MG0b OOF ROI。
 
-For each outer fold, the other four train folds are split by patient into fit
-and monitor subsets. The outer holdout patients are exported only for later
-prediction. Project val, original test and external data are never used here.
+每个外层折中，其余四折按患者拆成拟合集和监控集；外层留出患者只供后续
+预测使用。本脚本不使用项目验证集、原始测试集或外部数据。
 """
 
 from __future__ import annotations
@@ -35,7 +34,7 @@ MONITOR_SEED_BASE = 4200
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the frozen MG0a manifest, isolated output and self-test mode."""
+    """解析冻结的MG0a清单、独立输出目录和自测模式。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MG0_MANIFEST)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -46,15 +45,7 @@ def parse_args() -> argparse.Namespace:
 def split_development_patients(
     patients: pd.DataFrame, fold: int
 ) -> tuple[set[str], set[str]]:
-    """Split non-holdout patients into fit and early-stop monitor sets.
-
-    Args:
-        patients: Unique ``patient_id`` and binary ``label`` rows.
-        fold: Outer OOF fold, used to derive a deterministic monitor seed.
-
-    Returns:
-        Two disjoint patient-id sets: fit and monitor.
-    """
+    """将非留出患者拆成互斥的拟合集和早停监控集。"""
     splitter = StratifiedShuffleSplit(
         n_splits=1,
         test_size=MONITOR_FRACTION,
@@ -71,16 +62,7 @@ def split_development_patients(
 
 
 def link_row(row: pd.Series, fold_root: Path, role: str) -> tuple[str, str]:
-    """Create image/label symlinks for one fit, monitor or holdout row.
-
-    Args:
-        row: MG0a image row containing Y0-F relative image and label paths.
-        fold_root: Current outer-fold dataset root.
-        role: ``fit``, ``monitor`` or ``holdout``.
-
-    Returns:
-        Relative image and label paths inside the fold dataset.
-    """
+    """为拟合、监控或留出队列中的一行创建图像和标签软链接。"""
     source_image = Y0F_ROOT / str(row.yolo_image_relpath)
     source_label = Y0F_ROOT / str(row.yolo_label_relpath)
     if not source_image.is_file() or not source_label.is_file():
@@ -94,7 +76,7 @@ def link_row(row: pd.Series, fold_root: Path, role: str) -> tuple[str, str]:
 
 
 def build_fold(frame: pd.DataFrame, output_dir: Path, fold: int) -> dict:
-    """Build one outer-fold fit/monitor/holdout view and audit metadata."""
+    """构建一个外层折的拟合/监控/留出视图及审计信息。"""
     train = frame.loc[frame.split.eq("train")].copy()
     holdout = train.loc[train.oof_fold.eq(fold)].copy()
     development = train.loc[~train.oof_fold.eq(fold)].copy()
@@ -158,7 +140,7 @@ def build_fold(frame: pd.DataFrame, output_dir: Path, fold: int) -> dict:
 
 
 def run_self_test() -> None:
-    """Check deterministic, stratified and disjoint fit/monitor splitting."""
+    """自测拟合/监控划分的确定性、分层性和患者互斥性。"""
     patients = pd.DataFrame({
         "patient_id": [f"p{i:03d}" for i in range(100)],
         "label": [0] * 70 + [1] * 30,
@@ -173,7 +155,7 @@ def run_self_test() -> None:
 
 
 def main() -> None:
-    """Build all five OOF YOLO views without training or inference."""
+    """构建五个OOF YOLO视图，本脚本不执行训练或推理。"""
     args = parse_args()
     if args.self_test:
         run_self_test()

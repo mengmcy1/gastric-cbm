@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Summarize the MG2 A/B/C matrix and judge the eight frozen release gates.
+"""汇总MG2 A/B/C实验矩阵，并判断八条冻结放行门槛。
 
-This tool reads the three arm products, the frozen beta calibration JSON and
-the M0-F seed42 reference, verifies all SHA bindings and product completeness,
-then evaluates the frozen MG2 release gates (2026-08-18 protocol):
+本工具读取三组实验产物、冻结beta校准JSON和M0-F seed42参照，校验全部
+SHA绑定及产物完整性，再按2026-08-18协议评估冻结门槛：
 
 1. arm A val patient AUC >= M0-F patient AUC - 0.01;
 2. arm C val patient AUC >= M0-F patient AUC - 0.005;
@@ -18,11 +17,9 @@ then evaluates the frozen MG2 release gates (2026-08-18 protocol):
    <= 0.05; if the stratum has fewer than 15 images this gate degrades to
    report-only and the summary explicitly discloses it.
 
-Incomplete or tampered products are never summarized as success. The M0-F
-reference patient AUC is read from its config JSON; a preregistered fallback
-constant is used only when the file is unreadable, with an explicit warning.
-Only train/val-derived products are read; test/internal test/external never
-participate. Output is one machine-readable JSON plus a human-readable table.
+残缺或被改动的产物不会被汇总为成功。M0-F患者AUC从其配置JSON读取，只有
+文件不可读时才使用预注册回退常量并明确警告。本工具只读取由训练/验证得到的
+产物，测试集和外部数据均不参与；输出机器可读JSON和便于阅读的表格。
 """
 
 from __future__ import annotations
@@ -66,7 +63,7 @@ DECISION_STOP = "stop"
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse the summary inputs; defaults follow the formal/debug split."""
+    """解析汇总输入，默认路径严格区分正式与调试产物。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-root", type=Path, default=None,
                         help="三组arm产物根目录；缺省按正式/debug目录解析")
@@ -83,13 +80,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def arm_run_name(arm: str, seed: int, debug: bool) -> str:
-    """Return the frozen per-arm run directory name."""
+    """返回各实验组冻结的运行目录名称。"""
     name = f"mg2_arm{arm.lower()}_efficientnet_b0_seed{seed}"
     return name + ("_debug" if debug else "")
 
 
 def load_arm_products(run_dir: Path, arm: str) -> dict:
-    """Load one arm's config after completeness and lock-flag verification.
+    """完成完整性与锁定标记校验后加载一个实验组配置。
 
     参数:
         run_dir (Path): 该arm输出目录。
@@ -119,7 +116,7 @@ def load_arm_products(run_dir: Path, arm: str) -> dict:
 
 
 def extract_arm_metrics(config: dict) -> dict:
-    """Extract the gate-relevant metrics from one verified arm config.
+    """从已校验配置中提取放行门槛所需指标。
 
     参数:
         config (dict): load_arm_products校验过的config。
@@ -138,7 +135,7 @@ def extract_arm_metrics(config: dict) -> dict:
 def load_m0f_reference(
     reference_path: Path, debug: bool
 ) -> tuple[float, str, str | None]:
-    """Read the M0-F seed42 safety-reference patient AUC.
+    """读取M0-F seed42安全参照患者AUC。
 
     参数:
         reference_path (Path): M0-F正式run的config.json路径。
@@ -169,7 +166,7 @@ def load_m0f_reference(
 
 
 def verify_cross_arm_consistency(configs: dict, calibration: dict) -> None:
-    """Verify deep cross-arm consistency before any gate judgement.
+    """在判断门槛前校验三组实验的深层一致性。
 
     参数:
         configs (dict): ``{"A"/"B"/"C": config}``，每个config已经过
@@ -194,6 +191,7 @@ def verify_cross_arm_consistency(configs: dict, calibration: dict) -> None:
             raise ValueError(f"arm{arm} seed不是42: {config.get('seed')}")
 
     def training_key(arm: str) -> dict:
+        """提取A/B/C必须一致的训练配置，排除实验条件混杂。"""
         training = configs[arm]["training"]
         return {
             name: training[name]
@@ -225,7 +223,7 @@ def verify_cross_arm_consistency(configs: dict, calibration: dict) -> None:
 
 
 def evaluate_gates(arm_metrics: dict, m0f_patient_auc: float) -> dict:
-    """Judge all eight frozen MG2 release gates (pure function).
+    """以纯函数方式判断八条冻结MG2放行门槛。
 
     参数:
         arm_metrics (dict): ``{"A"/"B"/"C": extract_arm_metrics结果}``。
@@ -382,7 +380,7 @@ def evaluate_gates(arm_metrics: dict, m0f_patient_auc: float) -> dict:
 
 
 def print_table(summary: dict) -> None:
-    """Print the human-readable gate table and overall decision."""
+    """打印便于阅读的门槛表格和总体结论。"""
     print(f"M0-F参照患者AUC: {summary['m0f_reference']['patient_auc']:.4f} "
           f"({summary['m0f_reference']['source']})")
     if summary["m0f_reference"]["warning"]:
@@ -420,7 +418,7 @@ def print_table(summary: dict) -> None:
 
 
 def main() -> None:
-    """Verify bindings, load the three arms, judge gates and write the summary."""
+    """校验绑定、加载三组实验、判断门槛并写出汇总。"""
     args = parse_args()
     run_root = args.run_root
     if run_root is None:
