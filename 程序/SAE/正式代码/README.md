@@ -145,3 +145,24 @@ CUDA_DEVICE=<启动前核实的空闲GPU> bash \
 全部成功后才调用`summarize_clong_s2b.py`判定门槛和选择唯一patch臂。
 `test_clong_s2b.py`覆盖稀疏预算、阈值并列、完整替换、空间指标、
 正式预算锁和决胜链。
+
+## C-long S2c Matryoshka patch SAE
+
+`clong_s2c_matryoshka.py`实现2026-08-20冻结的S2c协议：在同一个
+`1280 -> 10240 -> 1280`共享patch字典中联合学习
+`K={64,128,256,512,1024}`五层嵌套Top-K。`clong_s2c_core.py`保存单排序
+嵌套结构、五层并集死亡口径、gamma公式和最小合格K选择等纯数学逻辑；
+`test_clong_s2c.py`覆盖这些防线及FVU诊断、gamma初始化SHA和跨seed冻结K交接。
+
+正式seed42固定按“train-only gamma_pool校准 -> 五层联合训练 -> 逐K完整替换评价
+-> 八门槛最小K选择”运行：
+
+```bash
+CUDA_DEVICE=<启动前核实的空闲GPU> bash \
+  程序/SAE/正式代码/run_clong_s2c.sh
+```
+
+脚本日志写入`结果/SAE/CLong_S2c_Matryoshka_20260821/logs/`。FVU与
+explained variance只作诊断，不参与checkpoint、K选择或成败判定。seed42没有
+合格K时正式停止；seed202/503只有在seed42选出唯一K后才能运行，并且只能复现该
+冻结K，不得重新选择其他K。
