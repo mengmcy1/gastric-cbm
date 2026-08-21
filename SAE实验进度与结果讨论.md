@@ -72,7 +72,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | S2b代码 | 已实现并完成debug验收 | 独立核心模块、正式入口、四臂矩阵脚本、自动汇总器和18项回归测试已落盘；CPU debug的B/C/D/N四臂均端到端跑通；启动器和汇总器已支持将BatchTopK阈值不可实现记为正式协议失败，不阻断独立实验臂 |
 | S2b正式矩阵 | 已完成（2026-08-20），`no_patch_product_stop_s2b` | B/C/D/N四臂与自动汇总全部完成；S4-B因train正预激活数不足而协议失败；S4-C/D均通过8项门槛中的6项，同时未达到患者预测一致率`>=0.95`和pooled cosine`>=0.90`；无唯一patch正式产品，按预注册停止，不进入SAE seed202/503复现，不追加K/宽度/归一化/门槛调参 |
 | S2b失败诊断 | v1已完成，v2口径修正待运行 | v1确认17位翻转患者主要集中在冻结阈值附近，且完整替换的翻转主要由内容重构驱动；审阅发现v1分层使用的是patch cosine，而正式失败门槛为pooled cosine。诊断脚本已补入逐图pooled cosine分层、最差30图和完整翻转四象限，将输出到新v2目录，不覆盖v1 |
-| S2c Matryoshka patch SAE | 预注册草案，待用户审阅，未冻结 | 单一seed42模型在同一字典中联合学习`K={64,128,256,512,1024}`五层嵌套粒度；不启用归一化旁路、BatchTopK或新宽度扫描；训练后选择通过八项门槛的最小K，通过后才进入SAE seed202/503复现和医学生概念命名 |
+| S2c Matryoshka patch SAE | 已正式预注册，2026-08-20冻结 | 单一seed42模型在同一字典中联合学习`K={64,128,256,512,1024}`五层嵌套粒度；不启用归一化旁路、BatchTopK或新宽度扫描；死亡率按五层train激活并集定义；训练后选择通过八项门槛的最小K，通过后才进入SAE seed202/503复现和医学生概念命名 |
 
 ## 第一轮文献结论
 
@@ -918,7 +918,7 @@ v1诊断脚本对S4-C/D正式checkpoint和config SHA做了逐项校验，并以`
 完整翻转四象限和attention KL与pooled cosine的相关性。v2只读train/val并输出新目录，
 不改写v1，不参与S2b产品选择。
 
-## S2c：Matryoshka patch SAE预注册草案（待用户审阅，未冻结）
+## S2c：Matryoshka patch SAE正式预注册（2026-08-20冻结）
 
 ### 研究问题与实验定位
 
@@ -960,7 +960,11 @@ L_total = mean(L_64, L_128, L_256, L_512, L_1024)
   理由是当前瓶颈为保真，而非进一步强调最小K的稀疏性；
 - patch位置权重、冻结注意力头重算、margin定义与S2b一致；
 - `gamma_margin=0.1`继续冻结；`gamma_pool`不直接复用S2b数值，而是在同一train-only
-  74批、seed42固定初始化上，按五层联合损失重新校准并绑定JSON/SHA；
+  74批、seed42固定初始化上做一次校准。对每批先计算
+  `joint_patch=mean_K(L_patch,K)`和`joint_pool=mean_K(L_pool,K)`，再冻结
+  `gamma_pool=0.25*median_74(joint_patch)/median_74(joint_pool)`，使pool项初始量级约为patch项的25%；
+  JSON必须绑定五层K-list、初始SAE state SHA、manifest/缓存/学生checkpoint SHA、74个批次SHA、
+  两组中位数和最终`gamma_pool`；分母小于`1e-8`则快速失败，禁止手工传入或看val重校准；
 - 预计算实现必须对一次排序结果构造嵌套mask，不得分别重复排序导致嵌套性漂移；
 - 预激活为正的数量少于某个K时，该层真实L0可低于K，不用0填充假装激活；
   必须逐K报告train/val mean L0和正激活不足比例；
@@ -977,8 +981,9 @@ L_total = mean(L_64, L_128, L_256, L_512, L_1024)
 2. 冻结患者阈值下一致率`>=0.95`；
 3. pooled cosine`>=0.90`；
 4. recovered CE`>=0.95`；
-5. 选定K下train死亡Feature率`<=0.10`；
-6. 非死亡decoder绝对cosine`>=0.95`的重复Feature率`<=0.10`；
+5. 字典级train死亡Feature率`<=0.10`；死亡定义为一个Feature在五层K的train激活
+   并集中从未激活，不按最终选定的较小K机械地把高粒度Feature计为死亡；
+6. 在上述五层并集非死亡Feature中，decoder绝对cosine`>=0.95`的重复Feature率`<=0.10`；
 7. normalized AiB下降`<=0.05`；
 8. PGA下降`<=0.05`。
 
@@ -988,7 +993,9 @@ reverse weighting或Gated SAE到同一实验中。
 
 诊断指标额外报告但不参与checkpoint/K选择：患者/图像概率MAE、患者最大概率偏移及ID、
 阈值`+-0.05/+-0.10`内患者的一致率、逐K注意力KL/cosine、每位置L0、每图唯一Feature数、
-概念覆盖的图像/患者/位置数，以及标签/来源/分辨率/画中画/病灶大小分层。
+概念覆盖的图像/患者/位置数，选定K下至少激活一次的实际使用Feature数及占字典比例，
+以及标签/来源/分辨率/画中画/病灶大小分层。“选定K下使用Feature数”是信息性指标，
+不替代五层并集的字典级死亡率硬门槛。
 
 ### 复现、停止与医学生交付
 
@@ -1099,6 +1106,8 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     不在S2b上临时扫描K/宽度/门槛。
 11. 运行S2b失败诊断v2：使用新目录输出逐图pooled cosine分层和完整翻转四象限，
     核对后再将“正式cosine是否弥散”的结论升级为正式诊断结果；
-12. 审阅并冻结S2c Matryoshka patch SAE草案：重点确认`K={64,128,256,512,1024}`、
-    uniform weighting、五层联合`gamma_pool`校准和“八门槛中最小合格K”选择规则；
-    冻结前不实现代码或启动训练。
+12. ~~审阅并冻结S2c Matryoshka patch SAE~~：已于2026-08-20冻结`K={64,128,256,512,1024}`、
+    uniform weighting、五层联train-only `gamma_pool`校准、五层激活并集死亡率口径和
+    “八门槛中最小合格K”选择规则；
+13. 实现S2c新入口、联合`gamma_pool`校准、逐K评价与自动选择，先做单元测试和debug冒烟；
+    通过工程验收后才提供S2c正式训练命令。
