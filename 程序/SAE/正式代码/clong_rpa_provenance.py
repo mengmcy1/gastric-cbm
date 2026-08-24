@@ -14,29 +14,28 @@ from clong_rpa_artifacts import file_sha256
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[2]
 PROTOCOL_BUNDLE_SHA = "768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280"
-CODE_FILES = (
-    "run_clong_rpa_development.sh",
-    "run_clong_rpa_development_training.sh",
-    "clong_rpa_train_development.py",
-    "clong_rpa_prepare_seed.py",
-    "clong_rpa_match_development.py",
-    "clong_rpa_development_core.py",
-    "clong_rpa_null_fdr.py",
-    "clong_rpa_bootstrap.py",
-    "clong_rpa_bootstrap_worker.py",
-    "clong_rpa_bootstrap_coordinator.py",
-    "clong_rpa_validate_development.py",
-    "clong_rpa_finalize_development.py",
-    "clong_rpa_record_implementation_failure.py",
-    "clong_rpa_artifacts.py",
-    "clong_rpa_provenance.py",
-    "benchmark_clong_rpa_matching.py",
+_SAE_CODE_FILES = (
+    "run_clong_rpa_development.sh", "run_clong_rpa_development_training.sh",
+    "clong_rpa_train_development.py", "clong_rpa_prepare_seed.py",
+    "clong_rpa_match_development.py", "clong_rpa_development_core.py",
+    "clong_rpa_null_fdr.py", "clong_rpa_bootstrap.py",
+    "clong_rpa_bootstrap_worker.py", "clong_rpa_bootstrap_coordinator.py",
+    "clong_rpa_validate_development.py", "clong_rpa_finalize_development.py",
+    "clong_rpa_record_implementation_failure.py", "clong_rpa_artifacts.py",
+    "clong_rpa_provenance.py", "benchmark_clong_rpa_matching.py",
+    "clong_s2c_core.py", "clong_s2c_matryoshka.py", "clong_sae_discovery.py",
+    "clong_s2b_discovery.py", "clong_s2b_core.py",
 )
+CODE_PATHS = {
+    **{name: SCRIPT_DIR / name for name in _SAE_CODE_FILES},
+    "train_utils.py": PROJECT_ROOT / "程序/模型训练/正式代码/train_utils.py",
+}
+CODE_FILES = tuple(CODE_PATHS)
 
 
 def current_code_sha256() -> dict[str, str]:
     """按显式正式执行清单计算逐文件SHA256。"""
-    return {name: file_sha256(SCRIPT_DIR / name) for name in CODE_FILES}
+    return {name: file_sha256(CODE_PATHS[name]) for name in CODE_FILES}
 
 
 def current_git_commit() -> str:

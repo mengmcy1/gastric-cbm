@@ -300,6 +300,6 @@ runner会先打印`nvidia-smi`，训练与分析使用第一张卡，bootstrap�
 异常退出另存实现失败现场，且不会生成科学结论。
 
 runner在任何正式计算前由`clong_rpa_provenance.py`独占创建`run_code_snapshot.json`，分别记录
-启动时Git commit、冻结protocol bundle SHA和显式正式执行文件的逐文件SHA256。续跑与finalizer均
+启动时Git commit、冻结protocol bundle SHA和22个显式正式执行文件及直接依赖的逐文件SHA256。续跑与finalizer均
 复验同一快照；运行期间Git提交、代码内容或代码清单发生变化都会快速失败。最终`run_manifest.json`
 必须同时包含这三类血缘，缺任一项都会被artifact schema拒绝。

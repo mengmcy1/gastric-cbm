@@ -246,8 +246,13 @@ class ValidationTests(unittest.TestCase):
     def test_code_snapshot_covers_runner_and_validates_current_tree(self) -> None:
         snapshot = build_snapshot()
         self.assertEqual(set(snapshot["code_file_sha256"]), set(CODE_FILES))
-        self.assertIn("run_clong_rpa_development.sh", snapshot["code_file_sha256"])
-        self.assertIn("clong_rpa_finalize_development.py", snapshot["code_file_sha256"])
+        for name in (
+            "run_clong_rpa_development.sh", "clong_rpa_finalize_development.py",
+            "clong_s2c_core.py", "clong_s2c_matryoshka.py",
+            "clong_sae_discovery.py", "clong_s2b_discovery.py",
+            "clong_s2b_core.py", "train_utils.py",
+        ):
+            self.assertIn(name, snapshot["code_file_sha256"])
         validate_snapshot(snapshot)
 
     def test_changed_code_sha_is_rejected(self) -> None:
