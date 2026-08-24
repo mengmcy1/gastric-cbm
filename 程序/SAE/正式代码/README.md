@@ -218,3 +218,18 @@ Top-25 occurrence并列、Spearman、spatial、结构失败、400条归并及ful
 self-consistency，并验证coordinator拒绝错误的结构失败reason及超出`[0,1]`的正式指标。
 bootstrap不提前冻结spatial的可评价性和数值规则；完整matching worker和正式产物格式须在
 关闭spatial/GPU数值口径后再实现。冻结SHA见`rpa_bootstrap_SHA256SUMS.txt`。
+
+## RP-A spatial冻结核心
+
+`rpa_spatial_protocol_v1.json`与`clong_rpa_spatial.py`冻结同图49位置spatial的presence、
+NA/0语义、患者平衡聚合及train/bootstrap/val支持度下限。正式数值路径为float32 raw-map
+cosine、关闭TF32、float64层级累积，不进行裁剪或舍入。
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpa_spatial.py
+```
+
+6项测试覆盖`max_p h > ACTIVE_EPS`、单侧active为0、双侧inactive为NA、患者等权和支持度语义。
+`audit_clong_rpa_spatial_numeric.py`只允许输出误差、NA一致性、耗时和显存；正式v2审计支持混合
+精度路径且未生成任何matching统计。冻结SHA见`rpa_spatial_SHA256SUMS.txt`。RP-A整体仍未冻结，
+不得据此启动新seed。

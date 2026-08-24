@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖与bootstrap子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；activation与representation energy的reference/confirmation两侧指标定义于2026-08-24正式冻结；bootstrap精确完整重算已通过正式规模benchmark，其抽样、重复患者、400次、RNG、lower门槛、结构失败和并行归并经14项纯函数测试及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖、bootstrap与spatial子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR、activation、representation energy与bootstrap均于2026-08-24正式冻结；spatial的presence、NA/0、支持度和混合精度规则经6项测试、固定小块数值审计及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1373,27 +1373,51 @@ ordinal score，只允许用于Spearman、Top-q和原型排序；禁止跨Featur
 进入activation mass或representation energy。患者图数对max-ranking的共同偏差预计可被
 同患者结构的分层null部分吸收，但不表述为已消除，并须保留ranking与患者图数相关性审计。
 
-### 同图49位置空间复现：拟冻结，待工程产物化
+### 同图49位置空间复现：正式冻结（2026-08-24）
 
 对同一输入图像，比较seed A Feature `j`和seed B Feature `k`的两个原始非负49维激活图；
 不做min-max、softmax、减均值或单位方差标准化，只计算raw-map cosine：
 
 ```text
-both nonzero: spatial_image = cosine(h_A[49], h_B[49])
-one zero:     spatial_image = 0
-both zero:    spatial_image = NA
+image_active = 1[max_p h_p > ACTIVE_EPS], ACTIVE_EPS=1e-8
+both active:       spatial_image = cosine(raw h_A[49], raw h_B[49])
+exactly one active: spatial_image = 0
+both inactive:      spatial_image = NA
 
 union_active_images_u = 该患者中至少一侧非零的图像
 spatial_patient_u = mean(spatial_image over union_active_images_u)
 spatial_pair = mean(spatial_patient_u over valid patients)
 ```
 
-一侧非零而另一侧全零记0，用于惩罚漏响应；两侧都为零不能证明空间复现，故记NA而非1。
+`ACTIVE_EPS`只判断整张激活图是否active，不把49维原始图中低于eps的元素再次置零。一侧active而
+另一侧inactive记0，用于惩罚漏响应；两侧都inactive不能证明空间复现，故记NA而非1。
 患者内先平均、患者间再平均，防止图多患者获得更大权重。只在双方共同激活图上计算的cosine
 可在未来作为diagnostic候选，但不替代上述主候选。正式输出另存`n_evaluable_patients`、
 `n_union_active_images`、`fraction_one_side_zero`和`fraction_both_active`，用于区分“双方非零
-但位置正交”和“一侧未响应”。最少valid患者数、浮点零判断、均值累积精度及空集合处理仍须
-在运行43/44前冻结。
+但位置正交”和“一侧未响应”。bootstrap中字段名固定为`n_evaluable_patient_instances`，所有图像
+计数均按multiplicity展开；`fraction_one_side_zero + fraction_both_active = 1`，仅作诊断。
+
+最低支持度直接继承已冻结的Top-q支持：train为25位患者，bootstrap为25个patient instances，
+val为6位患者。患者无union-active图像则患者为NA；pair低于对应支持度则`spatial=NA`且candidate
+invalid。支持度足够但所有患者值均为0时，0是合法的完全空间不一致证据，不得改成NA。
+
+数值路径冻结为：SAE激活和49维图像cosine使用float32，关闭TF32；图像到患者、患者到pair及
+bootstrap multiplicity加权使用float64累积，最终spatial保存为float64。不裁剪到`[0,1]`、不舍入、
+不把小值强制置零；有效位置出现NaN/Inf或超出理论`[0,1]`时fast-fail。
+
+固定数值审计只读取seed42 train缓存的前32位排序患者（85图），用`PCG64(20260824)`无放回选择
+96个Feature并分成48×48 pair；不输出best Feature、edge、anchor、coverage、p值或门槛。相对CPU
+float64 reference，全float32与混合精度的NA/finite语义均完全一致；最大绝对误差分别为
+`3.5232e-8`与`7.9919e-9`，预热后中位耗时分别为`0.001575s`与`0.001568s`，混合精度只增加
+`331264 bytes`峰值显存。因此正式采用混合精度路径。正式审计为
+`结果/SAE/RP_A_Spatial数值审计_20260824/numerical_audit_v2.json`，SHA256为
+`d485b397e6c44935410befcdabbb0b821565c5fedeacfff964eef75e2405867b`；首轮未预热计时产物仅为历史
+调试记录，不参与冻结证据。
+
+冻结实现与测试为`rpa_spatial_protocol_v1.json`、`clong_rpa_spatial.py`、
+`audit_clong_rpa_spatial_numeric.py`和`test_clong_rpa_spatial.py`，6项语义测试通过；完整SHA见
+`程序/SAE/正式代码/rpa_spatial_SHA256SUMS.txt`。本子协议只冻结spatial数值与可评价规则，不授权
+启动新seed或正式matching。
 
 ### seed42 train-only聚合分布审计：输出先冻结
 
@@ -1542,8 +1566,8 @@ split results CSV SHA = 9ea6733bd09906162227e95de25830aa5bbdcaf6dd84533d61b5f384
 ```
 
 `SHA256SUMS.txt`已对全9个正式产物复验通过。至此eligible子协议正式
-冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。RP-A整体仍因
-bootstrap、spatial数值等未决项而未冻结。
+冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。bootstrap与spatial子协议已于
+2026-08-24随后完成冻结；RP-A整体目前仍因GPU identity和正式产物协议未关闭而未冻结。
 
 ### 跨seed边匹配算法
 
@@ -2049,9 +2073,8 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 ### 冻结前未决项
 
 1. bootstrap子协议已于2026-08-24正式冻结并完成SHA固结；完整matching worker和正式产物协议尚未实现；
-2. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
-3. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
-4. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
+2. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
+3. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
 
 字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
 已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
@@ -2178,6 +2201,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     RP-A matching正式规模纯计算benchmark已完成，精确完整重算约11.6分钟/replicate、
     400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；bootstrap抽样、RNG、400次、
     最弱折lower门槛、重复患者、结构失败和并行归并已于2026-08-24正式冻结，14项纯函数测试、
-    真实train-only抽样debug和协议/实现/测试SHA固结均通过。之后依次关闭
-    spatial数值和GPU identity。任何新seed均未
+    真实train-only抽样debug和协议/实现/测试SHA固结均通过；spatial数值与可评价规则随后通过
+    6项语义测试和固定小块numerical-only audit，于2026-08-24正式冻结。下一步关闭GPU identity。
+    任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
