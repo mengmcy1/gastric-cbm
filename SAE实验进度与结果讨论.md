@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible已冻结，null/FDR拟冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库审阅修正并通过19项测试，待再次确认后冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible与null/FDR子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1543,12 +1543,13 @@ split results CSV SHA = 9ea6733bd09906162227e95de25830aa5bbdcaf6dd84533d61b5f384
 
 `SHA256SUMS.txt`已对全9个正式产物复验通过。至此eligible子协议正式
 冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。RP-A整体仍因
-null/FDR确认、energy、bootstrap、spatial数值等未决项而未冻结。
+energy、bootstrap、spatial数值等未决项而未冻结。
 
 ### 跨seed边匹配算法
 
 每个seed-pair分别运行；同一字典内部pair不能代替跨seed null。以下规则已实现为
-`rpa_null_fdr_protocol_v1.json`候选协议，当前为**拟冻结待用户确认**，尚不允许启动新seed。
+`rpa_null_fdr_protocol_v1.json`协议已于2026-08-24通过复审并正式冻结。本子协议的统计方法与实现
+不再调整；RP-A整体仍未冻结，因此仍不允许启动新seed。
 
 1. 对每个有向source eligible Feature，在另一seed的全部valid target eligible Feature中执行
    完整搜索；target分层只用于条件null，不限制候选搜索范围。
@@ -1585,10 +1586,11 @@ null/FDR确认、energy、bootstrap、spatial数值等未决项而未冻结。
    重估null或改分层。
 
 闭式p值已用小规模全排列穷举核验；strata还必须同时满足16层完整、target总数至少512且
-每层至少32。经验CDF、独立valid mask、非有限值拒绝、并列、BH和RNN共19项纯函数测试通过。
+每层至少32。经验CDF、独立valid mask、非有限值拒绝、并列、BH和RNN共20项纯函数测试通过。
 2026-08-24仓库级审阅发现并修复了“train/val共用valid mask”、train/val tie convention相差
-半个秩和strata硬断言不完整三项问题；exact-null主体未改变。该候选协议需重新审阅后再冻结。
-该子协议只有在用户确认、协议文件SHA固结并补齐正式产物格式后才升级为正式冻结。
+半个秩和strata硬断言不完整三项问题；最终复审进一步将train中秩函数的valid非有限输入从
+静默NaN改为fast-fail，exact-null数学主体全程未改变。协议状态、代码与测试SHA已固结，
+后续实现必须按该版本执行。
 
 ### development technical reference
 
@@ -1745,13 +1747,11 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. null/FDR候选协议的用户确认、协议/代码SHA固结及正式失败现场格式；方法、`q_FDR=0.05`、
-   精确null、平衡16层、并列和一一规则均已关闭，不再存在`B_null`；
-2. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
-3. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
-4. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
-5. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
-6. RP-A确认输出、失败保留现场和协议SHA文件格式。
+1. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
+2. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
+3. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
+4. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
+5. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
 
 字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
 已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
@@ -1872,7 +1872,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     概念粒度与重构粒度分离，或直接转向不要求严格可逆重构的概念发现协议。任何新方向均需
     重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
-    9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确候选协议经审阅修正并通过
-    19项测试，
-    待用户确认后固结SHA；随后继续关闭energy、bootstrap、spatial数值和GPU identity。任何新seed均未
+    9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确协议经两轮审阅、20项测试及
+    SHA固结后于2026-08-24正式冻结；下一步关闭representation energy，再依次关闭bootstrap、
+    spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。

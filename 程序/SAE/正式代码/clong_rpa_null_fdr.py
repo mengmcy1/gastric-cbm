@@ -112,8 +112,10 @@ def train_midrank_percentile(values: np.ndarray, valid: np.ndarray) -> np.ndarra
         raise ValueError("values/valid必须是同shape一维数组")
     output = np.full(x.shape, np.nan, dtype=np.float64)
     selected = x[mask]
-    if selected.size == 0 or not np.isfinite(selected).all():
+    if selected.size == 0:
         return output
+    if not np.isfinite(selected).all():
+        raise ValueError("valid不得包含NaN/Inf")
     order = np.argsort(selected, kind="mergesort")
     sorted_values = selected[order]
     sorted_ranks = np.empty(selected.size, dtype=np.float64)

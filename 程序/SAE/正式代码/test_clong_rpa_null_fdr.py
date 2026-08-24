@@ -37,6 +37,7 @@ class NullFDRTests(unittest.TestCase):
 
     def test_protocol_has_no_monte_carlo_b_null(self) -> None:
         protocol = load_protocol()
+        self.assertEqual(protocol["status"], "frozen_2026-08-24")
         self.assertEqual(protocol["null"]["type"], "exact_conditional_permutation")
         self.assertIsNone(protocol["null"]["b_null"])
         self.assertEqual(protocol["fdr"]["q"], 0.05)
@@ -91,6 +92,12 @@ class NullFDRTests(unittest.TestCase):
     def test_train_midrank_ties(self) -> None:
         result = train_midrank_percentile(np.array([1.0, 2.0, 2.0, 9.0]), np.ones(4, bool))
         np.testing.assert_allclose(result, np.array([0.125, 0.5, 0.5, 0.875]))
+
+    def test_train_midrank_valid_rejects_nonfinite_values(self) -> None:
+        with self.assertRaises(ValueError):
+            train_midrank_percentile(
+                np.array([1.0, np.nan, 3.0]), np.ones(3, dtype=bool),
+            )
 
     def test_val_uses_frozen_train_cdf(self) -> None:
         result = frozen_train_cdf_percentile(

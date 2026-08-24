@@ -1,6 +1,6 @@
 {
   "protocol_name": "rpa_cross_seed_null_fdr_v1",
-  "status": "candidate_freeze_pending_user_confirmation",
+  "status": "frozen_2026-08-24",
   "eligible_protocol_sha256": "3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91",
   "eligible_audit_summary_sha256": "2b16886e898c09062ee80b0d0eaa6be068aa3a07def5cb9d5419d3c2f013f5ba",
   "eligible_feature_csv_sha256": "b354c8491e47fbb0c6646cccf5c0946cfab1bd3cc1d412ffb37c9b2cd2f7c172",
