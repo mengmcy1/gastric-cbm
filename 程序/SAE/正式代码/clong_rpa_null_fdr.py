@@ -12,10 +12,7 @@ import json
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
-
 import numpy as np
-from scipy.stats import rankdata
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROTOCOL_PATH = SCRIPT_DIR / "rpa_null_fdr_protocol_v1.json"
@@ -40,23 +37,42 @@ def load_protocol(path: Path = PROTOCOL_PATH) -> dict:
 def assign_target_strata(
     patient_coverage: np.ndarray,
     active_frequency: np.ndarray,
-    coverage_cutpoints: Iterable[float],
-    frequency_cutpoints: Iterable[float],
+    feature_ids: np.ndarray,
+    bins_per_dimension: int = 4,
 ) -> np.ndarray:
-    """按冻结绝对切点将Feature分到4×4个目标strata。
+    """确定性构造患者覆盖率×激活频率的平衡层。
 
-    边界值用``searchsorted(..., side='right')``进入较高bin；返回编号
-    ``coverage_bin * 4 + frequency_bin``。
+    先按``(coverage, frequency, feature_id)``稳定排序并等频分成4组，再在
+    每个覆盖率组内按``(frequency, coverage, feature_id)``等频分4组。返回
+    ``coverage_bin * 4 + frequency_bin``。该层只使用目标seed的train eligible
+    Feature，不读取匹配指标或val；val沿用train分层。
     """
     coverage = np.asarray(patient_coverage, dtype=np.float64)
     frequency = np.asarray(active_frequency, dtype=np.float64)
-    if coverage.shape != frequency.shape or coverage.ndim != 1:
-        raise ValueError("coverage/frequency必须是同shape一维数组")
+    ids = np.asarray(feature_ids, dtype=np.int64)
+    if not (coverage.shape == frequency.shape == ids.shape) or coverage.ndim != 1:
+        raise ValueError("coverage/frequency/feature_ids必须是同shape一维数组")
     if not np.isfinite(coverage).all() or not np.isfinite(frequency).all():
         raise ValueError("strata输入不得包含NaN/Inf")
-    c = np.searchsorted(np.asarray(tuple(coverage_cutpoints)), coverage, side="right")
-    f = np.searchsorted(np.asarray(tuple(frequency_cutpoints)), frequency, side="right")
-    return (4 * c + f).astype(np.int16)
+    if bins_per_dimension < 2 or coverage.size < bins_per_dimension ** 2:
+        raise ValueError("strata分箱数无效或Feature不足")
+    if np.unique(ids).size != ids.size:
+        raise ValueError("feature_ids必须唯一")
+
+    strata = np.empty(coverage.size, dtype=np.int16)
+    coverage_order = np.lexsort((ids, frequency, coverage))
+    for coverage_bin, coverage_indices in enumerate(
+        np.array_split(coverage_order, bins_per_dimension)
+    ):
+        local_order = np.lexsort((
+            ids[coverage_indices], coverage[coverage_indices], frequency[coverage_indices]
+        ))
+        frequency_order = coverage_indices[local_order]
+        for frequency_bin, indices in enumerate(
+            np.array_split(frequency_order, bins_per_dimension)
+        ):
+            strata[indices] = coverage_bin * bins_per_dimension + frequency_bin
+    return strata
 
 
 def validate_target_strata(strata: np.ndarray, minimum_size: int = 32) -> dict[int, int]:
@@ -79,7 +95,20 @@ def train_midrank_percentile(values: np.ndarray, valid: np.ndarray) -> np.ndarra
     selected = x[mask]
     if selected.size == 0 or not np.isfinite(selected).all():
         return output
-    output[mask] = rankdata(selected, method="average") / selected.size
+    order = np.argsort(selected, kind="mergesort")
+    sorted_values = selected[order]
+    sorted_ranks = np.empty(selected.size, dtype=np.float64)
+    start = 0
+    while start < selected.size:
+        end = start + 1
+        while end < selected.size and sorted_values[end] == sorted_values[start]:
+            end += 1
+        # 1-based ranks start+1...end have average (start+1+end)/2.
+        sorted_ranks[start:end] = (start + 1 + end) / 2.0
+        start = end
+    ranks = np.empty(selected.size, dtype=np.float64)
+    ranks[order] = sorted_ranks
+    output[mask] = ranks / selected.size
     return output
 
 
@@ -241,10 +270,12 @@ def reciprocal_edges(
     rejected: set[tuple[int, int, int, int]],
 ) -> list[tuple[int, int]]:
     """在BH后仅保留双方向均拒绝且best target互为彼此的一一边。"""
-    by_source = {
-        (h.source_seed, h.target_seed, h.source_feature_id): h.target_feature_id
-        for h in hypotheses
-    }
+    by_source: dict[tuple[int, int, int], int] = {}
+    for h in hypotheses:
+        source_key = (h.source_seed, h.target_seed, h.source_feature_id)
+        if source_key in by_source:
+            raise RuntimeError(f"同一有向source出现多个best-candidate假设: {source_key}")
+        by_source[source_key] = h.target_feature_id
     edges: set[tuple[int, int]] = set()
     for h in hypotheses:
         key = (h.source_seed, h.target_seed, h.source_feature_id, h.target_feature_id)

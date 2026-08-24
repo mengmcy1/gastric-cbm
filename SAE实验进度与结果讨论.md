@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结，eligible子协议已冻结 | seed42正式train-only审计与400次split-half已完成并通过9/9 SHA验收；冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`。其余七类未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible已冻结，null/FDR拟冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议与16项测试已完成，待用户确认后冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1543,28 +1543,46 @@ split results CSV SHA = 9ea6733bd09906162227e95de25830aa5bbdcaf6dd84533d61b5f384
 
 `SHA256SUMS.txt`已对全9个正式产物复验通过。至此eligible子协议正式
 冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。RP-A整体仍因
-null/FDR、energy、bootstrap、spatial数值等七类未决项而未冻结。
+null/FDR确认、energy、bootstrap、spatial数值等未决项而未冻结。
 
 ### 跨seed边匹配算法
 
-每个seed-pair分别运行，null也必须来自同一跨seed pair，不用同一字典内部pair代替。
+每个seed-pair分别运行；同一字典内部pair不能代替跨seed null。以下规则已实现为
+`rpa_null_fdr_protocol_v1.json`候选协议，当前为**拟冻结待用户确认**，尚不允许启动新seed。
 
-1. 对每个eligible Feature，在另一seed的相同分层候选中执行完整搜索；
-2. 第一关为带符号decoder cosine；医学反向方向不按相同Feature处理；
-3. 患者激活Spearman、Top患者Jaccard和同图49位置空间复现分别转换为各自分层null
-   percentile；空间复现只比较两个SAE seed在同一张输入图像、同一49位置上的Feature响应，
-   再按冻结的image到patient公式聚合，不把跨患者7x7绝对位置解释为解剖配准；
-4. 行为组合候选固定为`median(U_spearman, U_jaccard, U_spatial)`，不训练人工权重；
-5. 对组合统计量计算经验p值。每个无序seed-pair内，两个方向全部eligible source Feature
-   的best-candidate p值共同构成一个BH假设族，并按冻结`q_FDR=TBD`校正；
-6. 最终边还必须满足reciprocal nearest neighbour；
-7. 一对Feature只能形成一条一一匹配边，冲突消解规则在实现前冻结。
+1. 对每个有向source eligible Feature，在另一seed的全部valid target eligible Feature中执行
+   完整搜索；target分层只用于条件null，不限制候选搜索范围。
+2. 四项原始指标为带符号decoder cosine、union-positive患者Spearman、Top患者Jaccard和
+   同图49位置空间复现。任一best pair原始指标非有限值或`<=0`，该有向假设直接记`p=1`。
+   空间复现只比较同一输入图像的相同49位置，不把跨患者7x7绝对位置解释为解剖配准。
+3. train中每个source行的四项指标分别按全部valid target计算经验中秩百分位。定义
+   `U_behavior=median(U_spearman,U_jaccard,U_spatial)`，再定义
+   `S_edge=min(U_decoder,U_behavior)`；因此结构和行为任一侧偏低都会限制边分数。
+4. best target按`S_edge`降序、原始带符号decoder cosine降序、target Feature ID升序唯一确定。
+5. null不是随机单pair，也不使用有限次Monte Carlo置换。它在每个target stratum内，条件保持
+   decoder百分位和整块behavior分数的边际分布，只随机二者对应关系。对观测阈值`s`，每层令
+   `a=#(U_decoder>=s)`、`b=#(U_behavior>=s)`、候选数为`n`，则该层没有高-高重合的精确概率为
+   `C(n-a,b)/C(n,b)`；各层相乘后取`1-product`，即完整候选搜索
+   `P_null(max S_edge>=s)`的闭式右尾p值。故`B_null`不存在，也没有有限置换导致的p值下限。
+6. target分层采用target seed的train eligible Feature，先按
+   `(patient coverage, active frequency, Feature ID)`等频分4组，再在每组内按
+   `(active frequency, patient coverage, Feature ID)`等频分4组，形成确定性平衡16层。
+   val沿用train层归属，不重新分层。每个非空层至少32个且target总数至少512；否则该seed-pair
+   判`null_stratification_infeasible`，禁止合并、重分箱或删掉不利层。seed42正式9418个
+   eligible Feature预检得到每层588--589；此前“两个绝对四分位直接交叉”产生5个Feature小层，
+   已在冻结前被预检否决，不属于正式协议。
+7. 每个无序seed-pair的BH假设族包含两个方向全部eligible source Feature各自唯一的
+   best-candidate假设，固定`q_FDR=0.05`。排序并列依次按p值、source seed、source Feature ID、
+   target Feature ID升序处理。
+8. 正式顺序固定为`完整搜索 -> 唯一best -> 精确p -> seed-pair内BH-FDR -> reciprocal nearest
+   neighbour -> 一一性断言`。只有双方向都被BH拒绝且best互指才成边；由于best已唯一，RNN后
+   若仍出现一对多属于实现错误，不做贪心冲突消解。
+9. val固定train Feature universe、eligible IDs、target strata、每个source行的train指标CDF和
+   精确null函数。val只重算患者依赖的行为指标，并用
+   `(#train<x + 0.5*#train==x)/N`映射到冻结train CDF；禁止val重新置换、重估null或改分层。
 
-null必须复现完整candidate search、best-match选择和互为最近邻过程，不能用“搜索最大值”与
-“随机单pair”比较。正式顺序固定为`candidate search -> best-candidate statistic -> empirical p
--> seed-pair内BH-FDR -> reciprocal nearest neighbour -> 一一冲突消解`，不得在实现时交换
-FDR和RNN的顺序。置换次数`B_null=TBD`、空间相似度公式、分层容差、并列处理和随机种子
-均须预先写死。
+闭式p值已用小规模全排列穷举核验；strata、经验CDF、并列、BH和RNN共16项纯函数测试通过。
+该子协议只有在用户确认、协议文件SHA固结并补齐正式产物格式后才升级为正式冻结。
 
 ### development technical reference
 
@@ -1721,13 +1739,13 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. eligible审计/校准正式产物、代码SHA、协议SHA及其自身SHA；
-2. `B_null/q_FDR`、分层容差、并列和一一分配规则；
-3. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
-4. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
-5. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
-6. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
-7. RP-A确认输出、失败保留现场和协议SHA文件格式。
+1. null/FDR候选协议的用户确认、协议/代码SHA固结及正式失败现场格式；方法、`q_FDR=0.05`、
+   精确null、平衡16层、并列和一一规则均已关闭，不再存在`B_null`；
+2. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
+3. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
+4. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
+5. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
+6. RP-A确认输出、失败保留现场和协议SHA文件格式。
 
 字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
 已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
@@ -1848,6 +1866,6 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     概念粒度与重构粒度分离，或直接转向不要求严格可逆重构的概念发现协议。任何新方向均需
     重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
-    9/9产物SHA验收通过，eligible子协议已冻结；随后继续关闭
-    null/FDR、energy、bootstrap、spatial数值和GPU identity等七类未决项。任何新seed均未
+    9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确候选协议及16项测试已完成，
+    待用户确认后固结SHA；随后继续关闭energy、bootstrap、spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。

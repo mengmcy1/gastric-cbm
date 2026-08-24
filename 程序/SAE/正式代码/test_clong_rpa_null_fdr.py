@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import itertools
 import math
 import sys
 import unittest
@@ -11,6 +13,7 @@ from pathlib import Path
 import numpy as np
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parents[2]
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from clong_rpa_null_fdr import (  # noqa: E402
@@ -38,12 +41,38 @@ class NullFDRTests(unittest.TestCase):
         self.assertIsNone(protocol["null"]["b_null"])
         self.assertEqual(protocol["fdr"]["q"], 0.05)
 
-    def test_strata_boundary_goes_to_higher_bin(self) -> None:
+    def test_protocol_eligible_lineage_matches_formal_files(self) -> None:
+        protocol = load_protocol()
+        paths = {
+            "eligible_protocol_sha256": REPO_ROOT / "程序/SAE/正式代码/rpa_eligible_protocol_v1.json",
+            "eligible_audit_summary_sha256": REPO_ROOT / (
+                "结果/SAE/RP_A_Eligible校准_20260821/"
+                "seed42_feature_aggregation_audit_summary.json"
+            ),
+            "eligible_feature_csv_sha256": REPO_ROOT / (
+                "结果/SAE/RP_A_Eligible校准_20260821/"
+                "seed42_feature_aggregation_audit.csv"
+            ),
+        }
+        for key, path in paths.items():
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            self.assertEqual(protocol[key], digest)
+
+    def test_hierarchical_strata_are_balanced_and_deterministic(self) -> None:
+        coverage = np.repeat(np.arange(8), 8).astype(float)
+        frequency = np.tile(np.arange(8), 8).astype(float)
+        ids = np.arange(64)
         strata = assign_target_strata(
-            np.array([0.1, 0.2]), np.array([0.01, 0.02]),
-            [0.2, 0.4, 0.6], [0.02, 0.04, 0.06],
+            coverage, frequency, ids,
         )
-        np.testing.assert_array_equal(strata, np.array([0, 5]))
+        self.assertEqual(validate_target_strata(strata, minimum_size=4), {
+            stratum: 4 for stratum in range(16)
+        })
+        np.testing.assert_array_equal(strata, assign_target_strata(coverage, frequency, ids))
+
+    def test_strata_reject_duplicate_feature_ids(self) -> None:
+        with self.assertRaises(ValueError):
+            assign_target_strata(np.arange(16), np.arange(16), np.zeros(16, dtype=int))
 
     def test_small_nonempty_stratum_fails_without_merge(self) -> None:
         with self.assertRaises(RuntimeError):
@@ -92,6 +121,21 @@ class NullFDRTests(unittest.TestCase):
         )
         self.assertAlmostEqual(p, 0.75)
 
+    def test_exact_null_matches_bruteforce_permutations(self) -> None:
+        decoder = np.array([1.0, 0.8, 0.4, 0.2])
+        behavior = np.array([0.9, 0.7, 0.3, 0.1])
+        observed = 0.7
+        exact = exact_conditional_search_p(
+            decoder, behavior, np.zeros(4, dtype=int), np.ones(4, bool), observed,
+        )
+        exceed = 0
+        total = 0
+        for permuted in itertools.permutations(behavior.tolist()):
+            total += 1
+            score = np.max(np.minimum(decoder, np.asarray(permuted)))
+            exceed += int(score >= observed)
+        self.assertAlmostEqual(exact, exceed / total)
+
     def test_raw_direction_gates(self) -> None:
         self.assertTrue(raw_direction_gates_pass(0.1, 0.2, 0.3, 0.4))
         self.assertFalse(raw_direction_gates_pass(0.1, 0.0, 0.3, 0.4))
@@ -105,8 +149,16 @@ class NullFDRTests(unittest.TestCase):
             DirectedHypothesis(2, 1, 11, 1, 0.9),
         ]
         rejected, cutoff = benjamini_hochberg(hypotheses, q=0.05)
-        self.assertEqual(cutoff, 0.001)
-        self.assertEqual(len(rejected), 2)
+        self.assertEqual(cutoff, 0.02)
+        self.assertEqual(len(rejected), 3)
+
+    def test_rnn_rejects_duplicate_source_hypotheses(self) -> None:
+        hypotheses = [
+            DirectedHypothesis(1, 2, 0, 10, 0.001),
+            DirectedHypothesis(1, 2, 0, 11, 0.002),
+        ]
+        with self.assertRaises(RuntimeError):
+            reciprocal_edges(hypotheses, set())
 
     def test_rnn_requires_both_directions_and_is_one_to_one(self) -> None:
         hypotheses = [

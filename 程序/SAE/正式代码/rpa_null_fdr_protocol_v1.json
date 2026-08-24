@@ -12,21 +12,15 @@
   },
   "target_stratification": {
     "dimensions": ["patient_coverage", "active_position_frequency"],
-    "binning": "seed42_eligible_train_quartile_absolute_cutpoints",
-    "patient_coverage_cutpoints": [
-      0.3853135313531353,
-      0.4603960396039604,
-      0.5932343234323433
-    ],
-    "active_position_frequency_cutpoints": [
-      0.00868114825,
-      0.011580897,
-      0.01865023925
-    ],
-    "boundary_rule": "numpy.searchsorted_side_right",
+    "binning": "target_seed_train_hierarchical_equal_count_4x4",
+    "stage_1": "sort_by_patient_coverage_then_active_frequency_then_feature_id_and_numpy_array_split_4",
+    "stage_2": "within_each_stage1_bin_sort_by_active_frequency_then_patient_coverage_then_feature_id_and_numpy_array_split_4",
+    "data_scope": "target_seed_train_eligible_features_only",
+    "validation_rule": "val_reuses_frozen_target_seed_train_strata",
     "stratum_count": 16,
     "minimum_nonempty_target_stratum_size": 32,
-    "small_stratum_policy": "seed_pair_null_stratification_infeasible_no_merging"
+    "minimum_total_target_features": 512,
+    "small_stratum_policy": "seed_pair_null_stratification_infeasible_no_merging_or_rebinning"
   },
   "raw_metrics": [
     "signed_decoder_cosine",
