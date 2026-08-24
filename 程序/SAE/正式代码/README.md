@@ -262,3 +262,20 @@ python 程序/SAE/正式代码/test_clong_rpa_artifacts.py
 11项测试覆盖唯一best、RNN一一edge、严格3-clique、400 bootstrap records、六项指标、禁止完整
 候选矩阵，以及科学失败/实现失败互斥。规则层面现已允许启动seed43/44；正式runner仍必须按该
 schema实现并验收，不能因为开发结果修改bundle。
+
+## RP-A seed43/44 development训练适配
+
+`clong_rpa_train_development.py`复用S2c的Matryoshka训练函数，但将43/44明确限定为
+development-calibration字典，不再按S2c八门槛决定产品。正式解释固定使用`K=1024`，并强制
+继承seed42的gamma校准JSON及SHA，禁止逐seed重校准。`test_clong_rpa_development.py`覆盖seed
+角色、设备、gamma血缘、strict 3-clique和三折六指标归约；CPU隔离debug已跑通。
+
+正式训练启动器只训练字典，不提前执行matching/bootstrap：
+
+```bash
+CUDA_DEVICE=<启动前检查后选定的GPU> bash \
+  程序/SAE/正式代码/run_clong_rpa_development_training.sh
+```
+
+日志位于`结果/SAE/RP_A_Development_20260824/logs/`。在完整development-calibration runner
+及其debug验收前，不应启动该正式训练脚本。

@@ -2120,6 +2120,18 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 以及两类失败互斥的11项测试。至此RP-A评价规则首次整体冻结，允许开始实现并运行seed43/44；
 不得因开发结果修改bundle。202/503只有在43/44开发校准完成并生成冻结数值后才能启动，911仍保持锁定。
 
+### seed43/44 runner实现进度（2026-08-24）
+
+第一段训练适配已完成，但完整runner尚未验收，因此尚未启动正式seed43/44：
+
+- `clong_rpa_train_development.py`复用S2c冻结的Matryoshka五层联合训练与正式预算，只允许43/44；
+- 两个seed强制继承seed42正式`gamma_pool=0.5095280077324069`及校准JSON SHA，禁止重校准；
+- 后续RP-A表示固定为`K=1024`，S2c八门槛只作健康诊断，不再决定development字典是否为产品；
+- `clong_rpa_development_core.py`已实现三组一一edge到严格3-clique，以及三折伪确认六指标归约；
+- 9项单元测试与seed44少量患者CPU真实缓存冒烟通过，debug与正式目录分离，test/internal/external未读取；
+- `run_clong_rpa_development_training.sh`只负责43→44字典训练，当前不得单独启动。下一实现段是
+  正式matching、400次bootstrap worker/coordinator、val复现和最终schema落盘，全部debug通过后才放行正式训练。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
