@@ -40,6 +40,17 @@ for gpu in "${GPUS[@]}"; do
   fi
 done
 
+CODE_SNAPSHOT="$OUTPUT/run_code_snapshot.json"
+CURRENT_STAGE="code_provenance"
+CURRENT_COMMAND="$PYTHON $CODE/clong_rpa_provenance.py"
+if [[ -f "$CODE_SNAPSHOT" ]]; then
+  "$PYTHON" "$CODE/clong_rpa_provenance.py" verify --output "$CODE_SNAPSHOT" \
+    2>&1 | tee -a "$CURRENT_LOG"
+else
+  "$PYTHON" "$CODE/clong_rpa_provenance.py" create --output "$CODE_SNAPSHOT" \
+    2>&1 | tee -a "$CURRENT_LOG"
+fi
+
 run_logged() {
   local stage="$1"
   local log="$2"

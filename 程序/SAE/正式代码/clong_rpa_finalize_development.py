@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import subprocess
 from pathlib import Path
 
 import pandas as pd
@@ -19,9 +18,11 @@ from clong_rpa_artifacts import (
     validate_edges,
     validate_failure_record,
     validate_output_file_set,
+    validate_run_manifest,
 )
 from clong_rpa_bootstrap import METRIC_NAMES
 from clong_rpa_train_development import OUTPUT_ROOT as DEVELOPMENT_ROOT
+from clong_rpa_provenance import build_snapshot, load_and_validate_snapshot
 from clong_s2c_matryoshka import file_sha256
 
 
@@ -39,29 +40,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def git_commit() -> str:
-    """记录执行时Git提交，不把它混入冻结protocol bundle。"""
-    return subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=PROJECT_ROOT, text=True
-    ).strip()
-
-
 def run_manifest(debug: bool) -> dict:
-    """生成运行血缘；协议bundle与代码版本分开记录。"""
+    """生成运行血缘；正式模式复验runner启动时的代码快照。"""
     members, bundle = protocol_bundle_payload(SCRIPT_DIR)
     if bundle != PROTOCOL_BUNDLE_SHA:
         raise RuntimeError("运行时protocol bundle SHA与冻结值不一致")
-    return {
+    snapshot = build_snapshot() if debug else load_and_validate_snapshot(
+        DEVELOPMENT_ROOT / "run_code_snapshot.json"
+    )
+    manifest = {
         "stage": "RP-A development-calibration",
         "debug": debug,
         "development_seeds": [42, 43, 44],
         "confirmation_seeds_started": [],
-        "git_commit": git_commit(),
+        "git_commit": snapshot["git_commit"],
+        "code_file_sha256": snapshot["code_file_sha256"],
         "protocol_bundle_sha256": bundle,
         "protocol_members": members,
         "internal_test_evaluated": False,
         "external_evaluated": False,
     }
+    validate_run_manifest(manifest)
+    return manifest
 
 
 def write_sha_manifest(target: Path) -> None:

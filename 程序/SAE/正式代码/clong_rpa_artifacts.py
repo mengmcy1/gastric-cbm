@@ -125,6 +125,23 @@ def validate_six_metrics(metrics: dict) -> None:
         raise ValueError("正式指标必须为[0,1]有限比例")
 
 
+def validate_run_manifest(manifest: dict) -> None:
+    """正式manifest必须分别记录Git、协议bundle和逐文件代码SHA。"""
+    required = {"git_commit", "protocol_bundle_sha256", "code_file_sha256"}
+    if not required.issubset(manifest):
+        raise ValueError("run manifest缺少Git、protocol bundle或code SHA")
+    if not all(isinstance(manifest[name], str) and manifest[name] for name in (
+        "git_commit", "protocol_bundle_sha256"
+    )):
+        raise ValueError("Git commit与protocol bundle SHA必须是非空字符串")
+    code = manifest["code_file_sha256"]
+    if not isinstance(code, dict) or not code:
+        raise ValueError("code_file_sha256必须是非空映射")
+    if any(not isinstance(name, str) or not isinstance(value, str) or len(value) != 64
+           for name, value in code.items()):
+        raise ValueError("代码文件名或SHA256格式非法")
+
+
 def validate_failure_record(record: dict) -> None:
     """区分科学失败与实现失败，禁止实现失败产出科学结论。"""
     failure_type = record.get("failure_type")

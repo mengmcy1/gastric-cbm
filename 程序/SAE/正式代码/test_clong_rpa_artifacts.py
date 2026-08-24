@@ -15,9 +15,11 @@ from clong_rpa_artifacts import (
     validate_edges,
     validate_failure_record,
     validate_output_file_set,
+    validate_run_manifest,
     validate_six_metrics,
 )
 from clong_rpa_bootstrap import METRIC_NAMES
+from clong_rpa_finalize_development import run_manifest
 
 
 ROOT = Path(__file__).resolve().parent
@@ -124,6 +126,22 @@ class ArtifactTests(unittest.TestCase):
                 {"implementation_failure.json", "formal_result.json"},
                 "implementation_failure",
             )
+
+    def test_run_manifest_requires_separate_git_bundle_and_code_sha(self) -> None:
+        manifest = {
+            "git_commit": "a" * 40,
+            "protocol_bundle_sha256": "b" * 64,
+            "code_file_sha256": {"runner.py": "c" * 64},
+        }
+        validate_run_manifest(manifest)
+        for field in ("git_commit", "protocol_bundle_sha256", "code_file_sha256"):
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                validate_run_manifest({key: value for key, value in manifest.items() if key != field})
+
+    def test_finalizer_manifest_contains_live_code_snapshot(self) -> None:
+        manifest = run_manifest(debug=True)
+        validate_run_manifest(manifest)
+        self.assertIn("clong_rpa_finalize_development.py", manifest["code_file_sha256"])
 
 
 if __name__ == "__main__":

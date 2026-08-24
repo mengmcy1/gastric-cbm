@@ -2142,7 +2142,10 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 - `run_clong_rpa_development.sh`按训练→三seed缓存→full-train matching→anchor门控→多worker
   bootstrap→coordinator→val复现→finalizer串联完整流程；strict anchor不足、bootstrap不可行和val
   失败进入科学失败，异常进入独立实现失败现场；最终schema debug以0-anchor路径真实通过；
-- development、bootstrap、artifact、null/FDR当前回归分别19/19、14/14、11/11、20/20通过，Shell
+- provenance blocker已在正式运行前关闭：runner启动时独占冻结Git commit、protocol bundle SHA与
+  16个显式正式执行文件的逐文件SHA，续跑和finalizer再次逐项复验；`run_manifest`缺任一类血缘即
+  拒绝正式落盘，不修改冻结protocol JSON或bundle SHA；
+- development、bootstrap、artifact、null/FDR当前回归分别21/21、14/14、13/13、20/20通过，Shell
   语法与`git diff --check`通过。正式运行须启动前重新检查GPU并显式给出`CUDA_DEVICES`，不得单独
   调用训练脚本；202/503/911仍未解锁。
 

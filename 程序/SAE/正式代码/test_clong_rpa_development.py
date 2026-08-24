@@ -37,6 +37,7 @@ from clong_rpa_validate_development import (
     minimum_fold_metrics,
     pair_edges_from_csv,
 )
+from clong_rpa_provenance import CODE_FILES, build_snapshot, validate_snapshot
 from clong_s2c_core import MatryoshkaSparseAutoencoder
 
 
@@ -241,6 +242,20 @@ class ValidationTests(unittest.TestCase):
         blocked = cross_spatial_matrix(*arguments, target_block=1)
         single = cross_spatial_matrix(*arguments, target_block=4)
         np.testing.assert_allclose(blocked, single, rtol=0, atol=0)
+
+    def test_code_snapshot_covers_runner_and_validates_current_tree(self) -> None:
+        snapshot = build_snapshot()
+        self.assertEqual(set(snapshot["code_file_sha256"]), set(CODE_FILES))
+        self.assertIn("run_clong_rpa_development.sh", snapshot["code_file_sha256"])
+        self.assertIn("clong_rpa_finalize_development.py", snapshot["code_file_sha256"])
+        validate_snapshot(snapshot)
+
+    def test_changed_code_sha_is_rejected(self) -> None:
+        snapshot = build_snapshot()
+        name = CODE_FILES[0]
+        snapshot["code_file_sha256"][name] = "0" * 64
+        with self.assertRaises(RuntimeError):
+            validate_snapshot(snapshot)
 
 
 if __name__ == "__main__":
