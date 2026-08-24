@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible与null/FDR子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible与null/FDR子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；representation energy指标定义已拟冻结，两侧绝对门槛待bootstrap子协议产生。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1619,16 +1619,45 @@ R_activation = 0.5 * (
     activation_mass_A_matched / activation_mass_A_eligible
   + activation_mass_B_matched / activation_mass_B_eligible
 )
-
-R_energy = 0.5 * (
-    representation_energy_A_matched / representation_energy_A_eligible
-  + representation_energy_B_matched / representation_energy_B_eligible
-)
 ```
 
-`representation_energy`的精确定义在运行43/44前冻结，候选为患者聚合的
-`sum ||h_j d_j||^2`；它只表示SAE分量能量，不是分类贡献。真正分类贡献仅在RP-C用
-残差保留干预的`delta margin`定义。
+### Representation component energy：指标定义拟冻结
+
+固定使用`K_coverage=1024`的正式激活。对患者`u`、图像`i`、49个位置中的位置`p`和
+Feature `j`，`h_uipj>=0`为激活，`d_j`为decoder第`j`列。单个位置的显式解码分量和平方范数为：
+
+```text
+c_uipj = h_uipj * d_j
+e_uipj = ||c_uipj||_2^2
+```
+
+正式Feature energy采用患者平衡的均值聚合：
+
+```text
+E_j = mean_u mean_i mean_p ||h_uipj * d_j||_2^2
+```
+
+计算范围包含当前split全部患者、全部图像和全49个位置；零激活精确贡献0。decoder bias
+不属于任何Feature，不计入；连续energy不应用`ACTIVE_EPS`二值截断。activation mass与
+representation energy都采用患者平衡聚合；现有activation mass的dataset-level原始量是患者
+质量求和，energy则规范存储为患者均值。在固定split内二者的sum/mean常数因子不改变覆盖比例。
+
+`representation_energy`衡量SAE Feature显式decoder component `h_j*d_j`的平方范数质量。decoder
+directions不要求正交，因此不同Feature可包含相关或重叠方向；各Feature energy之和不是
+重构向量总能量的正交分解，也不等价于explained variance、Feature importance或classification
+contribution。稳定Feature的energy coverage只表示其覆盖了eligible dictionary中多少显式
+decoder-component magnitude。真正分类贡献仅在RP-C中用残差保留干预的`delta margin`定义。
+
+对开发seed `s in {42,43,44}`，eligible Feature集合为`eligible_s`，严格3/3 anchor集合为`A`，
+anchor `a`在seed `s`中的成员为`j_s(a)`。开发anchor energy coverage先在每个seed内计算：
+
+```text
+C_anchor_energy_s = sum_{a in A} E_{s,j_s(a)} / sum_{j in eligible_s} E_{s,j}
+C_anchor_energy_mean = mean_{s in {42,43,44}} C_anchor_energy_s
+```
+
+`C_anchor_energy_mean`是development reference描述量，不扩展为新的PASS综合分。不允许先将不同seed的
+raw energy相加后再计算一个总ratio，以免绝对激活尺度较大的seed获得更高权重。
 
 confirmation相对3-member anchor不强行套用普通pair的对称`R_feature`，至少分别报告：
 
@@ -1637,8 +1666,32 @@ R_anchor_recall = 被confirmation复现的eligible 3/3 anchors / 全部eligible 
 R_confirm_coverage = 匹配到anchor的eligible confirmation Features / eligible confirmation Features
 ```
 
-`R_activation`和`R_energy`也分别报告reference-side与confirmation-side覆盖，再按预注册公式
-组合。开发伪确认与正式确认必须使用同名、同方向指标，不能在确认阶段临时改回对称pair公式。
+`R_activation`分别报告reference-side与confirmation-side覆盖，其门槛形式尚待冻结。energy的两侧指标
+已拟冻结为：
+
+```text
+R_energy_reference_c = mean_s (
+    reproduced_anchor_energy_in_seed_s / all_frozen_anchor_energy_in_seed_s
+)
+
+R_energy_confirmation_c =
+    matched_confirmation_feature_energy / all_confirmation_eligible_feature_energy
+```
+
+reference-side先在每个development seed内计算被confirmation复现的anchor energy比例，再对
+42/43/44等权平均；其分母是全部冻结development anchors的energy，而不是全部eligible
+Features。confirmation-side的分母则是该confirmation seed全部eligible Feature energy。两者回答
+不同问题，必须分别进入PASS：
+
+```text
+R_energy_reference >= T_energy_reference
+AND
+R_energy_confirmation >= T_energy_confirmation
+```
+
+原对称均值仅允许以`R_energy_symmetric_diagnostic`保留于表格，固定
+`diagnostic_only=true`、`used_for_pass=false`、`used_for_threshold_calibration=false`。开发伪确认与正式确认必须
+使用同名、同方向指标，不能在确认阶段临时改回对称pair公式。
 
 ### 校准函数：先冻结算法，再由43/44产生数值
 
@@ -1654,6 +1707,28 @@ R_confirm_coverage = 匹配到anchor的eligible confirmation Features / eligible
 每个伪确认Feature必须同时匹配2/2 anchor成员。该过程与未来202/503匹配3/3 anchor时采用
 相同的candidate search、行为门控、FDR和一一分配主体，只把“至少2个开发成员”固定为共同
 判据。这样开发门槛与确认评价处于同一统计口径。
+
+每一折分别输出`R_energy_reference`和`R_energy_confirmation`。伪确认的reference只有两个seed，
+因此reference-side energy的分母必须是该折全部冻结2/2 anchors的energy；不得使用未来完整
+3/3 anchor分母。未来202/503正式确认则使用42/43/44严格3/3 anchors，并以匹配至少2/3
+开发成员定义成功复现；两个阶段的指标语义保持不变。
+
+energy子协议只冻结两列伪确认输出和两个独立绝对门槛的接口：
+
+```text
+pseudo_confirmation_outputs:
+- R_energy_reference
+- R_energy_confirmation
+
+thresholds:
+- T_energy_reference
+- T_energy_confirmation
+
+combined_threshold: none
+```
+
+两个门槛由后续冻结的patient-level bootstrap calibration protocol分别生成。energy协议现在不决定
+`Q_0.05`、bootstrap次数、完整重匹配还是固定图，也不提前写入任何门槛数值。
 
 患者bootstrap使用同一批有放回抽样患者同时重算三个伪确认折。必须在冻结前决定是每个
 bootstrap从eligible、行为统计、null percentile、匹配边到anchor全部重算，还是固定全train
@@ -1687,7 +1762,7 @@ seed202和seed503分别相对冻结的42/43/44 3/3 anchors评价。每个seed必
 4. BH-FDR后的Feature边真实性规则；
 5. `R_anchor_recall`和`R_confirm_coverage`分别达到冻结门槛；
 6. reference/confirmation两侧`R_activation`及其组合指标达到冻结门槛；
-7. reference/confirmation两侧`R_energy`及其组合指标达到冻结门槛；
+7. `R_energy_reference`和`R_energy_confirmation`分别达到各自冻结的绝对门槛；
 8. train冻结规则在val独立复现，val不得重估任何阈值。
 
 只有202和503均PASS才进入RP-B/RP-C。1/2通过仍判RP-A失败，不更换seed、不放宽门槛、
@@ -1747,7 +1822,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. `representation_energy`、reference/confirmation两侧覆盖及anchor聚合的精确定义；
+1. representation energy指标定义已拟冻结；两侧绝对门槛及其数值由待冻结的bootstrap子协议分别生成；
 2. bootstrap完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
 3. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
 4. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
@@ -1873,6 +1948,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
     9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确协议经两轮审阅、20项测试及
-    SHA固结后于2026-08-24正式冻结；下一步关闭representation energy，再依次关闭bootstrap、
+    SHA固结后于2026-08-24正式冻结；representation energy指标定义已拟冻结，下一步完成复审并
+    正式冻结该定义，再依次关闭bootstrap、
     spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
