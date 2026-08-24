@@ -33,6 +33,7 @@ from clong_rpa_null_fdr import (
     exact_conditional_search_p,
     raw_direction_gates_pass,
     reciprocal_edges,
+    validate_target_strata,
 )
 from clong_rpa_prepare_seed import OUTPUT_ROOT as CACHE_ROOT
 from clong_rpa_train_development import OUTPUT_ROOT as DEVELOPMENT_ROOT
@@ -132,7 +133,10 @@ def jaccard_matrix(
 
 def normalized_maps(seed: dict, device: torch.device) -> tuple[torch.Tensor, torch.Tensor]:
     """将图像激活移到设备并按49位置归一化，返回active标记。"""
-    values = torch.from_numpy(np.asarray(seed["image_activations"]).copy()).to(device)
+    source = seed["image_activations"]
+    if "image_indices" in seed:
+        source = np.asarray(source[np.asarray(seed["image_indices"], dtype=int)])
+    values = torch.from_numpy(np.asarray(source).copy()).to(device)
     norms = torch.linalg.vector_norm(values, dim=1)
     active = norms > ACTIVE_EPS
     values.div_(norms.clamp_min(1e-12).unsqueeze(1))
@@ -178,6 +182,7 @@ def reduce_direction(
     target_maps: torch.Tensor, target_active: torch.Tensor,
     image_patient_index: torch.Tensor, top_count: int, minimum_support: int,
     source_block: int, target_block: int,
+    progress: bool = True,
 ) -> list[dict]:
     """分块完整搜索并仅返回每个source的唯一best hypothesis。"""
     output = []
@@ -243,30 +248,27 @@ def reduce_direction(
                 "top_patient_jaccard": best_raw[2],
                 "spatial_similarity": best_raw[3],
             })
-        print(f"direction {source_seed}->{target_seed}: {stop}/{len(source_ids)}", flush=True)
+        if progress:
+            print(f"direction {source_seed}->{target_seed}: {stop}/{len(source_ids)}", flush=True)
     return output
 
 
-def main() -> None:
-    """执行三pair双向matching，保存最小证据和full-train指标。"""
-    args = parse_args()
-    if not args.debug and args.device != "cuda":
-        raise ValueError("正式matching必须使用CUDA")
-    target = OUTPUT_ROOT / ("debug_v2" if args.debug else "formal")
-    if target.exists():
-        raise FileExistsError(f"matching输出已存在，禁止覆盖: {target}")
-    device = torch.device(args.device)
-    seeds = {seed: load_seed(seed, args) for seed in (42, 43, 44)}
+def compute_matching(
+    seeds: dict[int, dict], device: torch.device, source_block: int,
+    target_block: int, top_count: int, minimum_support: int,
+    validate_strata: bool = True, progress: bool = True,
+) -> tuple[list[dict], dict[tuple[int, int], list[tuple[int, int]]], list[dict], dict]:
+    """对准备好的同患者三seed数据执行完整matching并返回最小证据。"""
     validate_cross_seed_alignment(seeds)
-    target.mkdir(parents=True)
+    if validate_strata:
+        for seed in (42, 43, 44):
+            validate_target_strata(np.asarray(seeds[seed]["strata"]))
     patient_ids = seeds[42]["patients"].patient_id.to_numpy(str)
     patient_index = {patient: index for index, patient in enumerate(patient_ids)}
     image_patient_index = torch.as_tensor(
         [patient_index[str(patient)] for patient in seeds[42]["images"].patient_id],
         device=device,
     )
-    top_count = min(FORMAL_TOP_COUNT, len(patient_ids)) if args.debug else FORMAL_TOP_COUNT
-    support = min(2, len(patient_ids)) if args.debug else FORMAL_SPATIAL_SUPPORT
     static = {}
     for seed, data in seeds.items():
         ranking = np.asarray(data["ranking"])
@@ -294,8 +296,8 @@ def main() -> None:
             static[left]["ranks"], static[right]["ranks"],
             static[left]["top"], static[right]["top"],
             left_maps, left_active, right_maps, right_active,
-            image_patient_index, top_count, support,
-            args.source_block, args.target_block,
+            image_patient_index, top_count, minimum_support,
+            source_block, target_block, progress,
         )
         reverse = reduce_direction(
             right, left, seeds[right], seeds[left], cosine.T,
@@ -303,8 +305,8 @@ def main() -> None:
             static[right]["ranks"], static[left]["ranks"],
             static[right]["top"], static[left]["top"],
             right_maps, right_active, left_maps, left_active,
-            image_patient_index, top_count, support,
-            args.source_block, args.target_block,
+            image_patient_index, top_count, minimum_support,
+            source_block, target_block, progress,
         )
         hypotheses = forward + reverse
         frozen = [DirectedHypothesis(
@@ -318,8 +320,7 @@ def main() -> None:
                    row["source_feature_id"], row["target_feature_id"])
             row["bh_rejected"] = key in rejected
             row["bh_cutoff"] = cutoff
-        edges = reciprocal_edges(frozen, rejected)
-        pair_edges[(left, right)] = edges
+        pair_edges[(left, right)] = reciprocal_edges(frozen, rejected)
         all_rows.extend(hypotheses)
         del left_maps, left_active, right_maps, right_active
         if device.type == "cuda":
@@ -330,6 +331,28 @@ def main() -> None:
     mass = {seed: np.asarray(data["mass"]).sum(0) for seed, data in seeds.items()}
     energy = {seed: np.asarray(data["energy"]).sum(0) for seed, data in seeds.items()}
     metrics = all_pseudo_fold_metrics(pair_edges, eligible, mass, energy)
+    return all_rows, pair_edges, anchors, metrics
+
+
+def main() -> None:
+    """执行三pair双向matching，保存最小证据和full-train指标。"""
+    args = parse_args()
+    if not args.debug and args.device != "cuda":
+        raise ValueError("正式matching必须使用CUDA")
+    target = OUTPUT_ROOT / ("debug_v2" if args.debug else "formal")
+    if target.exists():
+        raise FileExistsError(f"matching输出已存在，禁止覆盖: {target}")
+    device = torch.device(args.device)
+    seeds = {seed: load_seed(seed, args) for seed in (42, 43, 44)}
+    target.mkdir(parents=True)
+    patient_ids = seeds[42]["patients"].patient_id.to_numpy(str)
+    top_count = min(FORMAL_TOP_COUNT, len(patient_ids)) if args.debug else FORMAL_TOP_COUNT
+    support = min(2, len(patient_ids)) if args.debug else FORMAL_SPATIAL_SUPPORT
+    eligible = {seed: np.asarray(data["eligible_ids"], dtype=int) for seed, data in seeds.items()}
+    all_rows, pair_edges, anchors, metrics = compute_matching(
+        seeds, device, args.source_block, args.target_block, top_count, support,
+        validate_strata=not args.debug,
+    )
     edge_rows = [{
         "seed_a": left, "feature_a": int(a), "seed_b": right, "feature_b": int(b),
         "both_directions_bh_rejected": True, "reciprocal": True,

@@ -9,6 +9,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import torch
 
 from clong_rpa_development_core import (
@@ -23,6 +24,11 @@ from clong_rpa_train_development import (
     validate_args,
 )
 from clong_rpa_prepare_seed import load_sae
+from clong_rpa_bootstrap_worker import (
+    bootstrap_plans,
+    expanded_image_instances,
+    expanded_patient_instances,
+)
 from clong_s2c_core import MatryoshkaSparseAutoencoder
 
 
@@ -128,6 +134,46 @@ class DevelopmentGraphTests(unittest.TestCase):
         broken[(42, 43)] = [(0, 1), (2, 1)]
         with self.assertRaises(ValueError):
             strict_three_cliques(broken)
+
+
+class BootstrapWorkerTests(unittest.TestCase):
+    """验证患者有放回抽样在患者与图像层的实例语义。"""
+
+    def setUp(self) -> None:
+        self.patients = pd.DataFrame({
+            "patient_id": ["p1", "p2"],
+            "label": [0, 1],
+            "source": ["a", "b"],
+            "image_count": [2, 1],
+        })
+        self.images = pd.DataFrame({
+            "patient_id": ["p1", "p1", "p2"],
+            "relative_path": ["a.jpg", "b.jpg", "c.jpg"],
+        })
+
+    def test_duplicate_patient_instances_are_distinct(self) -> None:
+        indices, expanded = expanded_patient_instances(
+            self.patients, np.asarray([2, 0], dtype=np.int32)
+        )
+        np.testing.assert_array_equal(indices, [0, 0])
+        self.assertEqual(expanded.patient_id.tolist(), ["p1#occ0", "p1#occ1"])
+
+    def test_each_occurrence_carries_all_patient_images(self) -> None:
+        indices, expanded = expanded_image_instances(
+            self.images, self.patients, np.asarray([2, 0], dtype=np.int32)
+        )
+        np.testing.assert_array_equal(indices, [0, 1, 0, 1])
+        self.assertEqual(
+            expanded.patient_id.tolist(),
+            ["p1#occ0", "p1#occ0", "p1#occ1", "p1#occ1"],
+        )
+
+    def test_debug_bootstrap_plan_is_deterministic(self) -> None:
+        patients = pd.concat([self.patients, self.patients], ignore_index=True)
+        args = argparse.Namespace(debug=True, debug_replicates=2)
+        plans = bootstrap_plans(patients, args)
+        np.testing.assert_array_equal(plans[0], [1, 1, 1, 1])
+        np.testing.assert_array_equal(plans[1], [2, 0, 1, 1])
 
 
 if __name__ == "__main__":

@@ -2131,8 +2131,12 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 - 11项单元测试与42/43/44少量患者CPU真实缓存冒烟通过；三套统一schema分析缓存、六个有向
   matching、BH/RNN、strict anchor及三折六指标归约均已端到端执行，完整候选矩阵未落盘；
   debug与正式目录分离，test/internal/external未读取；
+- bootstrap worker/coordinator已按冻结患者有放回语义实现：同一患者的重复实例保留独立
+  occurrence ID并各自携带全部图像，worker按静态replicate index分工，coordinator只归并完整唯一
+  records；CPU debug已完成2个replicate的完整重匹配与非正式归并，未生成正式门槛；相关development、
+  bootstrap及artifact回归测试分别14/14、14/14、11/11通过；
 - `run_clong_rpa_development_training.sh`只负责43→44字典训练，当前不得单独启动。下一实现段是
-  400次bootstrap worker/coordinator、val复现和最终schema落盘，全部debug通过后才放行正式训练。
+  val冻结train CDF的独立复现、最终runner与schema落盘；全部debug通过后才放行正式训练。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
