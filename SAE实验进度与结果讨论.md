@@ -2122,7 +2122,7 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 
 ### seed43/44 runner实现进度（2026-08-24）
 
-第一段训练适配已完成，但完整runner尚未验收，因此尚未启动正式seed43/44：
+完整runner已实现并完成CPU debug验收，但尚未启动正式seed43/44：
 
 - `clong_rpa_train_development.py`复用S2c冻结的Matryoshka五层联合训练与正式预算，只允许43/44；
 - 两个seed强制继承seed42正式`gamma_pool=0.5095280077324069`及校准JSON SHA，禁止重校准；
@@ -2135,8 +2135,16 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
   occurrence ID并各自携带全部图像，worker按静态replicate index分工，coordinator只归并完整唯一
   records；CPU debug已完成2个replicate的完整重匹配与非正式归并，未生成正式门槛；相关development、
   bootstrap及artifact回归测试分别14/14、14/14、11/11通过；
-- `run_clong_rpa_development_training.sh`只负责43→44字典训练，当前不得单独启动。下一实现段是
-  val冻结train CDF的独立复现、最终runner与schema落盘；全部debug通过后才放行正式训练。
+- val复现固定train eligible Feature IDs、strata与逐source经验CDF，只重算val患者行为；Top患者数
+  与spatial最低支持均使用冻结val值6，train reference edges不在val重建。六方向CPU debug已通过；
+- spatial正式计算补齐target分块，保持原数学口径并避免正式约9000个target Feature时产生数GB级
+  未分块患者中间张量；分块前后数值恒等测试通过；
+- `run_clong_rpa_development.sh`按训练→三seed缓存→full-train matching→anchor门控→多worker
+  bootstrap→coordinator→val复现→finalizer串联完整流程；strict anchor不足、bootstrap不可行和val
+  失败进入科学失败，异常进入独立实现失败现场；最终schema debug以0-anchor路径真实通过；
+- development、bootstrap、artifact、null/FDR当前回归分别19/19、14/14、11/11、20/20通过，Shell
+  语法与`git diff --check`通过。正式运行须启动前重新检查GPU并显式给出`CUDA_DEVICES`，不得单独
+  调用训练脚本；202/503/911仍未解锁。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 

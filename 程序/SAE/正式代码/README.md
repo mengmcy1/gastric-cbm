@@ -277,11 +277,24 @@ CUDA_DEVICE=<启动前检查后选定的GPU> bash \
   程序/SAE/正式代码/run_clong_rpa_development_training.sh
 ```
 
-日志位于`结果/SAE/RP_A_Development_20260824/logs/`。在完整development-calibration runner
-及其debug验收前，不应启动该正式训练脚本。
+日志位于`结果/SAE/RP_A_Development_20260824/logs/`。该训练脚本仍只供完整runner内部调用，
+不应单独启动。
 
 `clong_rpa_prepare_seed.py`把三个字典编码成统一患者/图像顺序的presence、ranking、mass、
 active-frequency、energy和49位置激活缓存；`clong_rpa_match_development.py`执行三pair双向
 完整搜索，只落盘唯一best、BH+RNN edge、strict anchor和六项full-train指标。CPU缩小字典
-debug已跑通，未保存完整候选矩阵。该阶段仍不等于完整runner：bootstrap worker、val复现和
-最终formal artifact归并完成前，不运行正式43/44。
+debug已跑通，未保存完整候选矩阵。`clong_rpa_bootstrap_worker.py`与coordinator执行400次静态
+分工重匹配；`clong_rpa_validate_development.py`在val固定train eligible、strata和经验CDF，使用
+冻结的Top-6/空间支持6重建独立graph；`clong_rpa_finalize_development.py`按schema组装成功或科学
+失败结果。CPU debug已覆盖完整重匹配、bootstrap归并、val复现和0-anchor科学失败落盘。
+
+正式运行统一使用：
+
+```bash
+CUDA_DEVICES=<启动前核实的GPU，可逗号分隔多卡> bash \
+  程序/SAE/正式代码/run_clong_rpa_development.sh
+```
+
+runner会先打印`nvidia-smi`，训练与分析使用第一张卡，bootstrap按所列GPU静态并行；所有阶段均有
+独立实时日志。strict anchors不足100、bootstrap门槛不可行或val复现失败均作为正式科学失败停止；
+异常退出另存实现失败现场，且不会生成科学结论。

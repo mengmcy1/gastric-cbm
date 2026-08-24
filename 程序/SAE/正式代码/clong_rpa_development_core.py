@@ -71,6 +71,7 @@ def pseudo_confirmation_metrics(
     eligible_ids: Mapping[int, np.ndarray],
     activation_mass: Mapping[int, np.ndarray],
     representation_energy: Mapping[int, np.ndarray],
+    reference_pair_edges: Mapping[tuple[int, int], Sequence[tuple[int, int]]] | None = None,
 ) -> dict[str, float]:
     """计算一个2/2 reference → held-out伪确认折的六项正式比例。
 
@@ -82,7 +83,8 @@ def pseudo_confirmation_metrics(
         raise ValueError("held_out_seed必须属于42/43/44")
     references = [seed for seed in DEVELOPMENT_SEEDS if seed != held_out_seed]
     left, right = references
-    reference_edges = list(pair_edges[tuple(sorted((left, right)))])
+    references_graph = pair_edges if reference_pair_edges is None else reference_pair_edges
+    reference_edges = list(references_graph[tuple(sorted((left, right)))])
     if left > right:
         reference_edges = [(b, a) for a, b in reference_edges]
     held_to_left = edge_mapping(pair_edges, held_out_seed, left)
@@ -149,6 +151,23 @@ def all_pseudo_fold_metrics(
     return {
         str(seed): pseudo_confirmation_metrics(
             seed, pair_edges, eligible_ids, activation_mass, representation_energy
+        )
+        for seed in DEVELOPMENT_SEEDS
+    }
+
+
+def all_pseudo_fold_metrics_with_frozen_references(
+    reference_pair_edges: Mapping[tuple[int, int], Sequence[tuple[int, int]]],
+    reproduction_pair_edges: Mapping[tuple[int, int], Sequence[tuple[int, int]]],
+    eligible_ids: Mapping[int, np.ndarray],
+    activation_mass: Mapping[int, np.ndarray],
+    representation_energy: Mapping[int, np.ndarray],
+) -> dict[str, dict[str, float]]:
+    """用train冻结2/2 references评价独立val matching graph。"""
+    return {
+        str(seed): pseudo_confirmation_metrics(
+            seed, reproduction_pair_edges, eligible_ids, activation_mass,
+            representation_energy, reference_pair_edges=reference_pair_edges,
         )
         for seed in DEVELOPMENT_SEEDS
     }

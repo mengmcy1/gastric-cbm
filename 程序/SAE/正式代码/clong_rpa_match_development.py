@@ -63,27 +63,29 @@ def cache_directory(seed: int, args: argparse.Namespace) -> Path:
     return root / f"seed{seed}"
 
 
-def load_seed(seed: int, args: argparse.Namespace) -> dict:
-    """加载并核验一个seed的train缓存、eligible和decoder。"""
+def load_seed(seed: int, args: argparse.Namespace, split: str = "train") -> dict:
+    """加载一个seed的指定split；Feature universe与strata始终继承train。"""
+    if split not in {"train", "val"}:
+        raise ValueError("split必须是train或val")
     directory = cache_directory(seed, args)
     if not directory.is_dir():
         raise FileNotFoundError(f"缺少seed{seed}分析缓存: {directory}")
     config = json.loads((directory / "config.json").read_text(encoding="utf-8"))
     if int(config["seed"]) != seed or bool(config["debug"]) != bool(args.debug):
         raise RuntimeError("分析缓存seed/debug标记不一致")
-    patients = pd.read_csv(directory / "train_patients.csv", dtype={"patient_id": str})
-    images = pd.read_csv(directory / "train_images.csv", dtype={"patient_id": str})
+    patients = pd.read_csv(directory / f"{split}_patients.csv", dtype={"patient_id": str})
+    images = pd.read_csv(directory / f"{split}_images.csv", dtype={"patient_id": str})
     return {
         "directory": directory,
         "config": config,
         "patients": patients,
         "images": images,
-        "presence": np.load(directory / "train_presence.npy", mmap_mode="r"),
-        "ranking": np.load(directory / "train_ranking.npy", mmap_mode="r"),
-        "mass": np.load(directory / "train_mass.npy", mmap_mode="r"),
-        "energy": np.load(directory / "train_energy.npy", mmap_mode="r"),
-        "active_frequency": np.load(directory / "train_active_frequency.npy", mmap_mode="r"),
-        "image_activations": np.load(directory / "train_image_activations.npy", mmap_mode="r"),
+        "presence": np.load(directory / f"{split}_presence.npy", mmap_mode="r"),
+        "ranking": np.load(directory / f"{split}_ranking.npy", mmap_mode="r"),
+        "mass": np.load(directory / f"{split}_mass.npy", mmap_mode="r"),
+        "energy": np.load(directory / f"{split}_energy.npy", mmap_mode="r"),
+        "active_frequency": np.load(directory / f"{split}_active_frequency.npy", mmap_mode="r"),
+        "image_activations": np.load(directory / f"{split}_image_activations.npy", mmap_mode="r"),
         "eligible_ids": np.load(directory / "train_eligible_ids.npy"),
         "strata": np.load(directory / "train_eligible_strata.npy"),
         "decoder": np.load(directory / "decoder_weight.npy", mmap_mode="r"),
@@ -148,28 +150,33 @@ def cross_spatial_matrix(
     target_maps: torch.Tensor, target_active: torch.Tensor,
     image_patient_index: torch.Tensor, patient_count: int,
     source_ids: np.ndarray, target_ids: np.ndarray, minimum_support: int,
+    target_block: int,
 ) -> np.ndarray:
-    """按同图位置cosine→患者内均值→患者间均值计算跨seed空间复现。"""
+    """按target分块计算同图cosine→患者内均值→患者间均值。"""
     device = source_maps.device
     source_index = torch.as_tensor(source_ids, device=device)
-    target_index = torch.as_tensor(target_ids, device=device)
     source = source_maps.index_select(2, source_index).permute(0, 2, 1)
-    target = target_maps.index_select(2, target_index)
-    cosine = torch.bmm(source, target)
-    union = source_active.index_select(1, source_index).unsqueeze(2) | \
-        target_active.index_select(1, target_index).unsqueeze(1)
-    cosine.mul_(union)
-    shape = (patient_count, len(source_ids), len(target_ids))
-    patient_sum = torch.zeros(shape, dtype=torch.float64, device=device)
-    patient_n = torch.zeros(shape, dtype=torch.float64, device=device)
-    patient_sum.index_add_(0, image_patient_index, cosine.double())
-    patient_n.index_add_(0, image_patient_index, union.double())
-    valid = patient_n > 0
-    patient_values = patient_sum / patient_n.clamp_min(1)
-    support = valid.sum(0)
-    result = (patient_values * valid).sum(0) / support.clamp_min(1)
-    result[support < minimum_support] = torch.nan
-    return result.cpu().numpy()
+    source_is_active = source_active.index_select(1, source_index).unsqueeze(2)
+    output = np.empty((len(source_ids), len(target_ids)), dtype=np.float64)
+    for start in range(0, len(target_ids), target_block):
+        stop = min(start + target_block, len(target_ids))
+        target_index = torch.as_tensor(target_ids[start:stop], device=device)
+        target = target_maps.index_select(2, target_index)
+        cosine = torch.bmm(source, target)
+        union = source_is_active | target_active.index_select(1, target_index).unsqueeze(1)
+        cosine.mul_(union)
+        shape = (patient_count, len(source_ids), stop - start)
+        patient_sum = torch.zeros(shape, dtype=torch.float64, device=device)
+        patient_n = torch.zeros(shape, dtype=torch.float64, device=device)
+        patient_sum.index_add_(0, image_patient_index, cosine.double())
+        patient_n.index_add_(0, image_patient_index, union.double())
+        valid = patient_n > 0
+        patient_values = patient_sum / patient_n.clamp_min(1)
+        support = valid.sum(0)
+        result = (patient_values * valid).sum(0) / support.clamp_min(1)
+        result[support < minimum_support] = torch.nan
+        output[:, start:stop] = result.cpu().numpy()
+    return output
 
 
 def reduce_direction(
@@ -207,7 +214,7 @@ def reduce_direction(
         spatial = cross_spatial_matrix(
             source_maps, source_active, target_maps, target_active,
             image_patient_index, len(source["patients"]), block_ids, target_ids,
-            minimum_support,
+            minimum_support, target_block,
         )
         raw = [decoder_cosine[start:stop], spearman, jaccard, spatial]
         valid = np.logical_and.reduce([np.isfinite(values) for values in raw])
@@ -361,8 +368,14 @@ def main() -> None:
     validate_edges(edge_rows)
     validate_anchors(anchors)
     pd.DataFrame(all_rows).to_csv(target / "best_directed_hypotheses.csv", index=False)
-    pd.DataFrame(edge_rows).to_csv(target / "reciprocal_edges.csv", index=False)
-    pd.DataFrame(anchors).to_csv(target / "development_anchors.csv", index=False)
+    pd.DataFrame(edge_rows, columns=[
+        "seed_a", "feature_a", "seed_b", "feature_b",
+        "both_directions_bh_rejected", "reciprocal",
+    ]).to_csv(target / "reciprocal_edges.csv", index=False)
+    pd.DataFrame(anchors, columns=[
+        "anchor_id", "feature_42", "feature_43", "feature_44",
+        "edge_42_43", "edge_42_44", "edge_43_44",
+    ]).to_csv(target / "development_anchors.csv", index=False)
     result = {
         "debug": bool(args.debug),
         "eligible_counts": {str(seed): int(len(ids)) for seed, ids in eligible.items()},

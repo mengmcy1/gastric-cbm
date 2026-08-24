@@ -14,6 +14,7 @@ import torch
 
 from clong_rpa_development_core import (
     all_pseudo_fold_metrics,
+    pseudo_confirmation_metrics,
     strict_three_cliques,
 )
 from clong_rpa_train_development import (
@@ -24,10 +25,17 @@ from clong_rpa_train_development import (
     validate_args,
 )
 from clong_rpa_prepare_seed import load_sae
+from clong_rpa_match_development import cross_spatial_matrix
 from clong_rpa_bootstrap_worker import (
     bootstrap_plans,
     expanded_image_instances,
     expanded_patient_instances,
+)
+from clong_rpa_validate_development import (
+    FORMAL_VAL_SPATIAL_SUPPORT,
+    FORMAL_VAL_TOP_COUNT,
+    minimum_fold_metrics,
+    pair_edges_from_csv,
 )
 from clong_s2c_core import MatryoshkaSparseAutoencoder
 
@@ -135,6 +143,19 @@ class DevelopmentGraphTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             strict_three_cliques(broken)
 
+    def test_val_uses_frozen_train_reference_edges(self) -> None:
+        train_references = dict(self.edges)
+        train_references[(43, 44)] = [(1, 4), (3, 5)]
+        val_reproduction = dict(self.edges)
+        val_reproduction[(42, 43)] = [(0, 1)]
+        val_reproduction[(42, 44)] = [(0, 4)]
+        val_reproduction[(43, 44)] = []
+        metrics = pseudo_confirmation_metrics(
+            42, val_reproduction, self.eligible, self.mass, self.energy,
+            reference_pair_edges=train_references,
+        )
+        self.assertAlmostEqual(metrics["R_anchor_recall"], 0.5)
+
 
 class BootstrapWorkerTests(unittest.TestCase):
     """验证患者有放回抽样在患者与图像层的实例语义。"""
@@ -174,6 +195,52 @@ class BootstrapWorkerTests(unittest.TestCase):
         plans = bootstrap_plans(patients, args)
         np.testing.assert_array_equal(plans[0], [1, 1, 1, 1])
         np.testing.assert_array_equal(plans[1], [2, 0, 1, 1])
+
+
+class ValidationTests(unittest.TestCase):
+    """验证val固定人数、最弱折归约和合法空edge输入。"""
+
+    def test_val_uses_frozen_six_patient_rules(self) -> None:
+        self.assertEqual(FORMAL_VAL_TOP_COUNT, 6)
+        self.assertEqual(FORMAL_VAL_SPATIAL_SUPPORT, 6)
+
+    def test_minimum_fold_metrics_uses_weakest_fold(self) -> None:
+        folds = {
+            str(seed): {
+                name: 0.4 + 0.1 * index
+                for name in ("R_anchor_recall", "R_confirm_coverage",
+                             "R_activation_reference", "R_activation_confirmation",
+                             "R_energy_reference", "R_energy_confirmation")
+            }
+            for index, seed in enumerate((42, 43, 44))
+        }
+        self.assertTrue(all(value == 0.4 for value in minimum_fold_metrics(folds).values()))
+
+    def test_empty_train_edge_file_is_legal_zero_graph(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "edges.csv"
+            path.write_text("\n", encoding="utf-8")
+            self.assertEqual(
+                pair_edges_from_csv(path),
+                {(42, 43): [], (42, 44): [], (43, 44): []},
+            )
+
+    def test_spatial_target_blocking_is_numerically_invariant(self) -> None:
+        generator = torch.Generator().manual_seed(42)
+        source = torch.rand((3, 4, 5), generator=generator)
+        target = torch.rand((3, 4, 6), generator=generator)
+        source = source / torch.linalg.vector_norm(source, dim=1, keepdim=True)
+        target = target / torch.linalg.vector_norm(target, dim=1, keepdim=True)
+        source_active = torch.ones((3, 5), dtype=torch.bool)
+        target_active = torch.ones((3, 6), dtype=torch.bool)
+        patient_index = torch.tensor([0, 0, 1])
+        arguments = (
+            source, source_active, target, target_active, patient_index, 2,
+            np.asarray([0, 2, 4]), np.asarray([0, 1, 3, 5]), 1,
+        )
+        blocked = cross_spatial_matrix(*arguments, target_block=1)
+        single = cross_spatial_matrix(*arguments, target_block=4)
+        np.testing.assert_allclose(blocked, single, rtol=0, atol=0)
 
 
 if __name__ == "__main__":

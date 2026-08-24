@@ -71,22 +71,37 @@ def main() -> None:
         }
     else:
         validate_bootstrap_records(records)
-        thresholds = aggregate_thresholds(records)
         full = json.loads(
             (MATCHING_ROOT / "full_train_metrics.json").read_text(encoding="utf-8")
         )
-        verify_full_train_self_consistency(thresholds, full["fold_metrics"])
-        result = {
-            "status": "bootstrap_thresholds_frozen",
-            "debug": False,
-            "record_count": 400,
-            "thresholds": thresholds,
-            "full_train_self_consistency": True,
-            "bootstrap_records_sha256": file_sha256(records_path),
-            "full_train_metrics_sha256": file_sha256(
-                MATCHING_ROOT / "full_train_metrics.json"
-            ),
-        }
+        try:
+            thresholds = aggregate_thresholds(records)
+            verify_full_train_self_consistency(thresholds, full["fold_metrics"])
+        except RuntimeError as error:
+            if not str(error).startswith("bootstrap_calibration_infeasible:"):
+                raise
+            result = {
+                "status": "bootstrap_calibration_infeasible",
+                "debug": False,
+                "record_count": 400,
+                "reason": str(error),
+                "bootstrap_records_sha256": file_sha256(records_path),
+                "full_train_metrics_sha256": file_sha256(
+                    MATCHING_ROOT / "full_train_metrics.json"
+                ),
+            }
+        else:
+            result = {
+                "status": "bootstrap_thresholds_frozen",
+                "debug": False,
+                "record_count": 400,
+                "thresholds": thresholds,
+                "full_train_self_consistency": True,
+                "bootstrap_records_sha256": file_sha256(records_path),
+                "full_train_metrics_sha256": file_sha256(
+                    MATCHING_ROOT / "full_train_metrics.json"
+                ),
+            }
     result_path = target / "bootstrap_thresholds.json"
     result_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8"
