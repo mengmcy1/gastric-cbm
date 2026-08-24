@@ -188,3 +188,15 @@ CUDA_DEVICE=<启动前核实的GPU> bash \
 2026-08-21正式train-only任务已完成，`SHA256SUMS.txt` 9/9通过。冻结结果为
 `q=0.02`、`P_min_train=25`、`val Top-q=6`、
 `A_min=0.25/49=0.00510204081632653`。上述值不得在后续seed重估。
+
+## RP-A matching纯计算benchmark
+
+`benchmark_clong_rpa_matching.py`仅用seed42冻结SAE构造3个Feature双射逻辑seed，
+执行一次正式规模的3 pair / 6 direction matching和3折pseudo-confirm plumbing。
+它不训练新seed、不运行bootstrap循环，也不持久化edge、anchor、p值或任何
+稳定性指标。候选矩阵使用source block流式归约，批量中秩和best选择已通过与
+冻结null/FDR纯函数的逐行等价测试。
+
+2026-08-24最终benchmark使用`source_block=128`/`target_block=256`，完整replicate为
+696.2秒，峰值RAM 3.35 GiB、VRAM 6.20 GiB。该数字只用于bootstrap工程预算，
+不是RP-A统计结果。

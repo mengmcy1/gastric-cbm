@@ -1801,8 +1801,10 @@ combined_threshold: none
 患者bootstrap使用同一批有放回抽样患者同时重算三个伪确认折。必须在冻结前决定是每个
 bootstrap从eligible、行为统计、null percentile、匹配边到anchor全部重算，还是固定全train
 匹配图只重算质量覆盖；若固定匹配图，则`R_feature`不会变化，不能伪装成其bootstrap区间。
-当前推荐候选是完整重算matching pipeline，因为它能为结构复现率提供真实抽样不确定性；
-该选择在计算成本评估和小规模基准完成前仍标记为`TBD`。
+当前推荐候选是完整重算matching pipeline，因为它能为结构复现率提供真实抽样不确定性。
+2026-08-24已完成正式规模纯计算benchmark，证明精确完整重算在现有服务器上无OOM
+且可执行；该选择因此从计算可行性上通过，但仍须与抽样/RNG/并行归并等条款
+一起完成bootstrap子协议冻结后才能运行。
 
 ### Bootstrap source只读审计与结构失败口径（2026-08-24）
 
@@ -1846,6 +1848,33 @@ R_energy_confirmation
 NaN/Inf进入有效集、ID或shape错位、重复Feature ID、RNN一对多等属于实现或数值错误，
 必须fast-fail终止整个校准，不得记0继续。
 
+### RP-A matching纯计算benchmark（2026-08-24）
+
+benchmark只读seed42冻结SAE与train空间缓存，通过Feature维度的确定性双射构造
+42/43/44三个逻辑seed。decoder行和activation列使用同一双射，不加噪声、不训练新SAE，
+也不创造跨seed统计证据。surrogate replicate使用完整train且每位患者权重为1，
+因此只回答同规模精确计算能否跑通和需要多少资源，不是bootstrap分布中的一个正式观测。
+
+完整链路真实执行了K=1024空间编码、3个seed-pair的双向decoder cosine、union-positive
+Spearman、Top-q Jaccard、same-image 49位置spatial similarity、row percentile、best candidate、
+exact-null、BH-FDR、RNN和3个2/2 pseudo-confirm fold plumbing。候选矩阵按source block流式处理，
+每块完成有向hypothesis后立即释放；未持久化edge、anchor、p值、coverage或任何`R_*`。
+
+| 实现 | source block | 单replicate | 百分位+选best | spatial | Spearman | exact-null | 峰值RAM | 峰值VRAM |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 冻结纯函数逐行基线 | 32 | 3828.0 s | 3472.7 s | 155.4 s | 121.1 s | 76.7 s | 3.13 GiB | 5.30 GiB |
+| 等价批量中秩+best | 32 | 714.3 s | 358.9 s | 156.5 s | 121.2 s | 73.9 s | 3.20 GiB | 5.30 GiB |
+| 等价批量中秩+best | 128 | **696.2 s** | 347.5 s | 122.3 s | 151.3 s | 73.9 s | 3.35 GiB | 6.20 GiB |
+
+批量中秩与冻结`train_midrank_percentile()`逐行结果逐位等价；best选择与冻结的
+`score desc -> cosine desc -> target ID asc`逐行结果一致，因此优化只改变实现效率，
+不改变null/FDR数学定义。block 128相对block 32只再快2.5%，停止继续调块参数。
+
+最终工程投影为：一次预计算约6.0秒，400次精确完整重算在单GPU串行下约
+77.4小时。多GPU理想值不作承诺，因为百分位和exact-null还会占用CPU，且服务器GPU为共享资源。
+`B_boot=400`因此记为工程可执行的拟冻结选择；它尚不是正式冻结值，不允许仅凭本benchmark
+启动bootstrap或seed43/44。
+
 推荐但尚未冻结的门槛生成候选为：
 
 ```text
@@ -1858,7 +1887,7 @@ T_metric  = Q_0.05({R_min^(b)})
 相对完整搜索null单独控制，不再把null upper重复塞入R指标门槛。RP-A的严格性来自边真实性、
 BH-FDR、实际覆盖门槛、val独立复现和202/503双确认的组合，而不是`Q_0.05`单独提供。最终
 分别产生anchor recall、confirmation coverage、activation和energy门槛，不再笼统记为一个`T_feature`。`Q_0.05`、
-bootstrap次数、是否BCa、患者重复权重、空anchor处理和计算近似均为`TBD`，必须在运行43/44
+bootstrap次数的正式冻结、是否BCa、患者重复权重和并行归并均为`TBD`，必须在运行43/44
 前冻结。不能看到开发结果后在最小值、均值、中位数或排除某折之间选择。
 
 ### RP-A确认PASS与停止规则
@@ -1936,7 +1965,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. bootstrap子协议须分别生成activation/energy两侧绝对门槛；source分层与结构失败口径已关闭，完整重算或固定图方案、`B_boot/Q_0.05`及其余抽样细节仍待冻结；
+1. bootstrap子协议须分别生成activation/energy两侧绝对门槛；source分层与结构失败口径已关闭，精确完整重算已通过正式规模benchmark，`B_boot=400`为工程可行的拟冻结选择；`Q_0.05`、RNG、患者重复权重和并行归并等仍待冻结；
 2. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
 3. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
 4. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
@@ -2062,7 +2091,9 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
     9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确协议经两轮审阅、20项测试及
     SHA固结后于2026-08-24正式冻结；activation与representation energy的两侧指标定义均于
-    2026-08-24完成复审并正式冻结；bootstrap source只读审计和结构失败口径已关闭，
-    下一步做不产生统计证据的计算benchmark，再根据可行性冻结bootstrap其余参数。之后依次关闭
+    2026-08-24完成复审并正式冻结；bootstrap source只读审计和结构失败口径已关闭；
+    RP-A matching正式规模纯计算benchmark已完成，精确完整重算约11.6分钟/replicate、
+    400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；`B_boot=400`记为拟冻结选择。
+    下一步冻结bootstrap抽样、RNG、门槛分位数和并行归并口径。之后依次关闭
     spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
