@@ -1,6 +1,6 @@
 {
   "protocol_name": "rpa_active_frequency_calibration_v1",
-  "status": "candidate_freeze_pending_formal_artifacts",
+  "status": "frozen_2026-08-24",
   "active_eps": 1e-08,
   "representation_k": 1024,
   "top_q_candidates": [0.01, 0.02, 0.05, 0.1],
@@ -22,5 +22,17 @@
   "min_eligible_features": 100,
   "min_anchor_3of3": 100,
   "undefined_split_policy": "candidate_fails_without_dropping_split",
-  "selection_rule": "smallest_passing_active_frequency_candidate"
+  "selection_rule": "smallest_passing_active_frequency_candidate",
+  "frozen_values": {
+    "top_q": 0.02,
+    "p_min_train": 25,
+    "val_top_q_count": 6,
+    "a_min": 0.00510204081632653
+  },
+  "accepted_calibration": {
+    "candidate_protocol_sha256": "3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91",
+    "calibration_json": "结果/SAE/RP_A_Eligible校准_20260821/active_frequency_calibration.json",
+    "calibration_json_sha256": "ad0b277888c9de4399a69c71d31fe9ba8a875685e294b7a7bdc1a86af719b06f",
+    "formal_artifact_sha_file": "结果/SAE/RP_A_Eligible校准_20260821/SHA256SUMS.txt"
+  }
 }

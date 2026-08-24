@@ -1,0 +1,48 @@
+{
+  "protocol_name": "rpa_activation_and_representation_energy_coverage_v1",
+  "status": "frozen_2026-08-24",
+  "representation_k": 1024,
+  "activation_mass": {
+    "position_to_image": "mean_h_over_49_positions",
+    "image_to_patient": "mean_image_mass",
+    "dataset": "sum_patient_mass",
+    "reference": "mean_per_reference_seed_of_reproduced_anchor_mass_over_all_anchor_mass",
+    "confirmation": "matched_confirmation_feature_mass_over_all_confirmation_eligible_mass"
+  },
+  "representation_energy": {
+    "component": "squared_l2_norm_of_h_j_times_decoder_direction_d_j",
+    "position_to_image_to_patient": "mean_position_then_mean_image_then_mean_patient",
+    "decoder_bias_included": false,
+    "active_eps_applied": false,
+    "orthogonal_energy_decomposition_claimed": false,
+    "reference": "mean_per_reference_seed_of_reproduced_anchor_energy_over_all_anchor_energy",
+    "confirmation": "matched_confirmation_feature_energy_over_all_confirmation_eligible_energy"
+  },
+  "pseudo_confirmation": {
+    "reference_seed_count": 2,
+    "reference_ratio": "compute_ratio_per_reference_seed_then_equal_weight_mean",
+    "confirmation_ratio": "held_out_seed_matched_eligible_over_all_eligible"
+  },
+  "formal_confirmation": {
+    "reference_seed_count": 3,
+    "reference_ratio": "compute_ratio_per_seed42_43_44_then_equal_weight_mean",
+    "confirmation_ratio": "confirmation_seed_matched_eligible_over_all_eligible"
+  },
+  "pass_metrics": [
+    "R_activation_reference",
+    "R_activation_confirmation",
+    "R_energy_reference",
+    "R_energy_confirmation"
+  ],
+  "diagnostic_only": [
+    "R_activation_symmetric_diagnostic",
+    "R_energy_symmetric_diagnostic",
+    "all_latent_ablation"
+  ],
+  "val": {
+    "recompute_mass_and_energy_from_val_patients": true,
+    "feature_universe": "frozen_train_eligible_ids",
+    "anchor_membership": "frozen_train_anchors",
+    "eligible_rescreening": false
+  }
+}

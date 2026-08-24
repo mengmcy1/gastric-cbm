@@ -63,8 +63,8 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖、bootstrap、spatial与GPU identity子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR、activation、representation energy、bootstrap与spatial均于2026-08-24正式冻结；residual-preserving no-op的五级GPU identity固定输入、容差函数、RTX 5080数值环境和逐级门槛也于2026-08-24完成双卡一致审计并冻结。只剩正式产物/失败现场与整体协议SHA未关闭；此前仍禁止运行43/44/202/503/911 |
-| 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
+| RP-SAE新解释范式 | RP-A整体协议已冻结，允许进入43/44 development-calibration实现与运行 | eligible、null/FDR、activation、representation energy、bootstrap、spatial和GPU identity子协议均已冻结；正式产物schema、科学/实现失败分流及7协议overall bundle于2026-08-24完成11项测试并冻结。`protocol_bundle_sha256=768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`；允许按冻结规则实现并启动43/44，202/503/911仍须遵守后续顺序，不得提前运行 |
+| 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
@@ -1212,10 +1212,11 @@ SAE seed202/503，不启动跨seed Feature family正式流程，也不追加K、
 医生正式命名。后续若继续解释研究，必须另立Gated SAE、更合适解释层或概念粒度与重构
 粒度分离等新的预注册问题。
 
-## RP-A预注册草案：残差保留解释探针的技术确认（待确认，未冻结）
+## RP-A预注册草案：残差保留解释探针的技术确认（历史草案，现已整体冻结）
 
-状态：**本节是新研究问题的可执行草案，不是S2c修订，也尚未冻结。** 在本节所有`TBD`
-参数、校准函数、实现自测和输出血缘完成审阅前，不得运行seed43/44/202/503/911。
+历史状态：**本节最初是新研究问题的可执行草案，不是S2c修订。** 当时所有`TBD`参数、校准函数、
+实现自测和输出血缘完成审阅前不得运行新seed；这些规则现已逐项关闭，当前状态以本章末尾
+“RP-A整体正式冻结与产物边界”和顶部状态表为准。
 
 ### 研究问题与S2c边界
 
@@ -1557,7 +1558,8 @@ non-dead Feature；未读取val激活、internal test或external。主要结果�
 正式血缘：
 
 ```text
-protocol SHA = 3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91
+candidate protocol SHA = 3bc1bed29b8fb8ba0c9118438aa8d299f52f2af4c1e67fd337aa0a1ef7443a91
+frozen protocol SHA    = 4b0ecaa7fd2e8a569873d1cff099826b0981e49ae8ff1a0bb98aa0d96d70afd3
 code SHA     = 6b6192dbddf58ea6e159dade3f7f8868f96ecd308d5bb12e092cc28ed8faf69c
 S2c checkpoint SHA = 1abf1c2366fed3aa94d70dce7e52df2c1c21001d8ebcded221ae9665ebc1c15f
 audit summary SHA  = 2b16886e898c09062ee80b0d0eaa6be068aa3a07def5cb9d5419d3c2f013f5ba
@@ -1566,14 +1568,14 @@ split results CSV SHA = 9ea6733bd09906162227e95de25830aa5bbdcaf6dd84533d61b5f384
 ```
 
 `SHA256SUMS.txt`已对全9个正式产物复验通过。至此eligible子协议正式
-冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。bootstrap与spatial子协议已于
-2026-08-24随后完成冻结；RP-A整体目前仍因GPU identity和正式产物协议未关闭而未冻结。
+冻结；后续seed只能使用上述数值和SHA绑定规则，不得重新估计。bootstrap、spatial、GPU identity
+和正式产物协议随后均于2026-08-24关闭，RP-A现已按本章末尾overall bundle整体冻结。
 
 ### 跨seed边匹配算法
 
 每个seed-pair分别运行；同一字典内部pair不能代替跨seed null。以下规则已实现为
 `rpa_null_fdr_protocol_v1.json`协议已于2026-08-24通过复审并正式冻结。本子协议的统计方法与实现
-不再调整；RP-A整体仍未冻结，因此仍不允许启动新seed。
+不再调整；在overall bundle完成前曾禁止启动新seed，当前已允许按冻结规则启动43/44。
 
 1. 对每个有向source eligible Feature，在另一seed的全部valid target eligible Feature中执行
    完整搜索；target分层只用于条件null，不限制候选搜索范围。
@@ -1994,8 +1996,8 @@ T_metric  = Q_0.05({R_min^(b)})
 相对完整搜索null单独控制，不再把null upper重复塞入R指标门槛。RP-A的严格性来自边真实性、
 BH-FDR、实际覆盖门槛、val独立复现和202/503双确认的组合，而不是`Q_0.05`单独提供。最终
 分别产生anchor recall、confirmation coverage、activation和energy门槛，不再笼统记为一个`T_feature`。`Q_0.05`、
-bootstrap次数的正式冻结、是否BCa、患者重复权重和并行归并均为`TBD`，必须在运行43/44
-前冻结。不能看到开发结果后在最小值、均值、中位数或排除某折之间选择。
+bootstrap次数、BCa禁用、患者重复权重和并行归并已在2026-08-24正式冻结。不能看到开发结果后
+在最小值、均值、中位数或排除某折之间选择。
 
 ### RP-A确认PASS与停止规则
 
@@ -2092,14 +2094,31 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 特定LLM实验，不作为胃镜门槛。2026预印本`Unstable Features, Reproducible Subspaces`
 支持Feature重现概率和局部子空间诊断，但不是医学影像实证，也不能挽救Feature级失败。
 
-### 冻结前未决项
+### RP-A整体正式冻结与产物边界（2026-08-24）
 
-1. bootstrap子协议已于2026-08-24正式冻结并完成SHA固结；完整matching worker和正式产物协议尚未实现；
-2. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
+最后一个整体协议冻结为`rpa_overall_protocol_v1.json`。正式成功目录只保存：运行血缘、每个有向
+source hypothesis的唯一best、BH+RNN最终edges、严格3-clique anchors、400条bootstrap records、
+六门槛与六项正式指标、GPU identity、正式结果和SHA清单；明确禁止完整候选矩阵、完整pairwise
+指标矩阵和完整p值矩阵。
 
-字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
-已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
-随后先运行seed43/44，生成开发校准报告并冻结数值，最后才允许启动seed202/503。
+科学失败与实现失败彻底分开：`development_calibration_infeasible`、
+`bootstrap_calibration_infeasible`、confirmation指标失败或val复现失败属于正式科学结果，保留已完成
+证据并禁止下游；异常、数值错误或血缘错误属于实现失败，只保存stage、exception、message、
+traceback、Git commit和protocol bundle SHA现场，不得生成`formal_result.json`或科学结论。所有目录
+存在即拒绝覆盖，残缺现场不自动清理。
+
+overall bundle只绑定以下7个冻结规则JSON：eligible、null/FDR、activation+energy coverage、bootstrap、
+spatial、GPU identity和overall。Git commit、代码SHA、测试SHA和结果SHA不进入bundle，必须在每次
+`run_manifest.json`中另行记录。排序文件名与各自SHA拼接后的正式值为：
+
+```text
+protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280
+```
+
+`rpa_protocol_bundle_v1.json`记录成员与算法；`clong_rpa_artifacts.py`和
+`test_clong_rpa_artifacts.py`完成唯一best、一一edge、严格anchor、400 records、六指标、禁止巨大矩阵
+以及两类失败互斥的11项测试。至此RP-A评价规则首次整体冻结，允许开始实现并运行seed43/44；
+不得因开发结果修改bundle。202/503只有在43/44开发校准完成并生成冻结数值后才能启动，911仍保持锁定。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
@@ -2224,6 +2243,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     最弱折lower门槛、重复患者、结构失败和并行归并已于2026-08-24正式冻结，14项纯函数测试、
     真实train-only抽样debug和协议/实现/测试SHA固结均通过；spatial数值与可评价规则随后通过
     6项语义测试和固定小块numerical-only audit，于2026-08-24正式冻结；GPU identity随后完成
-    五级固定输入audit、双RTX 5080一致性复核、4项CPU测试和SHA固结，并于同日正式冻结。
-    下一步只关闭正式产物/失败现场和RP-A整体协议SHA。任何新seed均未
-    启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
+    五级固定输入audit、双RTX 5080一致性复核、4项CPU测试和SHA固结，并于同日正式冻结；最终
+    产物schema、科学/实现失败分流和7协议bundle通过11项测试后正式固结，overall SHA为
+    `768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`。RP-A评价规则现已整体冻结，
+    下一步按冻结schema实现并启动43/44 development-calibration；202/503和911继续锁定。

@@ -206,8 +206,7 @@ CUDA_DEVICE=<启动前核实的GPU> bash \
 `rpa_bootstrap_protocol_v1.json`与`clong_rpa_bootstrap.py`定义了6个
 `label x source` strata内有放回患者抽样、multiplicity加权、重复患者
 Top-25、`ACTIVE_EPS=1e-8`、静态worker分配和六门槛归并。当前协议状态为
-`frozen_2026-08-24`。这只表示bootstrap子协议已冻结；RP-A整体仍未冻结，仍不得启动新seed
-或正式bootstrap。
+`frozen_2026-08-24`。bootstrap须由RP-A整体冻结runner按bundle规则调用。
 
 ```bash
 python 程序/SAE/正式代码/test_clong_rpa_bootstrap.py
@@ -231,8 +230,7 @@ python 程序/SAE/正式代码/test_clong_rpa_spatial.py
 
 6项测试覆盖`max_p h > ACTIVE_EPS`、单侧active为0、双侧inactive为NA、患者等权和支持度语义。
 `audit_clong_rpa_spatial_numeric.py`只允许输出误差、NA一致性、耗时和显存；正式v2审计支持混合
-精度路径且未生成任何matching统计。冻结SHA见`rpa_spatial_SHA256SUMS.txt`。RP-A整体仍未冻结，
-不得据此启动新seed。
+精度路径且未生成任何matching统计。冻结SHA见`rpa_spatial_SHA256SUMS.txt`。
 
 ## RP-A GPU identity冻结核心
 
@@ -245,4 +243,22 @@ python 程序/SAE/正式代码/test_clong_rpa_gpu_identity.py
 ```
 
 4项测试覆盖误差累计、容差生成公式和逐元素gate。正式任务必须保存五级完整误差，任一级失败
-即停止干预解释。冻结SHA见`rpa_gpu_identity_SHA256SUMS.txt`。RP-A整体仍须等待正式产物协议。
+即停止干预解释。冻结SHA见`rpa_gpu_identity_SHA256SUMS.txt`。
+
+## RP-A整体冻结与产物schema
+
+`rpa_overall_protocol_v1.json`、`rpa_coverage_protocol_v1.json`和
+`rpa_protocol_bundle_v1.json`关闭最终PASS、activation/energy覆盖、正式输出和失败分流。
+overall bundle只包含7个冻结规则JSON，Git与代码版本在run manifest中另记：
+
+```text
+protocol_bundle_sha256=768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280
+```
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpa_artifacts.py
+```
+
+11项测试覆盖唯一best、RNN一一edge、严格3-clique、400 bootstrap records、六项指标、禁止完整
+候选矩阵，以及科学失败/实现失败互斥。规则层面现已允许启动seed43/44；正式runner仍必须按该
+schema实现并验收，不能因为开发结果修改bundle。

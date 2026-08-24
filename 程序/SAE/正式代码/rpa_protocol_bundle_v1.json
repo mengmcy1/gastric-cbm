@@ -1,0 +1,17 @@
+{
+  "bundle_name": "rpa_frozen_rule_protocol_bundle_v1",
+  "status": "frozen_2026-08-24",
+  "bundle_algorithm": "SHA256(concat(sorted(filename + two_spaces + file_sha256 + newline)))",
+  "members": [
+    {"file": "rpa_bootstrap_protocol_v1.json", "sha256": "4738acd626d755b05e57d65f7476108280dad8031cf6cd6f44612b0877a997fc"},
+    {"file": "rpa_coverage_protocol_v1.json", "sha256": "cbd8c5a48215431c005fb457bef7117ccb28f64f5227f7256f33e66ceb20ed39"},
+    {"file": "rpa_eligible_protocol_v1.json", "sha256": "4b0ecaa7fd2e8a569873d1cff099826b0981e49ae8ff1a0bb98aa0d96d70afd3"},
+    {"file": "rpa_gpu_identity_protocol_v1.json", "sha256": "0ecf6bfd83784c744c8ec9ee0168925b27914422ce88d039b13d3a951d8c902a"},
+    {"file": "rpa_null_fdr_protocol_v1.json", "sha256": "d2bb1e0bf5644b6037c71ee31e89d2893778e1fdbed3cf148e8226c18d017ef0"},
+    {"file": "rpa_overall_protocol_v1.json", "sha256": "79f71cd16ae8614a5f762cf189cd75ce3a3c9b5a07d4e70880f4248a7feffe5d"},
+    {"file": "rpa_spatial_protocol_v1.json", "sha256": "6e7857e12c3c2c80568272f996de83679ea056513e8f42e03bd069c9fa0837b9"}
+  ],
+  "protocol_bundle_sha256": "768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280",
+  "excludes": ["git_commit", "code_file_sha256", "test_file_sha256", "result_artifact_sha256"],
+  "implementation_version_policy": "record_git_commit_and_code_sha_separately_in_each_run_manifest"
+}
