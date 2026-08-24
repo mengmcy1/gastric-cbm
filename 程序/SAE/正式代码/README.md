@@ -279,3 +279,9 @@ CUDA_DEVICE=<启动前检查后选定的GPU> bash \
 
 日志位于`结果/SAE/RP_A_Development_20260824/logs/`。在完整development-calibration runner
 及其debug验收前，不应启动该正式训练脚本。
+
+`clong_rpa_prepare_seed.py`把三个字典编码成统一患者/图像顺序的presence、ranking、mass、
+active-frequency、energy和49位置激活缓存；`clong_rpa_match_development.py`执行三pair双向
+完整搜索，只落盘唯一best、BH+RNN edge、strict anchor和六项full-train指标。CPU缩小字典
+debug已跑通，未保存完整候选矩阵。该阶段仍不等于完整runner：bootstrap worker、val复现和
+最终formal artifact归并完成前，不运行正式43/44。

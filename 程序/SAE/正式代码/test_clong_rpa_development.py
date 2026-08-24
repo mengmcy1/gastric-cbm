@@ -4,9 +4,12 @@
 from __future__ import annotations
 
 import argparse
+import tempfile
 import unittest
+from pathlib import Path
 
 import numpy as np
+import torch
 
 from clong_rpa_development_core import (
     all_pseudo_fold_metrics,
@@ -19,6 +22,8 @@ from clong_rpa_train_development import (
     frozen_gamma,
     validate_args,
 )
+from clong_rpa_prepare_seed import load_sae
+from clong_s2c_core import MatryoshkaSparseAutoencoder
 
 
 class DevelopmentTrainingTests(unittest.TestCase):
@@ -38,6 +43,14 @@ class DevelopmentTrainingTests(unittest.TestCase):
                 validate_args(argparse.Namespace(seed=seed, device="cuda", debug=False,
                                                  debug_epochs=3, debug_patients_per_class=2))
 
+    def test_debug_allows_three_development_seeds_only(self) -> None:
+        for seed in (42, 43, 44):
+            validate_args(argparse.Namespace(seed=seed, device="cpu", debug=True,
+                                             debug_epochs=1, debug_patients_per_class=2))
+        with self.assertRaises(ValueError):
+            validate_args(argparse.Namespace(seed=202, device="cpu", debug=True,
+                                             debug_epochs=1, debug_patients_per_class=2))
+
     def test_formal_cpu_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
             validate_args(argparse.Namespace(seed=43, device="cpu", debug=False,
@@ -52,6 +65,19 @@ class DevelopmentTrainingTests(unittest.TestCase):
         gamma, record = frozen_gamma()
         self.assertAlmostEqual(gamma, 0.5095280077324069, places=15)
         self.assertEqual(record["seed"], 42)
+
+    def test_debug_checkpoint_restores_standard_encoder_keys(self) -> None:
+        source = MatryoshkaSparseAutoencoder(
+            input_dim=8, hidden_dim=16, feature_center=torch.zeros(8),
+            k_list=(2, 4),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "checkpoint.pth"
+            torch.save({"sae_state_dict": source.state_dict(), "k_list": [2, 4]}, path)
+            model = load_sae(path, torch.device("cpu"))
+            self.assertEqual(model.hidden_dim, 16)
+            self.assertEqual(model.input_dim, 8)
+            self.assertEqual(max(model.k_list), 4)
 
 
 class DevelopmentGraphTests(unittest.TestCase):

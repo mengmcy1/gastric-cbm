@@ -69,8 +69,10 @@ def experiment_name(seed: int) -> str:
 
 def validate_args(args: argparse.Namespace) -> None:
     """正式模式只允许43/44和CUDA；debug强制进入独立目录。"""
-    if args.seed not in FORMAL_SEEDS:
-        raise ValueError("RP-A development训练只允许seed43/44")
+    if (not args.debug and args.seed not in FORMAL_SEEDS) or (
+        args.debug and args.seed not in (42, 43, 44)
+    ):
+        raise ValueError("正式只允许seed43/44；debug只允许42/43/44")
     if not args.debug and args.device != "cuda":
         raise ValueError("正式RP-A development训练必须显式使用CUDA")
     if args.debug and args.debug_epochs < 1:
