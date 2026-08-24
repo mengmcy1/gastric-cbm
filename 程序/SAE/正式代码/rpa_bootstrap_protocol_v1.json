@@ -1,6 +1,11 @@
 {
   "protocol_name": "rpa_development_bootstrap_v1",
-  "status": "candidate_freeze_pending_user_confirmation",
+  "status": "frozen_2026-08-24",
+  "scope": {
+    "frozen_here": "patient_resampling_multiplicity_full_recomputation_fold_reduction_threshold_generation_parallel_merge",
+    "spatial_metric_rule": "inherits_separately_frozen_rpa_spatial_protocol",
+    "does_not_define_or_modify_spatial_validity_or_numeric_accumulation": true
+  },
   "matching_recomputation": "full_pipeline_per_replicate",
   "bootstrap": {
     "replicate_count": 400,

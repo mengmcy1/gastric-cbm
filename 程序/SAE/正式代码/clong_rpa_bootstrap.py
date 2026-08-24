@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""RP-A development bootstrap的确定性纯函数核心。
+"""RP-A development bootstrap的冻结确定性纯函数核心。
 
 本模块不读取正式患者资产、不运行matching也不生成门槛。
-它只实现拟冻结的分层有放回计划、重复患者等价加权、
+它只实现已冻结的分层有放回计划、重复患者等价加权、
 Top-25 instance语义和最终结果归并。
 """
 
@@ -44,7 +44,7 @@ METRIC_NAMES = (
 
 
 def load_protocol(path: Path = PROTOCOL_PATH) -> dict:
-    """读取bootstrap拟冻结协议。"""
+    """读取bootstrap冻结协议。"""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -241,11 +241,19 @@ def aggregate_thresholds(records: list[dict]) -> dict[str, float]:
         status = record.get("status")
         if status not in {"completed", "replicate_structural_failure"}:
             raise RuntimeError(f"非法replicate status: {status}")
-        if status == "replicate_structural_failure" and any(
-            float(record["fold_metrics"][str(fold)][name]) != 0.0
-            for fold in (42, 43, 44) for name in METRIC_NAMES
-        ):
-            raise RuntimeError("结构失败replicate的三折六指标必须全为0")
+        if status == "replicate_structural_failure":
+            if record.get("reason") != "null_stratification_infeasible":
+                raise RuntimeError("结构失败reason必须为null_stratification_infeasible")
+            if any(
+                float(record["fold_metrics"][str(fold)][name]) != 0.0
+                for fold in (42, 43, 44) for name in METRIC_NAMES
+            ):
+                raise RuntimeError("结构失败replicate的三折六指标必须全为0")
+        for fold in (42, 43, 44):
+            for name in METRIC_NAMES:
+                value = float(record["fold_metrics"][str(fold)][name])
+                if not np.isfinite(value) or not 0.0 <= value <= 1.0:
+                    raise ValueError("bootstrap正式指标必须是[0,1]内有限比例")
     thresholds: dict[str, float] = {}
     for name in METRIC_NAMES:
         weakest = np.asarray([

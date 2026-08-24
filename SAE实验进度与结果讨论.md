@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR与两类质量覆盖定义已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；activation与representation energy的reference/confirmation两侧指标定义于2026-08-24正式冻结；bootstrap精确完整重算已通过正式规模benchmark，抽样、重复患者、400次、RNG、lower门槛和并行归并已写成拟冻结协议并通过12项纯函数测试，待用户确认后才可冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖与bootstrap子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；activation与representation energy的reference/confirmation两侧指标定义于2026-08-24正式冻结；bootstrap精确完整重算已通过正式规模benchmark，其抽样、重复患者、400次、RNG、lower门槛、结构失败和并行归并经14项纯函数测试及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1872,15 +1872,14 @@ exact-null、BH-FDR、RNN和3个2/2 pseudo-confirm fold plumbing。候选矩阵�
 
 最终工程投影为：一次预计算约6.0秒，400次精确完整重算在单GPU串行下约
 77.4小时。多GPU理想值不作承诺，因为百分位和exact-null还会占用CPU，且服务器GPU为共享资源。
-`B_boot=400`因此记为工程可执行的拟冻结选择；它尚不是正式冻结值，不允许仅凭本benchmark
-启动bootstrap或seed43/44。
+`B_boot=400`在随后完成的bootstrap子协议复审中正式冻结；本benchmark本身仍只提供工程可执行性
+证据，不能单独授权启动bootstrap或seed43/44。
 
-### Bootstrap拟冻结协议与纯函数核心（2026-08-24，待用户确认）
+### Bootstrap正式冻结协议与纯函数核心（2026-08-24）
 
 基于benchmark，fixed graph从候选中删除；每个replicate精确重算eligible membership、
 患者行为、空间相似度、百分位、exact-null、BH-FDR、RNN、anchor和pseudo-confirm六项指标。
-拟冻结静态协议为`rpa_bootstrap_protocol_v1.json`，状态仍为
-`candidate_freeze_pending_user_confirmation`。
+正式静态协议为`rpa_bootstrap_protocol_v1.json`，状态为`frozen_2026-08-24`。
 
 抽样由CPU单进程coordinator在worker启动前一次性生成。使用：
 
@@ -1941,12 +1940,25 @@ full train的三折六指标任一低于相应门槛，均记`bootstrap_calibrat
 对应指标自然记0，不扩大“结构失败”定义。NaN/Inf、ID/shape错位、重复Feature ID或RNN冲突必须
 终止整个formal calibration，不得用不足400条记录生成门槛。
 
+本子协议只冻结患者重采样、multiplicity语义、每次replicate完整重匹配、三折归约、门槛生成和
+并行归并。spatial指标的最少可评价患者数、空集合与浮点累积规则继承随后单独冻结的RP-A spatial
+子协议；本次bootstrap冻结不提前定义或修改这些数值规则。
+
 `clong_rpa_bootstrap.py`已实现抽样、加权聚合、Top-25、worker分配、结构失败记录和门槛归并纯函数；
-`test_clong_rpa_bootstrap.py` 12项测试已通过。真实train-only只读debug已证明400个计划可重复产生，
+`test_clong_rpa_bootstrap.py` 14项测试已通过，其中coordinator会再次拒绝错误的结构失败reason，
+并拒绝任何超出`[0,1]`的正式比例指标。真实train-only只读debug已证明400个计划可重复产生，
 且每replicate六层数始终为冻结值。当前尚未实现完整matching worker和正式产物协议，
 也未启动任何正式bootstrap或新seed。
 
-推荐但尚未冻结的门槛生成候选为：
+冻结SHA：
+
+```text
+4738acd626d755b05e57d65f7476108280dad8031cf6cd6f44612b0877a997fc  rpa_bootstrap_protocol_v1.json
+9033089219e7bfdfa65acc0f2422e76470f410ec0e037762335e5f84ecf61009  clong_rpa_bootstrap.py
+c364bad3b1df93ac84b90e8b3d35fcf7ce1d6c4ba33809769d57989762a48743  test_clong_rpa_bootstrap.py
+```
+
+正式冻结的门槛生成规则为：
 
 ```text
 R_min^(b) = min(R_fold42^(b), R_fold43^(b), R_fold44^(b))
@@ -2036,7 +2048,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. bootstrap精确完整重算已通过正式规模benchmark；`B_boot=400`、`PCG64(20260824)`、六层有放回抽样、重复患者instance、最弱折`Q0.05/lower`、六个独立门槛和确定性并行归并已形成拟冻结协议并通过纯函数/debug验收，待用户确认后正式冻结；完整matching worker和产物协议尚未实现；
+1. bootstrap子协议已于2026-08-24正式冻结并完成SHA固结；完整matching worker和正式产物协议尚未实现；
 2. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
 3. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
 4. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
@@ -2164,8 +2176,8 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     SHA固结后于2026-08-24正式冻结；activation与representation energy的两侧指标定义均于
     2026-08-24完成复审并正式冻结；bootstrap source只读审计和结构失败口径已关闭；
     RP-A matching正式规模纯计算benchmark已完成，精确完整重算约11.6分钟/replicate、
-    400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；`B_boot=400`记为拟冻结选择。
-    bootstrap抽样、RNG、400次、最弱折lower门槛、重复患者和并行归并已写成拟冻结协议，
-    12项纯函数测试与真实train-only抽样debug通过，待用户确认后正式冻结。之后依次关闭
+    400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；bootstrap抽样、RNG、400次、
+    最弱折lower门槛、重复患者、结构失败和并行归并已于2026-08-24正式冻结，14项纯函数测试、
+    真实train-only抽样debug和协议/实现/测试SHA固结均通过。之后依次关闭
     spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。

@@ -50,11 +50,14 @@ def toy_patients() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
 class BootstrapTests(unittest.TestCase):
     """验证抽样、重复instance、加权聚合和门槛归并。"""
 
-    def test_protocol_is_candidate_and_uses_active_eps(self) -> None:
+    def test_protocol_is_frozen_scoped_and_uses_active_eps(self) -> None:
         protocol = load_protocol()
-        self.assertEqual(protocol["status"], "candidate_freeze_pending_user_confirmation")
+        self.assertEqual(protocol["status"], "frozen_2026-08-24")
         self.assertEqual(protocol["bootstrap"]["replicate_count"], 400)
         self.assertEqual(protocol["eligible"]["active_eps"], ACTIVE_EPS)
+        self.assertTrue(
+            protocol["scope"]["does_not_define_or_modify_spatial_validity_or_numeric_accumulation"]
+        )
         values = np.array([[0.0, ACTIVE_EPS / 2], [0.0, ACTIVE_EPS * 2]])
         np.testing.assert_array_equal(
             activation_presence(values, axis=1), np.array([False, True])
@@ -169,6 +172,33 @@ class BootstrapTests(unittest.TestCase):
         invalid_status[0] = {**invalid_status[0], "status": "implementation_error"}
         with self.assertRaises(RuntimeError):
             aggregate_thresholds(invalid_status)
+
+    def test_aggregator_rejects_wrong_structural_failure_reason(self) -> None:
+        records = [
+            structural_failure_record(index, "null_stratification_infeasible")
+            for index in range(400)
+        ]
+        records[0] = {**records[0], "reason": "zero_anchor"}
+        with self.assertRaises(RuntimeError):
+            aggregate_thresholds(records)
+
+    def test_aggregator_rejects_metrics_outside_unit_interval(self) -> None:
+        records = []
+        for index in range(400):
+            records.append({
+                "replicate_index": index,
+                "status": "completed",
+                "fold_metrics": {
+                    str(fold): {name: 0.5 for name in METRIC_NAMES}
+                    for fold in (42, 43, 44)
+                },
+            })
+        for invalid in (-0.02, 1.03):
+            with self.subTest(value=invalid):
+                records[0]["fold_metrics"]["42"][METRIC_NAMES[0]] = invalid
+                with self.assertRaises(ValueError):
+                    aggregate_thresholds(records)
+        records[0]["fold_metrics"]["42"][METRIC_NAMES[0]] = 0.5
 
     def test_nonpositive_threshold_and_full_train_failure_stop(self) -> None:
         records = [structural_failure_record(index, "null_stratification_infeasible") for index in range(400)]

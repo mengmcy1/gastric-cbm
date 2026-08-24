@@ -201,18 +201,20 @@ CUDA_DEVICE=<启动前核实的GPU> bash \
 696.2秒，峰值RAM 3.35 GiB、VRAM 6.20 GiB。该数字只用于bootstrap工程预算，
 不是RP-A统计结果。
 
-## RP-A bootstrap拟冻结纯函数
+## RP-A bootstrap冻结纯函数
 
 `rpa_bootstrap_protocol_v1.json`与`clong_rpa_bootstrap.py`定义了6个
 `label x source` strata内有放回患者抽样、multiplicity加权、重复患者
 Top-25、`ACTIVE_EPS=1e-8`、静态worker分配和六门槛归并。当前协议状态为
-`candidate_freeze_pending_user_confirmation`，不得用它启动新seed或正式bootstrap。
+`frozen_2026-08-24`。这只表示bootstrap子协议已冻结；RP-A整体仍未冻结，仍不得启动新seed
+或正式bootstrap。
 
 ```bash
 python 程序/SAE/正式代码/test_clong_rpa_bootstrap.py
 ```
 
-12项测试覆盖计划确定性、六层实例数、weighted-vs-explicit-copy等价、
+14项测试覆盖计划确定性、六层实例数、weighted-vs-explicit-copy等价、
 Top-25 occurrence并列、Spearman、spatial、结构失败、400条归并及full-train
-self-consistency。该模块只是协议核心；完整matching worker和正式产物格式须在协议
-正式冻结并关闭spatial/GPU数值口径后再实现。
+self-consistency，并验证coordinator拒绝错误的结构失败reason及超出`[0,1]`的正式指标。
+bootstrap不提前冻结spatial的可评价性和数值规则；完整matching worker和正式产物格式须在
+关闭spatial/GPU数值口径后再实现。冻结SHA见`rpa_bootstrap_SHA256SUMS.txt`。
