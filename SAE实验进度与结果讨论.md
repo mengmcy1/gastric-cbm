@@ -1804,6 +1804,48 @@ bootstrap从eligible、行为统计、null percentile、匹配边到anchor全部
 当前推荐候选是完整重算matching pipeline，因为它能为结构复现率提供真实抽样不确定性；
 该选择在计算成本评估和小规模基准完成前仍标记为`TBD`。
 
+### Bootstrap source只读审计与结构失败口径（2026-08-24）
+
+bootstrap分层字段固定为S0冻结train manifest的原始`source`列，不使用`center`或其他派生字段。
+只读审计前已复验manifest SHA为
+`b1dfd24505cbba876fd28502e36b0b190206de8f063562f47347dc7c67f32e33`，train为2350图/1212人。
+原始字面类别及患者数为：
+
+| label | source | 患者数 |
+| ---: | --- | ---: |
+| 0 | 武大省人民 | 830 |
+| 0 | 第一届早癌大赛 | 32 |
+| 0 | 第二届早癌大赛 | 38 |
+| 1 | 武大省人民 | 261 |
+| 1 | 第一届早癌大赛 | 19 |
+| 1 | 第二届早癌大赛 | 32 |
+
+`source`和`label`均无缺失；1212名患者均唯一对应一个`label`和一个`source`，无患者内
+冲突。bootstrap必须直接使用上述6个`label x source` strata的原始类别；禁止众数回填、
+重命名、合并稀有类别、拆分类别或用`center`替代。
+
+结构失败口径固定为：一个bootstrap replicate中，若构建三次pseudo-confirm所必需的任一
+seed-pair无法满足已冻结null strata条件（16层完整、target eligible Features总数至少512、
+每层至少32），则整个replicate记为`replicate_structural_failure`，三折全部正式calibration
+metrics统一记0：
+
+```text
+R_anchor_recall
+R_confirm_coverage
+R_activation_reference
+R_activation_confirmation
+R_energy_reference
+R_energy_confirmation
+```
+
+不得删除该replicate、合并strata、重新分箱或放宽512/32条件。合法抽样产生的0 anchors或
+0 reproduced anchors同样属于科学性低稳定，对应正式指标记0而不删除。若未重采样full train的
+任一正式pseudo-confirm fold发生同类不可行，则直接记`development_calibration_infeasible`，
+不启动bootstrap。
+
+NaN/Inf进入有效集、ID或shape错位、重复Feature ID、RNN一对多等属于实现或数值错误，
+必须fast-fail终止整个校准，不得记0继续。
+
 推荐但尚未冻结的门槛生成候选为：
 
 ```text
@@ -1894,7 +1936,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. bootstrap子协议须分别生成energy两侧绝对门槛，并冻结完整重算或固定图方案、`B_boot/Q_0.05`及空anchor处理；
+1. bootstrap子协议须分别生成activation/energy两侧绝对门槛；source分层与结构失败口径已关闭，完整重算或固定图方案、`B_boot/Q_0.05`及其余抽样细节仍待冻结；
 2. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
 3. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
 4. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
@@ -2020,6 +2062,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
     9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确协议经两轮审阅、20项测试及
     SHA固结后于2026-08-24正式冻结；activation与representation energy的两侧指标定义均于
-    2026-08-24完成复审并正式冻结，下一步关闭bootstrap，再依次关闭
+    2026-08-24完成复审并正式冻结；bootstrap source只读审计和结构失败口径已关闭，
+    下一步做不产生统计证据的计算benchmark，再根据可行性冻结bootstrap其余参数。之后依次关闭
     spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
