@@ -4,8 +4,6 @@ import csv
 import os
 import sys
 
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
-
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageOps

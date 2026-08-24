@@ -1,9 +1,5 @@
 """ResNet50 去偏重训练入口：固定 manifest/fold，共享 P6 增强与评估。"""
 
-import os
-
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
-
 import torch.nn as nn
 from torchvision.models import ResNet50_Weights, resnet50
 

@@ -111,7 +111,6 @@ def parse_args():
         "--evaluate-test", action="store_true",
         help="显式解锁内部test；M1模型选择阶段不要使用。",
     )
-    parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
 
@@ -1127,10 +1126,10 @@ def save_checkpoint(path, model, args, epoch_record, m0_checkpoint):
 
 
 def prepare_run_dir(args):
-    """创建独立运行目录；除非显式overwrite，否则拒绝覆盖已有结果。
+    """创建独立运行目录；已有目录一律拒绝覆盖。
 
     Args:
-        args (argparse.Namespace): 输出根、运行名、seed、debug和overwrite配置。
+        args (argparse.Namespace): 输出根、运行名、seed和debug配置。
 
     Returns:
         Path: 已创建且可写的本次运行目录。
@@ -1143,9 +1142,7 @@ def prepare_run_dir(args):
         name += "_debug"
     output = args.output_root / name
     if output.exists():
-        if not args.overwrite:
-            raise FileExistsError(f"输出已存在: {output}")
-        shutil.rmtree(output)
+        raise FileExistsError(f"输出已存在，请更换运行名: {output}")
     output.mkdir(parents=True)
     return output
 

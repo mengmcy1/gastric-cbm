@@ -2,11 +2,8 @@
 
 import argparse
 import json
-import os
 from datetime import datetime
 from pathlib import Path
-
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
 
 import matplotlib.pyplot as plt
 import numpy as np

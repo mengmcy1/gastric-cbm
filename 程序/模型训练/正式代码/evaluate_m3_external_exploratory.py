@@ -77,7 +77,6 @@ def parse_args():
         "--debug-patients-per-class", type=int, default=0,
         help="每类抽取指定患者数做链路调试；0表示完整外部集。",
     )
-    parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
 
@@ -280,9 +279,7 @@ def main():
     if args.debug_patients_per_class > 0:
         output = output.with_name(output.name + "_debug")
     if output.exists():
-        if not args.overwrite:
-            raise FileExistsError(f"输出已存在: {output}")
-        shutil.rmtree(output)
+        raise FileExistsError(f"输出已存在，请更换输出目录: {output}")
     output.mkdir(parents=True)
 
     frame = pd.read_csv(args.manifest, encoding="utf-8-sig")

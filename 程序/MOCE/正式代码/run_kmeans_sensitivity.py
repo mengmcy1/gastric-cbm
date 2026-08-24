@@ -2,12 +2,9 @@
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
-
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
 
 import joblib
 import matplotlib
@@ -88,10 +85,6 @@ def parse_args():
     parser.add_argument(
         "--skip-analysis", action="store_true",
         help="只生成聚类、重要性和SSC/SDC原始结果",
-    )
-    parser.add_argument(
-        "--overwrite", action="store_true",
-        help="覆盖本次指定K、模型和类别的已有敏感性结果",
     )
     return parser.parse_args()
 
@@ -238,11 +231,13 @@ def generate_raw_results(args, clusters, models, labels):
             target_model_dir.mkdir(parents=True, exist_ok=True)
             for label in labels:
                 target_class_dir = target_model_dir / f"class_{label}"
-                if args.overwrite and target_class_dir.exists():
-                    shutil.rmtree(target_class_dir)
                 if class_is_complete(target_class_dir):
                     print(f"跳过已完成: K={k} {model_name}/class_{label}")
                     continue
+                if target_class_dir.exists():
+                    raise FileExistsError(
+                        f"发现残缺输出目录，拒绝自动删除或覆盖: {target_class_dir}"
+                    )
                 if args.analysis_only:
                     raise FileNotFoundError(
                         f"analysis-only缺少完整结果: {target_class_dir}"
@@ -250,7 +245,7 @@ def generate_raw_results(args, clusters, models, labels):
                 if target_class_dir.exists():
                     raise RuntimeError(
                         f"发现不完整输出: {target_class_dir}；"
-                        "确认重跑时添加--overwrite"
+                        "请人工核对并归档残缺目录后重跑"
                     )
                 run_one_class(
                     model,

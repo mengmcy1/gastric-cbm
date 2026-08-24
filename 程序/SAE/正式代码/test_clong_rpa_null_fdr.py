@@ -65,7 +65,9 @@ class NullFDRTests(unittest.TestCase):
         strata = assign_target_strata(
             coverage, frequency, ids,
         )
-        self.assertEqual(validate_target_strata(strata, minimum_size=4), {
+        self.assertEqual(validate_target_strata(
+            strata, minimum_size=4, minimum_total=64,
+        ), {
             stratum: 4 for stratum in range(16)
         })
         np.testing.assert_array_equal(strata, assign_target_strata(coverage, frequency, ids))
@@ -76,19 +78,53 @@ class NullFDRTests(unittest.TestCase):
 
     def test_small_nonempty_stratum_fails_without_merge(self) -> None:
         with self.assertRaises(RuntimeError):
-            validate_target_strata(np.array([0] * 31 + [1] * 40), minimum_size=32)
+            validate_target_strata(
+                np.repeat(np.arange(16), 32)[:-1], minimum_size=32, minimum_total=1,
+            )
+
+    def test_strata_require_all_16_layers_and_total_512(self) -> None:
+        with self.assertRaises(RuntimeError):
+            validate_target_strata(np.repeat(np.arange(15), 40), minimum_total=1)
+        with self.assertRaises(RuntimeError):
+            validate_target_strata(np.repeat(np.arange(16), 31), minimum_size=1)
 
     def test_train_midrank_ties(self) -> None:
         result = train_midrank_percentile(np.array([1.0, 2.0, 2.0, 9.0]), np.ones(4, bool))
-        np.testing.assert_allclose(result, np.array([0.25, 0.625, 0.625, 1.0]))
+        np.testing.assert_allclose(result, np.array([0.125, 0.5, 0.5, 0.875]))
 
     def test_val_uses_frozen_train_cdf(self) -> None:
         result = frozen_train_cdf_percentile(
             np.array([1.0, 2.0, 2.0, 4.0]),
             np.array([0.0, 2.0, 3.0, 5.0]),
             np.ones(4, bool),
+            np.ones(4, bool),
         )
         np.testing.assert_allclose(result, np.array([0.0, 0.5, 0.75, 1.0]))
+
+    def test_val_valid_never_changes_frozen_train_cdf(self) -> None:
+        train = np.array([1.0, 2.0, 3.0, 100.0])
+        val = np.array([1.5, 2.5, 3.5, 50.0])
+        train_valid = np.array([True, True, True, False])
+        all_val = frozen_train_cdf_percentile(
+            train, val, train_valid, np.ones(4, bool),
+        )
+        subset_val = frozen_train_cdf_percentile(
+            train, val, train_valid, np.array([False, True, True, False]),
+        )
+        np.testing.assert_allclose(subset_val[1:3], all_val[1:3])
+        self.assertTrue(np.isnan(subset_val[[0, 3]]).all())
+
+    def test_valid_masks_must_exclude_nonfinite_values(self) -> None:
+        with self.assertRaises(ValueError):
+            frozen_train_cdf_percentile(
+                np.array([1.0, np.nan]), np.array([1.0, 2.0]),
+                np.ones(2, bool), np.ones(2, bool),
+            )
+        with self.assertRaises(ValueError):
+            frozen_train_cdf_percentile(
+                np.array([1.0, 2.0]), np.array([1.0, np.nan]),
+                np.ones(2, bool), np.ones(2, bool),
+            )
 
     def test_edge_score_is_structural_behavior_bottleneck(self) -> None:
         behavior, score = edge_scores(

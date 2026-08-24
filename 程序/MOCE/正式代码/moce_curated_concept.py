@@ -3,12 +3,8 @@
 import argparse
 import hashlib
 import json
-import os
-import shutil
 import sys
 from pathlib import Path
-
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
 import pandas as pd
 import torch
@@ -67,10 +63,6 @@ def parse_args():
         help='debug使用的匹配对数量，默认得到20张非癌和20张癌图',
     )
     parser.add_argument('--clusters', type=int, default=25)
-    parser.add_argument(
-        '--overwrite', action='store_true',
-        help='删除本模型同模式的已有输出后重跑',
-    )
     return parser.parse_args()
 
 
@@ -152,11 +144,7 @@ def enrich_records(records, metadata):
 def prepare_output(args, selected):
     output_dir = OUTPUT_ROOT / args.mode / args.model
     if output_dir.exists() and any(output_dir.iterdir()):
-        if not args.overwrite:
-            raise FileExistsError(
-                f'输出目录已存在: {output_dir}；确认重跑时添加--overwrite'
-            )
-        shutil.rmtree(output_dir)
+        raise FileExistsError(f'输出目录已存在，请更换运行名: {output_dir}')
     output_dir.mkdir(parents=True, exist_ok=True)
     selected.to_csv(
         output_dir / 'frozen_manifest_snapshot.csv',
@@ -252,4 +240,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

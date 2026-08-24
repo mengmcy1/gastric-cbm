@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible已冻结，null/FDR拟冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议与16项测试已完成，待用户确认后冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible已冻结，null/FDR拟冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库审阅修正并通过19项测试，待再次确认后冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1555,7 +1555,8 @@ null/FDR确认、energy、bootstrap、spatial数值等未决项而未冻结。
 2. 四项原始指标为带符号decoder cosine、union-positive患者Spearman、Top患者Jaccard和
    同图49位置空间复现。任一best pair原始指标非有限值或`<=0`，该有向假设直接记`p=1`。
    空间复现只比较同一输入图像的相同49位置，不把跨患者7x7绝对位置解释为解剖配准。
-3. train中每个source行的四项指标分别按全部valid target计算经验中秩百分位。定义
+3. train中每个source行的四项指标分别按全部train-valid target计算
+   `(#train<x + 0.5*#train==x)/N`经验中秩百分位。定义
    `U_behavior=median(U_spearman,U_jaccard,U_spatial)`，再定义
    `S_edge=min(U_decoder,U_behavior)`；因此结构和行为任一侧偏低都会限制边分数。
 4. best target按`S_edge`降序、原始带符号decoder cosine降序、target Feature ID升序唯一确定。
@@ -1579,9 +1580,14 @@ null/FDR确认、energy、bootstrap、spatial数值等未决项而未冻结。
    若仍出现一对多属于实现错误，不做贪心冲突消解。
 9. val固定train Feature universe、eligible IDs、target strata、每个source行的train指标CDF和
    精确null函数。val只重算患者依赖的行为指标，并用
-   `(#train<x + 0.5*#train==x)/N`映射到冻结train CDF；禁止val重新置换、重估null或改分层。
+   `(#train<x + 0.5*#train==x)/N`映射到冻结train CDF。`train_valid`只决定train reference，
+   `val_valid`只决定val query；改变val不可评价候选不得改变train CDF。禁止val重新置换、
+   重估null或改分层。
 
-闭式p值已用小规模全排列穷举核验；strata、经验CDF、并列、BH和RNN共16项纯函数测试通过。
+闭式p值已用小规模全排列穷举核验；strata还必须同时满足16层完整、target总数至少512且
+每层至少32。经验CDF、独立valid mask、非有限值拒绝、并列、BH和RNN共19项纯函数测试通过。
+2026-08-24仓库级审阅发现并修复了“train/val共用valid mask”、train/val tie convention相差
+半个秩和strata硬断言不完整三项问题；exact-null主体未改变。该候选协议需重新审阅后再冻结。
 该子协议只有在用户确认、协议文件SHA固结并补齐正式产物格式后才升级为正式冻结。
 
 ### development technical reference
@@ -1866,6 +1872,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     概念粒度与重构粒度分离，或直接转向不要求严格可逆重构的概念发现协议。任何新方向均需
     重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
-    9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确候选协议及16项测试已完成，
+    9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确候选协议经审阅修正并通过
+    19项测试，
     待用户确认后固结SHA；随后继续关闭energy、bootstrap、spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。

@@ -33,7 +33,7 @@ python 程序/模型训练/正式代码/resnet_train_debiased.py \
 集成与TTA评估：
 
 ```bash
-python 程序/模型训练/正式代码/evaluate_ensemble_tta.py
+python 程序/模型训练/正式代码/evaluate_ensemble_tta.py --include-test
 ```
 
 调试时增加 `--debug --debug-units 2 --no-pretrained`；正式训练不要使用这三个参数。完整冻结参数见`数据去偏重训练_参数与报告/数据训练参数_v1.md`。

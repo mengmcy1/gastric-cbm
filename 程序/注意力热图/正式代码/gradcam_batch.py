@@ -10,7 +10,6 @@
 
 import os
 import sys
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
 
 import csv
 
@@ -215,17 +214,12 @@ def load_output_dataframe(debug_n):
     return df_valid
 
 
-def clear_old_outputs(out_dir):
-    for filename in os.listdir(out_dir):
-        if filename.endswith('.png') or filename == 'manifest.csv':
-            os.remove(os.path.join(out_dir, filename))
-
-
 def generate_for_model(model_name, df):
     threshold = MODEL_REGISTRY[model_name][1]
     out_dir = os.path.join(OUTPUT_DIR, '热图批量', '第二批', model_name)
-    os.makedirs(out_dir, exist_ok=True)
-    clear_old_outputs(out_dir)
+    if os.path.exists(out_dir):
+        raise FileExistsError(f'热图输出目录已存在，请更换或人工归档: {out_dir}')
+    os.makedirs(out_dir)
 
     print(f'\n===== {model_name} =====')
     print(f'阈值: {threshold}')

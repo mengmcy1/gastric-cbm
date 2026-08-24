@@ -3,8 +3,6 @@
 import csv
 import os
 
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
-
 import joblib
 import numpy as np
 import pandas as pd

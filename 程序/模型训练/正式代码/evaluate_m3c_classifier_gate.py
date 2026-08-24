@@ -33,7 +33,6 @@ def parse_args():
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--bootstrap", type=int, default=2000)
     parser.add_argument("--qc-count", type=int, default=20)
-    parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     return parser.parse_args()
 
@@ -264,9 +263,7 @@ def evaluate_seed(seed, args):
             raise FileNotFoundError(path)
     output = args.output_root / f"m3c_balanced_keep_efficientnet_b0_seed{seed}"
     if output.exists():
-        if not args.overwrite:
-            raise FileExistsError(f"输出已存在: {output}")
-        shutil.rmtree(output)
+        raise FileExistsError(f"输出已存在，请更换输出根目录: {output}")
     output.mkdir(parents=True)
 
     config = json.loads(config_path.read_text(encoding="utf-8"))

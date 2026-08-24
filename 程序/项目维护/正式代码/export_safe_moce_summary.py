@@ -7,6 +7,8 @@ import shutil
 import zipfile
 from pathlib import Path
 
+from openpyxl import load_workbook
+
 
 PROJECT_DIR = Path(__file__).resolve().parents[3]
 SOURCE_DIR = PROJECT_DIR / '结果' / 'MOCE聚类数量分析'
@@ -48,6 +50,25 @@ SAFE_ROOT_FILES = [
     'efficientnet_b0_class_1_K敏感性汇总.png',
     'resnet50_class_0_K敏感性汇总.png',
     'resnet50_class_1_K敏感性汇总.png',
+]
+
+SAFE_K_SUMMARY_SHEETS = {
+    '全部结果',
+    'efficientnet_c0',
+    'efficientnet_c1',
+    'resnet50_c0',
+    'resnet50_c1',
+}
+
+SAFE_K_SUMMARY_HEADER = [
+    'model', 'class_label', 'k', 'candidate_count', 'image_count', 'patient_count',
+    'inertia_per_candidate', 'mean_distance_to_center', 'p90_distance_to_center',
+    'median_cluster_candidates', 'min_cluster_candidates', 'median_cluster_patients',
+    'min_cluster_patients', 'clusters_under_5_patients', 'clusters_under_10_patients',
+    'mean_max_patient_share', 'worst_max_patient_share', 'top1_importance_S_h',
+    'top5_mean_probability_drop', 'ssc_step0_accuracy', 'ssc_final_accuracy',
+    'sdc_step0_accuracy', 'sdc_final_accuracy', 'previous_k',
+    'adjusted_rand_vs_previous_k', 'normalized_mutual_info_vs_previous_k',
 ]
 
 SENSITIVE_COLUMNS = {
@@ -96,6 +117,25 @@ def validate_docx(path):
         raise ValueError(f'Word包含内嵌媒体，拒绝导出: {path}')
 
 
+def validate_k_summary_xlsx(path):
+    """只允许预定工作表和聚合列，阻止隐藏患者级sheet随工作簿导出。"""
+    workbook = load_workbook(path, read_only=True, data_only=True)
+    try:
+        if set(workbook.sheetnames) != SAFE_K_SUMMARY_SHEETS:
+            raise ValueError(f'XLSX工作表不符合白名单: {path}: {workbook.sheetnames}')
+        for worksheet in workbook.worksheets:
+            header = [
+                normalized_header(str(cell.value)) if cell.value is not None else ''
+                for cell in next(worksheet.iter_rows(min_row=1, max_row=1))
+            ]
+            if header != SAFE_K_SUMMARY_HEADER:
+                raise ValueError(
+                    f'XLSX列名不符合白名单: {path} [{worksheet.title}]: {header}'
+                )
+    finally:
+        workbook.close()
+
+
 def sha256(path):
     digest = hashlib.sha256()
     with path.open('rb') as handle:
@@ -139,7 +179,10 @@ def main():
         summary_dir / 'K敏感性汇总.csv',
     )
     for name in SAFE_ROOT_FILES:
-        shutil.copy2(SOURCE_DIR / '自动分析' / name, summary_dir / name)
+        source = SOURCE_DIR / '自动分析' / name
+        if source.suffix.lower() == '.xlsx':
+            validate_k_summary_xlsx(source)
+        shutil.copy2(source, summary_dir / name)
 
     docx = (
         SOURCE_DIR

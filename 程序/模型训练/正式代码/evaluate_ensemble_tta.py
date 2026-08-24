@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 """在冻结验证/测试集上评估患者聚合、双模型集成和水平翻转 TTA。"""
 
-import os
-
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
-
 import argparse
 import json
-import shutil
 from pathlib import Path
 
 import numpy as np
@@ -46,7 +41,10 @@ def parse_args():
     parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--seed', type=int, default=42)
-    parser.add_argument('--overwrite', action='store_true')
+    parser.add_argument(
+        '--include-test', action='store_true',
+        help='显式确认读取冻结internal test；缺少该参数时拒绝运行',
+    )
     return parser.parse_args()
 
 
@@ -257,10 +255,10 @@ def candidate_rank(row):
 
 def main():
     args = parse_args()
+    if not args.include_test:
+        raise RuntimeError('该入口会读取internal test，必须显式传入--include-test')
     if args.output_dir.exists():
-        if not args.overwrite:
-            raise FileExistsError(f'输出目录已存在: {args.output_dir}')
-        shutil.rmtree(args.output_dir)
+        raise FileExistsError(f'输出目录已存在，请更换路径: {args.output_dir}')
     args.output_dir.mkdir(parents=True)
 
     weights = sorted({

@@ -561,7 +561,12 @@ def create_training_parser(model_name):
     parser.add_argument(
         '--defer-test',
         action='store_true',
-        help='只用验证集选模型和阈值，暂不读取内部测试集预测',
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        '--include-test',
+        action='store_true',
+        help='显式解锁内部测试集评估；默认仅运行train+val',
     )
     parser.add_argument(
         '--crop-scale-min', type=float, default=0.85,
@@ -571,7 +576,6 @@ def create_training_parser(model_name):
         '--crop-scale-max', type=float, default=1.0,
         help='RandomResizedCrop scale 上界',
     )
-    parser.add_argument('--overwrite', action='store_true')
     return parser
 
 
@@ -613,9 +617,7 @@ def prepare_run_directory(args, model_slug):
     run_name = args.run_name or f'{model_slug}_{manifest_stem}{suffix}{debug_suffix}'
     run_dir = os.path.join(args.output_root, run_name)
     if os.path.exists(run_dir):
-        if not args.overwrite:
-            raise FileExistsError(f'运行目录已存在，请更换 --run-name 或使用 --overwrite: {run_dir}')
-        shutil.rmtree(run_dir)
+        raise FileExistsError(f'运行目录已存在，请更换 --run-name: {run_dir}')
     os.makedirs(run_dir, exist_ok=True)
     return run_dir
 
@@ -630,6 +632,12 @@ def run_training(
     stage2_description,
     label_smoothing,
 ):
+    # 新运行默认锁定internal test；旧--defer-test仅保留CLI兼容且不能解锁test。
+    include_test = bool(getattr(args, 'include_test', False))
+    if include_test and bool(getattr(args, 'defer_test', False)):
+        raise ValueError('--include-test与旧--defer-test不能同时使用')
+    args.include_test = include_test
+    args.defer_test = not include_test
     if args.debug:
         args.stage1_epochs = min(args.stage1_epochs, 1)
         args.stage2_epochs = min(args.stage2_epochs, 1)
@@ -764,9 +772,7 @@ def run_training(
 
     evaluated_splits = [('val', val_predictions, val_patients)]
     test_loss = None
-    if args.defer_test:
-        print('内部测试集评估已延后（--defer-test）')
-    else:
+    if args.include_test:
         test_loss, test_predictions = prediction_frame(
             model, loaders['test'], device, criterion
         )
@@ -790,6 +796,8 @@ def run_training(
         evaluated_splits.append(('test', test_predictions, test_patients))
         print(f'Test image: {format_metrics(metrics_by_level["test_image"])}')
         print(f'Test patient: {format_metrics(metrics_by_level["test_patient"])}')
+    else:
+        print('内部测试集保持锁定；仅显式--include-test才会评估。')
 
     pd.DataFrame(history).to_csv(
         os.path.join(run_dir, 'training_history.csv'), index=False, encoding='utf-8-sig'

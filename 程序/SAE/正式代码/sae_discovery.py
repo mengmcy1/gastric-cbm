@@ -6,8 +6,6 @@ import os
 import random
 from datetime import datetime
 
-os.environ.setdefault('CUDA_VISIBLE_DEVICES', '1')
-
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont, ImageOps

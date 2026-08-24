@@ -79,7 +79,6 @@ def parse_args():
     parser.add_argument("--qc-count", type=int, default=20)
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--debug-units", type=int, default=3)
-    parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--self-test", action="store_true")
     return parser.parse_args()
 
@@ -516,9 +515,7 @@ def prepare_output(args):
         name += "_debug"
     output = args.output_root / name
     if output.exists():
-        if not args.overwrite:
-            raise FileExistsError(f"输出已存在: {output}")
-        shutil.rmtree(output)
+        raise FileExistsError(f"输出已存在，请更换运行名: {output}")
     output.mkdir(parents=True)
     return output
 

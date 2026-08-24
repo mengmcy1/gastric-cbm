@@ -29,8 +29,9 @@
     "same_image_spatial_similarity"
   ],
   "metric_percentile": {
-    "train": "source_row_empirical_midrank_over_all_valid_targets",
+    "train": "source_row_empirical_cdf_less_plus_half_equal_over_train_valid_targets",
     "val": "frozen_train_source_row_empirical_cdf_less_plus_half_equal",
+    "valid_masks": "train_valid_defines_frozen_reference_and_val_valid_defines_queries_independently",
     "higher_is_better": true,
     "undefined_candidate_policy": "candidate_invalid"
   },

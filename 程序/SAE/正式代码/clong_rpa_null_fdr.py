@@ -75,10 +75,29 @@ def assign_target_strata(
     return strata
 
 
-def validate_target_strata(strata: np.ndarray, minimum_size: int = 32) -> dict[int, int]:
-    """检查每个非空目标stratum的最小规模，不自动合并。"""
-    values, counts = np.unique(np.asarray(strata), return_counts=True)
+def validate_target_strata(
+    strata: np.ndarray,
+    minimum_size: int = 32,
+    expected_strata: int = 16,
+    minimum_total: int = 512,
+) -> dict[int, int]:
+    """检查目标strata完整性、总规模和每层最小规模，不自动合并。"""
+    strata = np.asarray(strata)
+    if strata.ndim != 1 or strata.size < minimum_total:
+        raise RuntimeError(
+            f"null_stratification_infeasible: total={strata.size}, minimum={minimum_total}"
+        )
+    if not np.issubdtype(strata.dtype, np.integer):
+        raise ValueError("strata必须是整数编号")
+    values, counts = np.unique(strata, return_counts=True)
     result = {int(v): int(n) for v, n in zip(values, counts)}
+    expected = set(range(expected_strata))
+    actual = set(result)
+    if actual != expected:
+        raise RuntimeError(
+            "null_stratification_infeasible: "
+            f"missing={sorted(expected - actual)}, unexpected={sorted(actual - expected)}"
+        )
     small = {v: n for v, n in result.items() if n < minimum_size}
     if small:
         raise RuntimeError(f"null_stratification_infeasible: {small}")
@@ -108,12 +127,15 @@ def train_midrank_percentile(values: np.ndarray, valid: np.ndarray) -> np.ndarra
         start = end
     ranks = np.empty(selected.size, dtype=np.float64)
     ranks[order] = sorted_ranks
-    output[mask] = ranks / selected.size
+    output[mask] = (ranks - 0.5) / selected.size
     return output
 
 
 def frozen_train_cdf_percentile(
-    train_values: np.ndarray, val_values: np.ndarray, valid: np.ndarray
+    train_values: np.ndarray,
+    val_values: np.ndarray,
+    train_valid: np.ndarray,
+    val_valid: np.ndarray,
 ) -> np.ndarray:
     """将val指标映射到冻结train empirical CDF。
 
@@ -122,17 +144,24 @@ def frozen_train_cdf_percentile(
     """
     train = np.asarray(train_values, dtype=np.float64)
     val = np.asarray(val_values, dtype=np.float64)
-    mask = np.asarray(valid, dtype=bool)
-    if train.shape != val.shape or train.shape != mask.shape or train.ndim != 1:
-        raise ValueError("train/val/valid必须是同shape一维数组")
-    reference = np.sort(train[mask])
-    output = np.full(train.shape, np.nan, dtype=np.float64)
-    if reference.size == 0 or not np.isfinite(reference).all():
+    train_mask = np.asarray(train_valid, dtype=bool)
+    val_mask = np.asarray(val_valid, dtype=bool)
+    if not (
+        train.shape == val.shape == train_mask.shape == val_mask.shape
+    ) or train.ndim != 1:
+        raise ValueError("train/val/train_valid/val_valid必须是同shape一维数组")
+    reference = np.sort(train[train_mask])
+    output = np.full(val.shape, np.nan, dtype=np.float64)
+    if reference.size == 0:
         return output
-    query = val[mask]
+    if not np.isfinite(reference).all():
+        raise ValueError("train_valid不得包含NaN/Inf")
+    query = val[val_mask]
+    if not np.isfinite(query).all():
+        raise ValueError("val_valid不得包含NaN/Inf")
     left = np.searchsorted(reference, query, side="left")
     right = np.searchsorted(reference, query, side="right")
-    output[mask] = (left + 0.5 * (right - left)) / reference.size
+    output[val_mask] = (left + 0.5 * (right - left)) / reference.size
     return output
 
 
