@@ -1,0 +1,64 @@
+{
+  "protocol_name": "rpa_development_bootstrap_v1",
+  "status": "candidate_freeze_pending_user_confirmation",
+  "matching_recomputation": "full_pipeline_per_replicate",
+  "bootstrap": {
+    "replicate_count": 400,
+    "rng": "numpy.random.Generator(PCG64(20260824))",
+    "patient_sampling": "within_label_source_stratum_with_replacement_same_stratum_size",
+    "patient_base_order": "patient_id_string_ascending",
+    "shared_plan": "same_multiplicity_plan_for_all_three_development_seeds_and_folds",
+    "patient_instance_semantics": "all_images_carried_by_each_repeated_patient_instance"
+  },
+  "strata_order": [
+    [0, "武大省人民"],
+    [0, "第一届早癌大赛"],
+    [0, "第二届早癌大赛"],
+    [1, "武大省人民"],
+    [1, "第一届早癌大赛"],
+    [1, "第二届早癌大赛"]
+  ],
+  "formal_stratum_patient_counts": [830, 32, 38, 261, 19, 32],
+  "eligible": {
+    "full_train_nondead_universe_fixed": true,
+    "positive_patient_instance_min": 25,
+    "active_frequency_min": 0.00510204081632653,
+    "active_eps": 1e-08,
+    "membership_recomputed_per_replicate": true
+  },
+  "top_patient": {
+    "count": 25,
+    "order": ["ranking_score_desc", "patient_id_string_asc", "occurrence_index_asc"],
+    "duplicate_patient_instances_allowed": true
+  },
+  "thresholds": {
+    "metrics": [
+      "R_anchor_recall",
+      "R_confirm_coverage",
+      "R_activation_reference",
+      "R_activation_confirmation",
+      "R_energy_reference",
+      "R_energy_confirmation"
+    ],
+    "fold_reduction": "minimum_of_three_pseudo_confirmation_folds",
+    "quantile": 0.05,
+    "quantile_method": "lower",
+    "bca": false,
+    "nonpositive_threshold_policy": "bootstrap_calibration_infeasible",
+    "full_train_self_consistency_required": true,
+    "interpretation": "development_bootstrap_lower_robustness_bound_not_confidence_interval"
+  },
+  "structural_failure": {
+    "trigger": "any_required_seed_pair_null_stratification_infeasible",
+    "status": "replicate_structural_failure",
+    "all_three_folds_all_six_metrics": 0.0,
+    "zero_anchor_or_zero_reproduced_anchor": "completed_replicate_with_corresponding_metrics_zero"
+  },
+  "parallel": {
+    "plan_generation": "single_cpu_coordinator_before_workers",
+    "assignment": "replicate_index_mod_worker_count_equals_worker_rank",
+    "aggregation": "single_coordinator_exactly_indices_0_through_399_sorted_ascending",
+    "workers_require_same_code_protocol_dtype_and_algorithm_path": true
+  },
+  "implementation_error_policy": "abort_formal_calibration_without_thresholds"
+}

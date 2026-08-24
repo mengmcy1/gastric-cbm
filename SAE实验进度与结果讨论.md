@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR与两类质量覆盖定义已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；activation与representation energy的reference/confirmation两侧指标定义于2026-08-24正式冻结，各自绝对门槛待bootstrap子协议产生。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR与两类质量覆盖定义已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR闭式精确协议经仓库复审、20项回归测试及SHA固结后于2026-08-24正式冻结；activation与representation energy的reference/confirmation两侧指标定义于2026-08-24正式冻结；bootstrap精确完整重算已通过正式规模benchmark，抽样、重复患者、400次、RNG、lower门槛和并行归并已写成拟冻结协议并通过12项纯函数测试，待用户确认后才可冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -1875,6 +1875,77 @@ exact-null、BH-FDR、RNN和3个2/2 pseudo-confirm fold plumbing。候选矩阵�
 `B_boot=400`因此记为工程可执行的拟冻结选择；它尚不是正式冻结值，不允许仅凭本benchmark
 启动bootstrap或seed43/44。
 
+### Bootstrap拟冻结协议与纯函数核心（2026-08-24，待用户确认）
+
+基于benchmark，fixed graph从候选中删除；每个replicate精确重算eligible membership、
+患者行为、空间相似度、百分位、exact-null、BH-FDR、RNN、anchor和pseudo-confirm六项指标。
+拟冻结静态协议为`rpa_bootstrap_protocol_v1.json`，状态仍为
+`candidate_freeze_pending_user_confirmation`。
+
+抽样由CPU单进程coordinator在worker启动前一次性生成。使用：
+
+```text
+B_boot = 400
+RNG = numpy.random.Generator(numpy.random.PCG64(20260824))
+strata order =
+  (0,武大省人民), (0,第一届早癌大赛), (0,第二届早癌大赛),
+  (1,武大省人民), (1,第一届早癌大赛), (1,第二届早癌大赛)
+base order within stratum = patient_id string ascending
+sampling = 每层有放回抽取该层原患者数次
+```
+
+因此每个replicate始终有1212个patient instances，六层始终为
+`830/32/38/261/19/32`。同一份multiplicity plan同时传给三个seed和三个pseudo-confirm folds；
+禁止各GPU自行产生随机数。
+
+患者`u`被抽中`w_u`次等价于`w_u`个独立bootstrap patient instances，每个instance携带
+该患者全部原始图像。实现使multiplicity加权而不复制大数组，但必须与显式展开逐位等价：
+
+```text
+positive patient instances = sum_u w_u * presence_u
+active frequency = (1/1212) * sum_u w_u * A_u
+activation mass = sum_u w_u * M_u
+representation energy = (1/1212) * sum_u w_u * E_u
+spatial = sum_{u valid} w_u*S_u / sum_{u valid} w_u
+```
+
+full-train non-dead Feature universe保持冻结，但`positive>=25 AND A>=A_min`在每个replicate重算。
+presence和union-positive必须使用`ACTIVE_EPS=1e-8`；benchmark中的`>0`只是纯工程surrogate简化，
+不得进入正式bootstrap kernel。
+
+Top-25对bootstrap instances排序，顺序固定为`ranking score desc -> patient_id asc -> occurrence_index asc`。
+同一患者若被抽中多次，可在Top-25中出现多次；禁止按patient ID去重。Spearman、spatial、
+activation和energy也都须与multiplicity显式展开等价。
+
+每个replicate的每项正式指标先取三个pseudo-confirm folds的最小值，再独立生成六个门槛：
+
+```text
+T_m = numpy.quantile(
+  [min(R_m,42^(b), R_m,43^(b), R_m,44^(b)) for b in 0...399],
+  0.05,
+  method="lower"
+)
+```
+
+不使用BCa、不插值，不生成综合`T_feature`。该分位数只称
+`development bootstrap lower robustness bound`，不称95%置信下界。任一门槛`<=0`，或未重采样
+full train的三折六指标任一低于相应门槛，均记`bootstrap_calibration_infeasible`；不裁剪门槛、
+不删最弱折、不更换quantile。
+
+静态多worker分配为`replicate_index % worker_count == worker_rank`。所有worker必须使用同一冻结代码、
+协议、dtype和算法路径；正式任务只使用同型号GPU组。单coordinator最终只接受恰好一次的
+`0...399`记录，按index升序后归并；missing或duplicate不得生成门槛。
+
+已冻结的`replicate_structural_failure`仅由任一必要pair的`null_stratification_infeasible`触发，三折六指标
+全部记0。合法抽样得到0 anchor或0 reproduced anchor仍是`completed`的科学性低稳定结果，
+对应指标自然记0，不扩大“结构失败”定义。NaN/Inf、ID/shape错位、重复Feature ID或RNN冲突必须
+终止整个formal calibration，不得用不足400条记录生成门槛。
+
+`clong_rpa_bootstrap.py`已实现抽样、加权聚合、Top-25、worker分配、结构失败记录和门槛归并纯函数；
+`test_clong_rpa_bootstrap.py` 12项测试已通过。真实train-only只读debug已证明400个计划可重复产生，
+且每replicate六层数始终为冻结值。当前尚未实现完整matching worker和正式产物协议，
+也未启动任何正式bootstrap或新seed。
+
 推荐但尚未冻结的门槛生成候选为：
 
 ```text
@@ -1965,7 +2036,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 
 ### 冻结前未决项
 
-1. bootstrap子协议须分别生成activation/energy两侧绝对门槛；source分层与结构失败口径已关闭，精确完整重算已通过正式规模benchmark，`B_boot=400`为工程可行的拟冻结选择；`Q_0.05`、RNG、患者重复权重和并行归并等仍待冻结；
+1. bootstrap精确完整重算已通过正式规模benchmark；`B_boot=400`、`PCG64(20260824)`、六层有放回抽样、重复患者instance、最弱折`Q0.05/lower`、六个独立门槛和确定性并行归并已形成拟冻结协议并通过纯函数/debug验收，待用户确认后正式冻结；完整matching worker和产物协议尚未实现；
 2. 最少spatial valid患者数、浮点/空集合处理和数值累积精度；
 3. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
 4. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
@@ -2094,6 +2165,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     2026-08-24完成复审并正式冻结；bootstrap source只读审计和结构失败口径已关闭；
     RP-A matching正式规模纯计算benchmark已完成，精确完整重算约11.6分钟/replicate、
     400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；`B_boot=400`记为拟冻结选择。
-    下一步冻结bootstrap抽样、RNG、门槛分位数和并行归并口径。之后依次关闭
+    bootstrap抽样、RNG、400次、最弱折lower门槛、重复患者和并行归并已写成拟冻结协议，
+    12项纯函数测试与真实train-only抽样debug通过，待用户确认后正式冻结。之后依次关闭
     spatial数值和GPU identity。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
