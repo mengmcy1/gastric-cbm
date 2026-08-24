@@ -1,0 +1,74 @@
+{
+  "protocol_name": "rpa_gpu_noop_identity_v1",
+  "status": "frozen_2026-08-24",
+  "purpose": "verify_residual_preserving_h_prime_equals_h_path_before_formal_intervention",
+  "lineage": "frozen_s2c_seed42_sae_and_frozen_clong_student",
+  "fixed_input": {
+    "split": "train_only",
+    "patient_selection": "first_32_patient_ids_in_string_ascending_order",
+    "all_images_for_selected_patients": true,
+    "batch_size": 32,
+    "representation_k": 1024
+  },
+  "noop_path": {
+    "hidden": "h=SAE.encode(F,K=1024)",
+    "decoded": "D_h=SAE.decode(h)",
+    "residual": "r=F-D_h",
+    "intervened": "F_prime=SAE.decode(h_prime)+r_with_h_prime_equal_h",
+    "downstream": ["attention_recomputed", "pooled", "logits", "cancer_probability"]
+  },
+  "levels": ["patch", "attention", "pooled", "logits", "probability"],
+  "error_outputs": ["max_abs_error", "mean_abs_error", "max_relative_error"],
+  "relative_denominator": "max(abs(reference),1e-12)",
+  "tolerance_generation": {
+    "float32_epsilon_source": "numpy.finfo(float32).eps",
+    "rtol_each_level": "32*float32_epsilon",
+    "atol_each_level": "max(4*observed_max_abs_error,32*float32_epsilon*max(1,max_abs_reference))",
+    "rounding": "none_use_full_precision_json"
+  },
+  "formal_gate": "every_element_abs_diff_le_atol_plus_rtol_times_abs_reference_at_every_level",
+  "numeric_path": {
+    "device": "cuda",
+    "dtype": "float32",
+    "tf32": false,
+    "model_mode": "eval",
+    "gradients": false,
+    "environment_record": [
+      "gpu_name",
+      "gpu_compute_capability",
+      "nvidia_driver_version",
+      "torch_version",
+      "cuda_version",
+      "cudnn_version"
+    ]
+  },
+  "failure": "any_level_failure_aborts_formal_intervention",
+  "frozen_environment": {
+    "gpu_name": "NVIDIA GeForce RTX 5080",
+    "gpu_compute_capability": [12, 0],
+    "nvidia_driver_version": "610.43.02",
+    "torch_version": "2.11.0+cu128",
+    "cuda_version": "12.8",
+    "cudnn_version": 91900
+  },
+  "frozen_tolerances": {
+    "patch": {"atol": 7.246946915984154e-05, "rtol": 3.814697265625e-06},
+    "attention": {"atol": 3.814697265625e-06, "rtol": 3.814697265625e-06},
+    "pooled": {"atol": 2.9602600989164785e-05, "rtol": 3.814697265625e-06},
+    "logits": {"atol": 1.824492028390523e-05, "rtol": 3.814697265625e-06},
+    "probability": {"atol": 3.814697265625e-06, "rtol": 3.814697265625e-06}
+  },
+  "accepted_audit": {
+    "path": "结果/SAE/RP_A_GPU_Identity_20260824/identity_audit_v2.json",
+    "sha256": "bb254f91a7726781d4a53a35eb8b74c437aba2317def1dd6292c423bec7b685e",
+    "candidate_protocol_sha256": "0b0c528327326432d34f97c5e0f0c1c80826ef73b5459ce7ba6f07e774754cc5",
+    "all_five_levels_passed": true,
+    "gpu1_and_gpu3_observed_errors_identical": true
+  },
+  "forbidden": [
+    "new_seed",
+    "val_internal_test_or_external",
+    "matching_statistics",
+    "post_audit_tolerance_formula_change"
+  ]
+}

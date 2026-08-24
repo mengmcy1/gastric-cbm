@@ -233,3 +233,16 @@ python 程序/SAE/正式代码/test_clong_rpa_spatial.py
 `audit_clong_rpa_spatial_numeric.py`只允许输出误差、NA一致性、耗时和显存；正式v2审计支持混合
 精度路径且未生成任何matching统计。冻结SHA见`rpa_spatial_SHA256SUMS.txt`。RP-A整体仍未冻结，
 不得据此启动新seed。
+
+## RP-A GPU identity冻结核心
+
+`rpa_gpu_identity_protocol_v1.json`冻结 residual-preserving 路径在`h'=h`时的五级数值闸门：
+patch、attention、pooled、logits和probability分别使用独立`atol/rtol`。固定audit只读取seed42
+train缓存的32位患者/85张图，并在两张RTX 5080上得到一致结果。
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpa_gpu_identity.py
+```
+
+4项测试覆盖误差累计、容差生成公式和逐元素gate。正式任务必须保存五级完整误差，任一级失败
+即停止干预解释。冻结SHA见`rpa_gpu_identity_SHA256SUMS.txt`。RP-A整体仍须等待正式产物协议。

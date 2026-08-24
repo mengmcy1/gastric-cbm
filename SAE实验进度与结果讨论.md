@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖、bootstrap与spatial子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR、activation、representation energy与bootstrap均于2026-08-24正式冻结；spatial的presence、NA/0、支持度和混合精度规则经6项测试、固定小块数值审计及SHA固结后于2026-08-24正式冻结。其余未决项关闭前仍禁止运行43/44/202/503/911 |
+| RP-SAE新解释范式 | RP-A主体未冻结；eligible、null/FDR、两类质量覆盖、bootstrap、spatial与GPU identity子协议已冻结 | eligible已冻结`q=0.02`、`P_min_train=25`、`val Top-q=6`、`A_min=0.25/49`；null/FDR、activation、representation energy、bootstrap与spatial均于2026-08-24正式冻结；residual-preserving no-op的五级GPU identity固定输入、容差函数、RTX 5080数值环境和逐级门槛也于2026-08-24完成双卡一致审计并冻结。只剩正式产物/失败现场与整体协议SHA未关闭；此前仍禁止运行43/44/202/503/911 |
 | 复现口径 | RP-A草案已分工，未冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续协议冻结后作留出初始化复现 |
 | 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -2035,7 +2035,7 @@ val经验p值只能由冻结的train null empirical CDF映射得到；禁止在v
 val使用与train完全相同的绝对PASS门槛，不另设`val >= train - delta`容差。任一正式指标在
 val低于冻结门槛，该confirmation seed即失败。
 
-### no-op identity工程硬门槛
+### no-op identity工程硬门槛：正式冻结（2026-08-24）
 
 令`h'=h`，正式GPU路径必须逐级记录max/mean absolute error及max relative error：
 
@@ -2043,10 +2043,32 @@ val低于冻结门槛，该confirmation seed即失败。
 patch feature -> attention -> pooled vector -> logits -> probability
 ```
 
-正式容差不使用单一`T_identity_GPU`，而是分别冻结patch、attention、pooled、logit和
-probability各级的`atol/rtol`。容差生成方法、固定GPU数值路径和self-test输入必须在确认seed
-前写死；CPU仅用于单元测试并使用单独容差。不得只保存PASS布尔值。任一级超差则该seed
-直接失败，禁止解释干预结果。
+正式no-op具体执行`h=Encoder(F)`、`r=F-Decoder(h)`、`F'=Decoder(h')+r`且`h'=h`，随后从
+`F'`重算attention、pooled、logits和癌概率。固定self-test输入为seed42冻结train缓存中patient ID
+字符串升序前32位患者的全部85张图，batch size 32、`K=1024`；不读取val/internal test/external。
+
+五级容差不合并。令`eps32=np.finfo(float32).eps`，每级冻结生成函数为：
+
+```text
+rtol = 32 * eps32
+atol_level = max(
+    4 * observed_max_abs_error_level,
+    32 * eps32 * max(1, observed_max_abs_reference_level)
+)
+PASS_level = every(abs(candidate-reference) <= atol + rtol*abs(reference))
+```
+
+正式环境冻结为RTX 5080、compute capability 12.0、driver 610.43.02、PyTorch 2.11.0+cu128、
+CUDA 12.8、cuDNN 91900、float32且TF32关闭。GPU 1与GPU 3独立运行得到逐位相同误差：patch、
+attention、pooled、logits、probability最大绝对误差依次为`1.1921e-7`、`4.4703e-8`、
+`7.1526e-7`、`4.7684e-7`、`1.1921e-7`。冻结`atol`依次为`7.24695e-5`、`3.81470e-6`、
+`2.96026e-5`、`1.82449e-5`、`3.81470e-6`，五级`rtol`均为`3.814697265625e-6`。
+
+正式v2 audit为`结果/SAE/RP_A_GPU_Identity_20260824/identity_audit_v2.json`，SHA256为
+`bb254f91a7726781d4a53a35eb8b74c437aba2317def1dd6292c423bec7b685e`；它未生成matching统计。
+协议、核心、audit和4项CPU测试的SHA见`rpa_gpu_identity_SHA256SUMS.txt`。正式任务不得只保存
+PASS布尔值，必须逐级保存max/mean absolute error与max relative error；任一级超差即终止该seed，
+禁止继续解释干预。该子协议冻结不等于RP-A整体冻结。
 
 ### 局部子空间稳定性：纯诊断
 
@@ -2073,8 +2095,7 @@ ICLR 2026的`Sparse Autoencoders Trained on the Same Data Learn Different Featur
 ### 冻结前未决项
 
 1. bootstrap子协议已于2026-08-24正式冻结并完成SHA固结；完整matching worker和正式产物协议尚未实现；
-2. 各级GPU identity的`atol/rtol`生成方法与固定self-test输入；
-3. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
+2. RP-A确认输出、失败保留现场和整体协议SHA文件格式。
 
 字典死亡率和重复率不再列为新TBD，直接继承S2c的双10%定义；BH假设族及FDR/RNN执行顺序
 已在本草案中明确。以上未决项全部关闭、测试通过并由用户确认后，RP-A才可从“待确认、未冻结”升级为正式预注册；
@@ -2202,6 +2223,7 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     400次单GPU投影约77.4小时，无OOM且未持久化任何统计输出；bootstrap抽样、RNG、400次、
     最弱折lower门槛、重复患者、结构失败和并行归并已于2026-08-24正式冻结，14项纯函数测试、
     真实train-only抽样debug和协议/实现/测试SHA固结均通过；spatial数值与可评价规则随后通过
-    6项语义测试和固定小块numerical-only audit，于2026-08-24正式冻结。下一步关闭GPU identity。
-    任何新seed均未
+    6项语义测试和固定小块numerical-only audit，于2026-08-24正式冻结；GPU identity随后完成
+    五级固定输入audit、双RTX 5080一致性复核、4项CPU测试和SHA固结，并于同日正式冻结。
+    下一步只关闭正式产物/失败现场和RP-A整体协议SHA。任何新seed均未
     启动；全部规则冻结后才按43/44开发校准、202/503确认、911留出初始化复现执行。
