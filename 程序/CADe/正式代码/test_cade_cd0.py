@@ -7,7 +7,12 @@ import math
 
 import pandas as pd
 
-from cade_cd0_metrics import froc_curve, match_predictions, summarize_detection
+from cade_cd0_metrics import (
+    froc_curve,
+    lesion_size_groups,
+    match_predictions,
+    summarize_detection,
+)
 
 
 def fixture() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -55,7 +60,16 @@ def main() -> None:
     assert len(deployed) == 3
     empty = match_predictions(predictions, ground_truth, 2.0, 0.30)
     assert empty.empty and {"is_tp", "matched_gt_index", "matched_iou"}.issubset(empty.columns)
-    print("CD0 metrics tests: 9/9 passed")
+    groups = lesion_size_groups(pd.Series([0.10, 0.20, 0.40]), (0.18, 0.34))
+    assert groups.astype(str).tolist() == ["lesion_small", "lesion_medium", "lesion_large"]
+    boundary_groups = lesion_size_groups(pd.Series([0.18, 0.34]), (0.18, 0.34))
+    assert boundary_groups.astype(str).tolist() == ["lesion_small", "lesion_medium"]
+    val_group = lesion_size_groups(pd.Series([0.20]), (0.18, 0.34)).astype(str).iloc[0]
+    external_group = lesion_size_groups(
+        pd.Series([0.01, 0.20, 0.90]), (0.18, 0.34)
+    ).astype(str).iloc[1]
+    assert val_group == external_group == "lesion_medium"
+    print("CD0 metrics tests: 12/12 passed")
 
 
 if __name__ == "__main__":

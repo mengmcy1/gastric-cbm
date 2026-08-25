@@ -9,6 +9,20 @@ import numpy as np
 import pandas as pd
 
 
+def lesion_size_groups(
+    area_fraction: pd.Series,
+    bounds: tuple[float, float],
+) -> pd.Series:
+    """使用训练集预先冻结的面积边界划分病灶大小。"""
+    lower, upper = bounds
+    return pd.cut(
+        area_fraction,
+        bins=[-math.inf, lower, upper, math.inf],
+        labels=["lesion_small", "lesion_medium", "lesion_large"],
+        include_lowest=True,
+    )
+
+
 def box_iou(box: np.ndarray, boxes: np.ndarray) -> np.ndarray:
     """计算一个 xyxy 框与多个 xyxy 框的 IoU。"""
     if len(boxes) == 0:

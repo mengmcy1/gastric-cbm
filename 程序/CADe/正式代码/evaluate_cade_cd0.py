@@ -42,6 +42,7 @@ from run_y1_yolo26_smoke import assert_locked_library_behavior, file_sha256  # n
 from cade_cd0_metrics import (  # noqa: E402
     box_iou,
     froc_curve,
+    lesion_size_groups,
     match_predictions,
     primary_froc_point,
     summarize_detection,
@@ -119,6 +120,14 @@ def load_val_cohort(debug: bool) -> tuple[pd.DataFrame, pd.DataFrame]:
         frame = frame.loc[keep].reset_index(drop=True)
         ground_truth = ground_truth[ground_truth.image_key.isin(frame.image_key)].reset_index(drop=True)
     return frame, ground_truth
+
+
+def load_train_lesion_size_bounds() -> tuple[float, float]:
+    """仅从 Development Train 癌图计算一次面积三分位边界。"""
+    mapping = pd.read_csv(Y0F_ROOT / "y0f_mapping.csv", encoding="utf-8-sig")
+    train = mapping[mapping.split.eq("train") & mapping.label.eq(1)]
+    bounds = train.bbox_area_fraction.quantile([1 / 3, 2 / 3]).to_numpy(float)
+    return float(bounds[0]), float(bounds[1])
 
 
 def load_external_cohort(debug: bool) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -203,6 +212,7 @@ def basic_stratified_summary(
     predictions: pd.DataFrame,
     ground_truth: pd.DataFrame,
     threshold: float,
+    lesion_size_bounds: tuple[float, float],
 ) -> list[dict]:
     """按来源、分辨率、年份和病灶大小输出部署点分层诊断。"""
     records = []
@@ -212,11 +222,8 @@ def basic_stratified_summary(
             for value in images[column].dropna().unique():
                 definitions.append((f"{column}={value}", images[column].eq(value)))
     if "bbox_area_fraction" in ground_truth and len(ground_truth):
-        bounds = ground_truth.bbox_area_fraction.quantile([1 / 3, 2 / 3]).to_numpy()
-        lesion_group = pd.cut(
-            ground_truth.bbox_area_fraction,
-            [-math.inf, bounds[0], bounds[1], math.inf],
-            labels=["lesion_small", "lesion_medium", "lesion_large"],
+        lesion_group = lesion_size_groups(
+            ground_truth.bbox_area_fraction, lesion_size_bounds
         )
         for value in lesion_group.unique():
             keys = ground_truth.loc[lesion_group.eq(value), "image_key"]
@@ -333,6 +340,7 @@ def main() -> None:
     """执行预检或完整 CD0 三种子内部val+外部开发评价。"""
     args = parse_args()
     products = load_products()
+    lesion_size_bounds = load_train_lesion_size_bounds()
     val_images, val_gt = load_val_cohort(args.debug)
     external_images, external_gt = load_external_cohort(args.debug)
     if args.preflight_only:
@@ -369,8 +377,14 @@ def main() -> None:
                 images, predictions, ground_truth, product["deployment_threshold"]
             )
             summary["stratified"] = basic_stratified_summary(
-                images, predictions, ground_truth, product["deployment_threshold"]
+                images, predictions, ground_truth, product["deployment_threshold"],
+                lesion_size_bounds,
             )
+            summary["lesion_size_definition"] = {
+                "source": "development_train",
+                "bbox_area_q33": lesion_size_bounds[0],
+                "bbox_area_q67": lesion_size_bounds[1],
+            }
             prefix = f"seed{seed}_{cohort}"
             predictions.to_csv(output / f"{prefix}_all_predictions.csv", index=False)
             curve.to_csv(output / f"{prefix}_froc.csv", index=False)
@@ -397,6 +411,11 @@ def main() -> None:
         "internal_temporal_test_read": False,
         "matching_iou_threshold": 0.30,
         "primary_fp_per_image_limit": 0.5,
+        "lesion_size_definition": {
+            "source": "development_train",
+            "bbox_area_q33": lesion_size_bounds[0],
+            "bbox_area_q67": lesion_size_bounds[1],
+        },
         "review_selection": "run finalize_cade_cd0.py after inference",
         "seeds": summaries,
     }

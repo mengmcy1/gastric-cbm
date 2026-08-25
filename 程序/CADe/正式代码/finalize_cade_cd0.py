@@ -17,7 +17,9 @@ from evaluate_cade_cd0 import (
     SEEDS,
     load_external_cohort,
     load_products,
+    load_train_lesion_size_bounds,
     load_val_cohort,
+    basic_stratified_summary,
     render_review_images,
 )
 
@@ -26,6 +28,7 @@ def parse_args() -> argparse.Namespace:
     """解析已完成 CD0 目录，不接受模型或数据选择参数。"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--refresh-stratification-only", action="store_true")
     return parser.parse_args()
 
 
@@ -179,7 +182,7 @@ def choose_review_cases(fn: pd.DataFrame, fp: pd.DataFrame) -> tuple[pd.DataFram
     ).reset_index(drop=True)
     selected["case_id"] = [f"CD0-{index:04d}" for index in range(1, len(selected) + 1)]
     selected["reviewer_requirement"] = "single"
-    selected["needs_expert_review"] = True
+    selected["needs_expert_review"] = ""
     dual_count = int(round(len(selected) * 0.20))
     if dual_count:
         dual_indices = np.linspace(0, len(selected) - 1, dual_count, dtype=int)
@@ -260,6 +263,46 @@ def main() -> None:
         "development_val": val_images,
         "external_development": external_images,
     }
+    lesion_size_bounds = load_train_lesion_size_bounds()
+    if args.refresh_stratification_only:
+        ground_truths = {
+            "development_val": load_val_cohort(False)[1],
+            "external_development": load_external_cohort(False)[1],
+        }
+        for cohort, images in cohorts.items():
+            ground_truth = ground_truths[cohort]
+            for seed in SEEDS:
+                predictions = pd.read_csv(
+                    run_dir / f"seed{seed}_{cohort}_all_predictions.csv"
+                )
+                threshold = products[seed]["deployment_threshold"]
+                result = summary["seeds"][str(seed)][cohort]
+                result["stratified"] = basic_stratified_summary(
+                    images, predictions, ground_truth, threshold, lesion_size_bounds
+                )
+                result["lesion_size_definition"] = {
+                    "source": "development_train",
+                    "bbox_area_q33": lesion_size_bounds[0],
+                    "bbox_area_q67": lesion_size_bounds[1],
+                }
+        summary["lesion_size_definition"] = {
+            "source": "development_train",
+            "bbox_area_q33": lesion_size_bounds[0],
+            "bbox_area_q67": lesion_size_bounds[1],
+        }
+        summary_path.write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2, default=str),
+            encoding="utf-8",
+        )
+        review_path = run_dir / "CD0人工复核正式版/CD0人工复核去重清单.csv"
+        review = pd.read_csv(review_path, encoding="utf-8-sig")
+        review["needs_expert_review"] = ""
+        review.to_csv(review_path, index=False, encoding="utf-8-sig")
+        print(
+            f"CD0分层已刷新: development_train q33={lesion_size_bounds[0]:.8f}, "
+            f"q67={lesion_size_bounds[1]:.8f}; YOLO推理未重跑"
+        )
+        return
     all_fn, all_fp = [], []
     for cohort, images in cohorts.items():
         all_fn.append(stable_fn_table(run_dir, cohort, images))

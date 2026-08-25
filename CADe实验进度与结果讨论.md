@@ -313,12 +313,19 @@ Primary是每图误框不超过0.5时的实际可达病灶Sensitivity；下表�
 
 ### 病灶大小分层
 
+2026-08-25代码复核后修正分层口径：初版实现曾在val和external内各自重算面积
+三分位，无法严格比较同一绝对尺度。现已统一改为Development Train癌图一次性冻结的
+`bbox_area_fraction` 边界：`q33=0.18661895`、`q67=0.33844387`。同一边界原封不动应用于
+Development Val、External Development及未来锁定测试队列。本次只用已保存预测重算
+分层汇总，没有重跑YOLO，不影响总体FROC、部署点、IoU、AP或复核案例。
+
 | 队列 | small冻结阈值Sensitivity | medium | large |
 | --- | ---: | ---: | ---: |
-| Development Val | 0.7208 | 0.9333 | 0.9375 |
-| External Development | 0.6222 | 0.8324 | 0.9241 |
+| Development Val | 0.7404（95张） | 0.9351（77张） | 0.9461（68张） |
+| External Development | 0.6707（247张） | 0.8676（146张） | 0.9247（146张） |
 
-small是最弱分层，且从内部到外部平均再下降约10个百分点；medium也出现明显下降，
+small仍是最弱分层，且在同一训练集冻结尺度下从内部到外部平均下降约7个百分点；
+medium也出现接近7个百分点的下降，
 large相对稳定。因此“小/低对比病灶表征不足”是下一阶段需重点核对的假设，但仍需
 人工FN类型证据，不能仅根据bbox面积直接下因果结论。
 
