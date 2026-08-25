@@ -1,0 +1,62 @@
+{
+  "protocol_name": "rpc2_deterministic_nearest_control_matching_v2",
+  "status": "frozen_before_rpc2_intervention_2026-08-25",
+  "supersedes_for_control_selection": "rpc2_outcome_blind_matching_feasibility_audit_v1",
+  "v1_result_preserved": "matching_calibration_infeasible",
+  "scope": "development_train_only_matched_control_manifest_freeze",
+  "distance": {
+    "covariates": ["active_frequency", "activation_mass", "representation_energy"],
+    "patient_aggregation": "equal_weight_mean_over_all_1212_train_patients_without_label_weighting",
+    "percentile_fit_universe": "complete_frozen_eligible_feature_universe_per_seed_before_study_object_exclusion",
+    "percentile_transform": "(average_midrank_minus_0.5)/eligible_feature_count",
+    "metric": "linfinity_max_absolute_percentile_difference",
+    "numeric_tie_definition": "distance_units=max_absolute_difference_of_doubled_average_midranks; reported_distance=distance_units/(2*eligible_feature_count)"
+  },
+  "control_universe": {
+    "base": "frozen_eligible_features_per_seed",
+    "exclude": "union_of_all_149_unique_study_object_feature_ids_per_seed",
+    "within_target_duplicates": false,
+    "across_target_reuse": true
+  },
+  "selection": {
+    "maximum_caliper": 0.15,
+    "desired_controls": 100,
+    "minimum_controls": 20,
+    "order": ["distance_ascending", "feature_id_ascending"],
+    "if_pool_at_least_100": "select_first_100_nearest",
+    "if_pool_between_20_and_99": "select_all_within_caliper",
+    "if_pool_below_20": "matching_support_insufficient",
+    "runtime_caliper_widening": false,
+    "replacement_study_objects": false,
+    "rng_used": false
+  },
+  "role_semantics": {
+    "primary_candidate_flag_count": 122,
+    "low_effect_control_flag_count": 20,
+    "post_rpc1_secondary_exploratory_flag_count": 8,
+    "unique_study_object_count": 149,
+    "known_overlap": "a00987 has primary_candidate and low_effect_control flags",
+    "low_effect_controls": "descriptive_negative_control_only_not_null_calibration_population",
+    "role_groups_are_not_independent": true
+  },
+  "future_matched_control_summary": {
+    "percentile": "(count_control_less_than_target+0.5*count_equal)/n_control",
+    "conditional_empirical_p": "(1+count_control_greater_than_or_equal_target)/(n_control+1)",
+    "required_fields": [
+      "n_control",
+      "percentile_resolution",
+      "conditional_p_resolution",
+      "conditional_exploratory",
+      "selected_on_same_train_data"
+    ],
+    "confirmatory_significance_claim": false
+  },
+  "execution_boundary": {
+    "control_manifest_frozen_before_intervention": true,
+    "intervention_runner_must_not_rematch": true,
+    "train_only": true,
+    "val_evaluated": false,
+    "internal_test_evaluated": false,
+    "external_evaluated": false
+  }
+}

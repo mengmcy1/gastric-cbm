@@ -9,6 +9,8 @@ import pandas as pd
 
 CALIPERS = (0.025, 0.05, 0.075, 0.10, 0.15)
 REQUIRED_CONTROLS = 100
+MAXIMUM_CALIPER = 0.15
+MINIMUM_CONTROLS = 20
 
 
 def empirical_midrank(values: np.ndarray) -> np.ndarray:
@@ -66,3 +68,42 @@ def smallest_global_feasible_caliper(frame: pd.DataFrame) -> float | None:
         if frame[column].ge(REQUIRED_CONTROLS).all():
             return float(caliper)
     return None
+
+
+def select_nearest_controls(
+    target_feature_id: int,
+    eligible_ids: np.ndarray,
+    percentile_covariates: np.ndarray,
+    excluded_feature_ids: set[int],
+) -> tuple[pd.DataFrame, str]:
+    """按v2固定caliper与nearest-first顺序返回一个target的controls。"""
+    ids = np.asarray(eligible_ids, dtype=np.int64)
+    covariates = np.asarray(percentile_covariates, dtype=np.float64)
+    positions = np.flatnonzero(ids == int(target_feature_id))
+    if len(positions) != 1 or covariates.shape != (len(ids), 3):
+        raise ValueError("target或percentile covariates与eligible universe不一致")
+    keep = ~np.isin(ids, np.fromiter(sorted(excluded_feature_ids), dtype=np.int64))
+    control_ids = ids[keep]
+    control_covariates = covariates[keep]
+    # Midrank percentiles are exact multiples of 1/(2N). Compare in integer
+    # doubled-rank units so mathematical ties cannot be split by float error.
+    distance_units = np.max(np.rint(
+        np.abs(control_covariates - covariates[positions[0]]) * (2 * len(ids))
+    ).astype(np.int64), axis=1)
+    distances = distance_units.astype(np.float64) / (2 * len(ids))
+    within = distances <= MAXIMUM_CALIPER
+    candidates = pd.DataFrame({
+        "control_feature_id": control_ids[within],
+        "linf_distance_units": distance_units[within],
+        "linf_distance": distances[within],
+        "control_active_frequency_percentile": control_covariates[within, 0],
+        "control_activation_mass_percentile": control_covariates[within, 1],
+        "control_representation_energy_percentile": control_covariates[within, 2],
+    }).sort_values(
+        ["linf_distance_units", "control_feature_id"], kind="stable",
+    ).reset_index(drop=True)
+    if len(candidates) < MINIMUM_CONTROLS:
+        return candidates.iloc[0:0].copy(), "matching_support_insufficient"
+    selected = candidates.head(REQUIRED_CONTROLS).copy()
+    selected.insert(0, "control_rank", np.arange(1, len(selected) + 1, dtype=np.int64))
+    return selected, "matched"
