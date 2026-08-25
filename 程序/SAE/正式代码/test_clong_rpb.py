@@ -12,6 +12,8 @@ from clong_rpb_core import (
     choose_representative,
     classify_sharedness,
     complete_link_families,
+    diagnose_sharedness,
+    label_source_bootstrap_contrasts,
 )
 
 
@@ -58,6 +60,29 @@ class RPBTests(unittest.TestCase):
         equivalent_low = seed_row(-0.05, 0.05, -0.05, 0.05, 0.1)
         self.assertEqual(classify_sharedness([equivalent_high] * 3, PROTOCOL), "shared_high")
         self.assertEqual(classify_sharedness([equivalent_low] * 3, PROTOCOL), "shared_low_rare")
+
+    def test_mixed_reason_preserves_frozen_class(self) -> None:
+        cancer = seed_row(0.11, 0.20, 0.11, 0.20, 0.4)
+        noncancer = seed_row(-0.20, -0.11, -0.20, -0.11, 0.4)
+        mixed = seed_row(-0.20, 0.20, -0.20, 0.20, 0.4)
+        result = diagnose_sharedness([cancer, noncancer, mixed], PROTOCOL)
+        self.assertEqual(result[:2], ("mixed_uncertain", "opposite_enrichment_across_seeds"))
+
+    def test_mixed_reason_separates_coverage_and_mass(self) -> None:
+        row = seed_row(-0.05, 0.05, 0.11, 0.20, 0.4)
+        result = diagnose_sharedness([row, row, row], PROTOCOL)
+        self.assertEqual(result[:2], ("mixed_uncertain", "coverage_equivalent_mass_not_equivalent"))
+
+    def test_label_source_bootstrap_preserves_shapes(self) -> None:
+        presence = np.asarray([[1, 0], [0, 1], [1, 1], [0, 0]], dtype=np.float64)
+        mass = presence * 0.5
+        labels = np.asarray([0, 0, 1, 1])
+        sources = np.asarray(["a", "b", "a", "b"])
+        result = label_source_bootstrap_contrasts(
+            presence, mass, labels, sources, 10, np.random.default_rng(1),
+        )
+        self.assertEqual(result["coverage_low"].shape, (2,))
+        self.assertTrue(all(np.isfinite(values).all() for values in result.values()))
 
     def test_complete_link_prevents_chain_merge(self) -> None:
         edges = {("a", "b"), ("b", "c")}

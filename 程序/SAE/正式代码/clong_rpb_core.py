@@ -87,6 +87,56 @@ def stratified_bootstrap_contrasts(
     }
 
 
+def label_source_bootstrap_contrasts(
+    presence: np.ndarray,
+    mass: np.ndarray,
+    labels: np.ndarray,
+    sources: np.ndarray,
+    replicates: int,
+    rng: np.random.Generator,
+) -> dict[str, np.ndarray]:
+    """按label×source保持原层样本数，用于sharedness敏感性诊断。"""
+    if presence.shape != mass.shape or presence.shape[0] != len(labels) or len(labels) != len(sources):
+        raise ValueError("患者矩阵shape不一致")
+    strata = {
+        (label, source): np.flatnonzero((labels == label) & (sources == source))
+        for label in (0, 1)
+        for source in sorted(np.unique(sources).tolist())
+    }
+    if any(len(indices) == 0 for indices in strata.values()):
+        raise ValueError("label×source分层不完整")
+    n_features = presence.shape[1]
+    coverage_samples = np.empty((replicates, n_features), dtype=np.float32)
+    mass_samples = np.empty((replicates, n_features), dtype=np.float32)
+    for start in range(0, replicates, 100):
+        stop = min(start + 100, replicates)
+        size = stop - start
+        draws = {
+            key: rng.choice(indices, size=(size, len(indices)), replace=True)
+            for key, indices in strata.items()
+        }
+        cancer_draw = np.concatenate([draws[key] for key in strata if key[0] == 1], axis=1)
+        noncancer_draw = np.concatenate([draws[key] for key in strata if key[0] == 0], axis=1)
+        cancer_coverage = presence[cancer_draw].mean(axis=1)
+        noncancer_coverage = presence[noncancer_draw].mean(axis=1)
+        cancer_mass = mass[cancer_draw].mean(axis=1)
+        noncancer_mass = mass[noncancer_draw].mean(axis=1)
+        denominator = cancer_mass + noncancer_mass
+        coverage_samples[start:stop] = cancer_coverage - noncancer_coverage
+        mass_samples[start:stop] = np.divide(
+            cancer_mass - noncancer_mass,
+            denominator,
+            out=np.zeros_like(denominator),
+            where=denominator > 0,
+        )
+    return {
+        "coverage_low": np.quantile(coverage_samples, 0.025, axis=0),
+        "coverage_high": np.quantile(coverage_samples, 0.975, axis=0),
+        "mass_low": np.quantile(mass_samples, 0.025, axis=0),
+        "mass_high": np.quantile(mass_samples, 0.975, axis=0),
+    }
+
+
 def fast_delong_auc_ci(labels: np.ndarray, scores: np.ndarray) -> tuple[float, float, float]:
     """计算单预测器DeLong AUC及正态近似95%区间。"""
     labels = np.asarray(labels, dtype=np.int8)
@@ -136,6 +186,73 @@ def classify_sharedness(seed_rows: list[dict], protocol: dict) -> str:
         high = float(settings["shared_high_minimum_coverage_each_label"])
         return "shared_high" if min(cancer_coverage, noncancer_coverage) >= high else "shared_low_rare"
     return "mixed_uncertain"
+
+
+def diagnose_sharedness(seed_rows: list[dict], protocol: dict) -> tuple[str, str, str]:
+    """返回冻结分类、不改变分类的原因码和三seed状态。"""
+    settings = protocol["sharedness"]
+    margin_c = float(settings["coverage_equivalence_margin_absolute"])
+    margin_m = float(settings["mass_equivalence_margin_absolute"])
+    states = []
+    coverage_states = []
+    mass_states = []
+    for row in seed_rows:
+        if row["coverage_ci_low"] > margin_c:
+            coverage_state = "cancer"
+        elif row["coverage_ci_high"] < -margin_c:
+            coverage_state = "noncancer"
+        elif row["coverage_ci_low"] >= -margin_c and row["coverage_ci_high"] <= margin_c:
+            coverage_state = "equivalent"
+        else:
+            coverage_state = "unresolved"
+        if row["mass_ci_low"] > margin_m:
+            mass_state = "cancer"
+        elif row["mass_ci_high"] < -margin_m:
+            mass_state = "noncancer"
+        elif row["mass_ci_low"] >= -margin_m and row["mass_ci_high"] <= margin_m:
+            mass_state = "equivalent"
+        else:
+            mass_state = "unresolved"
+        coverage_states.append(coverage_state)
+        mass_states.append(mass_state)
+        if row["coverage_ci_low"] > margin_c and row["mass_ci_low"] > margin_m:
+            state = "cancer"
+        elif row["coverage_ci_high"] < -margin_c and row["mass_ci_high"] < -margin_m:
+            state = "noncancer"
+        elif (
+            row["coverage_ci_low"] >= -margin_c
+            and row["coverage_ci_high"] <= margin_c
+            and row["mass_ci_low"] >= -margin_m
+            and row["mass_ci_high"] <= margin_m
+        ):
+            state = "equivalent"
+        else:
+            state = "mixed"
+        states.append(state)
+    classification = classify_sharedness(seed_rows, protocol)
+    if classification != "mixed_uncertain":
+        reason = f"{classification}_rule_satisfied"
+    elif "cancer" in states and "noncancer" in states:
+        reason = "opposite_enrichment_across_seeds"
+    elif coverage_states.count("equivalent") >= 2 and mass_states.count("equivalent") < 2:
+        reason = "coverage_equivalent_mass_not_equivalent"
+    elif mass_states.count("equivalent") >= 2 and coverage_states.count("equivalent") < 2:
+        reason = "mass_equivalent_coverage_not_equivalent"
+    elif (
+        coverage_states.count("equivalent") >= 2
+        and mass_states.count("equivalent") >= 2
+        and states.count("equivalent") < 2
+    ):
+        reason = "metric_equivalence_on_different_seeds"
+    elif "equivalent" in states and ({"cancer", "noncancer"} & set(states)):
+        reason = "equivalence_enrichment_disagreement"
+    elif len(set(states)) == 3:
+        reason = "three_way_seed_disagreement"
+    elif states.count("mixed") >= 2:
+        reason = "within_seed_joint_criteria_unresolved"
+    else:
+        reason = "insufficient_seed_consensus"
+    return classification, reason, ";".join(states)
 
 
 def source_tests(

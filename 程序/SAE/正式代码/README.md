@@ -326,3 +326,11 @@ python 程序/SAE/正式代码/test_clong_rpb.py
 
 测试覆盖五类sharedness共识、BH校正、无边singleton保留、complete-link防链式合并和family
 代表词典序。图片、医学命名、轻量干预和完整RP-C干预均不属于该入口。
+
+RP-B v1 sharedness按冻结协议仅在label内bootstrap。以下入口另行执行
+`label × source`敏感性复算并生成mixed原因码，输出为`diagnostic_only`，不覆盖
+v1五类结果：
+
+```bash
+python 程序/SAE/正式代码/diagnose_clong_rpb_sharedness.py
+```
