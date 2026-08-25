@@ -54,7 +54,7 @@ CADe与CADx的任务边界固定为：
 | Locked Internal Temporal CADe Test | 保持锁定 | 112张/78人，癌52张/32人、非癌60张/46人；相对CADe开发尚未按YOLO错误返调，CD1-CD5全部冻结前不得读取检测结果 |
 | CD0定量诊断 | 已完成 | 三seed内部val+外部开发队列已运行；外部Primary敏感度平均下降0.0889，小病灶是最弱分层 |
 | CD0人工归因 | 非阻塞并行 | 已冻结510例去重复核包：210例FN+300例FP，其中102例双人独立归因；等待临床时间，不再阻塞CD1 |
-| CD1 Gray Qualification | 正式协议已冻结，待实现 | 只比较冻结RGB基线与同预算Gray检测器；先完成内部val三seed决策，再决定是否只读投影External Development |
+| CD1 Gray Qualification | 数据与纯逻辑已完成，训练入口待实现 | Gray 2847张train/val视图及增强smoke通过；错误互补、FP匹配、bootstrap和四态判定测试通过，尚未启动训练 |
 | CD2-CD8 | 路线骨架已冻结，逐阶段协议未冻结 | 根据CD0/CD1证据选择下一项假设；不得一次性堆叠Gray、LUPI、多个KD损失和分割 |
 
 ## 已确认的前置证据
@@ -450,12 +450,35 @@ External Development只在`CD1_VAL_DECISION.json`存在后运行，使用已冻�
 配置SHA、RGB/Gray Primary实际工作点和冻结部署阈值。External入口必须读取这些已冻结记录，
 不得自行重选checkpoint或重算val决策。
 
+## CD1实现前置完成情况（2026-08-25）
+
+已完成以下不涉及模型训练的前置实现：
+
+- `prepare_cd1_gray_data.py`：从Y0-F的train/val视图生成三通道Gray PNG，复制YOLO标签并保存
+  源图、Gray图、患者、split、标签和SHA映射；
+- `smoke_cd1_gray_augmentation.py`：直接调用锁定Ultralytics训练数据管线，检查真实增强后的
+  三通道是否仍相等；
+- `cade_cd1_metrics.py`：实现逐图GT错误集合、Gray rescue、reverse rescue、FN Jaccard、
+  FP最大基数且最大总IoU二分图匹配、固定阈值患者簇bootstrap和四态纯判定；
+- `test_cade_cd1.py`：覆盖数据、指标、匹配、bootstrap、PASS、COMPLEMENTARY PASS、FAIL、
+  INCONCLUSIVE及边界条件。
+
+正式Gray视图位于`数据整理记录/CADe_CD1_Gray_20260825/`，规模为train 2350张/1212人、
+val 497张/260人，共2847张PNG和2847份标签；Gray manifest SHA256为
+`28e5d567dc9afd58b9bfe735349b06de60726e8f436fa37c0914d6c0bc6031c0`。未导出test或external。
+真实增强smoke抽取32张训练样本，tensor尺寸为`3x640x640`，最大通道差为0。CD0回归
+`12/12`、CD1回归`20/20`均通过；FP匹配另经1至4框随机小矩阵穷举复核通过。
+
+当前尚未实现Gray训练、Development Val正式评价或External投影入口，也未启动任何CD1模型
+训练。下一轮应先审查并实现单seed训练与产品血缘，再做独立val决策入口；External入口最后
+实现，且必须由`CD1_VAL_DECISION.json`解锁。
+
 ## 当前下一步
 
-1. 实现并审查CD1 Gray无损数据生成、三seed训练和val决策代码，不改动冻结RGB产物；
-2. 先运行单元测试、数据谱系审计和小规模debug，确认真实增强后三通道相等且train/val无串集；
-3. 按冻结Y3-F预算运行Gray seed42/202/503，只用Development Val形成四态决策；
-4. 写出并冻结`CD1_VAL_DECISION.json`，在此之前不得读取CD1 External Development结果；
-5. 内部决策冻结后，才运行External Development只读投影并形成CD1终结报告；
-6. CD0人工归因由医学生并行完成；结果用于选择CD2/CD5/CD6方向，不追溯修改CD1；
-7. Locked Internal Temporal CADe Test继续锁定，不实现未冻结的CD2-CD8模型组合。
+1. 审查并实现`train_cd1_gray.py`，只负责单seed Gray YOLO训练、Y3-F参数一致性检查和产品血缘；
+2. 先做单seed一轮debug，核对持久化参数、Ultralytics checkpoint规则和输出隔离；
+3. 实现`evaluate_cd1_val.py`，复用CD0指标并只读取Development Val，生成三seed四态决策；
+4. 代码、自测和debug全部通过后，再按GPU实时空闲情况启动Gray seed42/202/503正式训练；
+5. 写出并冻结`CD1_VAL_DECISION.json`，在此之前不得实现或读取CD1 External正式结果；
+6. 内部决策冻结后实现并运行External Development只读投影，形成CD1终结报告；
+7. CD0人工归因由医学生并行完成；Locked Internal Temporal CADe Test继续锁定。

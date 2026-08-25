@@ -32,3 +32,26 @@ val或external队列内重算分位点。
   程序/CADe/正式代码/finalize_cade_cd0.py \
   --refresh-stratification-only
 ```
+
+## CD1 Gray Qualification
+
+CD1正式协议已冻结，但训练入口尚未实现。当前先验证Gray数据血缘、错误互补指标、严格FP
+二分图匹配、患者整簇bootstrap和四态决策：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/test_cade_cd1.py
+```
+
+测试通过后，生成只包含Development Train/Val的三通道Gray PNG视图：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/prepare_cd1_gray_data.py
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/smoke_cd1_gray_augmentation.py
+```
+
+该入口不会导出Y0-F的test，也不会读取External Development或Locked Internal Temporal
+CADe Test。正式Gray训练须等数据审计与真实Ultralytics增强smoke通过后再实现和启动。
