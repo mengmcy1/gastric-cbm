@@ -55,7 +55,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 
 ## 当前状态
 
-更新时间：2026-08-21
+更新时间：2026-08-25
 
 | 项目 | 状态 | 当前结论或阻塞项 |
 | --- | --- | --- |
@@ -63,9 +63,9 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A整体协议已冻结，允许进入43/44 development-calibration实现与运行 | eligible、null/FDR、activation、representation energy、bootstrap、spatial和GPU identity子协议均已冻结；正式产物schema、科学/实现失败分流及7协议overall bundle于2026-08-24完成11项测试并冻结。`protocol_bundle_sha256=768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`；允许按冻结规则实现并启动43/44，202/503/911仍须遵守后续顺序，不得提前运行 |
+| RP-SAE新解释范式 | RP-A首轮development-calibration发生实现失败，待合规恢复 | 43/44训练和full-train matching已完成，strict anchors=1150；bootstrap worker1/2发生CUDA launch timeout，400条记录不完整，未生成门槛或科学结论。首轮现场已保留，202/503/911继续锁定 |
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
-| 癌/非癌联合分析 | 已列为正式任务 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族 |
+| 癌/非癌联合分析 | RP-B后续方案已修订，待RP-A结果后另行预注册 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族；共享不自动删除，RP-A失败时只允许探索性降级交付 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2122,7 +2122,8 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 
 ### seed43/44 runner实现进度（2026-08-24）
 
-完整runner已实现并完成CPU debug验收，但尚未启动正式seed43/44：
+完整runner已实现并完成CPU debug验收；正式seed43/44 development-calibration已按冻结协议
+启动并在服务器后台运行。运行结束前不得修改被冻结的22个执行文件、切换Git提交或改写协议：
 
 - `clong_rpa_train_development.py`复用S2c冻结的Matryoshka五层联合训练与正式预算，只允许43/44；
 - 两个seed强制继承seed42正式`gamma_pool=0.5095280077324069`及校准JSON SHA，禁止重校准；
@@ -2148,6 +2149,155 @@ protocol_bundle_sha256 = 768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7
 - development、bootstrap、artifact、null/FDR当前回归分别21/21、14/14、13/13、20/20通过，Shell
   语法与`git diff --check`通过。正式运行须启动前重新检查GPU并显式给出`CUDA_DEVICES`，不得单独
   调用训练脚本；202/503/911仍未解锁。
+
+### 首轮development-calibration实现失败记录（2026-08-25）
+
+首轮正式任务于2026-08-24 16:46启动，2026-08-25 09:22人工停止。运行使用冻结Git commit
+`c96ce66fda499f9d451e88499e1a7c303d0798e8`、冻结protocol bundle
+`768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`及22文件代码快照；
+运行期间未修改冻结协议或执行文件。
+
+已完成且可确认的工程事实：
+
+- seed43和seed44正式训练均已完成；
+- seed42/43/44分析缓存及full-train matching已完成；
+- full-train matching得到strict anchors=1150，高于`N_anchor_min=100`，因此按冻结流程进入
+  bootstrap；该数量只说明bootstrap入口门槛满足，不代表RP-A已经通过；
+- internal test、external及被锁定的202/503/911均未读取或运行。
+
+bootstrap按`replicate_index % 3`静态分给三个worker。停止前日志记录：worker0完成84/134条，
+worker1完成58/133条，worker2完成18/133条，共完成160/400条计算。worker1和worker2分别在
+GPU2和GPU3出现：
+
+```text
+torch.AcceleratorError: CUDA error: the launch timed out and was terminated
+```
+
+堆栈在`compute_matching -> reduce_direction -> torch.as_tensor`处暴露，但CUDA错误可能异步上报，
+因此目前只能确认GPU kernel timeout，不能把`torch.as_tensor`认定为真正根因。GPU1上的worker0
+仍正常计算；启动脚本按PID顺序等待worker，未及时感知worker1/2已经失败，导致主服务继续显示
+running。发现后确认本轮已不可能形成完整400条正式records，遂人工停止worker0以避免继续浪费
+约8至9小时GPU时间。
+
+本轮结论严格记为**implementation failure**：
+
+- 不能汇总bootstrap门槛，不能执行val reproduction，不能生成RP-A PASS/FAIL；
+- anchors=1150是已完成阶段的描述性工程结果，不能替代bootstrap和confirmation；
+- 现有checkpoint、matching产物、三份worker日志及残缺现场全部保留，不自动删除或覆盖；
+- systemd被人工`SIGTERM`停止，runner未自动落盘`implementation_failure.json`，但worker1/2原始
+  traceback和服务日志构成首轮失败现场；任何恢复实现须显式引用该现场。
+
+恢复前必须另行审阅：CUDA timeout触发条件、失败worker能否在不改变统计协议下重算，以及并行
+runner如何在任一worker失败时立即停止其余worker。恢复尝试必须使用新的运行血缘和独立输出，
+不得改写首轮结果；冻结的400次计划、RNG、replicate静态归属、六项指标和门槛算法均不得改变。
+
+## RP-B/C/D后续解释与临床交付修订方案（2026-08-24，规划稿，未预注册）
+
+> 本节是当前RP-SAE后续路线，修正前文S5-S8及“S2c后正式解释阶段规划”对旧S2c产品和
+> seed42/202/503流程的依赖。历史章节继续保留用于追溯，但后续执行以本节为准。本节不修改
+> 已冻结RP-A规则，不授权提前运行202/503/911，也不因后续解释需求改变RP-A门槛。
+
+### 总体目的与边界
+
+RP-A只回答不同SAE初始化之间是否存在可重复的技术Feature。RP-B再回答这些Feature在癌与
+非癌患者中如何出现、可能代表什么；RP-C回答模型决策是否依赖它们；RP-D整理医生可阅读的
+概念图谱。四类证据必须分开保存：
+
+1. **技术稳定性**：跨seed匹配、anchor和确认结果；
+2. **类别属性**：癌富集、非癌富集、共享高覆盖、共享低覆盖/稀有或混合不确定；
+3. **医学语义**：病灶形态、正常结构、成像现象、器械/反光/气泡等伪特征或无法命名；
+4. **决策作用**：残差保留干预后margin、概率和患者级指标的变化。
+
+不得把四类证据压成一个综合分数。**癌与非癌共享的Feature不自动删除**：它可能表示正常
+黏膜、解剖结构、拍摄条件或诊断所需上下文。只有在技术复现、医生审核和干预证据齐备后，
+才能判断它是有用背景、无关共有模式还是风险伪特征。
+
+### RP-B0：候选池与证据等级
+
+- RP-A按整体协议通过时，以冻结的strict 3-clique anchors及后续confirmation结果构成正式
+  候选池；development与confirmation证据分别记录，不混称为“医学概念”。
+- RP-A发生预注册科学失败时，不改门槛、不补replacement seed、不启动被锁定的确认seed。
+  已产生的3/3 anchor可进入单独标记的探索性候选池；2/3或单seed模式若展示，必须另分层，
+  不得表述为稳定Feature或验证结果。
+- 每个候选保留原始seed成员、matching证据、覆盖率和失败/通过状态；证据等级不能由医生
+  命名好坏反向升级。
+
+### RP-B1：癌与非癌患者级共享性审计
+
+所有统计在同一个联合字典及同一冻结Feature universe内完成，不分别训练“癌字典”和
+“非癌字典”。每个Feature或anchor至少分开报告三种患者级量：
+
+- **presence**：患者是否至少出现过该Feature；
+- **patient ranking score**：患者内图像与位置取最大值，只用于同一Feature内部的患者排序、
+  Spearman、Top患者集合和原型检索，不具有跨Feature绝对幅度含义；
+- **activation mass**：位置到图像再到患者的均值，用于描述总体激活质量和representation
+  energy，不与ranking score混用。
+
+max聚合可能轻度偏向图像较多的患者，因此保留患者图像数相关性审计；真实比较与随机null
+必须使用相同患者和image-count结构，但只能表述为部分吸收共同偏差，不能声称偏差被消除。
+
+类别属性至少分为癌富集、非癌富集、共享高覆盖、共享低覆盖/稀有、混合/不确定。共享不能
+由“p值不显著”或“AUC看起来接近0.5”单独判定，必须在RP-B预注册中先冻结实际等效界值与
+不确定性规则，再检验癌/非癌差异是否同时落入等效范围。来源审计使用患者级数据，并同时
+报告全体患者、来源内标签比较和标签内来源比较；多Feature检验的multiplicity控制也须预注册。
+
+### RP-B2：跨seed对齐后的技术Feature family候选
+
+先完成RP-A规定的跨seed对齐，再构建Feature family候选，不能把两步合并成一次聚类。
+family候选可综合带符号decoder cosine、患者行为相关、Top患者重叠和空间响应重叠；技术阈值
+必须在医生查看语义前冻结，医生不能通过“看起来像”来调到刚好合并某组Feature。
+
+技术family只表示多项模型证据支持Feature相关，不等于医学概念相同。原始Feature、anchor、
+family候选和未能归组的Feature均保留，避免合并后掩盖细粒度差异。
+
+### RP-B3：Stage 1医生盲审与主动证伪
+
+正式看图前冻结候选抽样规则、每类数量、患者去重、panel布局和困难负例检索规则。Stage 1
+只回答“它可能是什么”，隐藏癌/非癌标签、富集方向、来源、AUC、分类贡献和干预结果；癌与
+非癌样本混合展示，避免标签先验引导命名。
+
+每个候选尽量包含高、中、低、零激活样本及外观相似但不激活的困难负例。医生先提出概念
+假设，再主动寻找反例，最终记录病灶形态、正常结构、共享背景、伪特征、单义、多义或无法
+判断。困难负例不能事后手挑，必须按冻结检索规则产生。
+
+### RP-B4：揭示统计后的Stage 2临床审核
+
+Stage 1完成后才揭示类别属性、来源、病灶内外位置、空间响应和分类贡献，医生判断模型使用
+该模式是否医学合理。最终医学语义family在此阶段裁定，可以认定为同一概念、同一粗概念的
+不同亚型、技术相似但语义不同或证据不足；不得回头修改RP-B2技术family阈值。
+
+### RP-C：残差保留的单Feature与family干预
+
+沿用残差保留干预，分别对单Feature和family执行`100%/75%/50%/25%/0%`多剂量缩放，并重算
+attention、分类margin、癌概率及患者级指标。癌与非癌患者分开报告，检验同一共享Feature在
+两类中是否承担相同、相反或仅一侧明显的决策作用。
+
+干预必须在每个可用SAE seed内独立执行，先得到各seed的比例和效应，再等权汇总；不得直接
+合并不同seed的raw activation或energy。随机对照至少匹配Feature/family成员数、患者激活频率
+和representation energy，并在RP-C预注册中冻结。干预结果不能反向修改共享类别或family成员。
+
+### RP-D：医生可读的Feature Atlas与后续M-CBM
+
+最终交付同时保留单Feature/anchor页和family页，展示技术证据等级、癌/非癌属性、典型与反例
+图像、空间位置、来源风险、医生结论和干预结果。技术稳定、医学可解释和决策相关必须分栏，
+不能用一个“可信度总分”掩盖证据差异。
+
+若RP-A正式通过并完成confirmation，Atlas可作为验证后的解释产物；若RP-A科学失败，只能输出
+醒目标记的探索性Atlas，用于生成假设，不能声称跨初始化稳定。只有经过医生审核、来源审计和
+干预支持的高可信候选，才进入独立概念存在性标注与M-CBM，不把SAE激活直接当医学真值。
+
+### 当前刻意不冻结的参数
+
+以下参数必须等RP-A结果明确后另立RP-B/RP-C预注册，但都须在相应结果或医生画面揭示前冻结：
+
+- 癌/非癌共享的实际等效界值及多重检验规则；
+- 医生审核候选数、各证据等级配额、panel抽样和困难负例检索规则；
+- 技术family的边阈值、聚类/连通规则及最小支持；
+- RP-C效应门槛、随机对照匹配变量和重复次数；
+- 探索性Atlas与正式Atlas的固定字段和醒目标识。
+
+因此当前唯一执行主线仍是完成RP-A development-calibration。上述规划用于关闭旧路线歧义，
+不构成启动RP-B、调用医生审核或解锁confirmation seed的授权。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
@@ -2255,14 +2405,13 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     SAE初始化随机数顺序”，已改为缓存加载后重新固定seed，并由初始化SHA防线复验；
 14. ~~正式运行S2c seed42~~：已于2026-08-21完成1000 epoch和五个K的完整评价；五个K均
     只在患者冻结阈值一致率上失败，状态为`no_product_stop_s2c`，按协议不放行seed202/503；
-15. **条件路线，当前不触发**：若未来另立协议并产生通过门槛的稳定SAE产品，再完成
-    SAE seed42/202/503复现，并另行冻结跨seed匹配阈值、
-    Feature family候选边界、共享性分类边界和医生panel数量，再依次执行跨seed对齐、技术
-    家族候选、癌/非癌四维共享性审计、医生两级盲审、来源/伪特征审计及单Feature与家族级
-    残差保留干预。当前S2c已失败，因此本项不启动；不得据此追加K、放宽门槛或继续调S2c；
-16. **下一项决策**：在保留S2c失败结论的前提下，单独讨论是否新建Gated SAE、更合适解释层、
-    概念粒度与重构粒度分离，或直接转向不要求严格可逆重构的概念发现协议。任何新方向均需
-    重新预注册，不能复用S2c“差一点通过”作为事后放宽依据；
+15. **RP-A后双分支**：RP-A按冻结协议通过时，先完成其confirmation，再另行预注册并执行
+    RP-B候选分级、癌/非癌共享性审计、技术family、医生两级审核，以及RP-C残差保留干预；
+    RP-A若发生科学失败，则保留失败结论，不修改门槛、不补seed，只允许使用已产生证据制作
+    醒目标记的探索性Atlas，不得声称Feature跨初始化稳定；
+16. **后续结构研究边界**：Gated SAE、更合适解释层或概念/重构粒度分离仍可作为独立新研究，
+    但不与当前RP-A/B/C混跑，也不能用RP-A“差一点通过”作为放宽依据；当前共享Feature问题
+    按本文件“RP-B/C/D后续解释与临床交付修订方案”处理，共享不自动删除；
 17. **当前主线**：~~seed42正式聚合审计与active-frequency split-half校准~~已完成，
     9/9产物SHA验收通过，eligible子协议已冻结；null/FDR闭式精确协议经两轮审阅、20项测试及
     SHA固结后于2026-08-24正式冻结；activation与representation energy的两侧指标定义均于
@@ -2275,4 +2424,6 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     五级固定输入audit、双RTX 5080一致性复核、4项CPU测试和SHA固结，并于同日正式冻结；最终
     产物schema、科学/实现失败分流和7协议bundle通过11项测试后正式固结，overall SHA为
     `768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`。RP-A评价规则现已整体冻结，
-    下一步按冻结schema实现并启动43/44 development-calibration；202/503和911继续锁定。
+    seed43/44训练与full-train matching已完成并得到1150个strict anchors，但首轮bootstrap因
+    worker1/2 CUDA kernel timeout发生实现失败，任务已人工停止且未生成科学结论；下一步先完成
+    不改统计协议的恢复审阅与实现，202/503和911继续锁定。
