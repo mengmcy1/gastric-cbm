@@ -53,8 +53,9 @@ CADe与CADx的任务边界固定为：
 | External Development CADe Cohort | 已具备 | 外部癌图542张中539张有有效bbox、覆盖121位癌患者；另有1399张非癌图；该队列已参与历史工程判断，只作开发诊断 |
 | Locked Internal Temporal CADe Test | 保持锁定 | 112张/78人，癌52张/32人、非癌60张/46人；相对CADe开发尚未按YOLO错误返调，CD1-CD5全部冻结前不得读取检测结果 |
 | CD0定量诊断 | 已完成 | 三seed内部val+外部开发队列已运行；外部Primary敏感度平均下降0.0889，小病灶是最弱分层 |
-| CD0人工归因 | 待医学生复核 | 已冻结510例去重复核包：210例FN+300例FP，其102例双人独立归因 |
-| CD1-CD8 | 路线骨架已冻结，逐阶段协议未冻结 | 根据CD0选择下一项假设；不得一次性堆叠Gray、LUPI、多个KD损失和分割 |
+| CD0人工归因 | 非阻塞并行 | 已冻结510例去重复核包：210例FN+300例FP，其中102例双人独立归因；等待临床时间，不再阻塞CD1 |
+| CD1 Gray Qualification | 正式协议已冻结，待实现 | 只比较冻结RGB基线与同预算Gray检测器；先完成内部val三seed决策，再决定是否只读投影External Development |
+| CD2-CD8 | 路线骨架已冻结，逐阶段协议未冻结 | 根据CD0/CD1证据选择下一项假设；不得一次性堆叠Gray、LUPI、多个KD损失和分割 |
 
 ## 已确认的前置证据
 
@@ -331,13 +332,14 @@ large相对稳定。因此“小/低对比病灶表征不足”是下一阶段�
 
 ### 复核包与完成边界
 
-逐seed的433条FN已合并为210个独立病灶案例：内部val 50例（稳定3/3漏检17），
+逐seed的433条FN已按`(image_key, gt_index)`合并为210个逐图GT错误案例：内部val 50例（稳定3/3漏检17），
 外部开发160例（稳定3/3漏检64）。FP按同图框`IoU>=0.30`跨seed聚类后共2980簇；
 冻结选入每队列稳定高置信FP 100例和不稳定FP固定随机50例。最终复核包共510例，
 其102例（20%）标记为双人独立归因。
 
-定量CD0已完成；整个CD0尚缺人工主/次错误归因与一致性统计，所以现在可以说“跨域定位
-退化和小病灶风险已定量确认”，还不能宣布Gray、KD或hard-negative中哪个已被证明应优先。
+定量CD0已完成；人工主/次错误归因与一致性统计作为临床并行任务继续。现在可以说“跨域定位
+退化和小病灶风险已定量确认”，还不能宣布Gray、KD或hard-negative中哪个已被证明有效。
+CD1只验证Gray假设，不以等待人工归因为前置条件。
 
 ### 正式产物
 
@@ -346,22 +348,114 @@ large相对稳定。因此“小/低对比病灶表征不足”是下一阶段�
 - 初版逐seed重复材料仅供追溯：`初版未去重复核材料_归档/`；
 - 正式代码：`程序/CADe/正式代码/`。
 
-## CD1预备边界（尚未冻结具体训练参数）
+## CD1 Gray Qualification正式预注册（2026-08-25冻结）
 
-CD1只回答Gray是否有资格作为后续教师或互补模型。RGB与Gray必须保持dataset、患者split、
-YOLO26s-640、预训练来源、optimizer、epoch、augmentation预算、checkpoint规则和
-seed42/202/503一致，唯一主要变量为输入颜色。
+### 研究问题与决策范围
 
-Gray资格不能只看总体mAP。正式协议需预先量化：总体与病灶大小分层FROC、外部开发FROC、
-Gray对RGB FN的rescue rate、RGB对Gray FN的反向rescue rate、FN/FP Jaccard重合、颜色扰动
-稳定性和三seed一致性。若Gray总体、small、域稳健性均更差且错误高度重合，则停止Gray教师
-路线；Gray失败不阻塞CD2b、CD5或CD6。
+CD1只回答：去除颜色后，Gray检测器是否比冻结RGB基线具有更好的病灶检出性能，或在总体
+性能基本不下降时提供稳定的互补检出。它不是Gray蒸馏实验，也不证明某类视觉结构的因果
+作用。CD1结论只允许为`performance pass`、`complementary pass`、`fail`或`inconclusive`。
+Gray失败不阻塞CD2b、CD5或CD6，也不得在结果揭示后追加Gray补救调参。
+
+### 数据角色与执行顺序
+
+1. 训练与checkpoint选择只使用既有Development Train和Development Val患者划分；
+2. 先完成三seed内部val评价并写出不可覆盖的`CD1_VAL_DECISION.json`；
+3. 仅当内部决策冻结后，才允许在独立入口中只读投影External Development；外部结果不得
+   修改内部决策、checkpoint、阈值或超参数；
+4. Locked Internal Temporal CADe Test继续锁定，CD1不读取、不生成预测；
+5. CD0人工归因并行推进，不作为CD1启动或结束的门槛。
+
+### 冻结RGB基线与Gray输入
+
+- RGB基线固定为Y3-F YOLO26s-640 seed42/202/503既有`best.pt`，不重新训练；
+- Gray使用同一YOLO26s-640结构、预训练来源、患者split、seed、训练预算、优化器、几何增强、
+  batch size、checkpoint选择规则和推理设置；
+- 唯一主要训练变量是颜色：Gray设置`hsv_h=0`、`hsv_s=0`，保留`hsv_v=0.4`；
+- Gray数据离线无损生成：`cv2.imread`读取原图，`BGR2GRAY`转灰度，再复制为三个相同通道，
+  以PNG保存，不增加JPEG重压缩；
+- 生成后核对图像数、患者划分、标签、bbox和原图映射一一不变，并验证三个通道逐像素相等；
+  训练实现还需在真实增强后抽样确认通道仍相等、路径未越过train/val边界。
+
+### 训练、checkpoint与部署阈值
+
+Gray三seed沿用Y3-F正式参数；除Gray数据路径和上述颜色参数外，持久化训练参数必须与对应
+RGB run一致。checkpoint仍只由Ultralytics验证`fitness`（mAP50-95）选择，不使用Primary、
+rescue、Jaccard或External Development挑epoch。
+
+每个Gray seed在Development Val上独立冻结部署阈值，严格复用
+`evaluate_y3_yolo26.py`既有实现：在癌图最高检测置信度上选择达到图像级Sensitivity
+`>=0.90`的最高实际阈值，后续比较统一使用`>=`。RGB继续使用各自历史冻结阈值，禁止RGB与
+Gray共用一个阈值。部署阈值与Primary FROC工作点是两个不同口径，必须分别报告。
+
+### 主要终点与统计单位
+
+主要终点与CD0一致：在`IoU>=0.30`一对一匹配下，报告实际达到
+`FP/image<=0.5`的最高病灶Sensitivity，不做插值。这里的“病灶Sensitivity”统计单位明确为
+逐图GT实例`(image_key, gt_index)`；同一生物学病灶若出现在多张图中，会作为多个逐图实例。
+
+同时报告冻结部署阈值下的Sensitivity、全队列FP/image、negative-only FP/image、mean IoU、
+`IoU>=0.50`和AP。small/medium/large继续复用Development Train冻结边界
+`q33=0.18661895`、`q67=0.33844387`，但病灶大小只作机制分层报告，不进入CD1放行门槛。
+
+### 错误互补指标
+
+在Primary工作点和冻结部署阈值两个口径分别计算：
+
+```text
+Gray rescue = RGB漏检而Gray检出的逐图GT实例数 / RGB漏检逐图GT实例数
+RGB reverse rescue = Gray漏检而RGB检出的逐图GT实例数 / Gray漏检逐图GT实例数
+FN Jaccard = 两模型共同漏检实例数 / 两模型漏检实例并集
+```
+
+FP重合主要在非癌图上评价；癌图额外FP作为辅助结果。两模型在同一图上的FP框使用
+`IoU>=0.30`构图，先求最大匹配数量，再在最大数量解中取总IoU最高的二分图匹配；不得按
+置信度贪心配对。定义
+`FP Jaccard=N_matched/(N_RGB_FP+N_Gray_FP-N_matched)`，并报告匹配FP比例、各自独有FP
+比例及计数。
+
+### 内部val冻结判据
+
+设每个seed的`Delta Primary = Gray Primary Sensitivity - RGB Primary Sensitivity`。一个
+Development Val队列共有240个逐图GT实例，允许的单实例波动为`1/240=0.00417`。
+
+按以下顺序裁决：
+
+1. `performance pass`：每个seed `Delta Primary>=-1/240`，且三seed平均
+   `Delta Primary>=+0.01`；
+2. 若未通过1，检查`complementary pass`：三seed平均`Delta Primary>=-0.02`、每个seed
+   `Delta Primary>=-0.03`、平均Gray rescue `>=0.20`且至少2/3 seed达到0.20、平均FN
+   Jaccard `<=0.75`且至少2/3 seed不高于0.75；
+3. 若未通过前两项，只有以下四项同时成立才记为`fail`：平均`Delta Primary<=-0.02`；至少
+   2/3 seed的`Delta Primary<=-0.02`；平均Gray rescue `<0.15`；平均FN Jaccard `>0.80`；
+4. 其余结果记为`inconclusive`。
+
+上述顺序固定，结果揭示后不得修改阈值、增加small门槛或另选seed。`performance pass`表示
+Gray可作为性能候选；`complementary pass`只表示Gray有资格作为后续互补教师/集成候选，
+不表示其单模型更优。
+
+### Bootstrap与External Development
+
+内部统计使用5000次患者簇配对bootstrap；每次按患者有放回抽样，并保留同一患者的全部
+图像。Primary及冻结部署工作点都使用全量Development Val预先确定的工作阈值，bootstrap
+内部不得重新扫描阈值。报告Gray-RGB配对Sensitivity差的95% CI，并同步记录每次对应的
+FP/image；CI用于描述不确定性，不替代上述预注册裁决树。
+
+External Development只在`CD1_VAL_DECISION.json`存在后运行，使用已冻结checkpoint和val
+部署阈值，报告同样的Primary、部署点、几何、rescue、FN/FP重合与固定大小分层。外部结果
+只能描述域稳健性，不能覆盖内部val的四态决策。颜色扰动稳定性不属于CD1正式PASS条件，
+如后续需要，必须作为另行预注册的诊断实验。
+
+`CD1_VAL_DECISION.json`至少保存四态结论、三seed指标、Gray checkpoint路径与SHA、对应训练
+配置SHA、RGB/Gray Primary实际工作点和冻结部署阈值。External入口必须读取这些已冻结记录，
+不得自行重选checkpoint或重算val决策。
 
 ## 当前下一步
 
-1. 将`CD0人工复核正式版`交给医学生，先统一FN/FP主类别的判定示例；
-2. 完成210例FN与300例FP的主/次错误归因，102例保持双人盲法独立记录；
-3. 统计主类别一致率，样本允许时计算Cohen's kappa，对分歧案例裁定；
-4. 根据稳定FN是否主要由小病灶/低对比主导，决定首个受控实验是CD1 Gray还是CD2a病灶加权KD；
-5. 若稳定FP主要为相同的皱襞/反光/炎症结构，则将CD5 OOF hard-negative提至优先候选；
-6. 人工归因完成前不解锁内部时间测试，不实现新网络或扫描新超参。
+1. 实现并审查CD1 Gray无损数据生成、三seed训练和val决策代码，不改动冻结RGB产物；
+2. 先运行单元测试、数据谱系审计和小规模debug，确认真实增强后三通道相等且train/val无串集；
+3. 按冻结Y3-F预算运行Gray seed42/202/503，只用Development Val形成四态决策；
+4. 写出并冻结`CD1_VAL_DECISION.json`，在此之前不得读取CD1 External Development结果；
+5. 内部决策冻结后，才运行External Development只读投影并形成CD1终结报告；
+6. CD0人工归因由医学生并行完成；结果用于选择CD2/CD5/CD6方向，不追溯修改CD1；
+7. Locked Internal Temporal CADe Test继续锁定，不实现未冻结的CD2-CD8模型组合。
