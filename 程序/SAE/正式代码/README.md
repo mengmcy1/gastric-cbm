@@ -399,3 +399,16 @@ python 程序/SAE/正式代码/build_clong_rpd_manifests.py
 `rpd_heavy_membership_v1.csv`、`rpd_case_manifest.csv`和`rpd_case_shortfalls.csv`。Zero不足按协议
 留空；不得跨bin补人。正式渲染器只能使用经`selection_freeze_v1.json`固结SHA的清单，不能在
 看图后重新选择病例。val、internal test和external不属于RP-D v1开发输入。
+
+## RP-D Technical Feature Atlas渲染
+
+`rpd_render_protocol_v1.json`绑定冻结病例清单，`render_clong_rpd_atlas.py`只读train激活和
+原图，生成Light/Heavy技术页、独立图像资产、匿名盲审包与Technical Reveal。先运行：
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpd_render.py
+```
+
+正式后台任务由`run_clong_rpd_render.sh`启动。默认输出为
+`结果/SAE/RP_D_Technical_Atlas_20260825/render_v1/`；目录已存在时快速失败，不覆盖。
+渲染失败只记录`asset_status/failure_reason`，不重选病例。

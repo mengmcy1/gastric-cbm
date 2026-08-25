@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | 已立项，待冻结导出schema后实现 | 全149个生成轻量Atlas；52个三seed高位候选、12个双侧功能候选、source-risk高效应对象、`a00987`和低效应对照进入重型包；医生盲审与技术Reveal严格分开 |
+| RP-D技术图谱 | 病例与渲染协议已冻结，真实debug通过，待正式渲染 | 全149个生成轻量Atlas；117个预冻结Heavy对象生成三seed同图、剂量、困难负例和source面板；医生盲审与技术Reveal严格分开 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2550,6 +2550,20 @@ seed42/43/44 matched Feature，不允许各seed重新挑“最好看”的图。
 selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结manifest；
 不得因为Zero面板不齐或视觉效果不理想重新抽样。医生盲包隐藏label、source、RP-B/RP-C证据和
 排名，并在盲审annotation冻结后才生成Technical Reveal。
+
+### RP-D v1渲染协议与debug验收（2026-08-25）
+
+`rpd_render_protocol_v1.json`已在正式图像渲染前冻结，并绑定上述选择协议、四张选择清单和
+`selection_freeze_v1.json` SHA。显示规则为完整train正激活`Q99`统一缩放，禁止逐图min-max；
+每个病例独立保存原图、原始`7x7` map、heatmap和overlay。Zero不足时，技术页显示
+`No true-zero patient available / Frozen selection shortfall`，盲审页仅显示`No eligible case`，
+不得换例。
+
+两个真实anchor debug同时覆盖Heavy与Light：76条冻结case、811条资产记录、0渲染失败。
+技术页、三seed同图页、剂量曲线、hard-negative、source panel和独立盲审页均通过视觉核查。
+盲审manifest只包含不透明Anchor/Case ID、激活档位、资产路径、匿名配对ID和冻结盲序；
+不包含label、source、Feature ID、干预结果或hard-negative pool。该阶段仍为train-only技术产物，
+不产生医学命名或新的科学PASS/FAIL。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
