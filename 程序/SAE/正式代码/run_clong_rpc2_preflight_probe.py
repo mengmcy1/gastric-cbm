@@ -220,8 +220,9 @@ def evaluate_probe_seed(
     seed: int, feature_ids: np.ndarray, target_ids: set[int], spatial: np.ndarray,
     images: pd.DataFrame, patients: pd.DataFrame, model: torch.nn.Module,
     device: torch.device, image_batch: int, feature_block: int,
+    alphas: np.ndarray = ALPHAS, capture_target_dir: Path | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """计算一个seed的probe Feature五档指标和目标 fixed-attention 诊断。"""
+    """计算一个seed的Feature剂量指标，并可保存目标图像/患者delta margin。"""
     cache = CACHE_ROOT / f"seed{seed}"
     activations = np.load(cache / "train_image_activations.npy", mmap_mode="r")
     decoder_all = np.load(cache / "decoder_weight.npy", mmap_mode="r")
@@ -235,7 +236,7 @@ def evaluate_probe_seed(
         [index for index, feature in enumerate(feature_ids) if int(feature) in target_ids],
         dtype=np.int64,
     )
-    for alpha in ALPHAS:
+    for alpha in np.asarray(alphas, dtype=np.float64):
         matrices = {
             "delta_margin": np.empty((len(images), len(feature_ids)), dtype=np.float32),
             "delta_probability": np.empty((len(images), len(feature_ids)), dtype=np.float32),
@@ -309,6 +310,18 @@ def evaluate_probe_seed(
         fixed_patient = aggregate_image_matrix_by_patient(
             fixed_target, image_patient_ids, patient_ids,
         )
+        if capture_target_dir is not None:
+            capture_target_dir.mkdir(parents=True, exist_ok=True)
+            suffix = f"{float(alpha):.2f}".replace(".", "p")
+            np.save(
+                capture_target_dir / f"image_delta_margin_alpha_{suffix}.npy",
+                matrices["delta_margin"][:, target_positions],
+            )
+            np.save(
+                capture_target_dir / f"patient_delta_margin_alpha_{suffix}.npy",
+                patient_outputs["delta_margin"][:, target_positions],
+            )
+            np.save(capture_target_dir / "target_feature_ids.npy", feature_ids[target_positions])
         for local, position in enumerate(target_positions):
             fixed_rows.append({
                 "seed": seed,

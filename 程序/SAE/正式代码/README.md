@@ -370,3 +370,16 @@ CUDA_DEVICE=<启动前nvidia-smi确认的GPU> bash \
 seed-anchor三层RP-C1精确复现；第二阶段只运行冻结的`a00139/a00987/a00816/a00019`
 及其matched references五档路径。两个阶段都明确`scientific_summary=false`，probe曲线不进入
 科学摘要，也不得用于修改协议。
+
+preflight/probe通过后，正式五档runner使用：
+
+```bash
+CUDA_DEVICE=<启动前nvidia-smi确认的GPU> bash \
+  程序/SAE/正式代码/run_clong_rpc2_formal.sh
+```
+
+正式runner先用自身五档核心对149对象×3 seed执行alpha=0图像、患者、seed-level逐位回归；
+Gate A失败时不会启动controls。通过后按`seed × unique Feature × dose`去重forward，再通过冻结
+manifest还原44,424条target-control关系。输出分为unique Feature事实层、447行target-seed证据层和
+149行Anchor汇总层；最终`config.json`仅在全部计算、角色计数、SHA和运行前后provenance复验通过后
+原子写入。
