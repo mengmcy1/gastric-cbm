@@ -334,3 +334,21 @@ v1五类结果：
 ```bash
 python 程序/SAE/正式代码/diagnose_clong_rpb_sharedness.py
 ```
+
+## RP-C1 residual-preserving effect screen
+
+`rpc_effect_screen_protocol_v1.json`在查看任何干预结果前冻结了全部1150个
+Anchor的三seed `100%→0%` effect screen，以`delta_margin=ablated-original`为主指标。
+每张图49个位置的目标激活全部删除，随后重算attention、pooling、logits和概率。
+结果先按image聚合到patient，再对患者等权汇总；同时保留全体与active-only效应。
+
+```bash
+CUDA_DEVICE=<启动前nvidia-smi确认的GPU> bash \
+  程序/SAE/正式代码/run_clong_rpc1.sh
+```
+
+入口先对seed42/43/44执行`alpha=1`的patch、attention、pooled、logits和
+probability五级identity gate，任一失败都不进入正式screen。RP-C1不生成p值、
+BH或PASS/FAIL，只测量和排序。RP-C2的Top 5%总效应、Top 5%类别分离、source-risk
+内Top 25%、全部source-sensitivity sentinel、全部cancer-enriched sentinel和20个低效对照
+均已在effect结果产生前写入协议，不使用加权总分。
