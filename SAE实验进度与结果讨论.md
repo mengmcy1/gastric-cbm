@@ -2426,6 +2426,77 @@ singleton technical families；本轮没有实现技术去冗余。
 五剂量、随机匹配对照、attention decomposition和联合干预只用于后续筛出的代表/高影响/
 高风险候选。由于本轮无非singleton family，暂不执行family联合干预。
 
+## RP-C2五剂量残差保留干预结果（2026-08-25）
+
+### 正式运行与工程验收
+
+RP-C2在冻结matching v2、干预协议和matched-control清单后完成正式train-only运行。最终有效
+运行使用Git提交`6c52a8b754568dcd33d280a69c0b8156590c2113`，正式runner SHA256为
+`8beae166858aedd9843444dfccfeb729fcf3e3123241483868e1a27bad525975`，输出目录为：
+
+`结果/SAE/RP_C2_Intervention_20260825/formal_retry1/`
+
+此前三次尝试均属于实现失败现场：前两次依次暴露worktree的SAE与MAGE结果映射缺失，第三次
+暴露内存浮点值与CSV序列化值末位不一致；均未生成正式科学结论。修复后runner先将候选指标
+写入CSV并重新读取，再与RP-C1冻结CSV逐值比较，不改变干预、matching或统计协议。
+
+本次任务由`systemd`托管在GPU1运行，约2分54秒完成。正式Gate A结果为：
+
+- 149个anchor x 3个SAE seed，共447个target-seed对象全部通过alpha=0回归；
+- 图像delta margin与患者delta margin均逐值一致；
+- 13,857个seed-level metric值全部一致；
+- alpha=1 no-op的overall effect最大绝对值为`2.61e-7`；
+- 149个anchor、447条target-seed证据、44,424条冻结matched-control映射全部落盘；
+- role计数为primary candidate 122、low-effect control 20、post-RP-C1 secondary 8，
+  `a00987`为预先记录的角色重叠对象；
+- source描述表为13,410行，等于`149 x 3 seed x 5 dose x 2 label x 3 source`；
+- 三张正式CSV数值均为有限值，无重复`anchor_id x seed`或重复anchor；
+- start/end provenance一致，正式输出SHA已写入`config.json`；
+- 仅使用train，val、internal test和external均未读取。
+
+### 五剂量与匹配对照结果
+
+RP-C2没有预注册阶段级PASS/FAIL，也没有确认性显著性检验。`matched midrank percentile`是
+target在冻结matched controls中的描述性相对位置，不是p值；下面只报告技术证据强弱。
+
+在447个target-seed对象上，matched percentile中位数为0.91；236个达到至少0.90，188个达到
+至少0.95，108个达到至少0.99。按预冻结角色分层：
+
+| 角色 | target-seed数 | matched percentile中位数 | 至少0.90 | 中间剂量癌/非癌/分离曲线规则 |
+| --- | ---: | ---: | ---: | --- |
+| Primary candidate | 366 | 0.95 | 236 | 349/366；345/366；338/366 |
+| Low-effect control | 60 | 0.219 | 0 | 46/60；47/60；48/60 |
+| Post-RP-C1 secondary | 24 | 0.625 | 0 | 24/24；24/24；24/24 |
+
+anchor级别，primary candidate中82/122的三seed中位matched percentile至少0.90，52/122的
+三seed最弱值也至少0.90。primary、low-effect control和secondary的三seed中位overall effect
+中位数分别约为0.00633、0.000187和0.00259，说明冻结角色在新五剂量路径中保持了预期层级。
+
+12个anchor满足`bidirectional_label_supporting_3of3`模式，且其36个target-seed对象的癌侧、
+非癌侧和癌非癌分离曲线全部规则。这表示同一Feature对癌与非癌患者均可能产生稳定影响，
+支持后续继续保留并分栏研究shared Feature；它不等于这些Feature已经获得医学命名，也不能
+单凭方向一致性判断其作用合理。
+
+随着alpha从1降到0，447个target-seed的overall effect中位数依次约为0、0.00247、0.00495、
+0.00745和0.00992，呈近似随干预增强而增大的总体趋势。alpha=0时重算attention与固定attention
+路径的差异绝对值中位数约0.00115，说明多数对象的主要效应来自Feature内容缩放；但个别对象
+差异可明显更大，因此attention只保留为诊断性分解，不能被解释成独立因果通道。
+
+### 结论边界与下一步
+
+本阶段能确认：RP-C2五剂量正式计算链完整可复现；primary candidates整体效应明显高于预冻结
+low-effect controls；存在一批跨三个SAE seed均处于matched-control高位的高影响候选；同时
+存在12个癌侧与非癌侧都呈规则剂量行为的shared候选，值得进入技术图谱。
+
+本阶段不能确认：matched percentile不是确认性p值；`mixed_functional_pattern`不等于无作用；
+source描述不能直接判定artifact；attention差异不能单独归因；任何Feature的医学含义、临床
+合理性和命名仍由后续医学生/医生审核完成。
+
+下一步技术侧不等待医学命名，直接基于同一`anchor_id`产出RP-D Technical Atlas素材：优先覆盖
+三seed均处于matched-control高位的候选、12个双侧规则候选、source-risk候选和预冻结低效对照，
+批量导出高/中/低/零激活、hard negative、五剂量曲线、癌/非癌分层效应和来源描述。医生审核
+只增加医学annotation，不反向修改RP-C2匹配或干预结果。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
