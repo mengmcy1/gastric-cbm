@@ -64,9 +64,9 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A首轮发生实现失败，恢复实现已验收待完整重跑 | 首轮strict anchors=1150，但bootstrap worker1/2 CUDA timeout，未生成科学结论；恢复版独立输出、原子worker产物、fail-fast监督、`32×128`短kernel及运行参数血缘已通过89项回归和GPU2/3探针，202/503/911继续锁定 |
+| RP-SAE新解释范式 | 正式RP-A未完成；RP-A-lite探索筛查已完成 | 正式RP-A首轮因CUDA timeout停在160/400，无科学结论；独立RP-A-lite固定使用原序列0--99并补齐100/100，train-only六项探索性比较均通过，1150个development strict anchors进入探索性RP-B技术分析；202/503/911继续锁定 |
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
-| 癌/非癌联合分析 | RP-B后续方案已修订，待RP-A结果后另行预注册 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族；共享不自动删除，RP-A失败时只允许探索性降级交付 |
+| 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2330,6 +2330,101 @@ attention、分类margin、癌概率及患者级指标。癌与非癌患者分�
 
 因此当前唯一执行主线仍是完成RP-A development-calibration。上述规划用于关闭旧路线歧义，
 不构成启动RP-B、调用医生审核或解锁confirmation seed的授权。
+
+## RP-A-lite与RP-B技术阶段结果（2026-08-25）
+
+### 角色和执行边界
+
+本项目协作中，技术侧负责把可计算、可复核、可视化和可干预的材料完整生成；医学生/医生
+负责医学命名、临床合理性和artifact语义判断。医生审核是后续annotation layer，不再作为
+RP-B、RP-C和RP-D技术流水线的前置依赖。M-CBM仍必须等待临床概念命名与独立presence标注
+达到可用质量。
+
+正式RP-A因CUDA timeout未完成400次bootstrap，也未运行val reproduction，因此没有正式
+PASS/FAIL。为满足限时技术交付，另立RP-A-lite探索筛查：固定使用原bootstrap序列`0..99`；
+该探索子序列在查看RP-A-lite B100指标分布和cutoff前确定，不依据bootstrap指标数值。已有
+85条加新补15条形成100/100完整记录，索引大于等于100的75条首轮记录不进入分析。
+
+RP-A-lite仍使用正式的患者重采样、完整重匹配、最弱伪确认折和六项指标定义，但产生的数值
+只称探索性cutoff。replicate53验证`32x256`、`32x128`与`32x64`三折六指标最大绝对差均为0；
+train完整数据的六项最弱折全部高于B100探索性cutoff。完整数值见：
+
+`文档/RP-A-lite探索性稳定性筛查_20260825.md`
+
+### RP-B启动冻结
+
+在查看任何Feature图片或医生语义前，独立冻结：
+
+- `rpb_technical_protocol_v1.json`：sharedness、source audit、technical family和family代表规则；
+- `rpb_priority_protocol_v1.json`：数值审计后、看图前冻结的多轨技术队列规则。
+
+Sharedness不以`p>0.05`或`AUC约0.5`代表等价，而是对癌/非癌患者分别有放回bootstrap，要求
+覆盖率差和归一化activation-mass差的95% CI同时满足冻结的实际等价/富集边界，并要求至少
+2/3 SAE seed同向且无反向seed。来源审计在癌与非癌内部独立执行presence卡方和mass
+Kruskal-Wallis，BH-FDR后还必须达到实际效应门槛；source-risk只标记，不删除。
+
+Technical family只使用decoder cosine、患者ranking Spearman、Top25患者Jaccard和患者平衡
+空间相似度。任一family edge须至少2/3 seed同时通过四门槛；聚类为确定性complete-link，
+不允许医生语义或干预结果反向修改成员。技术family不等于医学概念family。
+
+### RP-B1 Anchor Master Table结果
+
+1150个development strict anchors全部进入同一`anchor_id`主表，并绑定seed42/43/44 Feature ID、
+六方向matching证据、癌/非癌presence、mass、energy、ranking AUC与DeLong CI、来源审计和
+Top患者ID。冻结分类结果为：
+
+| 类别 | Anchor数 | 解释边界 |
+| --- | ---: | --- |
+| Shared-high | 331 | 癌与非癌两侧覆盖和mass均满足实际等价，且两侧覆盖均高 |
+| Cancer-enriched | 1 | 至少2/3 seed的覆盖与mass均超过癌侧实际富集边界 |
+| Mixed/uncertain | 818 | 未同时满足严格富集或严格等价，不等于“没有类别信息” |
+| Non-cancer-enriched | 0 | 当前严格规则下无候选 |
+| Shared-low/rare | 0 | strict anchors的总体患者覆盖普遍较高 |
+
+唯一`cancer_enriched`为`a00987`，但它同时属于source-risk，因此只能作为“癌富集且来源风险”的
+技术候选，不能称为癌医学概念。全体中198个anchor为source-risk，拆成独立审阅轨道；其余
+952个为content-candidate轨道。Shared Feature不删除。
+
+strict anchors的患者coverage高度饱和：中位数为1.0，5%分位约0.9979，最低仍约0.2913。
+因此后续不得只按presence覆盖率选Feature；ranking、mass、energy、来源风险和干预必须分栏。
+
+### RP-B2 Technical Feature Family结果
+
+冻结family规则未产生任何跨anchor候选边：要求至少2/3 seed的decoder cosine达到0.90时，
+候选数已经为0。所有不同anchor pair的“三seed中第二高decoder cosine”最大仅0.2497，99.9%
+分位约0.0468，说明不是结果卡在0.90附近。按预注册纪律不事后降低阈值，最终保留1150个
+singleton technical families；本轮没有实现技术去冗余。
+
+技术审阅不生成加权可信度总分。当前输出四个独立轴rank（稳定性、覆盖、energy、label-AUC
+距离）和独立review track。由于family全为singleton且无极低覆盖anchor，实际得到：
+
+- `content_candidate`：952；
+- `source_risk`：198；
+- `rare`：0；
+- `technical_family_member`：0。
+
+这些track只是技术工作队列，不是医学优先级或可信度等级。
+
+### 产物与下一步
+
+结果根目录：`结果/SAE/RP_B_Technical_20260825/`。关键产物包括：
+
+- `anchor_master/anchor_master.csv`：1150行主表；
+- `anchor_master/anchor_seed_statistics.csv`：3450行三seed统计；
+- `anchor_master/anchor_source_audit.csv`：标签内来源审计；
+- `anchor_master/anchor_matching_evidence.csv`：六方向matching证据；
+- `technical_families/anchor_family_assignments.csv`：singleton family归属；
+- `summary/anchor_technical_review_tracks.csv`：无综合分数的多轨技术队列；
+- `summary/technical_summary.json`与`SHA256SUMS.txt`：汇总和完整性。
+
+下一阶段直接进入两条可并行技术任务，不等待医生：
+
+1. 对1150个anchor执行`100% -> 0%`残差保留轻量干预，输出癌/非癌分层的margin与概率变化；
+2. 按冻结队列批量导出高/中/低/零激活和hard-negative图片，为Blind Review和Technical
+   Reveal包准备素材。
+
+五剂量、随机匹配对照、attention decomposition和联合干预只用于后续筛出的代表/高影响/
+高风险候选。由于本轮无非singleton family，暂不执行family联合干预。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
