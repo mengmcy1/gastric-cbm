@@ -41,7 +41,8 @@ from run_clong_rpc2_preflight_probe import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CODE_ROOT = Path(__file__).resolve().parent
-OUTPUT_ROOT = PROJECT_ROOT / "结果/SAE/RP_C2_Intervention_20260825/formal"
+DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "结果/SAE/RP_C2_Intervention_20260825/formal"
+OUTPUT_ROOT = Path(os.environ.get("RPC2_FORMAL_OUTPUT_ROOT", DEFAULT_OUTPUT_ROOT))
 RPC1_MASTER = RPC1_ROOT / "summary/rpc1_anchor_effect_master.csv"
 ROLE_COLUMNS = (
     "primary_candidate",
@@ -103,7 +104,8 @@ def alpha_zero_gate(
             model, device, image_batch, feature_block,
             alphas=np.asarray([0.0]), capture_target_dir=capture,
         )
-        metrics.to_csv(capture / "formal_core_alpha0_seed_metrics.csv", index=False)
+        metrics_path = capture / "formal_core_alpha0_seed_metrics.csv"
+        metrics.to_csv(metrics_path, index=False)
         columns = np.asarray(
             [anchor_column[feature_to_anchor[int(feature)]] for feature in feature_ids],
             dtype=np.int64,
@@ -122,7 +124,8 @@ def alpha_zero_gate(
         old = pd.read_csv(
             RPC1_ROOT / f"seed{seed}/seed_anchor_metrics.csv", dtype={"anchor_id": str},
         ).set_index("anchor_id")
-        current = metrics.set_index("feature_id")
+        # 两侧都按正式保存后的CSV值比较，避免Python float序列化前末位差异。
+        current = pd.read_csv(metrics_path).set_index("feature_id")
         excluded = {"anchor_column", "feature_id", "seed", "alpha"}
         for feature in feature_ids:
             anchor = feature_to_anchor[int(feature)]
@@ -355,6 +358,7 @@ def provenance(args: argparse.Namespace) -> dict[str, object]:
         "sae_checkpoints": checkpoints,
         "analysis_cache_configs": cache_configs,
         "runtime": {
+            "output_root": str(OUTPUT_ROOT),
             "image_batch": int(args.image_batch),
             "feature_block": int(args.feature_block),
             "gpu_name": torch.cuda.get_device_name(device),
