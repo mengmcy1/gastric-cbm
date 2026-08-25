@@ -352,3 +352,21 @@ probability五级identity gate，任一失败都不进入正式screen。RP-C1不
 BH或PASS/FAIL，只测量和排序。RP-C2的Top 5%总效应、Top 5%类别分离、source-risk
 内Top 25%、全部source-sensitivity sentinel、全部cancer-enriched sentinel和20个低效对照
 均已在effect结果产生前写入协议，不使用加权总分。
+
+## RP-C2 中间剂量工程 preflight/probe
+
+`rpc2_intervention_protocol_v1.json`冻结五档activation retention、三档中间剂量主统计量、
+deterministic matched-reference位置统计和fixed-attention诊断边界。正式干预runner禁止重新
+matching，也不把matched tail fraction称为p值。
+
+正式五档全量计算前只运行工程链：
+
+```bash
+CUDA_DEVICE=<启动前nvidia-smi确认的GPU> bash \
+  程序/SAE/正式代码/run_clong_rpc2_preflight_probe.sh
+```
+
+第一阶段对149个study objects的三个seed执行alpha=1五级identity和alpha=0图像、患者、
+seed-anchor三层RP-C1精确复现；第二阶段只运行冻结的`a00139/a00987/a00816/a00019`
+及其matched references五档路径。两个阶段都明确`scientific_summary=false`，probe曲线不进入
+科学摘要，也不得用于修改协议。
