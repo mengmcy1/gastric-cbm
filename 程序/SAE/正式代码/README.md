@@ -303,3 +303,26 @@ runner在任何正式计算前由`clong_rpa_provenance.py`独占创建`run_code_
 启动时Git commit、冻结protocol bundle SHA和22个显式正式执行文件及直接依赖的逐文件SHA256。续跑与finalizer均
 复验同一快照；运行期间Git提交、代码内容或代码清单发生变化都会快速失败。最终`run_manifest.json`
 必须同时包含这三类血缘，缺任一项都会被artifact schema拒绝。
+
+## RP-A-lite与RP-B技术分析
+
+`clong_rpa_lite_*`只构建固定`0..99`的train-only探索性B100筛查，不修改或替代正式RP-A
+B400。结果明确记录`is_formal_rpa_result=false`，不读取val、internal test或external。
+
+RP-B使用1150个development strict anchors建立统一技术主表：
+
+```bash
+bash 程序/SAE/正式代码/run_clong_rpb_technical.sh
+```
+
+`rpb_technical_protocol_v1.json`冻结sharedness、标签内来源审计、technical family和代表选择；
+`rpb_priority_protocol_v1.json`冻结看图前的多轨技术队列。RP-B不生成加权可信度总分，不把
+technical family称为医学概念，也不等待医生完成命名。输出位于
+`结果/SAE/RP_B_Technical_20260825/`，只使用train analysis cache。
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpb.py
+```
+
+测试覆盖五类sharedness共识、BH校正、无边singleton保留、complete-link防链式合并和family
+代表词典序。图片、医学命名、轻量干预和完整RP-C干预均不属于该入口。
