@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -52,18 +53,32 @@ def build_snapshot() -> dict:
         "git_commit": current_git_commit(),
         "protocol_bundle_sha256": PROTOCOL_BUNDLE_SHA,
         "code_file_sha256": current_code_sha256(),
+        "runtime_parameters": {
+            "development_root": str(Path(os.environ.get(
+                "RPA_DEVELOPMENT_ROOT",
+                PROJECT_ROOT / "结果/SAE/RP_A_Development_20260824",
+            )).resolve()),
+            "cuda_devices": os.environ.get("CUDA_DEVICES", ""),
+            "source_block": int(os.environ.get("RPA_SOURCE_BLOCK", "32")),
+            "target_block": int(os.environ.get("RPA_TARGET_BLOCK", "128")),
+        },
     }
 
 
 def validate_snapshot(snapshot: dict) -> None:
     """要求Git、bundle和每个执行文件均与启动时快照逐位一致。"""
-    required = {"git_commit", "protocol_bundle_sha256", "code_file_sha256"}
+    required = {
+        "git_commit", "protocol_bundle_sha256", "code_file_sha256",
+        "runtime_parameters",
+    }
     if not required.issubset(snapshot):
         raise RuntimeError("代码快照缺少Git、protocol bundle或code SHA")
     if snapshot["protocol_bundle_sha256"] != PROTOCOL_BUNDLE_SHA:
         raise RuntimeError("代码快照绑定的protocol bundle不一致")
     if snapshot["git_commit"] != current_git_commit():
         raise RuntimeError("运行期间Git commit发生变化")
+    if snapshot["runtime_parameters"] != build_snapshot()["runtime_parameters"]:
+        raise RuntimeError("运行期间正式运行参数发生变化")
     observed = snapshot["code_file_sha256"]
     expected = current_code_sha256()
     if set(observed) != set(expected):

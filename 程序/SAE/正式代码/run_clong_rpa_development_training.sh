@@ -6,7 +6,7 @@ PROJECT_ROOT="/home/mcy/gastric-cbm"
 PYTHON="/home/mcy/miniconda3/envs/gastric-cbm/bin/python"
 ENTRY="$PROJECT_ROOT/程序/SAE/正式代码/clong_rpa_train_development.py"
 TEST="$PROJECT_ROOT/程序/SAE/正式代码/test_clong_rpa_development.py"
-OUTPUT="$PROJECT_ROOT/结果/SAE/RP_A_Development_20260824"
+OUTPUT="${RPA_DEVELOPMENT_ROOT:-$PROJECT_ROOT/结果/SAE/RP_A_Development_20260824}"
 LOG_DIR="$OUTPUT/logs"
 CUDA_DEVICE="${CUDA_DEVICE:?必须在启动前检查GPU并显式设置CUDA_DEVICE}"
 

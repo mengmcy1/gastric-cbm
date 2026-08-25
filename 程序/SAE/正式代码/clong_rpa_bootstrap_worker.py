@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -144,8 +145,9 @@ def main() -> None:
     target = OUTPUT_ROOT / ("debug" if args.debug else "formal")
     target.mkdir(parents=True, exist_ok=True)
     output = target / f"worker_{args.worker_rank:02d}_of_{args.worker_count:02d}.jsonl"
-    if output.exists():
-        raise FileExistsError(f"worker输出已存在，禁止覆盖: {output}")
+    partial = target / f"worker_{args.worker_rank:02d}_of_{args.worker_count:02d}.partial.jsonl"
+    if output.exists() or partial.exists():
+        raise FileExistsError(f"worker正式或残缺输出已存在，禁止覆盖: {output}")
     seeds = {seed: load_seed(seed, args) for seed in (42, 43, 44)}
     validate_cross_seed_alignment(seeds)
     patients = seeds[42]["patients"]
@@ -155,7 +157,7 @@ def main() -> None:
     else:
         indices = worker_replicate_indices(args.worker_rank, args.worker_count)
     device = torch.device(args.device)
-    with output.open("x", encoding="utf-8") as handle:
+    with partial.open("x", encoding="utf-8") as handle:
         for replicate_index in indices:
             multiplicity = plans[int(replicate_index)]
             patient_indices, expanded_patients = expanded_patient_instances(patients, multiplicity)
@@ -194,6 +196,7 @@ def main() -> None:
             handle.write(json.dumps(record, ensure_ascii=False, allow_nan=False) + "\n")
             handle.flush()
             print(f"worker {args.worker_rank}: replicate {replicate_index} DONE", flush=True)
+    os.replace(partial, output)
     print(f"bootstrap worker完成: {output}")
 
 

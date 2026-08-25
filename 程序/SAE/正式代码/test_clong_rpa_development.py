@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import numpy as np
 import pandas as pd
@@ -261,6 +263,17 @@ class ValidationTests(unittest.TestCase):
         snapshot["code_file_sha256"][name] = "0" * 64
         with self.assertRaises(RuntimeError):
             validate_snapshot(snapshot)
+
+    def test_changed_runtime_parameters_are_rejected(self) -> None:
+        with mock.patch.dict(os.environ, {
+            "CUDA_DEVICES": "1,2,3",
+            "RPA_SOURCE_BLOCK": "32",
+            "RPA_TARGET_BLOCK": "128",
+        }, clear=False):
+            snapshot = build_snapshot()
+            with mock.patch.dict(os.environ, {"RPA_TARGET_BLOCK": "64"}, clear=False):
+                with self.assertRaises(RuntimeError):
+                    validate_snapshot(snapshot)
 
 
 if __name__ == "__main__":

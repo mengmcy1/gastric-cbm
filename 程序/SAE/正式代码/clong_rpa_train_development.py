@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -41,7 +42,10 @@ from train_utils import git_snapshot, json_ready
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-OUTPUT_ROOT = PROJECT_ROOT / "结果/SAE/RP_A_Development_20260824"
+OUTPUT_ROOT = Path(os.environ.get(
+    "RPA_DEVELOPMENT_ROOT",
+    PROJECT_ROOT / "结果/SAE/RP_A_Development_20260824",
+)).resolve()
 GAMMA_JSON = S2C_ROOT / GAMMA_JSON_NAME
 GAMMA_JSON_SHA256 = "3e427764415873cb5a3e6d7f8259350c96a968f48e82bd31c37a030b1dc7f35f"
 REPRESENTATION_K = 1024

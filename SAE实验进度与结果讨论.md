@@ -63,7 +63,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 旧SAE路线 | 已冻结归档 | 文档快照已保存；旧代码与结果原地只读保留 |
 | 新解释对象 | S0已冻结 | C-long attention-pooled 1280维表示；checkpoint、manifest、教师、缓存、beta共6项SHA全部核验一致，结构与阈值已写死 |
 | 新SAE结构 | S2c已正式结束，无正式产品 | seed42于2026-08-21完成；五个K均通过其余7项门槛，但患者冻结阈值一致率为0.9308–0.9423，未达到0.95；按预注册停止严格重构型SAE路线，不运行seed202/503 |
-| RP-SAE新解释范式 | RP-A首轮development-calibration发生实现失败，待合规恢复 | 43/44训练和full-train matching已完成，strict anchors=1150；bootstrap worker1/2发生CUDA launch timeout，400条记录不完整，未生成门槛或科学结论。首轮现场已保留，202/503/911继续锁定 |
+| RP-SAE新解释范式 | RP-A首轮发生实现失败，恢复实现已验收待完整重跑 | 首轮strict anchors=1150，但bootstrap worker1/2 CUDA timeout，未生成科学结论；恢复版独立输出、原子worker产物、fail-fast监督、`32×128`短kernel及运行参数血缘已通过89项回归和GPU2/3探针，202/503/911继续锁定 |
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B后续方案已修订，待RP-A结果后另行预注册 | 同一字典内分析共有、癌富集、非癌富集、混合及重复概念家族；共享不自动删除，RP-A失败时只允许探索性降级交付 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
@@ -2191,6 +2191,37 @@ running。发现后确认本轮已不可能形成完整400条正式records，遂
 runner如何在任一worker失败时立即停止其余worker。恢复尝试必须使用新的运行血缘和独立输出，
 不得改写首轮结果；冻结的400次计划、RNG、replicate静态归属、六项指标和门槛算法均不得改变。
 
+### 首轮实现失败修复与恢复验收（2026-08-25）
+
+恢复实现已完成，但尚未启动第二次正式运行。冻结的7个protocol JSON和overall bundle未修改；
+本次只修改输出隔离、代码/运行参数血缘、GPU计算分块、worker落盘与并行失败监督：
+
+- 正式输出根目录改为必须由恢复命令显式给出的`RPA_DEVELOPMENT_ROOT`；第二次运行使用全新
+  `结果/SAE/RP_A_Development_20260825_retry1/`，从seed43/44训练开始完整重跑，不复制或续写
+  首轮checkpoint、matching或bootstrap records；
+- 代码快照除Git commit、protocol bundle和逐文件SHA外，新增绑定development root、GPU列表、
+  source block和target block；运行期间任一参数变化均fast-fail，最终run manifest同步保存；
+- bootstrap worker先写`.partial.jsonl`，只有负责的全部replicate完成后才原子重命名为正式
+  `.jsonl`；异常时残缺文件保留但不会被runner误判为完整worker产物；
+- 并行监督改为按任意子进程最先结束进行等待。任一worker非零退出时，立即终止本批由runner
+  启动的其余worker并记录失败日志，不再按PID顺序等待最慢worker数小时；
+- `source_block=32`保持不变，`target_block`由256缩短为128，以缩短单次CUDA kernel。该参数只
+  改变计算分块，不改变候选、公式、排序、dtype或统计规则，并被正式运行快照锁定；full-train
+  matching、400次bootstrap和val reproduction统一使用同一分块。
+
+GPU修复验收使用首轮冻结缓存，只执行计算、不保存新matching、anchor、门槛或科学统计：
+
+1. 首轮最早在GPU3失败附近的replicate 56，以`32×128`在GPU2完整通过，耗时591秒；
+2. 同一replicate 56在原失败物理设备GPU3完整通过，耗时578秒；
+3. 对首轮已完成的replicate 53以新分块重算，并与旧`32×256`正式JSONL中的三折六指标逐项
+   比较，最大绝对差为`0.0`，证明本次分块调整数值恒等；
+4. fail-fast监督以一个30秒慢任务和一个1秒失败任务实测，1秒即识别失败并终止慢任务；
+5. eligible、null/FDR、bootstrap、spatial、GPU identity、artifacts和development共89项回归
+   全部通过，另有Python编译、Shell语法及`git diff --check`通过。
+
+因此本次修复属于实现恢复，不是协议或门槛修订。第二次正式运行仍必须从干净独立目录完整
+执行400次冻结计划；若再次发生timeout，按新fail-fast路径立即形成实现失败，不产生科学结论。
+
 ## RP-B/C/D后续解释与临床交付修订方案（2026-08-24，规划稿，未预注册）
 
 > 本节是当前RP-SAE后续路线，修正前文S5-S8及“S2c后正式解释阶段规划”对旧S2c产品和
@@ -2425,5 +2456,6 @@ cosine≥0.90。这与旧路线在GAP表示上的经验同构：分类保真容�
     产物schema、科学/实现失败分流和7协议bundle通过11项测试后正式固结，overall SHA为
     `768da344bfd3d49ca518528bc043a4eb2ef5b1b4f76b449c42e00c7223093280`。RP-A评价规则现已整体冻结，
     seed43/44训练与full-train matching已完成并得到1150个strict anchors，但首轮bootstrap因
-    worker1/2 CUDA kernel timeout发生实现失败，任务已人工停止且未生成科学结论；下一步先完成
-    不改统计协议的恢复审阅与实现，202/503和911继续锁定。
+    worker1/2 CUDA kernel timeout发生实现失败，任务已人工停止且未生成科学结论；不改统计协议的
+    恢复实现及89项回归、GPU2/3失败replicate探针和分块数值恒等验收均已通过，下一步从独立新目录
+    完整重跑development-calibration，202/503和911继续锁定。

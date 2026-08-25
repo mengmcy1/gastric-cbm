@@ -55,6 +55,7 @@ def run_manifest(debug: bool) -> dict:
         "confirmation_seeds_started": [],
         "git_commit": snapshot["git_commit"],
         "code_file_sha256": snapshot["code_file_sha256"],
+        "runtime_parameters": snapshot["runtime_parameters"],
         "protocol_bundle_sha256": bundle,
         "protocol_members": members,
         "internal_test_evaluated": False,

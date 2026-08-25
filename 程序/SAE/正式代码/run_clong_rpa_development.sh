@@ -5,9 +5,12 @@ set -Eeuo pipefail
 PROJECT_ROOT="/home/mcy/gastric-cbm"
 CODE="$PROJECT_ROOT/程序/SAE/正式代码"
 PYTHON="/home/mcy/miniconda3/envs/gastric-cbm/bin/python"
-OUTPUT="$PROJECT_ROOT/结果/SAE/RP_A_Development_20260824"
+OUTPUT="${RPA_DEVELOPMENT_ROOT:-$PROJECT_ROOT/结果/SAE/RP_A_Development_20260824}"
 LOG_DIR="$OUTPUT/logs"
 CUDA_DEVICES="${CUDA_DEVICES:?启动前检查GPU并以逗号分隔显式设置CUDA_DEVICES}"
+SOURCE_BLOCK="${RPA_SOURCE_BLOCK:-32}"
+TARGET_BLOCK="${RPA_TARGET_BLOCK:-128}"
+export RPA_DEVELOPMENT_ROOT="$OUTPUT" RPA_SOURCE_BLOCK="$SOURCE_BLOCK" RPA_TARGET_BLOCK="$TARGET_BLOCK"
 IFS=',' read -r -a GPUS <<< "$CUDA_DEVICES"
 CURRENT_STAGE="startup"
 CURRENT_COMMAND="$0"
@@ -39,6 +42,10 @@ for gpu in "${GPUS[@]}"; do
     exit 1
   fi
 done
+if ! [[ "$SOURCE_BLOCK" =~ ^[1-9][0-9]*$ && "$TARGET_BLOCK" =~ ^[1-9][0-9]*$ ]]; then
+  echo "RPA_SOURCE_BLOCK和RPA_TARGET_BLOCK必须为正整数" | tee -a "$CURRENT_LOG"
+  exit 1
+fi
 
 CODE_SNAPSHOT="$OUTPUT/run_code_snapshot.json"
 CURRENT_STAGE="code_provenance"
@@ -85,7 +92,8 @@ if [[ -f "$MATCHING/full_train_metrics.json" ]]; then
 else
   run_logged "full_train_matching" "$LOG_DIR/rpa_full_train_matching.log" \
     env CUDA_VISIBLE_DEVICES="${GPUS[0]}" "$PYTHON" -u \
-    "$CODE/clong_rpa_match_development.py" --device cuda
+    "$CODE/clong_rpa_match_development.py" --device cuda \
+    --source-block "$SOURCE_BLOCK" --target-block "$TARGET_BLOCK"
 fi
 
 anchor_count="$($PYTHON -c 'import json,sys; print(json.load(open(sys.argv[1]))["strict_anchor_count"])' "$MATCHING/full_train_metrics.json")"
@@ -118,21 +126,41 @@ else
     env CUDA_VISIBLE_DEVICES="${GPUS[$rank]}" "$PYTHON" -u \
       "$CODE/clong_rpa_bootstrap_worker.py" \
       --worker-rank "$rank" --worker-count "$worker_count" --device cuda \
+      --source-block "$SOURCE_BLOCK" --target-block "$TARGET_BLOCK" \
       >"$log" 2>&1 &
     pids+=("$!")
     worker_logs+=("$log")
     echo "bootstrap worker $rank -> GPU ${GPUS[$rank]}, log=$log" | tee -a "$CURRENT_LOG"
   done
-  worker_failed=0
-  for index in "${!pids[@]}"; do
-    if ! wait "${pids[$index]}"; then
-      worker_failed=1
-      CURRENT_LOG="${worker_logs[$index]}"
+  remaining=("${pids[@]}")
+  while [[ "${#remaining[@]}" -gt 0 ]]; do
+    finished_pid=""
+    if wait -n -p finished_pid "${remaining[@]}"; then
+      status=0
+    else
+      status="$?"
+    fi
+    next=()
+    for pid in "${remaining[@]}"; do
+      [[ "$pid" != "$finished_pid" ]] && next+=("$pid")
+    done
+    remaining=("${next[@]}")
+    if [[ "$status" -ne 0 ]]; then
+      for index in "${!pids[@]}"; do
+        if [[ "${pids[$index]}" == "$finished_pid" ]]; then
+          CURRENT_LOG="${worker_logs[$index]}"
+          break
+        fi
+      done
+      for pid in "${remaining[@]}"; do
+        kill "$pid" 2>/dev/null || true
+      done
+      for pid in "${remaining[@]}"; do
+        wait "$pid" 2>/dev/null || true
+      done
+      false
     fi
   done
-  if [[ "$worker_failed" -ne 0 ]]; then
-    false
-  fi
 fi
 
 BOOTSTRAP="$OUTPUT/bootstrap_calibration/formal/bootstrap_thresholds.json"
@@ -156,7 +184,8 @@ if [[ -f "$VAL" ]]; then
 else
   run_logged "val_reproduction" "$LOG_DIR/rpa_val_reproduction.log" \
     env CUDA_VISIBLE_DEVICES="${GPUS[0]}" "$PYTHON" -u \
-    "$CODE/clong_rpa_validate_development.py" --device cuda
+    "$CODE/clong_rpa_validate_development.py" --device cuda \
+    --source-block "$SOURCE_BLOCK" --target-block "$TARGET_BLOCK"
 fi
 
 run_logged "finalize" "$LOG_DIR/rpa_finalize.log" \
