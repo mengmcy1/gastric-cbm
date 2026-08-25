@@ -383,3 +383,19 @@ Gate A失败时不会启动controls。通过后按`seed × unique Feature × dos
 manifest还原44,424条target-control关系。输出分为unique Feature事实层、447行target-seed证据层和
 149行Anchor汇总层；最终`config.json`仅在全部计算、角色计数、SHA和运行前后provenance复验通过后
 原子写入。
+
+## RP-D Technical Feature Atlas清单冻结
+
+`rpd_atlas_protocol_v1.json`冻结seed42 canonical visualization、患者级High/Low/Mid/Zero
+确定性抽样、Light/Heavy规模、hard negative、source panel、跨seed同图复核和医生盲包隐藏字段。
+先只生成清单，不读取或渲染图像：
+
+```bash
+python 程序/SAE/正式代码/test_clong_rpd.py
+python 程序/SAE/正式代码/build_clong_rpd_manifests.py
+```
+
+构建器读取冻结train激活和C-long pooled表示，输出`rpd_anchor_manifest.csv`、
+`rpd_heavy_membership_v1.csv`、`rpd_case_manifest.csv`和`rpd_case_shortfalls.csv`。Zero不足按协议
+留空；不得跨bin补人。正式渲染器只能使用经`selection_freeze_v1.json`固结SHA的清单，不能在
+看图后重新选择病例。val、internal test和external不属于RP-D v1开发输入。

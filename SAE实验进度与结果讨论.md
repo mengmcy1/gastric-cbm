@@ -2520,6 +2520,37 @@ class separation和排名；盲审完成后才提供Technical Reveal。医生ann
 RP-D仍须醒目标注：正式RP-A未完成，当前依据是development strict anchors与RP-A-lite探索证据；
 Atlas属于train-only技术解释产物，不得写成正式跨初始化确认或医学概念真值。
 
+### RP-D v1病例选择冻结与dry-run（2026-08-25）
+
+`rpd_atlas_protocol_v1.json`已在读取或渲染任何病例图像前冻结。病例集合只由canonical seed42
+决定，按患者而非图像抽样；癌/非癌分别执行High→Low→Mid→Zero互斥选择。Light每个
+`label x bin`目标3人，Heavy目标5人；不足不跨bin补齐。Heavy同一批seed42病例后续才分别绘制
+seed42/43/44 matched Feature，不允许各seed重新挑“最好看”的图。
+
+冻结Heavy成员只取既有布尔轨道并集，不建立新排行榜：三seed最弱matched percentile不低于
+0.90的primary、双侧功能支持、RP-C1冻结source-risk高效应轨道、`a00987`以及预冻结低效对照。
+正式membership得到117个唯一Heavy对象，其中各flag计数依次为52、12、50、1和20；18个对象
+同时命中两个轨道，其余99个命中一个轨道。
+
+第一次dry-run在病例计算完成后因最终JSON布尔值拼写错误发生实现失败；四张无最终config的CSV
+保留在`manifest_dry_run_v1/`，不得作为冻结输入。修复并增加回归测试后，独立目录
+`manifest_dry_run_v1_retry1/`完成只读复算，未打开图片：
+
+- 149个anchor；Light病例2,776行；Heavy病例5,719行；总病例清单6,301行；
+- High、Low、Mid三档全部满额；1,217个shortfall全部来自Zero档，癌侧629、非癌侧588；
+- 仅25/298个`anchor x label`四档全满，141/149个anchor至少一个Zero档不足；该现象来自
+  Feature患者覆盖广，按冻结规则保留空缺，不用Low或其他档伪装Zero；
+- Heavy生成1,170个hard negative，无缺失；160个来自真正Zero患者，1,010个按冻结规则使用
+  selected-Low回退；
+- 50个source-risk高效应对象生成900行`label x source` panel，全部满额；
+- case ID唯一，Light标准病例在同一`anchor x label`内患者不重复；无跨bin替补；
+- 未读取图片、未渲染资产、未产生医学语义或科学PASS/FAIL，val/test/external均未读取。
+
+四张选择清单及SHA已由`selection_freeze_v1.json`固结；protocol SHA为`a4e7a9be...f2e4e`，
+selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结manifest；
+不得因为Zero面板不齐或视觉效果不理想重新抽样。医生盲包隐藏label、source、RP-B/RP-C证据和
+排名，并在盲审annotation冻结后才生成Technical Reveal。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
