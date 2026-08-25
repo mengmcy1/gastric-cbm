@@ -67,6 +67,8 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | RP-SAE新解释范式 | 正式RP-A未完成；RP-A-lite探索筛查已完成 | 正式RP-A首轮因CUDA timeout停在160/400，无科学结论；独立RP-A-lite固定使用原序列0--99并补齐100/100，train-only六项探索性比较均通过，1150个development strict anchors进入探索性RP-B技术分析；202/503/911继续锁定 |
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
+| RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
+| RP-D技术图谱 | 已立项，待冻结导出schema后实现 | 全149个生成轻量Atlas；52个三seed高位候选、12个双侧功能候选、source-risk高效应对象、`a00987`和低效应对照进入重型包；医生盲审与技术Reveal严格分开 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2470,32 +2472,53 @@ target在冻结matched controls中的描述性相对位置，不是p值；下面
 
 anchor级别，primary candidate中82/122的三seed中位matched percentile至少0.90，52/122的
 三seed最弱值也至少0.90。primary、low-effect control和secondary的三seed中位overall effect
-中位数分别约为0.00633、0.000187和0.00259，说明冻结角色在新五剂量路径中保持了预期层级。
+中位数分别约为0.00633、0.000187和0.00259。在预冻结角色的描述性比较中，primary candidates
+在RP-C2中间剂量下保持明显更高的matched-reference相对位置，而low-effect controls保持低位；
+两组均来自同一train的RP-C1 outcome selection，因此不作显著性检验或泛化性推断。
 
 12个anchor满足`bidirectional_label_supporting_3of3`模式，且其36个target-seed对象的癌侧、
-非癌侧和癌非癌分离曲线全部规则。这表示同一Feature对癌与非癌患者均可能产生稳定影响，
-支持后续继续保留并分栏研究shared Feature；它不等于这些Feature已经获得医学命名，也不能
-单凭方向一致性判断其作用合理。
+非癌侧和癌非癌分离曲线全部规则。它们统一称为“癌/非癌双侧功能支持候选”，不得直接称为
+`shared_high`：与RP-B冻结分类对齐后，其中3个为`shared_high`、9个为`mixed_uncertain`，另有
+3个带`source_risk`。这说明RP-B statistical sharedness与RP-C functional pattern是两个正交
+维度；同一Feature对两类患者均产生规则影响，不等于它已获得医学命名或其作用必然合理。
 
 随着alpha从1降到0，447个target-seed的overall effect中位数依次约为0、0.00247、0.00495、
-0.00745和0.00992，呈近似随干预增强而增大的总体趋势。alpha=0时重算attention与固定attention
-路径的差异绝对值中位数约0.00115，说明多数对象的主要效应来自Feature内容缩放；但个别对象
-差异可明显更大，因此attention只保留为诊断性分解，不能被解释成独立因果通道。
+0.00745和0.00992，呈近似随干预增强而增大的总体趋势。该平滑性部分受线性缩放公式本身影响，
+不能单独作为机制证据；有意义的是它与matched-reference高位和跨seed稳定共同出现。alpha=0时
+重算attention与固定attention路径的差异绝对值中位数约0.00115；447/447对象的该差异小于完整
+重算效应，372/447不超过完整效应的一半。两条路径不是严格机制分解，因此只能说明多数对象的
+总体干预效应不依赖大幅attention重排才能出现，不能进一步归因为独立的“内容贡献”。
 
 ### 结论边界与下一步
 
-本阶段能确认：RP-C2五剂量正式计算链完整可复现；primary candidates整体效应明显高于预冻结
-low-effect controls；存在一批跨三个SAE seed均处于matched-control高位的高影响候选；同时
-存在12个癌侧与非癌侧都呈规则剂量行为的shared候选，值得进入技术图谱。
+本阶段能确认：RP-C2五剂量正式计算链完整可复现；存在一批相对于active frequency、activation
+mass和representation energy匹配参考Feature仍处于高位的目标特异性功能效应候选；其中52个
+primary anchor在三个SAE seed的matched percentile均不低于0.90，另有12个癌侧与非癌侧都呈
+规则剂量行为的双侧功能支持候选，均值得进入技术图谱。
 
 本阶段不能确认：matched percentile不是确认性p值；`mixed_functional_pattern`不等于无作用；
 source描述不能直接判定artifact；attention差异不能单独归因；任何Feature的医学含义、临床
 合理性和命名仍由后续医学生/医生审核完成。
 
-下一步技术侧不等待医学命名，直接基于同一`anchor_id`产出RP-D Technical Atlas素材：优先覆盖
-三seed均处于matched-control高位的候选、12个双侧规则候选、source-risk候选和预冻结低效对照，
-批量导出高/中/低/零激活、hard negative、五剂量曲线、癌/非癌分层效应和来源描述。医生审核
-只增加医学annotation，不反向修改RP-C2匹配或干预结果。
+### RP-D Technical Feature Atlas与医生盲审立项
+
+不再新增RP-C3。下一步技术侧不等待医学命名，先冻结Atlas schema和确定性病例抽样规则，再基于
+同一`anchor_id`产出两层资产：
+
+- **轻量Atlas（全149个）**：癌/非癌各自的高、中、低、零激活样本，原图、SAE 7x7 map、
+  overlay，以及RP-B/RP-C结构化摘要；
+- **重型Atlas**：优先覆盖52个三seed均处于matched-control前10%的primary candidates、12个
+  双侧功能支持候选、source-risk且高效应对象、`a00987`这一“癌富集但低功能效应”反例，以及
+  一批预冻结low-effect controls；额外输出hard negatives、source分层、五剂量图、三seed对照和
+  attention诊断。
+
+RP-D1 Technical Atlas由技术侧独立生成。RP-D2医生首次盲审只显示`anchor_id`、高/中/低/零图、
+heatmap、overlay和hard negatives，隐藏癌富集、matched percentile、source-risk、干预效应、
+class separation和排名；盲审完成后才提供Technical Reveal。医生annotation不得反向修改RP-B
+分类、RP-C2匹配或干预结果。
+
+RP-D仍须醒目标注：正式RP-A未完成，当前依据是development strict anchors与RP-A-lite探索证据；
+Atlas属于train-only技术解释产物，不得写成正式跨初始化确认或医学概念真值。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
