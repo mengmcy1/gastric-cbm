@@ -35,12 +35,15 @@ val或external队列内重算分位点。
 
 ## CD1 Gray Qualification
 
-CD1正式协议已冻结，但训练入口尚未实现。当前先验证Gray数据血缘、错误互补指标、严格FP
-二分图匹配、患者整簇bootstrap和四态决策：
+CD1正式协议、Gray数据和单seed训练入口均已冻结。先验证Gray数据血缘、错误互补指标、严格FP
+二分图匹配、患者整簇bootstrap、四态决策及训练入口参数边界：
 
 ```bash
 /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/CADe/正式代码/test_cade_cd1.py
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/test_train_cd1_gray.py
 ```
 
 测试通过后，生成只包含Development Train/Val的三通道Gray PNG视图：
@@ -54,4 +57,16 @@ CD1正式协议已冻结，但训练入口尚未实现。当前先验证Gray数�
 ```
 
 该入口不会导出Y0-F的test，也不会读取External Development或Locked Internal Temporal
-CADe Test。正式Gray训练须等数据审计与真实Ultralytics增强smoke通过后再实现和启动。
+CADe Test。数据审计与真实Ultralytics增强smoke通过后，可先用完整train split做单轮debug：
+
+```bash
+CUDA_VISIBLE_DEVICES=<空闲GPU> /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/train_cd1_gray.py \
+  --seed 42 \
+  --device <空闲GPU> \
+  --debug
+```
+
+启动任何GPU任务前必须先用`nvidia-smi`同时核对显存、利用率和进程。`train_cd1_gray.py`
+只训练并保存可追溯产品，不计算Primary、rescue、Jaccard或部署阈值，也不作Gray资格判断。
+正式三seed完成后必须由独立的Development Val评价入口统一生成四态结论。
