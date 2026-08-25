@@ -464,7 +464,8 @@ External Development只在`CD1_VAL_DECISION.json`存在后运行，使用已冻�
   INCONCLUSIVE及边界条件。
 - `train_cd1_gray.py`：只负责单seed Gray YOLO26s-640训练，逐项核对Gray数据、增强smoke、
   同seed Y3-F参数参照和Ultralytics实际持久化参数，并保存checkpoint与完整产品血缘；该入口
-  不计算Primary、rescue、Jaccard或部署阈值，也不作CD1资格判断；
+  不计算Primary、rescue、Jaccard或部署阈值，也不作CD1资格判断；训练启动时另记录Git commit
+  和工作区dirty状态用于后续Teacher血缘追溯，但dirty状态只作审计、不作为训练门槛；
 - `test_train_cd1_gray.py`：验证Gray相对Y3-F只改变颜色相关参数、debug/formal命名隔离、
   持久化参数漂移拒绝和训练产品完整性。
 

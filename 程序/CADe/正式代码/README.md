@@ -60,12 +60,16 @@ CD1正式协议、Gray数据和单seed训练入口均已冻结。先验证Gray�
 CADe Test。数据审计与真实Ultralytics增强smoke通过后，可先用完整train split做单轮debug：
 
 ```bash
-CUDA_VISIBLE_DEVICES=<空闲GPU> /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+CUDA_VISIBLE_DEVICES=<物理GPU编号> /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/CADe/正式代码/train_cd1_gray.py \
   --seed 42 \
-  --device <空闲GPU> \
+  --device 0 \
   --debug
 ```
+
+`CUDA_VISIBLE_DEVICES`会把选中的物理GPU重新映射为进程内`cuda:0`。例如使用物理GPU 2时，
+应设置`CUDA_VISIBLE_DEVICES=2`并传`--device 0`；不要同时使用`CUDA_VISIBLE_DEVICES=2`和
+`--device 2`。也可以不设置`CUDA_VISIBLE_DEVICES`，直接传物理编号`--device 2`。
 
 启动任何GPU任务前必须先用`nvidia-smi`同时核对显存、利用率和进程。`train_cd1_gray.py`
 只训练并保存可追溯产品，不计算Primary、rescue、Jaccard或部署阈值，也不作Gray资格判断。

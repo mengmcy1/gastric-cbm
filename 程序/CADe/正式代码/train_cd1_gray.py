@@ -29,6 +29,7 @@ from train_y2_yolo26 import (  # noqa: E402
     FROZEN_TRAIN_ARGS,
     PRETRAINED_PATH,
 )
+from train_utils import git_snapshot  # noqa: E402
 
 
 GRAY_DATA_ROOT = PROJECT_ROOT / "数据整理记录/CADe_CD1_Gray_20260825"
@@ -214,6 +215,7 @@ def main() -> None:
         raise FileNotFoundError(f"缺少冻结预训练权重: {PRETRAINED_PATH}")
     data_audit = load_gray_data_audit()
     rgb_reference = load_rgb_reference(args.seed)
+    code_version = git_snapshot()
 
     output_root = args.output_root.resolve()
     run_name = expected_run_name(args.seed, args.debug)
@@ -274,6 +276,8 @@ def main() -> None:
         "external_read": False,
         "qualification_evaluated": False,
         "deployment_threshold_frozen": False,
+        "code_git_commit": code_version["git_commit"],
+        "git_dirty": code_version["git_dirty"],
         "locked_ultralytics": LOCKED_ULTRALYTICS_VERSION,
         "environment": environment,
         "best_checkpoint_behavior": assert_locked_library_behavior(best_model),
