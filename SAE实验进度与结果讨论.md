@@ -12,12 +12,13 @@
 1. AGENTS.md：长期背景、数据边界、目录、文件安全、Git和注释规则；
 2. SAE实验进度与结果讨论.md：当前协议、即时状态、结果、阻塞项和下一步；
 3. MAGE实验进度与结果讨论.md中C-long的模型血缘、注意力QC和外部描述性投影；
-4. 先读文献/SAE可能相关/README_文献分级索引.md，再按任务读取对应分级目录，另读
+4. CADe实验进度与结果讨论.md用于了解独立病灶检测路线；SAE任务不得改写其状态；
+5. 先读文献/SAE可能相关/README_文献分级索引.md，再按任务读取对应分级目录，另读
    文献/2_M-CBM_DeSantis_ICLR2026.pdf和文献/3_ProtoMIL_Sun_MICCAI2025.pdf；
-5. 本轮相关正式代码、冻结manifest、缓存、checkpoint和SHA。数字以正式产物为准。
+6. 本轮相关正式代码、冻结manifest、缓存、checkpoint和SHA。数字以正式产物为准。
 
 开始操作前先只读检查git status、目标输出目录和运行状态。GPU任务先运行nvidia-smi，
-不默认GPU编号。不得覆盖旧SAE、MAGE、分类器、internal test或external正式产物。
+不默认GPU编号。不得覆盖旧SAE、MAGE、CADe、分类器、internal test或external正式产物。
 
 当前SAE路线解释的是冻结C-long学生实际送入分类头的attention-pooled 1280维向量，
 不是普通GAP，也不是事后Grad-CAM。SAE不得修改C-long参数、BN统计、注意力图或预测。

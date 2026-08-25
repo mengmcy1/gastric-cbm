@@ -14,7 +14,9 @@
 3. YOLO26实验进度与结果讨论.md末尾：Y0-F数据、M0-F全局模型、Y3-F检测器、Y6局部
    模型及其正式/探索性边界；
 4. SAE实验进度与结果讨论.md用于了解正在并行推进的解释路线；MAGE任务不得改写其状态；
-5. 本轮相关正式代码、冻结manifest、CSV、JSON和checkpoint SHA。数字以正式产物为准。
+5. CADe实验进度与结果讨论.md用于了解独立病灶检测路线；MAGE任务不得改写其状态或把
+   CADe检测结果混作MAGE分类结论；
+6. 本轮相关正式代码、冻结manifest、CSV、JSON和checkpoint SHA。数字以正式产物为准。
 
 开始操作前只读检查git status、目标输出目录和运行状态。GPU任务先运行nvidia-smi，不默认
 GPU编号。先self-test和debug，再运行正式矩阵；长任务同时给启动和tail -F日志命令。
