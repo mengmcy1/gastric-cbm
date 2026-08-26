@@ -94,3 +94,24 @@ CUDA_VISIBLE_DEVICES=<物理GPU编号> /home/mcy/miniconda3/envs/gastric-cbm/bin
 正式入口重新推理冻结RGB与Gray产品，只读取Development Val，使用5000次患者簇配对
 bootstrap，并生成不可覆盖的`CD1_VAL_DECISION.json`。该文件冻结前后均不得读取External
 Development或Locked Internal Temporal CADe Test。
+
+内部四态决策冻结后，可运行External Development只读投影。该入口复用CD0正式RGB预测，
+只新增三组Gray推理；External Primary与val冻结部署点分开报告，不产生第二次资格判断：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/test_evaluate_cd1_external.py
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/evaluate_cd1_external.py \
+  --device 0 \
+  --preflight-only
+
+CUDA_VISIBLE_DEVICES=<物理GPU编号> /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/evaluate_cd1_external.py \
+  --device 0
+```
+
+输出包括三seed的RGB/Gray预测、FROC、患者簇bootstrap、FN/FP互补指标，以及Primary和val
+冻结部署点的逐GT四象限与`0/3`至`3/3` Gray rescue稳定性表。正式JSON固定记录内部结论仍为
+`INCONCLUSIVE`、External仅作描述性投影，并继续声明未读取Locked Internal Temporal CADe Test。

@@ -543,8 +543,49 @@ seed42/503略高、seed202接近，large总体接近。该现象只作机制描�
 ## 当前下一步
 
 1. CD1内部决策已经冻结；不得改阈值、换seed、补训Gray或重写四态门槛；
-2. 是否执行CD1 External Development只读投影需单独决定；它只能描述Gray互补性是否跨域存在，
-   不能把内部`INCONCLUSIVE`改成PASS；
+2. 已决定执行CD1 External Development只读投影；它只能描述Gray互补性是否跨域存在，不能把
+   内部`INCONCLUSIVE`改成PASS；
 3. Gray本轮不能直接作为已放行的CD2 Gray Teacher；下一项CADe干预应重新依据CD0错误地图、
    Gray互补证据和临床归因可用性，在病灶加权KD、定位KD或hard-negative中冻结一个单一假设；
 4. CD0人工归因由医学生并行完成；Locked Internal Temporal CADe Test继续锁定。
+
+## CD1 External Development只读投影协议（2026-08-26冻结）
+
+### 目的与边界
+
+本步骤只回答：Development Val中观察到的Gray与RGB漏检互补性，是否也能在跨中心External
+Development中观察到。它不训练模型、不更换checkpoint、不重新冻结val部署阈值，也不产生
+第二次`PASS/FAIL`。无论External结果如何，CD1内部正式结论始终保持`INCONCLUSIVE`；Locked
+Internal Temporal CADe Test继续不读取。
+
+评价使用`CD1_VAL_DECISION.json`中冻结的三组RGB/Gray checkpoint和各自val部署阈值。RGB
+External预测必须逐项复现CD0正式External记录；Gray只将同一External图像确定性转为三通道
+灰度，不改变尺寸、裁剪或病例构成。病灶大小沿用Development Train冻结边界
+`q33=0.18661895`、`q67=0.33844387`。
+
+### 预先规定的描述性输出
+
+每个seed分别报告以下两套工作点，二者不得混为同一指标：
+
+1. External Primary：RGB和Gray各自在External FROC中实际`FP/image<=0.5`时的最高病灶
+   Sensitivity，用于描述外部域的排序能力；
+2. Val冻结部署点：直接使用Development Val冻结阈值，报告病灶Sensitivity、FP/image、
+   mean IoU、AP50、mAP50-95及图像级触发率，用于描述不调阈值时的跨域表现。
+
+Primary和部署点均报告Gray rescue RGB FN、RGB reverse rescue、FN Jaccard，以及非癌图FP数量、
+独有FP、匹配FP和FP Jaccard。结果解释必须把FN rescue与新增FP负担放在一起，不能把更高报警
+倾向直接解释成更好的结构知识。来源、中心、分辨率和small/medium/large只作机制分层，不进入
+任何资格门槛。
+
+另输出逐GT实例四象限表：`both_detected`、`rgb_only`、`gray_only_rescue`、`neither`。每个实例
+保留bbox面积与冻结大小组、来源/中心、图像分辨率，以及三seed下RGB/Gray最佳IoU和对应置信度。
+在Primary和val冻结部署点分别统计同一GT被Gray稳定救回的`3/3`、`2/3`、`1/3`和`0/3`数量；
+该稳定性用于区分偶然救回与跨随机初始化重复出现的互补信号。
+
+本步骤不预设External rescue、FN Jaccard或FP负担的新数值门槛。External结果只形成后续研究
+问题的机制证据；即使互补性跨域保持，也不能直接启动Gray Teacher/Student训练。若后续提出
+“将Gray独有结构线索迁移到RGB且不继承Gray性能损失”的假设，必须另行预注册。
+
+独立入口`evaluate_cd1_external.py`及专项测试已实现；纯逻辑测试`14/14`、CD1原有回归
+`20/20`、Val评价回归`11/11`和全量preflight均通过。16张debug队列已完成三seed GPU推理，
+逐GT长表、稳定性表及安全边界字段计数闭合。正式投影必须在代码提交后从干净版本运行。
