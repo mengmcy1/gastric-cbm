@@ -19,7 +19,7 @@ from clong_rpd_render_core import (
     render_overlay,
     save_case_assets,
 )
-from render_clong_rpd_atlas import CODE_ROOT, select_debug_anchors
+from render_clong_rpd_atlas import CODE_ROOT, TECHNICAL_FONT_PATH, select_debug_anchors
 
 
 class RPDRenderTests(unittest.TestCase):
@@ -74,6 +74,9 @@ class RPDRenderTests(unittest.TestCase):
         })
         selected = select_debug_anchors(anchors, 2)
         self.assertEqual(selected.heavy_atlas.tolist(), [True, False])
+
+    def test_frozen_technical_font_supports_chinese(self) -> None:
+        self.assertTrue(TECHNICAL_FONT_PATH.is_file())
 
 
 if __name__ == "__main__":

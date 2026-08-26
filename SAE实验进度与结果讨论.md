@@ -2565,6 +2565,13 @@ selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结
 不包含label、source、Feature ID、干预结果或hard-negative pool。该阶段仍为train-only技术产物，
 不产生医学命名或新的科学PASS/FAIL。
 
+首次正式渲染`render_v1/`于17:38--18:35完成：149个anchor、6,301条case、73,576条唯一资产记录、
+4,414条盲审case，缺失路径和渲染失败均为0；149张Light页、117个Heavy目录、149张盲审页
+全部齐全。但视觉抽查发现50张source panel的中文来源名被PIL默认字体显示为方块。这是展示实现
+失败，不影响病例选择、激活或统计；首轮目录原地保留，不作医生交付。修复固定使用
+`NotoSansCJK-Regular.ttc`并在config记录字体SHA，单anchor真实debug已确认中文正常；
+完整交付包改在新目录`render_v1_retry1/`生成，不覆盖首轮现场。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：

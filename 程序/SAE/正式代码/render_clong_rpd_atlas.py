@@ -36,6 +36,8 @@ RPC2_EVIDENCE = (
 )
 SEEDS = (42, 43, 44)
 STANDARD_ROLES = ("high", "mid", "low", "zero")
+TECHNICAL_FONT_PATH = Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
+TECHNICAL_FONT_SIZE = 12
 
 
 def file_sha256(path: Path) -> str:
@@ -59,6 +61,8 @@ def verify_inputs() -> tuple[dict, pd.DataFrame, pd.DataFrame]:
     protocol = json.loads(RENDER_PROTOCOL.read_text(encoding="utf-8"))
     if protocol["status"] != "frozen_before_image_rendering_2026-08-25":
         raise RuntimeError("RP-D render协议未冻结")
+    if not TECHNICAL_FONT_PATH.is_file():
+        raise FileNotFoundError(f"RP-D技术面板字体不存在: {TECHNICAL_FONT_PATH}")
     if file_sha256(SELECTION_PROTOCOL) != protocol["selection_protocol_sha256"]:
         raise RuntimeError("RP-D selection protocol SHA不一致")
     freeze_path = SELECTION_ROOT / "selection_freeze_v1.json"
@@ -174,7 +178,10 @@ def render_seed_assets(
 
 
 def draw_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str) -> None:
-    draw.text(xy, text, fill=(20, 20, 20), font=ImageFont.load_default())
+    draw.text(
+        xy, text, fill=(20, 20, 20),
+        font=ImageFont.truetype(str(TECHNICAL_FONT_PATH), TECHNICAL_FONT_SIZE),
+    )
 
 
 def technical_grid(
@@ -505,6 +512,8 @@ def main() -> None:
         "selection_freeze_sha256": file_sha256(SELECTION_ROOT / "selection_freeze_v1.json"),
         "asset_manifest_sha256": file_sha256(args.output_root / "rpd_asset_manifest.csv"),
         "blind_manifest_sha256": file_sha256(args.output_root / "blind_review/blind_manifest.csv"),
+        "technical_font_path": str(TECHNICAL_FONT_PATH),
+        "technical_font_sha256": file_sha256(TECHNICAL_FONT_PATH),
         "train_only": True,
         "val_evaluated": False,
         "internal_test_evaluated": False,

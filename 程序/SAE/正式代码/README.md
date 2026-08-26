@@ -412,3 +412,6 @@ python 程序/SAE/正式代码/test_clong_rpd_render.py
 正式后台任务由`run_clong_rpd_render.sh`启动。默认输出为
 `结果/SAE/RP_D_Technical_Atlas_20260825/render_v1/`；目录已存在时快速失败，不覆盖。
 渲染失败只记录`asset_status/failure_reason`，不重选病例。
+技术面板固定使用`/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc`，
+字体SHA写入最终config，避免source中文标签被默认字体显示为方块。
+实现失败后重跑时，通过`RPD_RENDER_OUTPUT_ROOT`指向全新目录，不覆盖首轮现场。
