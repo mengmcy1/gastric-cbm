@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | v1.0正式技术交付完成；Decision-aware全量数值审计完成 | `render_v1_retry2/`通过三层验收并形成约982 MiB阶段成果包；双病例pilot后按预注册完成2350图x149 Anchor纯数值审计：整体Spearman中位数0.522，但Top-1仅1.53%一致、Top-6平均仅0.903/6重合，支持Semantic与Decision-aware两层相关但不可互相替代；仍未启动全量Decision-aware图片生成 |
+| RP-D技术图谱 | v1.0正式技术交付、Decision-aware数值审计及医学生补充包完成 | `render_v1_retry2/`通过三层验收并形成约982 MiB阶段成果包；双病例pilot后按预注册完成2350图x149 Anchor纯数值审计：整体Spearman中位数0.522，但Top-1仅1.53%一致、Top-6平均仅0.903/6重合；另形成12 MiB医学生说明包，含Word、两张pilot、四张统计图和核心表，不含PPT或盲审材料；仍未启动全量Decision-aware图片生成 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2784,6 +2784,25 @@ Anchor基数比例；占功能Top-6槽位28.16%，相对更低。全部image-anc
 先后因Pandas默认导出、修复仅命中极端表路径而未命中主保存路径，被验收判为序列化实现失败现场。
 最终让主保存路径调用已测试的固定宽度NumPy Unicode转换后，在`retry3`独立完整重跑；不覆盖或
 继承前三轮文件。
+
+### Decision-aware医学生阶段汇报包（2026-08-26）
+
+按用户要求不制作PPT，新增独立小体积材料包：
+
+```text
+结果/SAE/RP_SAE_Decision_Aware阶段汇报包_医学生版_20260826_retry1/
+```
+
+包内共16个文件、约12 MiB，包括：1份详细Word说明、两张完整pilot原图、四张全量统计图、
+五张从pilot复制图中确定性裁出的汇报局部图、1份三Sheet核心结果Excel、200条极端rank-gap技术
+候选CSV、README和config。两张pilot只复制不移动，复制件与原文件SHA一致；11张PNG全部通过
+解码，Word正文与表格通过`python-docx`结构核验，Excel Sheet与行数通过程序核验。服务器未安装
+LibreOffice，因此未执行PDF转换式渲染预览。
+
+Word按医学生阅读顺序解释三层含义、两张pilot、350,150组合总体结果、敏感度大小与净方向、
+source-risk和可以/不能下的结论。醒目标注为`train-only / diagnostic-only`，明确只覆盖149个
+研究Anchor而非全部10240 Feature，也明确本包不是匿名盲审材料。无`retry1`后缀包因Word正文
+未直接写出约定术语`train-only`而在验收中停止使用；其图片和数值无误，但不作为交付版本。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
