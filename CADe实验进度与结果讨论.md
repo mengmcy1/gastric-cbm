@@ -54,7 +54,7 @@ CADe与CADx的任务边界固定为：
 | Locked Internal Temporal CADe Test | 保持锁定 | 112张/78人，癌52张/32人、非癌60张/46人；相对CADe开发尚未按YOLO错误返调，CD1-CD5全部冻结前不得读取检测结果 |
 | CD0定量诊断 | 已完成 | 三seed内部val+外部开发队列已运行；外部Primary敏感度平均下降0.0889，小病灶是最弱分层 |
 | CD0人工归因 | 非阻塞并行 | 已冻结510例去重复核包：210例FN+300例FP，其中102例双人独立归因；等待临床时间，不再阻塞CD1 |
-| CD1 Gray Qualification | 训练入口与单seed debug已通过，正式三seed待启动 | Gray 2847张train/val视图、增强smoke、训练入口参数审计及seed42完整train单轮debug均通过；尚未启动正式训练 |
+| CD1 Gray Qualification | 已完成：INCONCLUSIVE | Gray三seed训练及Development Val配对评价完成；平均Primary下降0.0208，但平均救回31.2%的RGB漏检，未通过performance/complementary门槛，也不满足fail条件 |
 | CD2-CD8 | 路线骨架已冻结，逐阶段协议未冻结 | 根据CD0/CD1证据选择下一项假设；不得一次性堆叠Gray、LUPI、多个KD损失和分割 |
 
 ## 已确认的前置证据
@@ -483,14 +483,68 @@ seed42 debug已在完整Development Train（2350张）上完成1轮，独立输�
 预测框报告`x1 must be greater than or equal to x0`，但主训练、验证、checkpoint保存和重载均
 正常完成；当前将其界定为非阻塞的可视化告警，不修改冻结`plots=True`参数。
 
-当前尚未启动任何正式CD1 Gray训练，也尚未实现Development Val正式评价或External投影
-入口。内部test与External均未读取。
+上述训练入口验收后已按冻结配置完成三seed正式训练；Development Val评价入口及专项测试
+随后实现并通过。External投影入口仍未实现，内部test与External均未读取。
+
+## CD1正式Development Val结果（2026-08-26冻结）
+
+Gray seed42/202/503均使用提交`7ae549d`训练，正式评价入口提交为`8fc66f8`；三组训练和评价
+配置均记录`git_dirty=false`。正式决策文件位于
+`结果/CADe/CD1_Gray_Qualification_20260825/Development_Val正式评价/CD1_VAL_DECISION.json`，
+文件SHA256为`d969ac04b88996b54d33f64ce3adf592990d38771fb74bae3ec0c49f703d05c8`，
+绑定评价脚本SHA256 `c6d13d6925fe5231424ee21102f16e96271c2cf4a23b1ae5f446b4a476c34b1f`。
+RGB三seed主指标逐项复现CD0正式记录；Gray各自冻结的部署阈值均在240张癌图上达到精确
+90%图像级召回。External与Locked Internal Temporal CADe Test均未读取。
+
+### Primary与互补性
+
+Primary继续使用`IoU>=0.30`且实际`FP/image<=0.5`时的最高病灶Sensitivity，不插值。
+
+| seed | RGB Primary | Gray Primary | Gray-RGB | Gray救回RGB FN | FN Jaccard | 配对95% CI |
+|---:|---:|---:|---:|---:|---:|---:|
+| 42 | 0.8083 | 0.7875 | -0.0208 | 0.3478（16/46） | 0.4478 | [-0.0700, 0.0288] |
+| 202 | 0.8417 | 0.8125 | -0.0292 | 0.2632（10/38） | 0.5091 | [-0.0707, 0.0100] |
+| 503 | 0.8208 | 0.8083 | -0.0125 | 0.3256（14/43） | 0.4833 | [-0.0667, 0.0400] |
+| 平均 | 0.8236 | 0.8028 | **-0.0208** | **0.3122** | **0.4801** | 描述性汇总见各seed |
+
+冻结四态结论为`INCONCLUSIVE`：
+
+1. 未通过`performance pass`：三seed均下降，平均变化不是`>=+0.01`；
+2. 未通过`complementary pass`：救回率和FN差异均满足要求，三seed单独下降也都未越过
+   `-0.03`，但平均下降`-0.020833`略低于冻结下限`-0.020000`；差值仅0.000833不能成为
+   事后放宽规则的理由；
+3. 不属于`fail`：虽然性能下降条件成立，但平均Gray rescue为0.3122而非`<0.15`，平均
+   FN Jaccard为0.4801而非`>0.80`，说明Gray与RGB错误并不高度重合，Gray确实检出了一批
+   RGB漏诊病灶。
+
+因此，Gray不能作为已验证的单模型性能替代，也不能按本轮规则直接晋级为正式互补教师；
+但其互补信号真实存在，结论应保留为“证据接近门槛但不足”，不能写成Gray完全无效。
+
+### 部署点、定位质量与分层
+
+| seed | RGB病灶Sens | Gray病灶Sens | RGB FP/image | Gray FP/image | RGB mean IoU | Gray mean IoU |
+|---:|---:|---:|---:|---:|---:|---:|
+| 42 | 0.8625 | 0.8542 | 0.7686 | 0.7887 | 0.5945 | 0.5619 |
+| 202 | 0.8792 | 0.8375 | 0.6620 | 0.6016 | 0.5906 | 0.5678 |
+| 503 | 0.8500 | 0.8500 | 0.6137 | 0.7223 | 0.5845 | 0.5588 |
+
+Gray三seed的AP50和mAP50-95也均低于RGB，定位mean IoU均下降；因此Gray的互补性不是建立在
+整体定位质量提升之上。冻结病灶大小分层中，Gray对small Primary三seed均下降；medium在
+seed42/503略高、seed202接近，large总体接近。该现象只作机制描述，不进入四态判定。
+
+非癌图Primary FP Jaccard为0.397至0.435，表示两模型约四成FP区域可匹配，同时双方仍各有
+大量独有FP。这与FN rescue共同说明：去颜色后模型确实改变了错误分布，但变化没有稳定转化
+为总体Primary收益。
+
+首次全量评价在评价代码提交前运行，核心指标与正式重跑完全一致；该产物完整归档为
+`Development_Val正式评价_precommit_attempt_20260826`，不作为正式决策。正式重跑绑定干净
+提交和脚本SHA，生成21个预测、FROC、bootstrap与决策文件。
 
 ## 当前下一步
 
-1. 按GPU实时空闲情况启动Gray seed42/202/503正式训练，保持每个seed独立产品与日志；
-2. 实现`evaluate_cd1_val.py`，复用CD0指标并只读取Development Val，生成三seed四态决策；
-3. 评价入口先做纯逻辑、自测和debug，正式评价不得读取test或External；
-4. 写出并冻结`CD1_VAL_DECISION.json`，在此之前不得实现或读取CD1 External正式结果；
-5. 内部决策冻结后实现并运行External Development只读投影，形成CD1终结报告；
-6. CD0人工归因由医学生并行完成；Locked Internal Temporal CADe Test继续锁定。
+1. CD1内部决策已经冻结；不得改阈值、换seed、补训Gray或重写四态门槛；
+2. 是否执行CD1 External Development只读投影需单独决定；它只能描述Gray互补性是否跨域存在，
+   不能把内部`INCONCLUSIVE`改成PASS；
+3. Gray本轮不能直接作为已放行的CD2 Gray Teacher；下一项CADe干预应重新依据CD0错误地图、
+   Gray互补证据和临床归因可用性，在病灶加权KD、定位KD或hard-negative中冻结一个单一假设；
+4. CD0人工归因由医学生并行完成；Locked Internal Temporal CADe Test继续锁定。
