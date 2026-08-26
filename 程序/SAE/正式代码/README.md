@@ -436,3 +436,24 @@ python 程序/SAE/正式代码/build_rp_sae_clinical_delivery.py
 Light Atlas和117组Heavy Atlas，生成10个Sheet的Excel总表、6张核心统计图、Word/Markdown
 阅读指南以及可筛选HTML图册。它不复制`blind_review/`或73,576个重复底层资产，不读取
 val、internal test或external，也不改写RP-B/C/D正式输入。
+
+已交付主包不再改写。补充回答“SAE扩宽多少、重建后性能变化多大”时，单独运行：
+
+```bash
+python 程序/SAE/正式代码/build_rp_sae_fidelity_brief.py
+```
+
+该入口读取S2c正式config，生成独立Word，说明1280维局部表示到10240维字典的8倍扩宽，
+并列出原C-long学生与K=64/128/256/512/1024重建后的患者AUC、Sensitivity、Specificity、
+Accuracy、F1、一致率和cosine。它明确区分“总体性能变化很小”和“患者一致率未过95%严格门槛”。
+
+若需要从病例角度查看同一图像同时激活哪些Feature及其空间重合，运行：
+
+```bash
+python 程序/SAE/正式代码/build_rp_sae_image_centered_atlas.py \
+  --output-root <新的输出目录>
+```
+
+该入口只复用seed42正式train空间缓存，对RP-D冻结病例中的1770张唯一图像展示149个正式展示
+Anchor中的Top-6，并保存每图全部149个Anchor激活长表。Top-6按本图峰值除以各Anchor冻结Q99
+排序；多颜色混合与重合数均为诊断显示，不参与Feature筛选、医学命名或科学PASS/FAIL。
