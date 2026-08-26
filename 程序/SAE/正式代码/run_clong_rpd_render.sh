@@ -8,5 +8,9 @@ OUTPUT_ROOT="${RPD_RENDER_OUTPUT_ROOT:-$PROJECT_ROOT/结果/SAE/RP_D_Technical_A
 
 cd "$PROJECT_ROOT"
 echo "[$(date '+%F %T')] START RP-D v1 formal render"
-"$PYTHON" "$SCRIPT" --output-root "$OUTPUT_ROOT"
+ARGS=(--output-root "$OUTPUT_ROOT")
+if [[ -n "${RPD_REUSE_INDEPENDENT_ASSETS_FROM:-}" ]]; then
+  ARGS+=(--reuse-independent-assets-from "$RPD_REUSE_INDEPENDENT_ASSETS_FROM")
+fi
+"$PYTHON" "$SCRIPT" "${ARGS[@]}"
 echo "[$(date '+%F %T')] DONE RP-D v1 formal render"

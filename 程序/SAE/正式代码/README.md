@@ -415,3 +415,6 @@ python 程序/SAE/正式代码/test_clong_rpd_render.py
 技术面板固定使用`/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc`，
 字体SHA写入最终config，避免source中文标签被默认字体显示为方块。
 实现失败后重跑时，通过`RPD_RENDER_OUTPUT_ROOT`指向全新目录，不覆盖首轮现场。
+若一个已完整渲染目录只存在文字展示问题，可同时设置
+`RPD_REUSE_INDEPENDENT_ASSETS_FROM`；启动器会先核验该目录的config/asset-manifest/protocol SHA，
+硬链接已验收的original/raw 7x7/heatmap/overlay，然后只重建面板与盲审包。

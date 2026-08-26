@@ -2572,6 +2572,13 @@ selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结
 `NotoSansCJK-Regular.ttc`并在config记录字体SHA，单anchor真实debug已确认中文正常；
 完整交付包改在新目录`render_v1_retry1/`生成，不覆盖首轮现场。
 
+`render_v1_retry1/`于2026-08-26 10:31在面板生成后段被共享服务器OOM killer终止（exit 137）；
+任务自身峰值约4.7 GiB，而当时整机swap已用尽且其他用户内存占用显著上升。该目录无最终
+`config.json`，定性为外部资源竞争导致的实现失败，无科学结论。为缩短共享服务器暴露时间且减少
+磁盘重复，`retry2`只从已完整验收的`render_v1/`硬链接original/raw 7x7/heatmap/overlay，
+重建所有带文字的Light/Heavy/Blind/source面板和最终清单。复用源config与asset-manifest SHA在链接前
+强制核验；病例、Feature、Q99和数值资产均不重算或重选。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：

@@ -8,6 +8,7 @@ import gc
 import hashlib
 import json
 import os
+from functools import lru_cache
 from pathlib import Path
 
 import matplotlib
@@ -53,6 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Render frozen RP-D v1 Atlas")
     parser.add_argument("--output-root", type=Path, default=OUTPUT_ROOT)
     parser.add_argument("--debug-anchor-limit", type=int, default=0)
+    parser.add_argument("--reuse-independent-assets-from", type=Path)
     return parser.parse_args()
 
 
@@ -99,6 +101,47 @@ def select_debug_anchors(anchors: pd.DataFrame, limit: int) -> pd.DataFrame:
         anchors[~anchors.heavy_atlas].sort_values("anchor_id"),
     ]).drop_duplicates("anchor_id")
     return ordered.head(limit).reset_index(drop=True)
+
+
+def reuse_independent_assets(
+    source_root: Path,
+    output_root: Path,
+    protocol: dict,
+    anchors: pd.DataFrame,
+) -> tuple[list[dict], pd.DataFrame]:
+    """从已完成渲染硬链接数值/病例资产，仅重建文字面板。"""
+    source_config_path = source_root / "config.json"
+    source_manifest_path = source_root / "rpd_asset_manifest.csv"
+    source_config = json.loads(source_config_path.read_text(encoding="utf-8"))
+    if source_config["status"] != "rpd_render_complete":
+        raise RuntimeError("复用渲染源不是完整产物")
+    if source_config["render_protocol_sha256"] != file_sha256(RENDER_PROTOCOL):
+        raise RuntimeError("复用渲染源的render protocol SHA不一致")
+    if source_config["selection_freeze_sha256"] != protocol["selection_freeze_sha256"]:
+        raise RuntimeError("复用渲染源的selection freeze SHA不一致")
+    if file_sha256(source_manifest_path) != source_config["asset_manifest_sha256"]:
+        raise RuntimeError("复用渲染源的asset manifest SHA不一致")
+    source_assets = pd.read_csv(source_manifest_path, low_memory=False)
+    independent_types = {"original", "raw_7x7", "heatmap", "overlay"}
+    independent = source_assets[source_assets.asset_type.isin(independent_types)].copy()
+    if independent.asset_status.ne("ok").any() or independent.relative_output_path.duplicated().any():
+        raise RuntimeError("复用独立资产不完整")
+    for relative in independent.relative_output_path.astype(str):
+        source = source_root / relative
+        target = output_root / relative
+        if not source.is_file():
+            raise FileNotFoundError(f"复用独立资产缺失: {relative}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        os.link(source, target)
+    q99_source = source_root / "q99_scales.csv"
+    q99_target = output_root / "q99_scales.csv"
+    os.link(q99_source, q99_target)
+    scales = pd.read_csv(q99_target, dtype={"anchor_id": str})
+    expected = {(str(row.anchor_id), seed) for row in anchors.itertuples() for seed in SEEDS}
+    actual = set(zip(scales.anchor_id.astype(str), scales.seed.astype(int)))
+    if actual != expected:
+        raise RuntimeError("复用Q99的anchor x seed集合不一致")
+    return independent.to_dict("records"), scales
 
 
 def add_asset_record(
@@ -177,10 +220,16 @@ def render_seed_assets(
     return scale_frame
 
 
+@lru_cache(maxsize=1)
+def technical_font() -> ImageFont.FreeTypeFont:
+    """只加载一次固定中文字体，避免面板循环重复分配。"""
+    return ImageFont.truetype(str(TECHNICAL_FONT_PATH), TECHNICAL_FONT_SIZE)
+
+
 def draw_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str) -> None:
     draw.text(
         xy, text, fill=(20, 20, 20),
-        font=ImageFont.truetype(str(TECHNICAL_FONT_PATH), TECHNICAL_FONT_SIZE),
+        font=technical_font(),
     )
 
 
@@ -434,14 +483,21 @@ def main() -> None:
     anchors = select_debug_anchors(anchors, int(args.debug_anchor_limit))
     cases = cases[cases.anchor_id.isin(anchors.anchor_id)].copy()
     args.output_root.mkdir(parents=True)
-    asset_records: list[dict] = []
-    scale_frames = []
-    for seed in SEEDS:
-        scale_frames.append(render_seed_assets(
-            seed, anchors, cases, protocol, args.output_root, asset_records,
-        ))
-    scales = pd.concat(scale_frames, ignore_index=True)
-    scales.to_csv(args.output_root / "q99_scales.csv", index=False)
+    if args.reuse_independent_assets_from:
+        if args.debug_anchor_limit:
+            raise ValueError("debug不允许复用正式独立资产")
+        asset_records, scales = reuse_independent_assets(
+            args.reuse_independent_assets_from, args.output_root, protocol, anchors,
+        )
+    else:
+        asset_records = []
+        scale_frames = []
+        for seed in SEEDS:
+            scale_frames.append(render_seed_assets(
+                seed, anchors, cases, protocol, args.output_root, asset_records,
+            ))
+        scales = pd.concat(scale_frames, ignore_index=True)
+        scales.to_csv(args.output_root / "q99_scales.csv", index=False)
 
     evidence = pd.read_csv(RPC2_EVIDENCE, dtype={"anchor_id": str})
     for anchor in anchors.itertuples(index=False):
@@ -514,6 +570,13 @@ def main() -> None:
         "blind_manifest_sha256": file_sha256(args.output_root / "blind_review/blind_manifest.csv"),
         "technical_font_path": str(TECHNICAL_FONT_PATH),
         "technical_font_sha256": file_sha256(TECHNICAL_FONT_PATH),
+        "reused_independent_assets_from": (
+            str(args.reuse_independent_assets_from) if args.reuse_independent_assets_from else None
+        ),
+        "reused_source_config_sha256": (
+            file_sha256(args.reuse_independent_assets_from / "config.json")
+            if args.reuse_independent_assets_from else None
+        ),
         "train_only": True,
         "val_evaluated": False,
         "internal_test_evaluated": False,
