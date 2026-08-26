@@ -1,0 +1,54 @@
+{
+  "protocol_id": "decision_aware_full_numeric_audit_v1",
+  "status": "frozen_2026-08-26",
+  "scope": {
+    "split": "train_only",
+    "image_count": 2350,
+    "anchor_count": 149,
+    "canonical_seed": 42,
+    "diagnostic_only": true,
+    "scientific_pass_fail": false,
+    "generate_endoscopy_panels": false
+  },
+  "scores": {
+    "raw": "max_position_activation / frozen_seed42_anchor_train_positive_q99",
+    "functional": "abs(formal_rpc2_recomputed_attention_image_delta_margin_alpha_0p00)",
+    "signed_delta": "ablated_margin_minus_original_margin"
+  },
+  "ranking": {
+    "top_k": [1, 3, 6, 10],
+    "top_k_overlap": "intersection_count / k",
+    "deterministic_order": ["score_descending", "anchor_id_ascending"],
+    "spearman_ties": "average_rank"
+  },
+  "direction": {
+    "positive": "original_feature_net_intervention_effect_suppresses_cancer_margin",
+    "negative": "original_feature_net_intervention_effect_elevates_cancer_margin",
+    "zero": "exact_float_zero",
+    "near_zero_diagnostic": "abs(delta_margin) <= 1e-6",
+    "correct_label_support": {
+      "cancer_label_1": "delta_margin < 0",
+      "noncancer_label_0": "delta_margin > 0"
+    }
+  },
+  "reverse_rank_tables": {
+    "raw_top6_to_functional_rank_rows": 14100,
+    "functional_top6_to_raw_rank_rows": 14100
+  },
+  "extreme_decoupling": {
+    "rank_gap": "functional_rank - raw_rank",
+    "largest_positive_count": 100,
+    "largest_negative_count": 100,
+    "positive_order": ["rank_gap_descending", "image_index_ascending", "anchor_id_ascending"],
+    "negative_order": ["rank_gap_ascending", "image_index_ascending", "anchor_id_ascending"],
+    "render_images": false
+  },
+  "strata": ["overall", "label", "source_risk", "label_x_source_risk"],
+  "matrix_outputs": [
+    "raw_score_matrix.npy",
+    "functional_score_matrix.npy",
+    "signed_delta_matrix.npy",
+    "anchor_ids.npy"
+  ],
+  "interpretation_boundary": "raw_activation_and_functional_sensitivity_describe_different_information_and_cannot_replace_each_other"
+}

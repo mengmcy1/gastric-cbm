@@ -2694,6 +2694,33 @@ scientific_pass_fail=false`的config。首次无`retry1`目录是输入路径字
 未产生图片或数值结果。当前暂不启动149 Anchor全量Decision-aware Atlas；先由本pilot确认展示形式，
 原RP-D继续作为Semantic Feature Atlas保留。
 
+### Decision-aware全量数值审计v1预注册（2026-08-26冻结）
+
+双病例pilot只证明展示形式能够区分representation与functional dependence，不能回答这种解耦在
+完整train中有多普遍。因此在读取总体审计结果前冻结
+`decision_aware_audit_protocol_v1.json`，只分析完整2350张train图与149个既有Anchor，合计
+350,150个`image x anchor`组合；不读取val/internal test/external，不重新训练、筛选Anchor或生成
+胃镜图片，也不产生科学PASS/FAIL。
+
+两套分数保持与pilot完全一致：视觉语义分数为每图Feature空间峰值除以冻结seed42 Anchor train
+正激活Q99；功能敏感度分数为正式RP-C2重算attention后逐图`abs(delta_margin at alpha=0)`。
+两者均只在同一149 Anchor内排序。Top-k固定为`k={1,3,6,10}`，重合指标定义为
+`intersection_count / k`而非Jaccard；Top-k及ordinal rank的并列规则固定为分数降序、
+`anchor_id`升序。每图Spearman使用标准average ranks，禁止与确定性ordinal rank混用。
+
+方向保持`delta_margin=ablated-original`：正值表示原Feature净干预作用倾向压低癌margin，负值表示
+倾向抬高癌margin。癌图负值、非癌图正值记为`correct_label_supporting`；反方向记为`opposing`；
+严格浮点0单列。`abs(delta)<=1e-6`只作数值近零描述，不改变主符号分类。
+
+冻结输出包括2350行逐图摘要、14,100行Raw Top-6到功能rank反查、14,100行功能Top-6到Raw rank
+反查、rank gap正负各100条极端解耦记录、总体/癌非癌/source-risk分层摘要、三张分数矩阵与
+Anchor ID数组，以及四张总体统计图。rank gap定义为`functional_rank-raw_rank`；正向Top100表示
+视觉显眼但功能弱，负向Top100表示视觉不显眼但功能敏感，均只输出CSV，不自动绘图。
+
+本审计的解释边界预先固定为：raw SAE activation与RP-C2 functional sensitivity描述不同性质的
+信息，不能相互替代。即使总体解耦明显，也不能写成raw SAE不可靠或Semantic Atlas无效；是否
+扩展全量Decision-aware图片必须等本轮纯数值结果完成后另行决定。
+
 ## S2-S3正式矩阵结果（2026-08-20）
 
 正式17组矩阵已于2026-08-20全部运行完成，汇总器输出：
