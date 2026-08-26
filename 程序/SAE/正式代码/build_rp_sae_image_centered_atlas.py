@@ -19,12 +19,14 @@ from clong_rpd_render_core import display_response, render_heatmap, render_overl
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 SAE_ROOT = PROJECT_ROOT / "结果/SAE"
 RPA_CACHE = SAE_ROOT / "RP_A_Development_20260824/analysis_cache/seed42"
-SPATIAL_METADATA = SAE_ROOT / "CLong_S2b结构重构_20260820/frozen_spatial_cache/train_metadata.csv"
+SPATIAL_CACHE = SAE_ROOT / "CLong_S2b结构重构_20260820/frozen_spatial_cache"
+SPATIAL_METADATA = SPATIAL_CACHE / "train_metadata.csv"
+CLONG_ATTENTION = SPATIAL_CACHE / "train_attention.npy"
 RPB_MASTER = SAE_ROOT / "RP_B_Technical_20260825/anchor_master/anchor_master.csv"
 RPD_SELECTION = SAE_ROOT / "RP_D_Technical_Atlas_20260825/manifest_dry_run_v1_retry1"
 RPD_RENDER = SAE_ROOT / "RP_D_Technical_Atlas_20260825/render_v1_retry2"
 DEFAULT_OUTPUT = (
-    SAE_ROOT / "RP_SAE完整阶段成果_医学生提交版_v1_20260826/10_逐图多Feature图谱"
+    SAE_ROOT / "RP_SAE完整阶段成果_医学生提交版_v1_20260826/11_C-long注意力与SAE对照图谱_v1"
 )
 FONT_PATH = Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
 ACTIVE_EPS = 1e-8
@@ -34,27 +36,27 @@ COLORS = np.asarray([
     [213, 62, 79], [50, 136, 189], [244, 109, 67],
     [102, 194, 165], [171, 85, 182], [230, 171, 2],
 ], dtype=np.float32) / 255.0
-SHAREDNESS_CN = {
-    "shared_high": "癌与非癌均高覆盖",
-    "mixed_uncertain": "混合或暂不确定",
-    "cancer_enriched": "癌侧富集",
-}
-
-
 def parse_args() -> argparse.Namespace:
     """读取输出路径和可选的小规模验收数量。"""
     parser = argparse.ArgumentParser(description="Build image-centered RP-SAE Atlas")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--limit", type=int, default=0, help="0表示处理全部1770张冻结Atlas图像")
+    parser.add_argument(
+        "--image-indices", type=str, default="",
+        help="可选的逗号分隔image_index；用于定向复核病例",
+    )
     return parser.parse_args()
 
 
-def load_inputs(limit: int) -> tuple[pd.DataFrame, pd.DataFrame, np.memmap]:
+def load_inputs(
+    limit: int, requested_image_indices: list[int],
+) -> tuple[pd.DataFrame, pd.DataFrame, np.memmap, np.memmap]:
     """加载冻结病例、149个Anchor元数据、Q99和seed42空间激活。"""
     required = [
         RPA_CACHE / "train_image_activations.npy",
         RPA_CACHE / "train_images.csv",
         SPATIAL_METADATA,
+        CLONG_ATTENTION,
         RPB_MASTER,
         RPD_SELECTION / "rpd_anchor_manifest.csv",
         RPD_SELECTION / "rpd_case_manifest.csv",
@@ -71,6 +73,13 @@ def load_inputs(limit: int) -> tuple[pd.DataFrame, pd.DataFrame, np.memmap]:
     images = images.sort_values("image_index").reset_index(drop=True)
     if images.image_index.nunique() != 1770:
         raise RuntimeError(f"冻结RP-D唯一图像应为1770，实际={images.image_index.nunique()}")
+    if requested_image_indices:
+        requested = set(requested_image_indices)
+        images = images[images.image_index.isin(requested)].copy()
+        missing_indices = sorted(requested - set(images.image_index.astype(int)))
+        if missing_indices:
+            raise ValueError(f"指定image_index不在冻结Atlas中: {missing_indices}")
+        images = images.sort_values("image_index").reset_index(drop=True)
     if limit > 0:
         images = images.head(limit).copy()
 
@@ -103,7 +112,37 @@ def load_inputs(limit: int) -> tuple[pd.DataFrame, pd.DataFrame, np.memmap]:
     activation = np.load(RPA_CACHE / "train_image_activations.npy", mmap_mode="r")
     if activation.shape != (2350, 49, 10240):
         raise RuntimeError(f"seed42空间激活shape异常: {activation.shape}")
-    return images, anchors, activation
+    attention = np.load(CLONG_ATTENTION, mmap_mode="r")
+    if attention.shape != (2350, 49):
+        raise RuntimeError(f"C-long注意力shape异常: {attention.shape}")
+    selected_attention = np.asarray(attention[image_indices], dtype=np.float64)
+    if not np.isfinite(selected_attention).all():
+        raise RuntimeError("C-long注意力包含NaN/Inf")
+    if not np.allclose(selected_attention.sum(axis=1), 1.0, atol=1e-5):
+        raise RuntimeError("C-long注意力逐图和不为1")
+    return images, anchors, activation, attention
+
+
+def attention_alignment(
+    response: np.ndarray, attention: np.ndarray,
+) -> tuple[float | None, float | None, float | None]:
+    """比较同一7x7网格上的Feature激活与C-long原始注意力。"""
+    feature = np.clip(np.asarray(response, dtype=np.float64).reshape(-1), 0.0, None)
+    original_attention = np.asarray(attention, dtype=np.float64).reshape(-1)
+    feature_sum = float(feature.sum())
+    if feature_sum <= ACTIVE_EPS:
+        return None, None, None
+    feature_distribution = feature / feature_sum
+    attention_distribution = original_attention / original_attention.sum()
+    overlap = float(np.minimum(feature_distribution, attention_distribution).sum())
+    denominator = float(
+        np.linalg.norm(feature_distribution) * np.linalg.norm(attention_distribution)
+    )
+    cosine = float(np.dot(feature_distribution, attention_distribution) / denominator)
+    feature_peak = np.asarray(np.unravel_index(np.argmax(feature), (7, 7)))
+    attention_peak = np.asarray(np.unravel_index(np.argmax(attention_distribution), (7, 7)))
+    peak_distance = float(np.linalg.norm(feature_peak - attention_peak))
+    return overlap, cosine, peak_distance
 
 
 def pad_image(image: Image.Image, size: tuple[int, int]) -> Image.Image:
@@ -154,6 +193,7 @@ def render_panel(
     image_row: pd.Series,
     anchors: pd.DataFrame,
     image_activation: np.ndarray,
+    clong_attention: np.ndarray,
     output: Path,
 ) -> tuple[dict, list[dict]]:
     """生成一张病例中心总览，并返回Top与全149激活记录。"""
@@ -170,6 +210,9 @@ def render_panel(
     order = np.lexsort((anchors.anchor_id.to_numpy(str), -score))
     selected = order[:TOP_N]
     responses = np.stack([display_response(raw[index], float(q99[index])) for index in selected])
+    attention_7x7 = np.asarray(clong_attention, dtype=np.float32).reshape(7, 7)
+    attention_display = attention_7x7 / float(attention_7x7.max())
+    selected_alignment = [attention_alignment(raw[index], attention_7x7) for index in selected]
 
     tile = (420, 315)
     header = 92
@@ -177,7 +220,7 @@ def render_panel(
     label_h = 58
     canvas_w = gap * 3 + tile[0] * 2
     row_h = label_h + tile[1]
-    canvas_h = header + gap * 6 + row_h * 5
+    canvas_h = header + gap * 7 + row_h * 6
     canvas = Image.new("RGB", (canvas_w, canvas_h), "white")
     draw = ImageDraw.Draw(canvas)
     title_font = ImageFont.truetype(str(FONT_PATH), 19)
@@ -194,30 +237,37 @@ def render_panel(
 
     base = pad_image(original, tile)
     top_original = base
+    attention_heatmap = render_heatmap(attention_display, base.size)
+    attention_overlay = render_overlay(base, attention_heatmap, attention_display, 0.58)
     composite = color_composite(base, responses)
     top_items = [
         ("原图", "同一张冻结train图像", top_original),
+        ("C-long原始注意力", "模型分类时实际使用的7x7空间权重", attention_overlay),
         ("Top-6 SAE Feature多颜色叠加", "颜色对应下方Feature；重叠处发生混色", composite),
+        ("Top-6响应重合数", "达到各自0.5×Q99；亮色表示重合更多", overlap_map(responses, tile)),
     ]
-    y = header + gap
-    for column, (title, subtitle, image) in enumerate(top_items):
+    for item_index, (title, subtitle, image) in enumerate(top_items):
+        row = item_index // 2
+        column = item_index % 2
         x = gap + column * (tile[0] + gap)
+        y = header + gap + row * (row_h + gap)
         draw_title(canvas, (x, y), title, subtitle, title_font, tiny_font)
         canvas.paste(image, (x, y + label_h))
 
     for rank, anchor_index in enumerate(selected):
-        row = rank // 2 + 1
+        row = rank // 2 + 2
         column = rank % 2
         x = gap + column * (tile[0] + gap)
         y = header + gap + row * (row_h + gap)
         anchor = anchors.iloc[anchor_index]
         color = tuple(int(value * 255) for value in COLORS[rank])
         draw.rectangle((x, y + 2, x + 13, y + 15), fill=color)
-        sharedness = SHAREDNESS_CN.get(str(anchor.sharedness_class), str(anchor.sharedness_class))
+        overlap, _, peak_distance = selected_alignment[rank]
         draw_title(
             canvas, (x + 19, y),
             f"Top {rank + 1}: {anchor.anchor_id} / Feature {int(anchor.feature_id)}",
-            f"相对响应={score[anchor_index]:.3f} | 干预效应={float(anchor.median_intermediate_curve_overall_effect):.4f} | {sharedness}",
+            f"注意重合={overlap:.3f} | 峰距={peak_distance:.1f}格 | "
+            f"Anchor总体干预={float(anchor.median_intermediate_curve_overall_effect):.4f}",
             title_font, tiny_font,
         )
         response = responses[rank]
@@ -225,12 +275,24 @@ def render_panel(
         overlay = render_overlay(base, heatmap, response, 0.58)
         canvas.paste(overlay, (x, y + label_h))
 
-    bottom_y = header + gap + 4 * (row_h + gap)
+    bottom_y = header + gap + 5 * (row_h + gap)
     draw_title(
-        canvas, (gap, bottom_y), "Top-6响应重合数",
-        "达到各自0.5×Q99；亮色表示同一区域响应Feature更多", title_font, tiny_font,
+        canvas, (gap, bottom_y), "原注意力与SAE Feature怎么比较",
+        "重合度0到1；越高表示空间分布越接近。峰距单位为7x7网格格数", title_font, tiny_font,
     )
-    canvas.paste(overlap_map(responses, tile), (gap, bottom_y + label_h))
+    explanation = Image.new("RGB", tile, (246, 248, 248))
+    explanation_draw = ImageDraw.Draw(explanation)
+    explanation_lines = [
+        "C-long注意力：模型总体从哪些位置汇总信息。",
+        "SAE Feature：某一种内部视觉模式在哪些位置激活。",
+        "二者不要求完全相同；Feature激活不等于分类依赖。",
+        "请结合干预效应判断模型是否真正依赖该Feature。",
+    ]
+    for line_index, line in enumerate(explanation_lines):
+        explanation_draw.text(
+            (14, 18 + line_index * 52), line, fill=(42, 48, 50), font=small_font,
+        )
+    canvas.paste(explanation, (gap, bottom_y + label_h))
     summary_x = gap * 2 + tile[0]
     draw_title(canvas, (summary_x, bottom_y), "Top-6技术摘要",
                "matched percentile不是p值；source-risk只是排查提示", title_font, tiny_font)
@@ -238,6 +300,7 @@ def render_panel(
     summary_draw = ImageDraw.Draw(summary_box)
     for rank, anchor_index in enumerate(selected):
         anchor = anchors.iloc[anchor_index]
+        overlap, cosine, peak_distance = selected_alignment[rank]
         color = tuple(int(value * 255) for value in COLORS[rank])
         y_text = 12 + rank * 48
         summary_draw.rectangle((10, y_text + 3, 24, y_text + 17), fill=color)
@@ -245,7 +308,7 @@ def render_panel(
                           fill=(25, 30, 32), font=small_font)
         summary_draw.text(
             (32, y_text + 21),
-            f"Q99比={score[anchor_index]:.3f}  matched={float(anchor.median_matched_midrank_percentile):.2f}  "
+            f"重合={overlap:.2f}  cosine={cosine:.2f}  峰距={peak_distance:.1f}  "
             f"source-risk={bool(anchor.source_risk)}",
             fill=(72, 78, 80), font=tiny_font,
         )
@@ -267,10 +330,23 @@ def render_panel(
         "top_anchor_ids": ";".join(anchors.iloc[selected].anchor_id.astype(str)),
         "top_feature_ids": ";".join(anchors.iloc[selected].feature_id.astype(int).astype(str)),
         "top_relative_q99_scores": ";".join(f"{score[index]:.6g}" for index in selected),
+        "top_attention_overlaps": ";".join(
+            f"{selected_alignment[rank][0]:.6g}" for rank in range(TOP_N)
+        ),
+        "top_attention_cosines": ";".join(
+            f"{selected_alignment[rank][1]:.6g}" for rank in range(TOP_N)
+        ),
+        "top_attention_peak_distances": ";".join(
+            f"{selected_alignment[rank][2]:.6g}" for rank in range(TOP_N)
+        ),
         "panel_path": f"图像中心总览/{filename}",
     }
     all_records = []
+    top_rank_by_index = {
+        int(anchor_index): rank + 1 for rank, anchor_index in enumerate(selected)
+    }
     for index, anchor in anchors.iterrows():
+        overlap, cosine, peak_distance = attention_alignment(raw[index], attention_7x7)
         all_records.append({
             "image_index": int(image_row.image_index),
             "patient_id": str(image_row.patient_id),
@@ -282,6 +358,10 @@ def render_panel(
             "mass_activation": float(mass[index]),
             "q99_scale": float(q99[index]),
             "relative_q99_score": float(score[index]),
+            "top6_rank": top_rank_by_index.get(int(index)),
+            "clong_attention_overlap": overlap,
+            "clong_attention_cosine": cosine,
+            "clong_attention_peak_distance_grid": peak_distance,
             "active": bool(peak[index] > ACTIVE_EPS),
             "sharedness_class": str(anchor.sharedness_class),
             "source_risk": bool(anchor.source_risk),
@@ -337,13 +417,19 @@ def write_readme(path: Path, image_count: int) -> None:
 ## 每张总览怎么看
 
 1. 原图；
-2. Top-6多颜色叠加图；
-3. Top-6响应重合数图；
-4. 六个Feature各自的单独overlay。
+2. C-long原始注意力图；
+3. Top-6多颜色叠加图；
+4. Top-6响应重合数图；
+5. 六个Feature各自的单独overlay，并报告与原注意力的重合度和峰值距离。
 
 Top Feature按“本图空间峰值 / 该Anchor完整train正激活Q99”排序。这个相对分数只用于同一张图
 内选择突出Feature，不能解释为Feature A在医学上比Feature B强多少。重合数使用0.5×各自Q99作为
 显示阈值，仅是空间可视化诊断，不参与科学门槛或Feature筛选。
+
+“注意重合”先把C-long注意力和单Feature非负激活分别归一化为总和1，再计算逐网格最小值之和，
+范围0到1，越高表示两种空间分布越接近。“峰距”是两张7x7图最高响应网格之间的欧氏距离。
+这些指标只用于回答原注意力与SAE Feature关注位置是否一致，不参与选模或Feature排序。
+图中“Anchor总体干预”来自RP-C2跨病例汇总，不是当前单张图的个体干预效应。
 
 `逐图全部149Feature激活.csv`保存每张图对全部149个展示Anchor的激活，而总览只画Top-6，
 因此Top-6不表示模型只激活了六个Feature。
@@ -364,7 +450,10 @@ def main() -> None:
     output = args.output_root.resolve()
     if output.exists():
         raise FileExistsError(f"输出目录已存在，拒绝覆盖: {output}")
-    images, anchors, activation = load_inputs(args.limit)
+    requested_image_indices = [
+        int(value.strip()) for value in args.image_indices.split(",") if value.strip()
+    ]
+    images, anchors, activation, attention = load_inputs(args.limit, requested_image_indices)
     panel_root = output / "图像中心总览"
     panel_root.mkdir(parents=True)
 
@@ -373,7 +462,8 @@ def main() -> None:
     for number, image_row in enumerate(images.itertuples(index=False), start=1):
         top, records = render_panel(
             pd.Series(image_row._asdict()), anchors,
-            activation[int(image_row.image_index)], panel_root,
+            activation[int(image_row.image_index)],
+            attention[int(image_row.image_index)], panel_root,
         )
         top_records.append(top)
         all_records.extend(records)
@@ -382,8 +472,27 @@ def main() -> None:
 
     summary = pd.DataFrame(top_records)
     summary.to_csv(output / "逐图Top6_Feature汇总.csv", index=False, encoding="utf-8-sig")
-    pd.DataFrame(all_records).to_csv(
-        output / "逐图全部149Feature激活.csv", index=False, encoding="utf-8-sig"
+    all_frame = pd.DataFrame(all_records)
+    all_frame.to_csv(output / "逐图全部149Feature激活.csv", index=False, encoding="utf-8-sig")
+    top6_frame = all_frame[all_frame.top6_rank.notna()].copy()
+    summary_rows = []
+    for group_name, frame in [("全部", top6_frame), ("非癌", top6_frame[top6_frame.label.eq(0)]),
+                              ("癌", top6_frame[top6_frame.label.eq(1)])]:
+        summary_rows.append({
+            "分组": group_name,
+            "图像数": int(frame.image_index.nunique()),
+            "Top6记录数": int(len(frame)),
+            "注意重合均值": float(frame.clong_attention_overlap.mean()),
+            "注意重合中位数": float(frame.clong_attention_overlap.median()),
+            "注意重合Q25": float(frame.clong_attention_overlap.quantile(0.25)),
+            "注意重合Q75": float(frame.clong_attention_overlap.quantile(0.75)),
+            "重合度不低于0.5比例": float(frame.clong_attention_overlap.ge(0.5).mean()),
+            "峰距中位数_网格": float(frame.clong_attention_peak_distance_grid.median()),
+            "source_risk比例": float(frame.source_risk.mean()),
+        })
+    pd.DataFrame(summary_rows).to_csv(
+        output / "C-long注意力与Top6_SAE空间一致性汇总.csv",
+        index=False, encoding="utf-8-sig",
     )
     write_html(summary, output / "逐图多Feature图册.html")
     write_readme(output / "README_图片怎么看.md", len(images))
@@ -395,6 +504,13 @@ def main() -> None:
         "top_n": TOP_N,
         "ranking": "image_peak_activation / frozen_anchor_train_positive_q99",
         "overlap_display_threshold": "0.5 * frozen_anchor_train_positive_q99",
+        "clong_attention_comparison": {
+            "source": str(CLONG_ATTENTION.relative_to(PROJECT_ROOT)),
+            "grid": [7, 7],
+            "overlap": "sum(min(L1_normalized_feature, L1_normalized_attention))",
+            "peak_distance": "euclidean distance between argmax cells in 7x7 grid",
+            "selection_role": "diagnostic_only",
+        },
         "diagnostic_only": True,
         "train_only": True,
         "val_evaluated": False,
