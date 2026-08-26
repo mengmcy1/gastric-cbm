@@ -44,6 +44,9 @@ CD1正式协议、Gray数据和单seed训练入口均已冻结。先验证Gray�
 
 /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
   程序/CADe/正式代码/test_train_cd1_gray.py
+
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/test_evaluate_cd1_val.py
 ```
 
 测试通过后，生成只包含Development Train/Val的三通道Gray PNG视图：
@@ -74,3 +77,20 @@ CUDA_VISIBLE_DEVICES=<物理GPU编号> /home/mcy/miniconda3/envs/gastric-cbm/bin
 启动任何GPU任务前必须先用`nvidia-smi`同时核对显存、利用率和进程。`train_cd1_gray.py`
 只训练并保存可追溯产品，不计算Primary、rescue、Jaccard或部署阈值，也不作Gray资格判断。
 正式三seed完成后必须由独立的Development Val评价入口统一生成四态结论。
+
+三组正式训练产品齐全后，先运行只读预检，再在一张空闲GPU上执行唯一一次正式val评价：
+
+```bash
+/home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/evaluate_cd1_val.py \
+  --device 0 \
+  --preflight-only
+
+CUDA_VISIBLE_DEVICES=<物理GPU编号> /home/mcy/miniconda3/envs/gastric-cbm/bin/python \
+  程序/CADe/正式代码/evaluate_cd1_val.py \
+  --device 0
+```
+
+正式入口重新推理冻结RGB与Gray产品，只读取Development Val，使用5000次患者簇配对
+bootstrap，并生成不可覆盖的`CD1_VAL_DECISION.json`。该文件冻结前后均不得读取External
+Development或Locked Internal Temporal CADe Test。
