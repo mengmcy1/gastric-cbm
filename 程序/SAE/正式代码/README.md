@@ -422,3 +422,17 @@ python 程序/SAE/正式代码/test_clong_rpd_render.py
 当前正式交付目录为`render_v1_retry2/`，状态为**RP-SAE Technical Interpretation Delivery v1.0**。
 交付边界、目录说明和三层验收结果见该目录下`TECHNICAL_README.md`和
 `delivery_validation.json`。`render_v1/`和`render_v1_retry1/`仅是实现失败血缘，不得用于交付。
+
+## RP-SAE医学生阶段成果包
+
+在正式技术交付通过后，可将RP-B癌/非癌统计、RP-C2五剂量干预证据和RP-D正式Atlas整理成
+类似旧全局SAE材料的完整医学生提交包：
+
+```bash
+python 程序/SAE/正式代码/build_rp_sae_clinical_delivery.py
+```
+
+默认输出为`结果/SAE/RP_SAE完整阶段成果_医学生提交版_v1_20260826/`。该入口复制全部149张
+Light Atlas和117组Heavy Atlas，生成10个Sheet的Excel总表、6张核心统计图、Word/Markdown
+阅读指南以及可筛选HTML图册。它不复制`blind_review/`或73,576个重复底层资产，不读取
+val、internal test或external，也不改写RP-B/C/D正式输入。

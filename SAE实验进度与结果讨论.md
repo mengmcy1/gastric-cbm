@@ -56,7 +56,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 
 ## 当前状态
 
-更新时间：2026-08-25
+更新时间：2026-08-26
 
 | 项目 | 状态 | 当前结论或阻塞项 |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | v1.0正式技术交付完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；73,576条资产0缺失/0失败；下一步转入医生盲审 |
+| RP-D技术图谱 | v1.0正式技术交付及医学生阶段成果包完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；另已生成约982 MiB的完整阶段成果包，先用于展示癌/非癌统计、空间图谱和干预证据，盲审另立后续流程 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2593,7 +2593,27 @@ selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结
 正式技术交付名称为**RP-SAE Technical Interpretation Delivery v1.0**。`render_v1/`仅保留展示失败
 血缘，`render_v1_retry1/`仅保留共享服务器OOM实现现场，两者均不交付。完整验收记录和说明分别见
 `render_v1_retry2/delivery_validation.json`与`TECHNICAL_README.md`。本阶段不再追加SAE调参实验，
-下一步是把`blind_review/`交给医学生/医生盲审，annotation冻结后再提供Technical Reveal。
+下一步先向医学生展示现有SAE技术产出、癌/非癌统计和干预证据；盲审另立后续流程。若当前
+接收者已经查看带标签的Technical Atlas，则其后续审核只能称为临床审核，不能再作为同一材料的
+首次盲审。
+
+### RP-SAE医学生完整阶段成果包（2026-08-26）
+
+按旧`结果/SAE分析/EfficientNet全局分支_0804/`的“全量统计表 + 每候选概览 + HTML图册”交付
+方式，新增`build_rp_sae_clinical_delivery.py`并生成：
+
+```text
+结果/SAE/RP_SAE完整阶段成果_医学生提交版_v1_20260826/
+```
+
+主包包含149/149 Light Atlas、117/117 Heavy Atlas、6张核心统计图、10个Sheet的Excel总表、
+Word/Markdown阅读指南、149对象可筛选HTML图册及必要技术附录。包内含690个主载荷文件，连同
+`package_config.json`共691个文件、1,026,873,565 bytes（约982 MiB）；673张PNG全部通过解码检查，HTML的415个图片引用0缺失，
+Excel中的1150 Anchor、331 shared-high、818 mixed/uncertain、198 source-risk、149干预对象、
+12个三seed双侧支持和20个低效应对照行数均与正式输入一致。
+
+该包复制图片而不移动正式产物；不包含匿名盲审包、4,414个盲审病例拆图或73,576个重复底层
+资产。材料仍为train-only阶段性技术解释，不新增科学PASS/FAIL，也不进行医学命名。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
