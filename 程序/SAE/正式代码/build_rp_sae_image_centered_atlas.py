@@ -235,11 +235,12 @@ def render_panel(
     draw.text((gap, 63), "Top-6按本图峰值 / 各Anchor完整train正激活Q99排序；仅为图像内相对排序",
               fill=(75, 82, 85), font=tiny_font)
 
-    base = pad_image(original, tile)
-    top_original = base
-    attention_heatmap = render_heatmap(attention_display, base.size)
-    attention_overlay = render_overlay(base, attention_heatmap, attention_display, 0.58)
-    composite = color_composite(base, responses)
+    top_original = pad_image(original, tile)
+    attention_heatmap = render_heatmap(attention_display, original.size)
+    attention_overlay = pad_image(
+        render_overlay(original, attention_heatmap, attention_display, 0.58), tile,
+    )
+    composite = pad_image(color_composite(original, responses), tile)
     top_items = [
         ("原图", "同一张冻结train图像", top_original),
         ("C-long原始注意力", "模型分类时实际使用的7x7空间权重", attention_overlay),
@@ -271,8 +272,8 @@ def render_panel(
             title_font, tiny_font,
         )
         response = responses[rank]
-        heatmap = render_heatmap(response, base.size)
-        overlay = render_overlay(base, heatmap, response, 0.58)
+        heatmap = render_heatmap(response, original.size)
+        overlay = pad_image(render_overlay(original, heatmap, response, 0.58), tile)
         canvas.paste(overlay, (x, y + label_h))
 
     bottom_y = header + gap + 5 * (row_h + gap)

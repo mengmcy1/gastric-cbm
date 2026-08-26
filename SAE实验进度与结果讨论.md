@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | v1.0正式技术交付及医学生阶段成果包完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；另已生成约982 MiB的完整阶段成果包，先用于展示癌/非癌统计、空间图谱和干预证据，盲审另立后续流程 |
+| RP-D技术图谱 | v1.0正式技术交付完成；Decision-aware双病例pilot完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；约982 MiB完整阶段成果包用于展示癌/非癌统计、空间图谱和干预证据。新增image 42/1245诊断pilot验证raw activation排序与逐图功能排序明显不同，暂不扩展全量Decision-aware Atlas |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2643,6 +2643,56 @@ overlay、达到各自`0.5×Q99`的响应重合数和技术摘要；同时保存
 `1770×149=263730`行全量激活长表。PNG 1770/1770、HTML引用0缺失、CSV无缺失值，目录约
 2.64 GB。该图谱只用于病例内空间浏览，不新增Feature筛选、医学概念合并或科学PASS/FAIL。
 无`_v2`后缀目录为版式调整前中断的实现现场，不作交付。
+
+### Decision-aware SAE双病例pilot（2026-08-26）
+
+医学生查看逐图多Feature图谱后提出：部分raw SAE热区没有聚焦病灶，是否说明SAE整体学偏。该问题
+不能只靠raw activation回答，因此本pilot把两类问题正式分开：
+
+- **representation**：raw SAE激活回答模型内部在哪里编码了某种视觉模式；
+- **functional dependence**：正式RP-C2逐图残差保留干预回答当前预测对哪个Feature更敏感。
+
+不修改149 Anchor正式RP-D包、不重新训练或推理，仅用冻结train缓存生成image 42和1245两张
+对照图。视觉语义Top-6沿用`本图峰值 / Anchor完整train正激活Q99`；功能Top-6直接按正式
+RP-C2保存的重算attention单图`abs(delta_margin at alpha=0)`排序，其中
+`delta_margin=ablated-original`。每个入选Feature同时展示：
+
+1. raw激活`h`，回答哪里编码了该模式；
+2. attention-gated响应`a x h`，回答该模式在哪里与C-long原始attention同时出现；
+3. 固定原attention的局部删除margin图`-a x h x (d^T w_margin)`；
+4. 正式RP-C2重算attention后的单图`delta_margin`标量。
+
+有符号局部图中，红色表示删除后癌margin上升，蓝色表示删除后癌margin下降。癌图的raw/gated
+框内质量沿用冻结7x7 cell-overlap口径；有符号图分别报告框内signed sum与框内absolute-mass
+fraction，避免正负贡献抵消。外圈指标统一称为`7x7 grid-edge mass ratio`，不得称为黑边分数。
+
+两例结果如下：
+
+| 病例 | Raw Top-6与功能Top-6交集 | 关键观察 |
+| --- | ---: | --- |
+| image 42（非癌） | 1/6 | `a00992/F8890`同时是raw第2和功能第1，真实`delta_margin=+0.4029`；其raw、gated和direct图与原attention较一致（overlap=0.401）。其余多个raw高响应Feature未进入功能Top-6 |
+| image 1245（癌） | 0/6 | `a00604/F5176`的raw相对Q99仅0.591、未进raw Top-6，但为功能Top-1，真实`delta_margin=+0.9585`；说明视觉激活排名可漏掉当前预测高度依赖的Feature |
+
+预先关注的反例也成立：`a01041/F9327`在两图均为raw第6，且为source-risk提示对象，但两图真实
+效应仅`-0.0061`和`+0.0044`，均未进入功能Top-6。image 1245的raw第4
+`a00506/F4357`实际效应仅`+0.00009`，提供了raw强而功能接近零的sanity case。由此可确认：
+
+> 视觉上显眼不等于当前预测依赖；raw activation ranking与functional ranking不能互相替代。
+
+这两例只证明新的展示层能把两种语义分开，不能估计总体发生率，也不能据此判断Feature的医学
+含义。`a x h`是描述性乘积，固定attention direct图不是完整因果分解；正式功能结果仍以RP-C2
+重算attention标量为准。SAE字典过完备且非正交，单Feature贡献也不是唯一的加性分解。
+
+产物位于：
+
+```text
+结果/SAE/RP_D_Decision_Aware_Pilot_20260826_retry1/
+```
+
+其中含两张联合对照图、逐Feature指标CSV、阅读说明和明确标记为`train-only / diagnostic-only /
+scientific_pass_fail=false`的config。首次无`retry1`目录是输入路径字段核验失败留下的空实现现场，
+未产生图片或数值结果。当前暂不启动149 Anchor全量Decision-aware Atlas；先由本pilot确认展示形式，
+原RP-D继续作为Semantic Feature Atlas保留。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
