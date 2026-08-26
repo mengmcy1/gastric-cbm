@@ -54,7 +54,7 @@ CADe与CADx的任务边界固定为：
 | Locked Internal Temporal CADe Test | 保持锁定 | 112张/78人，癌52张/32人、非癌60张/46人；相对CADe开发尚未按YOLO错误返调，CD1-CD5全部冻结前不得读取检测结果 |
 | CD0定量诊断 | 已完成 | 三seed内部val+外部开发队列已运行；外部Primary敏感度平均下降0.0889，小病灶是最弱分层 |
 | CD0人工归因 | 非阻塞并行 | 已冻结510例去重复核包：210例FN+300例FP，其中102例双人独立归因；等待临床时间，不再阻塞CD1 |
-| CD1 Gray Qualification | 已完成：INCONCLUSIVE | Gray三seed训练及Development Val配对评价完成；平均Primary下降0.0208，但平均救回31.2%的RGB漏检，未通过performance/complementary门槛，也不满足fail条件 |
+| CD1 Gray Qualification | 已完成：INCONCLUSIVE；External只读投影完成 | Val平均Primary下降0.0208、Gray救回31.2%的RGB漏检；External平均下降0.0334、救回30.8%，互补结构跨中心复现但Gray单模型仍较弱 |
 | CD2-CD8 | 路线骨架已冻结，逐阶段协议未冻结 | 根据CD0/CD1证据选择下一项假设；不得一次性堆叠Gray、LUPI、多个KD损失和分割 |
 
 ## 已确认的前置证据
@@ -589,3 +589,65 @@ Primary和部署点均报告Gray rescue RGB FN、RGB reverse rescue、FN Jaccard
 独立入口`evaluate_cd1_external.py`及专项测试已实现；纯逻辑测试`14/14`、CD1原有回归
 `20/20`、Val评价回归`11/11`和全量preflight均通过。16张debug队列已完成三seed GPU推理，
 逐GT长表、稳定性表及安全边界字段计数闭合。正式投影必须在代码提交后从干净版本运行。
+
+## CD1 External Development只读投影结果（2026-08-26）
+
+正式入口使用提交`a938b14`运行，记录`git_dirty=false`。输出位于
+`结果/CADe/CD1_Gray_Qualification_20260825/External_Development只读投影/`，队列为
+1938张/1329人/539个GT病灶。RGB预测逐项复现CD0 External正式记录；Locked Internal Temporal
+CADe Test未读取。本节没有External资格判定，内部`INCONCLUSIVE`保持不变。
+
+### External Primary与FN互补性
+
+| seed | RGB Primary | Gray Primary | Gray-RGB | Gray救回RGB FN | RGB反向救回 | FN Jaccard | 配对95% CI |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 42 | 0.7477 | 0.6957 | -0.0519 | 0.3088（42/136） | 0.4268 | 0.4563 | [-0.0942, -0.0101] |
+| 202 | 0.7403 | 0.7069 | -0.0334 | 0.3143（44/140） | 0.3924 | 0.4752 | [-0.0743, 0.0090] |
+| 503 | 0.7161 | 0.7013 | -0.0148 | 0.3007（46/153） | 0.3354 | 0.5169 | [-0.0565, 0.0226] |
+| 平均 | 0.7347 | 0.7013 | **-0.0334** | **0.3079** | 0.3849 | **0.4828** | 各seed分别报告 |
+
+Gray在External上的平均rescue为30.8%，与Development Val的31.2%几乎一致；FN Jaccard平均
+0.483，也与Val的0.480接近。三seed方向一致，因此Val中观察到的错误互补并非只在单一内部
+队列或单一初始化中出现。但Gray Primary三seed仍全部低于RGB，平均下降3.34个百分点，不能
+解释成Gray单模型更优。
+
+Primary工作点两模型均约束在`FP/image<=0.5`。非癌图FP Jaccard为0.400至0.409，Gray独有FP
+分别为308、316、300个；说明Gray确实改变了报警区域，rescue必须与这些新增错误一起理解。
+不过两模型的Primary FP负担已基本相同，所以30.8%的rescue并非简单来自Gray在该工作点整体
+输出更多框。
+
+### Val冻结部署点与定位质量
+
+| seed | RGB Sens | Gray Sens | RGB FP/image | Gray FP/image | RGB mean IoU | Gray mean IoU | RGB AP50 | Gray AP50 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 42 | 0.8219 | 0.7792 | 0.8617 | 0.8535 | 0.5611 | 0.5160 | 0.3499 | 0.2881 |
+| 202 | 0.7996 | 0.7328 | 0.7430 | 0.5913 | 0.5469 | 0.4988 | 0.3360 | 0.3262 |
+| 503 | 0.7570 | 0.7644 | 0.6589 | 0.7374 | 0.5241 | 0.5180 | 0.3136 | 0.3121 |
+| 平均 | **0.7928** | **0.7588** | **0.7546** | **0.7274** | **0.5440** | **0.5109** | **0.3332** | **0.3088** |
+
+不调阈值直接跨域时，Gray平均病灶Sensitivity下降3.40个百分点，但平均FP/image没有增加，
+反而从0.755略降至0.727。Gray的mean IoU、AP50和mAP50-95均值仍低于RGB，说明其互补检出
+没有转化为更好的整体定位质量。按冻结病灶大小分层，Gray对small Primary三seed均下降；
+medium三seed均高于RGB，large总体接近。该分层只提示互补线索更可能出现在部分中等病灶，
+不作为新门槛或因果结论。
+
+### 跨seed rescue稳定性
+
+| 工作点 | 0/3 | 1/3 | 2/3 | 3/3 | 至少1个seed rescue |
+|---|---:|---:|---:|---:|---:|
+| External Primary | 443 | 70 | 16 | **10** | 96 |
+| Val冻结部署点 | 460 | 55 | 18 | **6** | 79 |
+
+Primary下10个严格`3/3` rescue病灶包括small 3个、medium 6个、large 1个。它们是后续机制分析
+最值得优先查看的技术样本；但数量只占539个GT的1.9%，不能把全部31%平均rescue都描述为
+高度稳定。逐GT长表和稳定性表已保留每个seed的四象限、最佳IoU、对应置信度、bbox面积、
+冻结大小组和可用分辨率字段。冻结External清单没有可靠的中心字段，因此本轮不虚构中心归属；
+未来如补充中心映射，可在不重跑推理的情况下并入逐GT表作描述性分析。
+
+### 阶段结论
+
+CD1最终结论仍为`INCONCLUSIVE`。External证据支持：Gray不是合格的RGB替代检测器，但其独有
+检出线索具有跨中心、跨seed可重复性，而且在冻结部署点并未以更高的平均FP负担为代价。
+下一项研究问题可以据此收敛为“能否将Gray独有结构线索迁移到RGB，同时不继承Gray的总体
+Sensitivity、IoU和AP损失”。这需要另行预注册Teacher/Student目标、对照组和停止条件，不能
+把本次描述性结果直接当作CD2放行证据。
