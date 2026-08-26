@@ -418,3 +418,7 @@ python 程序/SAE/正式代码/test_clong_rpd_render.py
 若一个已完整渲染目录只存在文字展示问题，可同时设置
 `RPD_REUSE_INDEPENDENT_ASSETS_FROM`；启动器会先核验该目录的config/asset-manifest/protocol SHA，
 硬链接已验收的original/raw 7x7/heatmap/overlay，然后只重建面板与盲审包。
+
+当前正式交付目录为`render_v1_retry2/`，状态为**RP-SAE Technical Interpretation Delivery v1.0**。
+交付边界、目录说明和三层验收结果见该目录下`TECHNICAL_README.md`和
+`delivery_validation.json`。`render_v1/`和`render_v1_retry1/`仅是实现失败血缘，不得用于交付。

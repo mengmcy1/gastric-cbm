@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | 病例与渲染协议已冻结，真实debug通过，待正式渲染 | 全149个生成轻量Atlas；117个预冻结Heavy对象生成三seed同图、剂量、困难负例和source面板；医生盲审与技术Reveal严格分开 |
+| RP-D技术图谱 | v1.0正式技术交付完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；73,576条资产0缺失/0失败；下一步转入医生盲审 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2578,6 +2578,22 @@ selection-freeze SHA为`243218ca...1637e`。后续渲染只能读取这套冻结
 磁盘重复，`retry2`只从已完整验收的`render_v1/`硬链接original/raw 7x7/heatmap/overlay，
 重建所有带文字的Light/Heavy/Blind/source面板和最终清单。复用源config与asset-manifest SHA在链接前
 强制核验；病例、Feature、Q99和数值资产均不重算或重选。
+
+`render_v1_retry2/`于10:47--11:03完成，监控记录最终`result=success`。三层验收结果：
+
+1. **科学输入一致**：149个anchor、6,301条case、render protocol SHA、selection freeze SHA、
+   `q99_scales.csv`和blind manifest均与首轮一致；
+2. **数值资产一致**：59,518个original/raw 7x7/heatmap/overlay路径和SHA全部一致，
+   且全部为同一inode硬链接；asset manifest二次CSV序列化的Q99文本最大末位差为
+   `3.55e-15`，冻结Q99 CSV和资产字节本体完全一致；
+3. **展示交付完整**：149 Light、117 Heavy、149 Blind、50 source panel全部齐全；
+   73,576条asset全部`ok`，0缺失、0渲染失败；盲审包0禁止字段、0未映射pair；中文字体
+   SHA通过且视觉抽查正常。
+
+正式技术交付名称为**RP-SAE Technical Interpretation Delivery v1.0**。`render_v1/`仅保留展示失败
+血缘，`render_v1_retry1/`仅保留共享服务器OOM实现现场，两者均不交付。完整验收记录和说明分别见
+`render_v1_retry2/delivery_validation.json`与`TECHNICAL_README.md`。本阶段不再追加SAE调参实验，
+下一步是把`blind_review/`交给医学生/医生盲审，annotation冻结后再提供Technical Reveal。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
