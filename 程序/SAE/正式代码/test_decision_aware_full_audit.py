@@ -4,10 +4,12 @@
 import unittest
 
 import numpy as np
+import pandas as pd
 
 from audit_rp_sae_decision_awareness import (
     deterministic_ranks,
     overlap_counts,
+    portable_anchor_ids,
     support_class,
     top_indices_from_ranks,
 )
@@ -37,6 +39,11 @@ class DecisionAwareFullAuditTests(unittest.TestCase):
             "correct_label_supporting", "opposing",
             "correct_label_supporting", "opposing", "exact_zero",
         ])
+
+    def test_anchor_ids_are_portable_unicode_not_object(self) -> None:
+        result = portable_anchor_ids(pd.Series(["a00001", "a00149"]))
+        self.assertEqual(result.dtype.kind, "U")
+        self.assertEqual(result.tolist(), ["a00001", "a00149"])
 
 
 if __name__ == "__main__":

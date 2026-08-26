@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib import font_manager
-from scipy.stats import rankdata, spearmanr
+from scipy.stats import spearmanr
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -24,7 +24,7 @@ RPC2_EFFECT = (
     SAE_ROOT
     / "RP_C2_Intervention_20260825/formal_retry1/unique_feature_facts/seed42/target_patient_effects"
 )
-OUTPUT_ROOT = SAE_ROOT / "Decision_Aware_Full_Numeric_Audit_v1_20260826"
+OUTPUT_ROOT = SAE_ROOT / "Decision_Aware_Full_Numeric_Audit_v1_20260826_retry3"
 FONT_PATH = Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
 TOP_K = (1, 3, 6, 10)
 TOP_N = 6
@@ -44,6 +44,13 @@ def deterministic_ranks(scores: np.ndarray, anchor_ids: np.ndarray) -> np.ndarra
         order = np.lexsort((anchor_priority, -row))
         ranks[row_index, order] = np.arange(1, len(anchor_ids) + 1, dtype=np.int16)
     return ranks
+
+
+def portable_anchor_ids(values: pd.Series) -> np.ndarray:
+    """生成无需pickle即可读取的固定宽度Unicode Anchor ID数组。"""
+    strings = values.astype(str).tolist()
+    width = max(map(len, strings))
+    return np.asarray(strings, dtype=f"<U{width}")
 
 
 def top_indices_from_ranks(ranks: np.ndarray, k: int) -> np.ndarray:
@@ -221,7 +228,7 @@ def build_extremes(
         "anchor_index": anchor_index.ravel(),
         "rank_gap_functional_minus_raw": (functional_ranks - raw_ranks).ravel(),
     })
-    anchor_ids = anchors.anchor_id.astype(str).to_numpy()
+    anchor_ids = portable_anchor_ids(anchors.anchor_id)
     flat["anchor_id"] = anchor_ids[flat.anchor_index]
     positive = flat.sort_values(
         ["rank_gap_functional_minus_raw", "image_index", "anchor_id"],
@@ -361,12 +368,12 @@ def make_figures(
     fig.savefig(figure_root / "figure2_spearman_by_label.png", dpi=180)
     plt.close(fig)
 
-    for number, (frame, column, title, filename) in enumerate([
+    for frame, column, title, filename in [
         (raw_to_functional, "functional_rank", "视觉语义Top-6在功能排名中的位置",
          "figure3_raw_top6_functional_rank.png"),
         (functional_to_raw, "raw_rank", "功能敏感度Top-6在视觉语义排名中的位置",
          "figure4_functional_top6_raw_rank.png"),
-    ], start=3):
+    ]:
         fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharex=True, sharey=True)
         for axis, risk in zip(axes, (False, True)):
             values = frame.loc[frame.source_risk.eq(risk), column]
@@ -391,7 +398,7 @@ def main() -> None:
     signed_delta = np.asarray(data["delta"], dtype=np.float32)
     raw_scores = compute_raw_scores(anchors)
     functional_scores = np.abs(signed_delta)
-    anchor_ids = anchors.anchor_id.astype(str).to_numpy()
+    anchor_ids = portable_anchor_ids(anchors.anchor_id)
     raw_ranks = deterministic_ranks(raw_scores, anchor_ids)
     functional_ranks = deterministic_ranks(functional_scores, anchor_ids)
 

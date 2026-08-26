@@ -68,7 +68,7 @@ margin项，不把旧字典宽度、lambda或Feature选择直接继承为新路�
 | 复现口径 | RP-A seed职责已冻结 | 只有一个C-long seed42；所有SAE seed使用同一冻结特征。42为开发，43/44仅作开发校准，202/503为2/2正式确认，911仅在后续确认协议允许后作留出初始化复现 |
 | 癌/非癌联合分析 | RP-B1/B2技术阶段已完成（train-only探索性） | 1150 anchors按看图前冻结规则得到shared-high 331、cancer-enriched 1、mixed/uncertain 818；198个source-risk仅标记不删除。严格technical-family规则未产生跨anchor边，1150个均保留为singleton，不事后降阈值 |
 | RP-C功能干预 | RP-C1/RP-C2已完成（train-only技术证据） | 149个研究对象完成五剂量残差保留干预和44,424条冻结matched-control比较；52个primary anchor在三个SAE seed的matched percentile均不低于0.90，12个为癌/非癌双侧功能支持候选；无阶段级PASS/FAIL，不读取val/test/external |
-| RP-D技术图谱 | v1.0正式技术交付完成；Decision-aware双病例pilot完成 | `render_v1_retry2/`通过三层验收：149/149 Light、117/117 Heavy、149/149 Blind、50/50 source panel；约982 MiB完整阶段成果包用于展示癌/非癌统计、空间图谱和干预证据。新增image 42/1245诊断pilot验证raw activation排序与逐图功能排序明显不同，暂不扩展全量Decision-aware Atlas |
+| RP-D技术图谱 | v1.0正式技术交付完成；Decision-aware全量数值审计完成 | `render_v1_retry2/`通过三层验收并形成约982 MiB阶段成果包；双病例pilot后按预注册完成2350图x149 Anchor纯数值审计：整体Spearman中位数0.522，但Top-1仅1.53%一致、Top-6平均仅0.903/6重合，支持Semantic与Decision-aware两层相关但不可互相替代；仍未启动全量Decision-aware图片生成 |
 | internal test/external | 锁定 | 新SAE开发不得读取；规则冻结后仅作一次描述性投影 |
 | 新路线代码 | 已实现，两轮debug验收通过 | `程序/SAE/正式代码/clong_sae_discovery.py` + 矩阵脚本 + 汇总器；输出根目录`结果/SAE/CLong文献重构_20260819/`；14项单元测试通过。审阅后加固：正式预算（lr/epoch/patience/warmup/batch/剪枝容差）逐项锁死、实验名限17个、debug强制隔离到`debug/`、缓存六文件SHA+shape+行顺序核验、S0交叉绑定补齐v3_audit与beta JSON、S3扩展指标（margin/双阈值/患者偏移/密度直方图）、汇总JSON禁止NaN |
 | 正式矩阵 | 已运行完成（2026-08-20），no_formal_product | 17/17组完成；L1合格0/15，Top-K备选亦未过全部硬门槛；按预注册停止规则本阶段无正式产品，未追加任何超参数。主要卡点：val mean cosine最高仅0.8814（Top-K），未达0.90。详见"S2-S3正式矩阵结果"节 |
@@ -2720,6 +2720,70 @@ Anchor ID数组，以及四张总体统计图。rank gap定义为`functional_ran
 本审计的解释边界预先固定为：raw SAE activation与RP-C2 functional sensitivity描述不同性质的
 信息，不能相互替代。即使总体解耦明显，也不能写成raw SAE不可靠或Semantic Atlas无效；是否
 扩展全量Decision-aware图片必须等本轮纯数值结果完成后另行决定。
+
+### Decision-aware全量数值审计v1结果（2026-08-26）
+
+冻结提交`5bfe7b6`推送后才运行总体审计。任务仅使用CPU和既有缓存，15秒完成；输出包含2350行
+逐图摘要、两张各14,100行的Top-6反向排名表、200条极端rank-gap记录、分层摘要、三张
+`2350 x 149` float矩阵、Anchor ID和四张总体统计图。全部350,150个组合有限；未生成胃镜图片，
+未读取val/internal test/external。
+
+总体结果显示两套排名存在中等相关，但头部对象明显不同：
+
+| 指标 | 全部2350图 | 癌图1181 | 非癌图1169 |
+| --- | ---: | ---: | ---: |
+| Top-1完全一致 | 1.53% | 0.85% | 2.22% |
+| Top-3平均重合比例 | 7.42% | 5.48% | 9.38% |
+| Top-6平均重合比例 | 15.05% | 13.01% | 17.11% |
+| Top-6完全不重合图像比例 | 37.06% | 42.25% | 31.82% |
+| Top-10平均重合比例 | 22.35% | 20.23% | 24.49% |
+| 每图149 Anchor Spearman中位数 | 0.522 | 0.485 | 0.567 |
+
+Top-6平均重合比例15.05%等价于每图平均只共享`0.903/6`个Anchor。Spearman约0.52说明两套
+分数在149个Anchor的宽泛顺序上并非随机或完全独立；但Top-1/Top-6结果同时证明，最显眼的
+视觉模式与最敏感的功能对象通常不是同一组。癌图的相关与重合均低于非癌图，说明不能用混合
+标签总体值替代分层解释。
+
+两张反向排名表进一步量化了解耦方向：
+
+- 视觉语义Top-6的功能rank中位数为32；仅15.05%仍位于功能Top-6，23.32%落到功能排名后半
+  （rank>75），14.09%落到100名以后；
+- 功能敏感度Top-6的raw rank中位数为25；仅15.05%仍位于raw Top-6，9.02%落到raw排名后半，
+  3.33%落到100名以后；
+- 极端正rank gap Top100为`+138`至`+145`，代表raw极显眼但功能接近末位；极端负gap Top100为
+  `-122`至`-135`，代表raw不显眼但功能高度敏感。该表只提供确定性后续案例候选，当前不画图。
+
+净干预方向也必须与敏感度大小分开。功能Top-6中，全部图的正确标签方向支持比例为65.57%；
+癌图为51.74%，非癌图为79.54%。因此`abs(delta_margin)`只能回答模型对删除有多敏感，不能自动
+解释为该Feature支持正确分类；尤其癌图中接近一半功能Top-6的净方向与癌标签相反。严格零
+`delta_margin`占全部350,150条的0.86%，`abs(delta)<=1e-6`占3.03%，后者只作近零描述，未改变
+正负分类。
+
+149 Anchor中56个带冻结`source-risk`标记，占37.58%。它们占raw Top-6槽位36.69%，接近其
+Anchor基数比例；占功能Top-6槽位28.16%，相对更低。全部image-anchor记录中，source-risk与
+非source-risk的平均绝对效应分别为0.01255和0.01645。该结果不能把source-risk解释为无功能，
+也不能把非source-risk解释为无混杂；它只说明本轮未观察到source-risk对象在功能Top-6中的总体
+富集，具体`source-risk + functional-high`对象仍应单独审阅。
+
+正式结论保持预注册边界：
+
+> Raw SAE activation与RP-C2 functional sensitivity具有中等总体关联，但在排名头部经常明显
+> 解耦；二者描述不同性质的信息，不能相互替代。
+
+因此原RP-D继续作为**Semantic Feature Atlas**回答“编码了什么、在哪里出现”；Decision-aware层
+回答“当前预测对哪些Feature更敏感、净方向是什么”；RP-C2重算attention的干预结果仍是功能层
+依据。本轮不把raw SAE定性为不可靠，也不推翻原Atlas。结果目录为：
+
+```text
+结果/SAE/Decision_Aware_Full_Numeric_Audit_v1_20260826_retry3/
+```
+
+在决定是否生成全量Decision-aware图片前，优先用四张总体统计图和两张pilot图向医学生解释两层
+含义；若后续制作图片，应按已冻结rank-gap或功能Top-6规则确定性选例，不再人工挑“漂亮案例”。
+无后缀目录及`retry1/retry2`的科学CSV与三张数值矩阵均与本轮逐值一致，但`anchor_ids.npy`
+先后因Pandas默认导出、修复仅命中极端表路径而未命中主保存路径，被验收判为序列化实现失败现场。
+最终让主保存路径调用已测试的固定宽度NumPy Unicode转换后，在`retry3`独立完整重跑；不覆盖或
+继承前三轮文件。
 
 ## S2-S3正式矩阵结果（2026-08-20）
 
