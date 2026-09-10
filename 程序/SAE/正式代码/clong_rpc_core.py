@@ -11,6 +11,37 @@ import torch
 
 
 @torch.no_grad()
+def remove_feature_group(
+    spatial: torch.Tensor,
+    hidden: torch.Tensor,
+    decoder: torch.Tensor,
+    members: list[int] | tuple[int, ...],
+) -> torch.Tensor:
+    """在原始空间表示中同时删除一组SAE Feature分量。
+
+    Args:
+        spatial (torch.Tensor): 原始表示，shape为``[B,49,D]``。
+        hidden (torch.Tensor): 同一原始表示的SAE激活，shape为``[B,49,H]``。
+        decoder (torch.Tensor): SAE decoder方向，shape为``[H,D]``。
+        members (list[int] | tuple[int, ...]): 需同时删除的Feature列号。
+
+    Returns:
+        torch.Tensor: ``spatial - sum_j(h_j*d_j)``，shape与``spatial``相同。
+    """
+    if spatial.ndim != 3 or hidden.ndim != 3 or spatial.shape[:2] != hidden.shape[:2]:
+        raise ValueError("spatial/hidden必须是[B,49,D]和[B,49,H]")
+    if decoder.ndim != 2 or hidden.shape[2] != decoder.shape[0] or spatial.shape[2] != decoder.shape[1]:
+        raise ValueError("hidden/decoder/spatial维度不一致")
+    ids = torch.as_tensor(members, dtype=torch.long, device=hidden.device)
+    if ids.ndim != 1 or ids.numel() == 0:
+        raise ValueError("members必须是非空一维Feature列表")
+    if torch.unique(ids).numel() != ids.numel() or ids.min() < 0 or ids.max() >= hidden.shape[2]:
+        raise ValueError("members含重复或越界Feature")
+    component = hidden.index_select(2, ids) @ decoder.index_select(0, ids)
+    return spatial - component
+
+
+@torch.no_grad()
 def intervention_block(
     spatial: torch.Tensor,
     hidden: torch.Tensor,
