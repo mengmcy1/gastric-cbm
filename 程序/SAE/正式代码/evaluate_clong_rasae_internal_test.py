@@ -443,11 +443,16 @@ def evaluate_gradient_alignment(
             total_direction_matches += match_count
             absolute_error = np.abs(predicted_row - exact_row)
             all_abs_errors.append(absolute_error)
-            rho = float(spearmanr(predicted_row, exact_row).statistic)
+            signed_rho = float(spearmanr(predicted_row, exact_row).statistic)
+            absolute_rho = float(spearmanr(
+                np.abs(predicted_row), np.abs(exact_row)
+            ).statistic)
             rows.append({
                 "source_row": start + local, "image_index": int(record.image_index),
                 "relative_path": record.relative_path, "patient_id": str(record.patient_id),
-                "label": int(record.label), "spearman_all_2560": rho,
+                "label": int(record.label),
+                "spearman_abs_effect_all_2560": absolute_rho,
+                "spearman_signed_effect_all_2560": signed_rho,
                 "top1_overlap": top_overlap(predicted_row, exact_row, 1),
                 "top3_overlap": top_overlap(predicted_row, exact_row, 3),
                 "top6_overlap": top_overlap(predicted_row, exact_row, 6),
@@ -462,7 +467,8 @@ def evaluate_gradient_alignment(
         print(f"全Feature实际删除: {stop}/{len(frame)}", flush=True)
     images = pd.DataFrame(rows)
     metric_columns = [
-        "spearman_all_2560", "top1_overlap", "top3_overlap", "top6_overlap",
+        "spearman_abs_effect_all_2560", "spearman_signed_effect_all_2560",
+        "top1_overlap", "top3_overlap", "top6_overlap",
         "top10_overlap", "mean_abs_approximation_error",
         "p95_abs_approximation_error", "max_abs_approximation_error",
     ]
@@ -471,17 +477,21 @@ def evaluate_gradient_alignment(
         **{column: (column, "mean") for column in metric_columns},
         eligible_direction_pairs=("eligible_direction_pairs", "sum"),
         direction_matches=("direction_matches", "sum"),
-    )
-    patients["direction_agreement"] = (
-        patients.direction_matches / patients.eligible_direction_pairs.replace(0, np.nan)
+        direction_agreement=("direction_agreement", "mean"),
     )
     absolute_errors = np.concatenate(all_abs_errors)
     summary = {
         "aggregation": (
-            "rank/overlap/error metrics: image then patient mean then equal patient mean; "
-            "direction agreement: eligible pairs pooled within patient then equal patient mean"
+            "all metrics: compute per image, then mean within patient, then equal mean across patients; "
+            "direction coverage counts are separately summed"
         ),
-        "patient_equal_mean_spearman_all_2560": float(patients.spearman_all_2560.mean()),
+        "primary_ranking_metric": "absolute-effect Spearman, matching val98 definition",
+        "patient_equal_mean_abs_effect_spearman_all_2560": float(
+            patients.spearman_abs_effect_all_2560.mean()
+        ),
+        "patient_equal_mean_signed_effect_spearman_all_2560": float(
+            patients.spearman_signed_effect_all_2560.mean()
+        ),
         "patient_equal_top_overlap": {
             f"top{count}": float(patients[f"top{count}_overlap"].mean())
             for count in (1, 3, 6, 10)
@@ -667,8 +677,11 @@ def write_report(output: Path, summary: dict, curve: pd.DataFrame) -> None:
         "",
         "## 梯度排序与实际删除",
         "",
-        f"- 全2560项排序的患者等权Spearman："
-        f"{ranking['patient_equal_mean_spearman_all_2560']:.5f}。",
+        f"- 全2560项绝对效应排序的患者等权Spearman："
+        f"{ranking['patient_equal_mean_abs_effect_spearman_all_2560']:.5f}。",
+        f"- 带符号预测效应与实际效应的患者等权Spearman："
+        f"{ranking['patient_equal_mean_signed_effect_spearman_all_2560']:.5f}。"
+        "该值补充描述效应方向，不与既有验证集绝对效应排序指标混用。",
         f"- Top-6患者等权重合率："
         f"{ranking['patient_equal_top_overlap']['top6']:.2%}。",
         f"- 排除|实际删除变化|≤{SIGN_TOLERANCE:g}后，"
@@ -727,8 +740,10 @@ def write_report(output: Path, summary: dict, curve: pd.DataFrame) -> None:
         "1表示方向完全相同，但不代表数值幅度完全一致。",
         "- `prediction_agreement`表示使用既有冻结阈值时，干预前后分类结果相同的比例；"
         "`flip_count`是跨过该阈值的数量。`AUC`只表示当前队列的排序区分能力。",
-        "- `spearman_all_2560`是梯度预测删除效应与实际删除效应的排名相关，"
-        "取值范围为−1到1。`top*_overlap`是两种排序的Top-k集合重合数除以k。",
+        "- `spearman_abs_effect_all_2560`先对预测与实际删除效应取绝对值，"
+        "再比较全2560项排名，是与val98一致的主排序指标。"
+        "`spearman_signed_effect_all_2560`保留正负号，只作方向关系补充；两者均取值−1到1。",
+        "- `top*_overlap`是两种绝对效应排序的Top-k集合重合数除以k。",
         f"- `direction_agreement`只在|实际`delta_margin`|>{SIGN_TOLERANCE:g}的Feature上比较正负号；"
         "`eligible_direction_pairs`是实际参与比较的图像–Feature对数。",
         "- `mean/median/P95/max_abs_approximation_error`分别是梯度近似与实际删除"
