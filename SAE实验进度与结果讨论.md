@@ -2974,6 +2974,173 @@ RP-B/C/D为train-only探索性技术证据，以及internal test/external使用�
 - 候选创新定位为“数据约束的局部SAE在胃镜模型中是否提高稳定、可定位且有预测作用的
   特征提取”。RA-SAE本身是已有方法，胃镜适配及其增益仍需上述对照证明。
 
+### RA-SAE医学反馈、空间功能定位与保真优化支线（2026-09-15至2026-09-17）
+
+#### 1. 当前解释边界
+
+当前主要解释器为RA-SAE duration100、宽度2560、`K=64/128/256`联合训练，
+分析使用`K=256`。原模型训练池为196图/128人；后续2350图train和497图val只用于
+投影与评价，不能写成原模型全量训练。
+
+当前仅支持“冻结C-long诊断＋保留原始residual的局部事后Feature解释”。纯SAE重构
+不能替代原表示；Feature编号不自动等于医学概念，不推进未经医学确认的
+Concept Family整体干预、Concept Bottleneck或Family合并。
+
+主要模型和本阶段结果根目录：
+[`RA_SAE_Pilot_20260908`](结果/SAE/RA_SAE_Pilot_20260908/)。
+
+#### 2. 已审核Feature、候选Family与非癌框空间功能定位
+
+医学侧已审核F0219、F0601、F0868、F1089、F1385、F2388、F2444和F2464。64个已审核
+Feature–图片配对的整图删除结果显示，部分医学描述不一致图像仍具有明显功能影响，
+因此不能全部归结为热图展示问题。
+
+本轮8项Feature形成的A/B/C三条候选Family均为“证据不足，暂不合并”。弱响应统一记为
+“无法比较”，不作为语义不同的证据。本结论只针对本轮8项，不推广到整个字典。
+
+相关结果：
+
+- [已审核语义一致/不一致响应的功能影响](结果/SAE/RA_SAE_Pilot_20260908/reviewed_response_function_20260915/结果说明.md)；
+- [医学反馈与候选Family结论](结果/SAE/RA_SAE_Pilot_20260908/candidate_visual_comparisons_20260915/医学反馈与候选Family结论.md)。
+
+四份非癌CVAT标注共1798图，去向全部明确：
+
+- train：1169图/900人；
+- val：257图/193人；
+- 内部test：252图，仅核对划分元数据；
+- 不在当前清单：120图，未加入开发。
+
+当前纳入的1426张train/val图像尺寸、缓存metadata和XML尺寸一致。验证集患者等权框面积
+约14.44%，原C-long注意力框内质量约31.34%；这说明相对均匀空间分布存在框内集中，
+但注意力不是功能贡献。详细口径和1798图去向见
+[非癌框完整对应与空间响应核对](结果/SAE/RA_SAE_Pilot_20260908/noncancer_box_mapping_review_20260916/结果说明.md)。
+
+随后对F0868、F1089和F2388中12个已审核且具有非癌框的配对执行框内、框外和整图
+独立删除：
+
+- 医学描述不一致的图片可能存在框外Feature分量的功能影响，不能全部归结为展示问题；
+- 框内外作用可能方向相反，因此整图净变化小不代表两部分都不重要；
+- F2388反例`train_0507`的框外分量原本降低癌margin，但框外位置本身不证明有害依赖；
+- 框内外面积与删除分量大小不同，不能解释为单位面积重要性；
+- 该分析是`7×7`粗网格内部表示干预，不能定位具体医学结构，也不支持泛化结论。
+
+实现和完整逐例结果见
+[已审核Feature框内/框外功能定位](结果/SAE/RA_SAE_Pilot_20260908/reviewed_box_function_20260916/结果说明.md)及
+[`analyze_clong_rasae_reviewed_box_function.py`](程序/SAE/正式代码/analyze_clong_rasae_reviewed_box_function.py)。
+
+医学阅片、重新命名和Family合并继续暂停。
+
+#### 3. 完整val纯重构基线
+
+原RA-SAE duration100在完整val497图/260人上的纯重构结果：
+
+- 患者概率绝对变化均值：0.06697；
+- 患者预测一致率：91.54%，翻转22/260；
+- 重构患者AUC：0.90055，原C-long为0.91014；
+- patch/pooled `1−FVU`：51.80%/49.40%；
+- pooled cosine：0.73940；
+- attention cosine：0.87476。
+
+`1−FVU`以固定train均值为参照，不代表医学信息保留比例。纯重构保真不完整与医学语义混杂
+是两个不同问题，不能认定前者导致后者。指标定义和逐图/逐患者结果见
+[完整val纯重构保真](结果/SAE/RA_SAE_Pilot_20260908/full_val_fidelity_20260915/结果说明.md)及
+[`evaluate_clong_rasae_full_val_fidelity.py`](程序/SAE/正式代码/evaluate_clong_rasae_full_val_fidelity.py)。
+
+#### 4. 扩大可抽样患者池：固定第100轮
+
+在原代表点、中心、结构、损失和1300次更新预算不变时，将每轮可抽样池扩大到
+1673图/1212人。100轮实际覆盖全部1212位患者。
+
+完整val比较中：
+
+- 患者概率误差、一致率和重构患者AUC改善；
+- patch和pooled FVU变差；
+- 五项方向条件通过3/5，结论为改善不一致，不替换当前RA-SAE。
+
+共同train路径诊断显示：总体联合损失下降主要来自margin项；新增患者改善，而原pilot
+患者退化。固定/重算注意力比较中，注意力路径相关的额外pool误差缩小，但重算
+注意力仍不优于固定原注意力。该诊断不能证明训练次数或代表点是原因。
+
+结果和代码入口：
+
+- [扩大可抽样池第100轮结果](结果/SAE/RA_SAE_Pilot_20260908/expanded_pool_fidelity_20260916/结果说明.md)；
+- [共同train损失与注意力路径诊断](结果/SAE/RA_SAE_Pilot_20260908/coverage_loss_path_diagnosis_20260916/结果说明.md)；
+- [`train_clong_rasae_expanded_pool.py`](程序/SAE/正式代码/train_clong_rasae_expanded_pool.py)；
+- [`analyze_clong_rasae_coverage_loss_paths.py`](程序/SAE/正式代码/analyze_clong_rasae_coverage_loss_paths.py)。
+
+#### 5. 固定第200轮训练时长实验
+
+旧第100轮checkpoint没有保存AdamW状态，因此从确定性初始状态重放1--100轮，保存
+完整优化器状态后，以同一AdamW继续101--200轮。
+
+复现验收：
+
+- 前100轮抽样顺序逐项一致；
+- 第100轮模型参数最大差为0；
+- 逐轮损失最大绝对差为`5.55×10⁻¹⁷`；
+- 第100/200轮累计更新分别为1300/2600次；
+- 第101轮没有重新warmup。
+
+第200轮相对同轨迹第100轮：
+
+- patch FVU：0.488889→0.454834；
+- pooled FVU：0.520025→0.470785；
+- 患者概率绝对变化：0.047040→0.046651；
+- 患者一致率：0.930769→0.923077；
+- 重构患者AUC：0.904261→0.903642。
+
+9人由与原C-long一致变为不一致，7人恢复一致，净增加2名不一致患者；不一致是
+保真指标，不等于诊断错误。五项条件通过3/5。
+
+该实验支持“当前更新预算是第100轮表示重构的限制因素之一”，但未同时满足
+全部预测保真条件，不判为联合成功，不追加第300轮。
+
+结果和代码入口：
+
+- [固定第200轮训练时长结果](结果/SAE/RA_SAE_Pilot_20260908/expanded_pool_duration200_20260916/结果说明.md)；
+- [`train_clong_rasae_expanded_pool_duration200.py`](程序/SAE/正式代码/train_clong_rasae_expanded_pool_duration200.py)；
+- [`analyze_clong_rasae_duration200_results.py`](程序/SAE/正式代码/analyze_clong_rasae_duration200_results.py)。
+
+#### 6. 扩大池重新拟合代表点
+
+以旧代表点第200轮模型为对照，候选仅将MiniBatchKMeans拟合数据从原pilot 196图改为
+扩大池1673图。旧中心、pilot校准协议、200轮抽样轨迹、2600次更新、K、损失和学习率
+协议保持不变。
+
+新拟合实际`n_steps_=234`；旧中心逐值一致，初始状态有限、松弛项为0、无近重复方向。
+新校准系数为0.037940，原值为0.045929；这是更换拟合数据后整套固定流程的连带变化，
+不解释为纯代表点几何效应。
+
+完整val比较：
+
+- patch FVU：0.454834→0.476407，变差；
+- pooled FVU：0.470785→0.520518，变差；
+- 患者概率绝对变化：0.046651→0.046527，略改善；
+- 患者一致率：0.923077→0.911538，变差；
+- 重构患者AUC：0.903642→0.911453，提高。
+
+五项条件通过2/5。共同train分层显示候选更适配新增患者，但明显牺牲原pilot患者的
+patch/pool重构，未形成对原pilot患者和val都更好的表示支撑。
+
+正式结论为：
+
+> 在固定旧中心、pilot校准协议和2600次更新条件下，更换代表点拟合数据未达到预期收益。
+
+这不能排除代表点的限制作用，但按预定停止规则，本次没有清晰保真收益，因此阶段性
+停止这条保真优化支线：
+
+- 不继续扫描中心、KMeans参数、delta、K、损失或训练轮数；
+- 不替换当前RA-SAE；
+- 保留原pilot、扩大池第100轮、第200轮及新代表点候选作为技术比较资产；
+- 新Feature编号不继承旧医学描述；
+- 不推断语义混杂改善，不恢复医学阅片。
+
+结果和代码入口：
+
+- [扩大池重拟合代表点结果](结果/SAE/RA_SAE_Pilot_20260908/expanded_pool_refit_points_duration200_20260917/结果说明.md)；
+- [`train_clong_rasae_expanded_points_duration200.py`](程序/SAE/正式代码/train_clong_rasae_expanded_points_duration200.py)；
+- [`analyze_clong_rasae_refit_points_results.py`](程序/SAE/正式代码/analyze_clong_rasae_refit_points_results.py)。
+
 ### 历史任务清单（保留追溯）
 
 1. ~~冻结S0~~：S0已完成，6项SHA、split、结构和阈值全部核验写入；
