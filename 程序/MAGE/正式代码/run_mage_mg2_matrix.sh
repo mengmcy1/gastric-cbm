@@ -12,9 +12,9 @@ set -uo pipefail
 # Usage:
 #   CUDA_DEVICE=<物理GPU编号> [BETA_CALIBRATION_JSON=<路径>] bash run_mage_mg2_matrix.sh
 #   MG2_MATRIX_DRY_RUN=1 bash run_mage_mg2_matrix.sh   # 只打印计划，不执行
-PROJECT_ROOT="/home/mcy/gastric-cbm"
-PYTHON="/home/mcy/miniconda3/envs/gastric-cbm/bin/python"
-SCRIPT_DIR="$PROJECT_ROOT/程序/MAGE/正式代码"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/../../.." && pwd)"
+PYTHON="${MAGE_PYTHON:-python}"
 SCRIPT="$SCRIPT_DIR/train_mage_mg2_student.py"
 SUMMARIZER="$SCRIPT_DIR/summarize_mage_mg2.py"
 RESULT_ROOT="$PROJECT_ROOT/结果/MAGE/MG2全图学生蒸馏_20260818"

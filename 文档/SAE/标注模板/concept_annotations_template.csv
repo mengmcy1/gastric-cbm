@@ -1,2 +1,0 @@
-image_path,patient_id,split,concept_id,concept_label,annotator,annotation_round,confidence,notes
-癌/示例患者/示例图片.jpg,示例患者,train,EXAMPLE_001,-1,doctor_a,pilot_1,1,示例行（正式标注前删除）

@@ -24,11 +24,13 @@ from __future__ import annotations
 import copy
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import pandas as pd
 
@@ -61,6 +63,36 @@ from train_mage_mg2_student import (  # noqa: E402
 )
 
 MANIFEST_SHA = "m" * 64
+
+
+def test_beta_cache_path_after_relocation() -> None:
+    """换克隆目录仅重绑定已知路径；缓存内容及未知路径仍受校验。"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = Path(tmpdir)
+        cache = root / "cache.pt"
+        cache.write_bytes(b"synthetic-cache")
+        calibration = _write_calibration(
+            root, cache, debug=True,
+            teacher_cache="/home/mcy/gastric-cbm/cache.pt",
+        )
+        with patch("train_mage_mg2_student.PROJECT_ROOT", root):
+            load_beta_calibration(calibration, MANIFEST_SHA, cache, 42, 32, True)
+            cache.write_bytes(b"changed-cache")
+            try:
+                load_beta_calibration(calibration, MANIFEST_SHA, cache, 42, 32, True)
+            except ValueError as exc:
+                assert "缓存SHA" in str(exc)
+            else:
+                raise AssertionError("迁移后未拒绝改变的缓存")
+            calibration = _write_calibration(
+                root, cache, debug=True, teacher_cache="/unknown/cache.pt",
+            )
+            try:
+                load_beta_calibration(calibration, MANIFEST_SHA, cache, 42, 32, True)
+            except ValueError as exc:
+                assert "缓存路径" in str(exc)
+            else:
+                raise AssertionError("未拒绝未知路径")
 
 
 def _write_calibration(tmp: Path, cache_path: Path, **overrides) -> Path:
@@ -584,10 +616,16 @@ def test_cross_arm_consistency() -> None:
 def test_launcher_dry_run() -> None:
     """启动器dry-run：打印A→B→C计划与自动汇总步骤，不执行训练。"""
     env = dict(os.environ, MG2_MATRIX_DRY_RUN="1")
-    result = subprocess.run(
-        ["bash", str(SCRIPT_DIR / "run_mage_mg2_matrix.sh")],
-        env=env, capture_output=True, text=True, check=False,
-    )
+    # 独立目录避免原机器已有训练产物导致启动器正确跳过而测试误报。
+    with tempfile.TemporaryDirectory() as tmpdir:
+        directory = Path(tmpdir) / "程序/MAGE/正式代码"
+        directory.mkdir(parents=True)
+        launcher = directory / "run_mage_mg2_matrix.sh"
+        shutil.copy2(SCRIPT_DIR / launcher.name, launcher)
+        result = subprocess.run(
+            ["bash", str(launcher)],
+            env=env, capture_output=True, text=True, check=False,
+        )
     assert result.returncode == 0, result.stderr
     assert "[DRY-RUN]" in result.stdout
     assert "--arm A" in result.stdout and "--arm C" in result.stdout

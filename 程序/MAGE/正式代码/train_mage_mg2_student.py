@@ -1214,7 +1214,13 @@ def load_beta_calibration(
     expected_cache_sha = file_sha256(cache_path)
     if payload.get("teacher_cache_sha256") != expected_cache_sha:
         raise ValueError("beta校准JSON的教师缓存SHA与当前缓存不一致")
-    if Path(payload.get("teacher_cache", "")).resolve() != cache_path.resolve():
+    recorded_cache = Path(payload.get("teacher_cache", ""))
+    # 历史冻结JSON不可改写；仅将已知原仓库前缀映射到当前克隆位置。
+    # 上方缓存内容SHA及下方校准JSON冻结SHA仍须完整通过。
+    historical_root = Path("/home/mcy/gastric-cbm")
+    if recorded_cache.is_relative_to(historical_root):
+        recorded_cache = PROJECT_ROOT / recorded_cache.relative_to(historical_root)
+    if recorded_cache.resolve() != cache_path.resolve():
         raise ValueError("beta校准JSON的教师缓存路径与当前运行不一致")
     if int(payload.get("seed", -1)) != seed:
         raise ValueError("beta校准JSON的seed与当前运行不一致")

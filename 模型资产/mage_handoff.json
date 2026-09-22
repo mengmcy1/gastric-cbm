@@ -1,0 +1,85 @@
+{
+  "release_tag": "mage-models",
+  "models": {
+    "teacher": {
+      "path": "结果/MAGE/MG1b注意力池化教师_20260818/正式验证集筛选/mg1b_attention_efficientnet_b0_seed42/mg1b_best_teacher.pth",
+      "architecture": "efficientnet_b0_attention_pooling_7x7",
+      "image_threshold": 0.21375234425067902,
+      "patient_threshold": 0.3049298021942377,
+      "preprocessing": "grayscale ROI -> resize224 -> ImageNet normalization"
+    },
+    "student": {
+      "path": "结果/MAGE/MG2L训练轮数敏感性_20260818/正式验证集筛选/mg2l_armc_efficientnet_b0_seed42/mg2_armc_best_student.pth",
+      "architecture": "efficientnet_b0_attention_pooling_7x7",
+      "image_threshold": 0.25923898816108704,
+      "patient_threshold": 0.3074711561203003,
+      "preprocessing": "full color preprocessed image -> resize224 -> ImageNet normalization"
+    }
+  },
+  "assets": [
+    {
+      "role": "teacher",
+      "path": "结果/MAGE/MG1b注意力池化教师_20260818/正式验证集筛选/mg1b_attention_efficientnet_b0_seed42/mg1b_best_teacher.pth",
+      "size_bytes": 16345771,
+      "sha256": "f2cd3b13cbbc0e8b4df64e9090ec50343314137ba71a4c07d9fae9faa8af48f9"
+    },
+    {
+      "role": "student",
+      "path": "结果/MAGE/MG2L训练轮数敏感性_20260818/正式验证集筛选/mg2l_armc_efficientnet_b0_seed42/mg2_armc_best_student.pth",
+      "size_bytes": 16346731,
+      "sha256": "29e76977251fbd50c9fd9ecd6ebd26927eaf9b54eeb8e70a0b70d3d5a70ce014"
+    },
+    {
+      "role": "fov",
+      "path": "程序/图像裁剪/模型/shiye_V1.onnx",
+      "size_bytes": 36643638,
+      "sha256": "87c466b9ca8a0767df7ded7c638f2a9966fa60b80174726bc90a82d2ccd0e780"
+    },
+    {
+      "role": "imagenet_initialization",
+      "path": "模型资产/torch/hub/checkpoints/efficientnet_b0_rwightman-7f5810bc.pth",
+      "size_bytes": 21444401,
+      "sha256": "7f5810bc96def8f7552d5b7e68d53c4786f81167d28291b21c0d90e1fca14934"
+    }
+  ],
+  "patient_data_in_release": false,
+  "teacher_cache_in_release": false,
+  "training_data_directory": "数据/教师学生模型交接数据",
+  "roi_assets": [
+    {
+      "path": "结果/MAGE/MG0b_OOF_YOLO_20260817/mg0b_oof_yolo26s_fold0/weights/best.pt",
+      "size_bytes": 20356335,
+      "sha256": "17c62b0a147e1d4efb7098b0227a590898da3f280c2286c7299178cd86c2656f"
+    },
+    {
+      "path": "结果/MAGE/MG0b_OOF_YOLO_20260817/mg0b_oof_yolo26s_fold1/weights/best.pt",
+      "size_bytes": 20356591,
+      "sha256": "b4b33dae30384e09d3c0592918616369920df5c882b6e5c4320b37a5e34fd853"
+    },
+    {
+      "path": "结果/MAGE/MG0b_OOF_YOLO_20260817/mg0b_oof_yolo26s_fold2/weights/best.pt",
+      "size_bytes": 20356591,
+      "sha256": "f9c14eef787a937ebee4c5a90ae38b56ea94e2d7874650484f4e1c4347afa008"
+    },
+    {
+      "path": "结果/MAGE/MG0b_OOF_YOLO_20260817/mg0b_oof_yolo26s_fold3/weights/best.pt",
+      "size_bytes": 20355567,
+      "sha256": "5b8335596949506d89893923e503577f6e2f5b7d8939bdced22c8954aaa18a1f"
+    },
+    {
+      "path": "结果/MAGE/MG0b_OOF_YOLO_20260817/mg0b_oof_yolo26s_fold4/weights/best.pt",
+      "size_bytes": 20358959,
+      "sha256": "c605a934f3c6be489f5096e69c630f79f0b5f53d56e43fc40ff7104ec21a4c3a"
+    },
+    {
+      "path": "结果/YOLO26定位_0804/Y3固定640三种子/y3_full_yolo26s_640_seed42/weights/best.pt",
+      "size_bytes": 20356719,
+      "sha256": "ebc952c71dd4c47ea274a8c6666ef210f868887adbd5a02f85fe41bb222a7d79"
+    },
+    {
+      "path": "yolo26s.pt",
+      "size_bytes": 20422725,
+      "sha256": "646f8bc3fe0a656803d95c294f7852321748cb29d13466a1af8862e2db384a1b"
+    }
+  ]
+}
