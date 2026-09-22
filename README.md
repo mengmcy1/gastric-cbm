@@ -7,7 +7,7 @@
 ## 先准备什么
 
 - 此私有仓库的访问权限。
-- Release `mage-models` 中的 `模型权重.tar` 和 `SHA256SUMS`。
+- Release `mage-models` 中的 `mage-models.tar` 和 `SHA256SUMS`。
 - 如需训练或复现原队列：由数据管理者通过受控渠道提供整个 `教师学生模型交接数据` 目录。患者图片、标注、清单、教师缓存不在GitHub。
 - 只做新图片学生推理时，不需要研究数据目录，只需已完成预处理的图片和学生权重。
 
@@ -52,12 +52,12 @@ gh release download mage-models --repo mengmcy1/gastric-cbm --dir weights-downlo
 cd weights-download
 sha256sum -c SHA256SUMS
 cd ..
-tar -xf weights-download/模型权重.tar
+tar -xf weights-download/mage-models.tar
 python 程序/MAGE/正式代码/manage_mage_handoff.py verify-assets
 export TORCH_HOME="$PWD/模型资产/torch"
 ```
 
-包括正式MG1b教师、正式C-long学生、FOV ONNX模型和ImageNet初始化权重。另提供 `ROI辅助权重.tar`，保留生成教师ROI使用的5折OOF检测器和Y3-F检测器；学生部署和使用现成ROI清单训练不需要加载这些检测器。若重新运行ROI检测流程，额外安装 `ultralytics==8.4.118` 并解包该文件，相关清单仍由受控数据交接。使用随包的ImageNet初始化可避免训练时另行联网下载。默认模型仍是原C-long，不自动使用后来的非癌框微调候选或SAE实验模型。
+包括正式MG1b教师、正式C-long学生、FOV ONNX模型和ImageNet初始化权重。另提供 `roi-weights.tar`，保留生成教师ROI使用的5折OOF检测器和Y3-F检测器；学生部署和使用现成ROI清单训练不需要加载这些检测器。若重新运行ROI检测流程，额外安装 `ultralytics==8.4.118` 并解包该文件，相关清单仍由受控数据交接。使用随包的ImageNet初始化可避免训练时另行联网下载。默认模型仍是原C-long，不自动使用后来的非癌框微调候选或SAE实验模型。
 
 ## 数据准备
 
