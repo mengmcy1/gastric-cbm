@@ -46,6 +46,7 @@ wandb/
 数据整理记录/
 参考图片/
 文献/*
+新想法/
 *.pdf
 
 # Generated results stay local.

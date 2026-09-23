@@ -1,0 +1,15 @@
+{
+  "release_tag": "sae-handoff-20260923",
+  "assets": [
+    {
+      "role": "RA-SAE100 inference with train Q99",
+      "path": "模型资产/sae/ra100_inference.pth",
+      "size_bytes": 26242713,
+      "sha256": "2e705d031ca117d07041b46fbd2d2cb64bfa22470050994d8e219fb902a90bb2"
+    }
+  ],
+  "evaluation_k": 256,
+  "original_training_checkpoint_in_controlled_supplement": true,
+  "no_patient_ids_or_paths": true,
+  "no_training_centroid_buffer": true
+}

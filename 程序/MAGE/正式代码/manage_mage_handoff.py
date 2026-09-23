@@ -15,9 +15,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=['verify-assets', 'restore-data', 'check-data'])
     parser.add_argument('--data-root', type=Path, default=ROOT / '数据/教师学生模型交接数据')
+    parser.add_argument('--catalog', type=Path, default=ROOT / '模型资产/mage_handoff.json',
+                        help='verify-assets所用资产清单；SAE可指定sae_handoff.json')
     args = parser.parse_args()
     if args.action == 'verify-assets':
-        catalog = json.loads((ROOT / '模型资产/mage_handoff.json').read_text())
+        catalog = json.loads(args.catalog.read_text())
         for asset in catalog['assets']:
             path = ROOT / asset['path']
             if path.stat().st_size != asset['size_bytes']:

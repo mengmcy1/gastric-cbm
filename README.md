@@ -6,7 +6,7 @@
 
 ## 先准备什么
 
-- 此私有仓库的访问权限。
+- 本仓库代码与Release下载权限。当前仓库为公开状态，患者数据及解释图只能通过受控渠道交接。
 - Release `mage-models` 中的 `mage-models.tar` 和 `SHA256SUMS`。
 - 如需训练或复现原队列：由数据管理者通过受控渠道提供整个 `教师学生模型交接数据` 目录。患者图片、标注、清单、教师缓存不在GitHub。
 - 只做新图片学生推理时，不需要研究数据目录，只需已完成预处理的图片和学生权重。
@@ -208,3 +208,61 @@ tail -F 结果/原流程复现/logs/student.log
 本次交接检查在现有Linux/CPU环境完成：原图裁边→FOV遮罩→学生推理→图片与患者结果；正式教师ROI预处理与原Dataset逐值一致；正式学生输入与原Dataset逐值一致、同设备输出与原实现一致；4张抽查图相对历史缓存最大概率差约0.000148，未据此宣称完整历史指标精确复现；小样本教师两阶段训练→该教师缓存→学生两阶段训练→新权重推理。没有重新训练完整研究模型，没有重新评价锁定测试集，也没有在新装操作系统上验证所有驱动组合。
 
 数据目录属于受控交接，不随GitHub发布。请保留所有split，不把验证和测试样本加入训练。后续非癌框微调和SAE解释不是当前默认部署模型的一部分。
+
+## SAE解释与后续研究
+
+交接范围与最终结论见 [交接与研究终点](文档/交接与研究终点.md)。SAE不是默认诊断器，诊断概率仍来自原C-long。
+以下命令只需公开代码和权重，以及一张自己有权使用的、已完成裁边／FOV处理的图片，不需要旧特征缓存。
+
+先完成前面的 `mage-models` 下载，再下载SAE推理资产：
+
+```bash
+gh release download sae-handoff-20260923 --repo mengmcy1/gastric-cbm --dir sae-download
+cd sae-download
+sha256sum -c SHA256SUMS
+cd ..
+tar -xf sae-download/sae-inference.tar
+python 程序/MAGE/正式代码/manage_mage_handoff.py verify-assets --catalog 模型资产/sae_handoff.json
+python 程序/SAE/正式代码/infer_clong_rasae.py --image /已预处理图片.jpg --device cpu --top-k 20 --save-maps --output 推理结果/SAE单图
+```
+
+批量接续可直接使用交接数据的验证清单（不要将测试清单用于调参）：
+
+```bash
+python 程序/SAE/正式代码/infer_clong_rasae.py --manifest 数据/教师学生模型交接数据/02_验证集/图片与标注清单.csv --device cpu --top-k 20 --save-maps --output 推理结果/SAE验证集
+```
+
+`--top-k 20`是每图选出的Feature数量；编码器仍固定逐位置K=256。图像按显式提供的CSV读取，没有自动搜索数据目录。
+输出包括原分类器逐图／患者概率、纯SAE重构研究概率、Feature激活×梯度排序、整图删除的分数与概率变化。
+`maps/*.npz`保存所选Feature编号、原始激活、train Q99及原注意力，均为7×7；不包含医学概念命名。
+`delta_margin=删除后−原始`，负值表示被删分量原本支持癌分数，正值表示原本降低癌分数。
+保留残差的内部删除不等于删除图片中的某种病变，也不代表医学因果。
+
+本次公开的SAE权重将凸组合字典计算成有效decoder，推理与原字典等价，Feature编号不变。
+不包含原训练代表点、患者记录、训练清单或优化器；不能直接用于受约束RA字典继续训练。
+原参数化权重、研究缓存、医学反馈与论文逐例结果放在单独的受控研究补充包中。
+
+最近的非癌框实验代码保留在 `程序/MAGE/正式代码/train_mage_clong_noncancer_box_pilot.py`。
+取得并解包受控补充包、恢复数据路径后，可先验证链路：
+
+```bash
+tar -xf /受控存储位置/研究接续补充_受控_20260923.tar
+python 程序/MAGE/正式代码/manage_mage_handoff.py restore-data
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python -u 程序/MAGE/正式代码/train_mage_clong_noncancer_box_pilot.py --device cpu --debug --output 新训练/非癌框链路检查
+```
+
+正式实验去掉 `--debug` 并在检查显存和进程后指定空闲GPU；两组固定各5轮。**现有结果未改善分类，不作为推荐配置或默认模型。**
+如果只是要训练新教师与学生，继续使用前文的新训练入口，不必运行此失败实验。
+
+历史研究另开目录查看：
+
+```bash
+git clone --branch research-archive-before-handoff https://github.com/mengmcy1/gastric-cbm.git gastric-cbm-research
+```
+
+不要用归档分支覆盖主分支的新推理入口。当前只上传可公开的代码、参数与推理权重；受控补充包不得上传公开Release。
+
+2026-09-23补充验证：在独立目录仅复制待提交源码、解包发布权重，并显式提供两张授权输入，
+CPU批量SAE推理通过；原RA与导出权重在K=64/128/256的激活和重构逐值一致；
+完整注意力链的解析梯度通过独立autograd对照。受控数据用自定义目录恢复后，
+非癌框两臂10张训练／6张验证的小样本各完成1次更新。上述是可运行性检查，不是新模型性能结论。
