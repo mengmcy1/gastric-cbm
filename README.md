@@ -211,7 +211,8 @@ tail -F 结果/原流程复现/logs/student.log
 
 ## SAE解释与后续研究
 
-交接范围与最终结论见 [交接与研究终点](文档/交接与研究终点.md)。SAE不是默认诊断器，诊断概率仍来自原C-long。
+交接范围与最终结论见 [交接与研究终点](文档/交接与研究终点.md)，首次接手先读
+[项目背景与历史SAE接续](文档/项目背景与历史SAE接续.md)。SAE不是默认诊断器，诊断概率仍来自原C-long。
 以下命令只需公开代码和权重，以及一张自己有权使用的、已完成裁边／FOV处理的图片，不需要旧特征缓存。
 
 先完成前面的 `mage-models` 下载，再下载SAE推理资产：
@@ -247,6 +248,7 @@ python 程序/SAE/正式代码/infer_clong_rasae.py --manifest 数据/教师学�
 
 ```bash
 tar -xf /受控存储位置/研究接续补充_受控_20260923.tar
+tar -xf /受控存储位置/交接审查增补_受控_20260923.tar
 python 程序/MAGE/正式代码/manage_mage_handoff.py restore-data
 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 python -u 程序/MAGE/正式代码/train_mage_clong_noncancer_box_pilot.py --device cpu --debug --output 新训练/非癌框链路检查
 ```
